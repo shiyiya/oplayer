@@ -8,5 +8,8 @@
   "license": "MIT",
   "scripts": {
     "start": "vite"
+  },
+  "dependencies": {
+    "lit-html": "^2.2.6"
   }
 }
