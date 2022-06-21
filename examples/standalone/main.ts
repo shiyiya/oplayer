@@ -13,7 +13,7 @@ const meta = () => html`
   <p>
    <small> ${formatTime(p.currentTime)} / ${formatTime(p.duration)}</small> &nbsp; &nbsp;
     <progress value=${p.currentTime} max=${p.duration}></progress>
-    <progress value=${p.buffered.end(0)} max=${p.duration}></progress>
+    <progress value=${p.buffered.length ? p.buffered.end(0) : 0} max=${p.duration}></progress>
    ${p.isLoading ? 'loading' : ''}
   </p>
 
@@ -54,7 +54,9 @@ const meta = () => html`
   </p>
 `
 
-p.on(() => {
+p.on((e) => {
+  console.log(e)
+
   render(meta(), document.getElementById('app')!)
 })
 

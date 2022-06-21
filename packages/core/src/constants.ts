@@ -13,5 +13,10 @@ export enum VIDEO_EVENTS {
   ERROR = 'error',
   VOLUMECHANGE = 'volumechange',
   RATECHANGE = 'ratechange',
-  DURATIONCHANGE = 'durationchange'
+  DURATIONCHANGE = 'durationchange',
+  ABORT = 'abort',
+  SEEKING = 'seeking',
+  STALLED = 'stalled',
+  SUSPENDs = 'suspends',
+  WAITING = 'waiting'
 }

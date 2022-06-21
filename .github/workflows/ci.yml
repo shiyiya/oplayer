@@ -1,0 +1,62 @@
+name: ci
+
+on:
+  push:
+    branches: main
+
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: setup node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: load cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}
+
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: latest
+          run_install: true
+
+      - name: build packs
+        run: |
+          pnpm build:cache
+          pnpm build:doc
+
+      - name: run test
+        run: |
+          pnpm test
+
+      - name: create versions or publish to npm registry
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          commit: 'ci(changeset): release oplayer'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: deploy to github pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GIT_HUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages

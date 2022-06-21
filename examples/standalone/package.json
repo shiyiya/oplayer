@@ -1,5 +1,5 @@
 {
-  "name": "@oplayer-examples/standalone",
+  "name": "@oplayer/standalone-example",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -7,7 +7,9 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "preview": "vite preview",
+    "build": "vite build"
   },
   "dependencies": {
     "lit-html": "^2.2.6"

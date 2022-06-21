@@ -1,17 +1,10 @@
 import { VIDEO_EVENTS } from './constants'
+import E, { Listener } from './event'
 
 export type PlayerPlugin = {
   apply: (ctX: Player, next: (...arg: any[]) => void) => void
   destroy?: VoidFunction
 }
-
-type Event = {
-  type: string
-  payload: any
-  _raw?: any
-}
-
-export type Listener = (enevt: Event) => void
 
 export type Options = {
   autoplay?: boolean
@@ -21,6 +14,7 @@ export type Options = {
   preload?: 'auto' | 'metadata' | 'none'
   poster?: string
   playbackRate?: number
+  playsinline?: boolean
   src: string
 }
 
@@ -37,17 +31,19 @@ export default class Player {
         height: el.offsetHeight,
         preload: 'auto',
         poster: '',
-        playbackRate: 1
+        playbackRate: 1,
+        playsinline: true
       },
       typeof options === 'string' ? { src: options } : options
     )
   }
 
+  #E = new E()
+
   readonly #options: Required<Options>
   readonly #container: HTMLElement
 
   readonly #plugins: Set<PlayerPlugin> = new Set()
-  readonly #listeners: Set<Listener> = new Set()
 
   videoType: string
   $root: HTMLElement
@@ -64,9 +60,12 @@ export default class Player {
     return this
   }
 
-  readonly on = (listener: Listener) => {
-    this.#listeners.add(listener)
-    return this
+  readonly on = (name: string | Listener, listener?: Listener) => {
+    if (typeof name === 'string') {
+      this.#E.on(name, listener!)
+    } else {
+      this.#E.on('*', name)
+    }
   }
 
   readonly create = () => {
@@ -84,9 +83,11 @@ export default class Player {
     return this
   }
 
+  readonly render = () => {}
+
   init = () => {
     this.#video = document.createElement('video')
-    if (!this.#video.src) {
+    if (!this.#video.getAttribute('data-src')) {
       this.#video.src = this.#options.src
     }
 
@@ -94,9 +95,9 @@ export default class Player {
     this.#video.muted = this.#options.muted
     this.#video.loop = this.#options.loop
     this.#video.volume = this.#options.volume
+    this.#video.defaultPlaybackRate = this.#options.playbackRate
     this.#video.preload = this.#options.preload
     this.#video.poster = this.#options.poster
-    this.#video.playbackRate = this.#options.playbackRate
 
     this.#container.appendChild(this.#video)
   }
@@ -104,10 +105,7 @@ export default class Player {
   initEvent = () => {
     Object.values(VIDEO_EVENTS).forEach((event) => {
       this.#video.addEventListener(event, (e) => {
-        console.log(e)
-        this.#listeners.forEach((listener) => {
-          listener({ type: e.type, payload: e })
-        })
+        this.#E.emit(event, e)
       })
     })
   }
@@ -246,7 +244,9 @@ export default class Player {
     }
   }
 
-  changeSource(sources: string) {}
+  changeSource(sources: string) {
+    this.#video.src = sources
+  }
 
   destroy() {}
 }
