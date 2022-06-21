@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "strict": true,
+    "pretty": true,
     "target": "es2015",
     "module": "esnext",
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "noEmitOnError": true,
 
     "declaration": true,
     "declarationMap": true,
@@ -11,17 +13,12 @@
 
     "importHelpers": true,
     "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "pretty": true,
-    "experimentalDecorators": true,
+    "esModuleInterop": true,
     "useUnknownInCatchVariables": true,
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
+    // "forceConsistentCasingInFileNames": true,
 
-    "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitOverride": true,

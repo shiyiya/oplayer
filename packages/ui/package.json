@@ -11,7 +11,7 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "tsc --emitDeclarationOnly && vite build"
+    "build": "vite build &&  tsc --emitDeclarationOnly"
   },
   "files": [
     "dist",
@@ -25,6 +25,7 @@
     "IE 11"
   ],
   "dependencies": {
-    "@oplayer/core": "workspace:*"
+    "@oplayer/core": "workspace:*",
+    "lit": "^2.2.6"
   }
 }

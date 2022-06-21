@@ -57,8 +57,10 @@ importers:
 
   examples/standalone:
     specifiers:
+      '@oplayer/core': workspace:*
       lit: ^2.2.6
     dependencies:
+      '@oplayer/core': link:../../packages/core
       lit: 2.2.6
 
   packages/core:
@@ -78,8 +80,10 @@ importers:
   packages/ui:
     specifiers:
       '@oplayer/core': workspace:*
+      lit: ^2.2.6
     dependencies:
       '@oplayer/core': link:../core
+      lit: 2.2.6
 
 packages:
 

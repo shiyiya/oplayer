@@ -12,7 +12,7 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "tsc --emitDeclarationOnly && vite build"
+    "build": "vite build &&  tsc --emitDeclarationOnly"
   },
   "files": [
     "dist",

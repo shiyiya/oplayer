@@ -1,6 +1,9 @@
-import Player, { html, render, ref, formatTime } from '@oplayer/core'
+import Player, { formatTime } from '@oplayer/core'
 import type { PlayerPlugin } from '@oplayer/core'
 import style from './index.css'
+import { render, html } from 'lit'
+import { ref } from 'lit/directives/ref.js'
+// import play from './icons/play.svg?raw'
 
 let hoverWidth: number = 0
 let $hit: HTMLDivElement
@@ -32,12 +35,13 @@ const calculateWidth = (player: Player) => {
 }
 
 const apply = (player: Player) => {
-  const vn = ({ playedWidth = 0, bufferedWidth = 0, hoverWidth = 0 } = {}) => html`
-    <style>
-    ${style}
+  const vn = ({ playedWidth = 0, bufferedWidth = 0, hoverWidth = 0 } = {}) => html` <style>
+      ${style}
     </style>
+    <div class="oh-mask" @click=${() => player.togglePlay()}></div>
     <div class="oh-controller" ${ref((el) => ($controller = el as HTMLDivElement))}>
-      <div class="oh-controller-progress-wrap"
+      <div
+        class="oh-controller-progress-wrap"
         ${ref(createHitRef)}
         @mousedown=${(e: any) => {
           player.seek(player.duration * (e.offsetX / e.currentTarget?.offsetWidth))
@@ -47,22 +51,27 @@ const apply = (player: Player) => {
           render(vn({ playedWidth, bufferedWidth, hoverWidth: hoverWidth }), player.$root)
         }}
       >
-        <div class="oh-controller-progress"  >
-          <div
-           class="oh-controller-progress-hit"
-           style="left: ${hoverWidth}%;"
-           >
+        <div class="oh-controller-progress">
+          <div class="oh-controller-progress-hit" style="left: ${hoverWidth}%;">
             ${formatTime(player.duration * (hoverWidth / 100))}
-           </div>
+          </div>
           <div class="oh-controller-progress-buffered" style="width:${bufferedWidth}%"></div>
           <div class="oh-controller-progress-played" style="width:${playedWidth}%"></div>
-          <div class="oh-controller-progress-played-dot" style="transform: translateX(${playedWidth}%);"></div>
-          </div>
+          <div
+            class="oh-controller-progress-played-dot"
+            style="transform: translateX(${playedWidth}%);"
+          ></div>
         </div>
       </div>
+
+      <div class="oh-controller-bottom"></div>
     </div>`
 
   render(vn(), player.$root)
+
+  player.__video.addEventListener('click', () => {
+    player.togglePlay()
+  })
 
   player.on('timeupdate', () => {
     render(vn({ hoverWidth, ...calculateWidth(player) }), player.$root)
@@ -72,18 +81,16 @@ const apply = (player: Player) => {
     render(vn({ hoverWidth, ...calculateWidth(player) }), player.$root)
   }
 
+  const debounceHideCtrl = debounce(() => {
+    $controller.classList.add('hide')
+  })
+
   player.on('seeking', updateProgress).on('mouseenter', updateProgress)
 
-  player
-    .on('mousemove', () => {
-      $controller.classList.contains('hide') && $controller.classList.remove('hide')
-    })
-    .on(
-      'mousemove',
-      debounce(() => {
-        $controller.classList.add('hide')
-      })
-    )
+  player.on('mousemove', () => {
+    $controller.classList.contains('hide') && $controller.classList.remove('hide')
+    debounceHideCtrl()
+  })
 }
 
 const ui: PlayerPlugin = {

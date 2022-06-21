@@ -55,7 +55,7 @@
   width: 100%;
 }
 
-.oh-controller:hover .oh-controller-progress-played-dot::before {
+.oh-controller-progress-wrap:hover .oh-controller-progress-played-dot::before {
   transform: scale(1);
 }
 
