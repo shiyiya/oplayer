@@ -1,6 +1,6 @@
 import Player, { formatTime } from '@oplayer/core'
 import type { PlayerPlugin } from '@oplayer/core'
-import style from './index.css'
+import './index.css'
 import { render, html } from 'lit'
 import { ref } from 'lit/directives/ref.js'
 // import play from './icons/play.svg?raw'
@@ -35,10 +35,10 @@ const calculateWidth = (player: Player) => {
 }
 
 const apply = (player: Player) => {
-  const vn = ({ playedWidth = 0, bufferedWidth = 0, hoverWidth = 0 } = {}) => html` <style>
-      ${style}
-    </style>
-    <div class="oh-mask" @click=${() => player.togglePlay()}></div>
+  const vn = ({ playedWidth = 0, bufferedWidth = 0, hoverWidth = 0 } = {}) => html` <div
+      class="oh-mask"
+      @click=${() => player.togglePlay()}
+    ></div>
     <div class="oh-controller" ${ref((el) => ($controller = el as HTMLDivElement))}>
       <div
         class="oh-controller-progress-wrap"

@@ -1,4 +1,4 @@
-import style from './index.css'
+import './index.css'
 import { html, render } from 'lit'
 import E, { Listener, OEvent } from './event'
 import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
@@ -116,9 +116,6 @@ export class Player {
     this.#container.classList.add('oh-wrap')
     render(
       html`
-        <style>
-          ${style}
-        </style>
         <div class="oh-player" ${ref((el) => (this.$root = el as HTMLDivElement))}>
           <video
             class="oh-video"
