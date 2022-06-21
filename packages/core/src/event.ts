@@ -1,4 +1,4 @@
-type OEvent = {
+export type OEvent = {
   type: string
   payload: any
   _raw?: any

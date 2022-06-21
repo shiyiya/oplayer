@@ -6,7 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Oh player!</title>
     <style>
-      /* CSS */
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
       button {
         flex-direction: column;
         align-items: center;
@@ -23,11 +30,16 @@
         -webkit-user-select: none;
         touch-action: manipulation;
       }
-
       button:focus {
         box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2),
           0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
         outline: 0;
+      }
+      button + button {
+        margin-left: 10px;
+      }
+      .loading {
+        animation: spin 1s linear infinite;
       }
 
       body {
@@ -41,9 +53,6 @@
         margin: 0 auto;
         padding: 3.6rem 2rem 0;
       }
-      video {
-        width: 100%;
-      }
       p {
         display: flex;
         align-items: center;
@@ -55,6 +64,7 @@
   </head>
   <body>
     <div id="app"></div>
+    <div id="meta"></div>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>

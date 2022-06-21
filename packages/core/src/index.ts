@@ -1,8 +1,15 @@
-import { VIDEO_EVENTS } from './constants'
-import E, { Listener } from './event'
+import style from './index.css'
+import { html, render } from 'lit'
+import E, { Listener, OEvent } from './event'
+import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import { ref } from 'lit/directives/ref.js'
 
 export type PlayerPlugin = {
-  apply: (ctX: Player, next: (...arg: any[]) => void) => void
+  name: string
+  version?: string
+  beforeRender?: (player: Player) => void
+  apply?: (player: Player, next: (...arg: any[]) => void) => void
+  load?: (src: string, player: Player) => boolean
   destroy?: VoidFunction
 }
 
@@ -38,16 +45,15 @@ export default class Player {
     )
   }
 
-  #E = new E()
-
   readonly #options: Required<Options>
   readonly #container: HTMLElement
-
   readonly #plugins: Set<PlayerPlugin> = new Set()
 
-  videoType: string
+  readonly #E = new E()
+
   $root: HTMLElement
   #video: HTMLVideoElement
+  #isCustomLoader: boolean
 
   static make(el: HTMLElement, options: Options | string): Player {
     return new Player(el, options)
@@ -68,38 +74,15 @@ export default class Player {
     }
   }
 
-  readonly create = () => {
-    const next = Promise.resolve()
-    this.#plugins.forEach((plugin) => {
-      next.then(() => {
-        return new Promise<any>((resolve) => {
-          plugin.apply(this, resolve)
-        })
-      })
-    })
-
-    this.init()
-    this.initEvent()
-    return this
+  readonly emit = (name: string, payload: OEvent) => {
+    this.#E.emit(name, payload)
   }
 
-  readonly render = () => {}
-
-  init = () => {
-    this.#video = document.createElement('video')
-    if (!this.#video.getAttribute('data-src')) {
-      this.#video.src = this.#options.src
-    }
-
-    this.#video.autoplay = this.#options.autoplay
-    this.#video.muted = this.#options.muted
-    this.#video.loop = this.#options.loop
-    this.#video.volume = this.#options.volume
-    this.#video.defaultPlaybackRate = this.#options.playbackRate
-    this.#video.preload = this.#options.preload
-    this.#video.poster = this.#options.poster
-
-    this.#container.appendChild(this.#video)
+  readonly create = () => {
+    this.render()
+    this.initEvent()
+    this.load(this.#options.src)
+    return this
   }
 
   initEvent = () => {
@@ -108,6 +91,50 @@ export default class Player {
         this.#E.emit(event, e)
       })
     })
+    Object.values(PLAYER_EVENTS).forEach((event) => {
+      this.$root.addEventListener(event, (e) => {
+        this.#E.emit(event, e)
+      })
+    })
+  }
+
+  readonly render = () => {
+    render(
+      html`
+        <style>
+          ${style}
+        </style>
+        <div class="oh-player" ${ref((el) => (this.$root = el as HTMLDivElement))}>
+          <video
+            class="oh-video"
+            ${ref((el) => (this.#video = el as HTMLVideoElement))}
+            ?autoplay=${this.#options.autoplay}
+            ?muted=${this.#options.muted}
+            ?loop=${this.#options.loop}
+            ?playsinline=${this.#options.playsinline}
+            muted=${this.#options.muted}
+            volume=${this.#options.volume}
+            preload=${this.#options.preload}
+            poster=${this.#options.poster}
+          />
+        </div>
+      `,
+      // src=${this.#options.src}
+      this.#container
+    )
+  }
+
+  load = (src: string) => {
+    this.#plugins.forEach((plugin) => {
+      if (plugin.load && !this.#isCustomLoader) {
+        this.#isCustomLoader = plugin.load(src, this)
+      }
+    })
+    if (!this.#isCustomLoader) {
+      this.#video.src = src
+    }
+
+    console.log(!this.#isCustomLoader)
   }
 
   get video() {
@@ -147,7 +174,7 @@ export default class Player {
   }
 
   get duration() {
-    return this.#video.duration
+    return this.#video.duration || 0
   }
 
   get buffered() {
@@ -245,7 +272,8 @@ export default class Player {
   }
 
   changeSource(sources: string) {
-    this.#video.src = sources
+    this.#isCustomLoader = false
+    this.load(sources)
   }
 
   destroy() {}

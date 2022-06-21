@@ -1,0 +1,10 @@
+.oh-player {
+  position: relative;
+  user-select: none;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.oh-player .oh-video{
+  width: 100%;
+}

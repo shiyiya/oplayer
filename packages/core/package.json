@@ -23,5 +23,9 @@
     "not dead",
     "not op_mini all",
     "IE 11"
-  ]
+  ],
+  "dependencies": {
+    "hls.js": "^1.1.5",
+    "lit": "^2.2.6"
+  }
 }

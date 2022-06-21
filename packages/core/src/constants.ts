@@ -20,3 +20,26 @@ export enum VIDEO_EVENTS {
   SUSPENDs = 'suspends',
   WAITING = 'waiting'
 }
+
+export enum PLAYER_EVENTS {
+  FOUCUS = 'focus',
+  BLUR = 'blur',
+  KEYDOWN = 'keydown',
+  KEYUP = 'keyup',
+  MOUSEDOWN = 'mousedown',
+  MOUSEUP = 'mouseup',
+  MOUSEMOVE = 'mousemove',
+  MOUSEENTER = 'mouseenter',
+  MOUSELEAVE = 'mouseleave',
+  TOUCHSTART = 'touchstart',
+  TOUCHEND = 'touchend',
+  TOUCHMOVE = 'touchmove',
+  TOUCHCANCEL = 'touchcancel',
+  CONTEXTMENU = 'contextmenu',
+  CLICK = 'click',
+  DBLCLICK = 'dblclick'
+}
+
+export declare interface Listeners {
+  [VIDEO_EVENTS.LOADSTART]: (type: string, event: any, data: any) => void
+}
