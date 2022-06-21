@@ -4,6 +4,14 @@ import E, { Listener, OEvent } from './event'
 import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import { ref } from 'lit/directives/ref.js'
 
+// @ts-ignore
+import pkg from '../package.json'
+
+export type Source = {
+  src: string
+  poster?: string
+}
+
 export type PlayerPlugin = {
   name: string
   version?: string
@@ -19,10 +27,9 @@ export type Options = {
   loop?: boolean
   volume?: number
   preload?: 'auto' | 'metadata' | 'none'
-  poster?: string
   playbackRate?: number
   playsinline?: boolean
-  src: string
+  source: Source
 }
 
 export default class Player {
@@ -41,19 +48,21 @@ export default class Player {
         playbackRate: 1,
         playsinline: true
       },
-      typeof options === 'string' ? { src: options } : options
+      typeof options === 'string' ? { source: { src: options } } : options
     )
   }
 
   readonly #options: Required<Options>
   readonly #container: HTMLElement
-  readonly #plugins: Set<PlayerPlugin> = new Set()
 
   readonly #E = new E()
+  readonly #plugins: Set<PlayerPlugin> = new Set()
 
   $root: HTMLElement
   #video: HTMLVideoElement
   #isCustomLoader: boolean
+
+  hasError: boolean = false
 
   static make(el: HTMLElement, options: Options | string): Player {
     return new Player(el, options)
@@ -74,18 +83,21 @@ export default class Player {
     }
   }
 
-  readonly emit = (name: string, payload: OEvent) => {
+  readonly emit = (name: string, payload?: OEvent) => {
     this.#E.emit(name, payload)
   }
 
   readonly create = () => {
     this.render()
     this.initEvent()
-    this.load(this.#options.src)
+    this.load(this.#options.source.src)
     return this
   }
 
   initEvent = () => {
+    this.on('error', () => {
+      this.hasError = true
+    })
     Object.values(VIDEO_EVENTS).forEach((event) => {
       this.#video.addEventListener(event, (e) => {
         this.#E.emit(event, e)
@@ -99,6 +111,7 @@ export default class Player {
   }
 
   readonly render = () => {
+    this.#container.classList.add('oh-wrap')
     render(
       html`
         <style>
@@ -115,7 +128,7 @@ export default class Player {
             muted=${this.#options.muted}
             volume=${this.#options.volume}
             preload=${this.#options.preload}
-            poster=${this.#options.poster}
+            poster=${this.#options.source.poster}
           />
         </div>
       `,
@@ -133,11 +146,10 @@ export default class Player {
     if (!this.#isCustomLoader) {
       this.#video.src = src
     }
-
-    console.log(!this.#isCustomLoader)
   }
 
-  get video() {
+  //TODO: 不暴露接口
+  get __video() {
     return this.#video
   }
 
@@ -150,7 +162,7 @@ export default class Player {
   }
 
   get isLoading() {
-    return this.#video.readyState < this.#video.HAVE_FUTURE_DATA
+    return this.#video.readyState < this.#video.HAVE_FUTURE_DATA && !this.hasError
   }
 
   get isLoaded() {
@@ -255,26 +267,38 @@ export default class Player {
   }
 
   enter() {
-    this.requestFullscreen.call(this.#video, { navigationUI: 'hide' })
+    this.requestFullscreen.call(this.$root, { navigationUI: 'hide' })
   }
 
   exit() {
     this.exitFullscreen.call(document)
-    return true
   }
 
   toggleFullScreen() {
-    if (document.fullscreenElement === this.#video) {
+    if (document.fullscreenElement === this.$root) {
       this.exit()
     } else {
       this.enter()
     }
   }
 
-  changeSource(sources: string) {
+  changeSource(sources: string | Source) {
+    this.hasError = false
     this.#isCustomLoader = false
-    this.load(sources)
+    this.load(typeof sources === 'string' ? sources : sources.src)
   }
 
-  destroy() {}
+  destroy() {
+    this.pause()
+    this.#video.src = ''
+    this.#video.remove()
+    this.#container.remove()
+    this.#E.offAll()
+    this.#plugins.clear()
+    this.emit('destroy')
+  }
+
+  static get version() {
+    return pkg.version
+  }
 }

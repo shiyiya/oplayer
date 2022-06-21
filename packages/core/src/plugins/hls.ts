@@ -5,7 +5,6 @@ import Hls from 'hls.js'
 let hls: Hls | null = null
 let prevSrc: string | null = null
 
-//TODO: 按需加载
 const getHls = (options: Partial<HlsConfig> = {}) => {
   if (!hls) {
     hls = new Hls(options)
@@ -14,8 +13,8 @@ const getHls = (options: Partial<HlsConfig> = {}) => {
 }
 
 const hlsPlugin: PlayerPlugin = {
-  name: 'hls',
-  load: (src: string, { video, on, emit }) => {
+  name: 'hlsPlugin',
+  load: (src: string, { __video: video, on, emit }) => {
     if (!/m3u8(#|\?|$)/i.test(src)) return false
     if (
       video.canPlayType('application/x-mpegURL') ||
@@ -28,7 +27,7 @@ const hlsPlugin: PlayerPlugin = {
 
     if (!hls || !Hls.isSupported()) {
       emit('error', {
-        type: 'hls',
+        type: 'hlsNotSupported',
         payload: { message: 'HLS is not supported' }
       })
       return false
@@ -43,16 +42,16 @@ const hlsPlugin: PlayerPlugin = {
     hls.loadSource(src)
     prevSrc = src
 
-    on('destroy', () => {
-      hls!.destroy()
-      hls = null
-    })
-
-    hls.on(Hls.Events.ERROR, (event, data) => {
+    hls.once(Hls.Events.ERROR, (event, data) => {
       emit('error', {
         type: event,
         payload: data
       })
+    })
+
+    on('destroy', () => {
+      hls!.destroy()
+      hls = null
     })
 
     return true
