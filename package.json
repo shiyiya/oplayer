@@ -22,7 +22,8 @@
     "graph": "nx dep-graph",
     "clear": "rimraf 'packages/*/{dist,tsconfig.tsbuildinfo,node_modules,.rollup.cache}' && rimraf node_modules",
     "changeset": "changeset",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "test": "echo 1"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
