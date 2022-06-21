@@ -57,9 +57,9 @@ importers:
 
   examples/standalone:
     specifiers:
-      lit-html: ^2.2.6
+      lit: ^2.2.6
     dependencies:
-      lit-html: 2.2.6
+      lit: 2.2.6
 
   packages/core:
     specifiers:
@@ -70,6 +70,12 @@ importers:
       lit: 2.2.6
 
   packages/react:
+    specifiers:
+      '@oplayer/core': workspace:*
+    dependencies:
+      '@oplayer/core': link:../core
+
+  packages/ui:
     specifiers:
       '@oplayer/core': workspace:*
     dependencies:
@@ -1801,7 +1807,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.5
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true

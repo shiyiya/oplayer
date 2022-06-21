@@ -1,8 +1,10 @@
 import Player from '../../packages/core/src/index'
-import { html, render } from 'lit-html'
+import { html, render } from 'lit'
 import { formatTime } from '../../packages/core/src/utils/time'
-import { PLAYER_EVENTS, VIDEO_EVENTS } from '../../packages/core/src/constants'
+import { VIDEO_EVENTS } from '../../packages/core/src/constants'
 import hls from '../../packages/core/src/plugins/hls'
+import ui from '../../packages/ui/src/index'
+import { live } from 'lit/directives/live.js'
 
 const $container = document.getElementById('app')!
 const $meta = document.getElementById('meta')!
@@ -31,13 +33,18 @@ const p = Player.make($container, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use(hls)
+  .use([hls, ui])
   .create()
 
 const meta = () => html`
   <p>
     <b>v${Player.version}</b>
-    <input type="text" @input=${(e: any) => (src = e.target.value)} style="flex:1;" value=${src} />
+
+    <input
+    type="text"
+    @input=${(e: any) => (src = e.target.value)}
+    style="flex:1;" .value=${live(src)} />
+
     <span
       class="${p.isLoading && 'loading'}">
       ${p.isLoading ? '✳️' : p.isLoaded ? '✅' : '❌'}
@@ -105,12 +112,10 @@ const meta = () => html`
 
 p.on((e) => {
   if (Object.values(VIDEO_EVENTS).includes(e.type as any)) {
-    console.log(e)
+    // console.log(e)
     render(meta(), $meta)
   }
 })
-
-p.on(PLAYER_EVENTS.CLICK, () => p.togglePlay())
 
 render(meta(), $meta)
 

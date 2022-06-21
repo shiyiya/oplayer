@@ -1,10 +1,10 @@
 {
-  "name": "@oplayer/core",
+  "name": "@oplayer/ui",
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.es.js",
+  "types": "./lib/index.d.ts",
   "sideEffects": false,
   "author": "",
   "license": "MIT",
@@ -25,7 +25,6 @@
     "IE 11"
   ],
   "dependencies": {
-    "hls.js": "^1.1.5",
-    "lit": "^2.2.6"
+    "@oplayer/core": "workspace:*"
   }
 }

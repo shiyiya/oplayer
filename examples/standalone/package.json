@@ -12,6 +12,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "lit-html": "^2.2.6"
+    "lit": "^2.2.6"
   }
 }
