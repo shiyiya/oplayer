@@ -27,11 +27,11 @@
   fill: currentcolor;
   position: absolute;
   right: 40px;
-  bottom: 40px;
+  bottom: 45px;
 }
 
 .oh-play .icon {
-  width: 4em;
+  width: 3em;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -86,10 +86,6 @@
   border-radius: 2px;
 }
 
-.oh-controller.hide .oh-controller-progress {
-  border-radius: 0;
-}
-
 .oh-controller-progress-buffered {
   background: hsla(0, 0%, 100%, 0.4);
 }
@@ -104,6 +100,12 @@
   will-change: width;
   transition: all 0.2s ease;
   border-radius: 2px;
+}
+
+.oh-controller.hide .oh-controller-progress,
+.oh-controller-progress-buffered,
+.oh-controller-progress-played {
+  border-radius: 0;
 }
 
 .oh-controller-progress-played {

@@ -82,8 +82,8 @@ const meta = () => html`
 `
 
 p.on((e) => {
+  e.type != 'timeupdate' && console.log(e)
   if (Object.values(VIDEO_EVENTS).includes(e.type as any) && e.type != 'timeupdate') {
-    console.log(e)
     render(meta(), $meta)
   }
 })

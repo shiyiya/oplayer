@@ -1,21 +1,23 @@
-import { render, html } from 'lit'
-import { ref } from 'lit/directives/ref.js'
 import type { PlayerPlugin } from '@oplayer/core'
-import Player, { formatTime } from '@oplayer/core'
+import Player, { formatTime, isMobile } from '@oplayer/core'
+import { html, render } from 'lit'
+import { ref } from 'lit/directives/ref.js'
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js'
 
-import playSvg from './icons/play.svg?raw'
-import pauseSvg from './icons/pause.svg?raw'
-import expandSvg from './icons/expand.svg?raw'
 import compressSvg from './icons/compress.svg?raw'
+import expandSvg from './icons/expand.svg?raw'
+import pauseSvg from './icons/pause.svg?raw'
 import pipSvg from './icons/pip.svg?raw'
-import volumeSvg from './icons/volume.svg?raw'
+import playSvg from './icons/play.svg?raw'
 import volumeOffSvg from './icons/volume-off.svg?raw'
+import volumeSvg from './icons/volume.svg?raw'
 
 import './index.css'
 
 let $controller: HTMLDivElement
 let controllerIsActive = false
+
+let CTRL_HIDE_DELAY = isMobile ? 2000 : 1500
 
 const calculateWidth = (player: Player) => {
   const { currentTime, duration } = player
@@ -44,7 +46,7 @@ const apply = (player: Player) => {
     })
   }
 
-  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class="oh-ui">
+  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <divclass="oh-ui">
     <div class="oh-mask" @click=${() => player.togglePlay()}></div>
 
     ${
@@ -62,7 +64,7 @@ const apply = (player: Player) => {
       <div
         class="oh-play"
         aria-label="Play"
-        style="display:${player.isPlaying || !player.isLoaded ? 'none' : 'block'}"
+        style="display:${player.isPlaying || !player.isLoaded || isMobile ? 'none' : 'block'}"
       >
         <button
           aria-label="Play"
@@ -73,7 +75,7 @@ const apply = (player: Player) => {
           ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
         </button>
       </div>
-    </div>
+    </divclass=>
 
     <div
       class="oh-controller"
@@ -176,14 +178,21 @@ const apply = (player: Player) => {
     debounceHideCtrl()
   })
 
-  player.on('pause', hideCtrl)
-
-  player.on('mousemove', () => {
-    $controller.classList.remove('hide')
-    debounceHideCtrl()
+  player.on('pause', () => {
+    if (isMobile) {
+      $controller.classList.remove('hide')
+    } else {
+      hideCtrl()
+    }
   })
 
-  player.on('mouseleave', hideCtrl)
+  if (!isMobile) {
+    player.on('mousemove', () => {
+      $controller.classList.remove('hide')
+      debounceHideCtrl()
+    })
+    player.on('mouseleave', hideCtrl)
+  }
 }
 
 const ui: PlayerPlugin = () => ({
@@ -191,7 +200,7 @@ const ui: PlayerPlugin = () => ({
   apply
 })
 
-const debounce = (fn: () => void, ms: number = 1000) => {
+const debounce = (fn: () => void, ms: number = CTRL_HIDE_DELAY) => {
   let time: NodeJS.Timeout | null = null
   return () => {
     time && clearTimeout(time)
