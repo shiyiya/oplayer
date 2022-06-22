@@ -47,7 +47,17 @@ const apply = (player: Player) => {
   const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class="oh-ui">
     <div class="oh-mask" @click=${() => player.togglePlay()}></div>
 
-    <div class="oh-area">
+    ${
+      player.isLoading &&
+      html`<div class="oh-area">
+        <div class="oh-loading">
+          <div class="linear-activity">
+            <div class="indeterminate"></div>
+          </div>
+        </div>
+      </div>`
+    }
+
       <div
         class="oh-play"
         aria-label="Play"

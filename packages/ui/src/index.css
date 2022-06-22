@@ -34,8 +34,17 @@
   width: 4em;
 }
 
+@media only screen and (max-width: 1000px) {
+  .oh-play {
+    right: 20px;
+    bottom: 20px;
+  }
+  .oh-play .icon {
+    width: 2em;
+  }
+}
+
 .oh-play .icon svg {
-  fill: #fff;
   filter: drop-shadow(0px 0px 5px rgb(102 104 171 / 0.5));
 }
 
@@ -225,7 +234,7 @@ icon.volume {
 }
 
 .dropdown:hover .expand {
-  opacity: 1;
+  visibility: visible;
 }
 
 .dropdown .expand {
@@ -235,11 +244,86 @@ icon.volume {
   transform: translate(0%, -100%);
   /* width: 100%; */
   box-sizing: border-box;
-  opacity: 0;
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.9);
   color: #fff;
   font-size: 12px;
-  opacity: 0;
+  visibility: hidden;
   transition: opacity 0.1s ease-in-out;
+}
+
+/* loding */
+.oh-loading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.linear-activity {
+  overflow: hidden;
+  width: 20%;
+  height: 4px;
+  background-color: rgba(102 104 171 /0.4);
+  margin: 20px auto;
+  border-radius: 4px;
+}
+
+.determinate {
+  position: relative;
+  max-width: 100%;
+  height: 100%;
+  -webkit-transition: width 500ms ease-out 1s;
+  -moz-transition: width 500ms ease-out 1s;
+  -o-transition: width 500ms ease-out 1s;
+  transition: width 500ms ease-out 1s;
+  background-color: #03a9f4;
+}
+
+.indeterminate {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.indeterminate:before {
+  content: '';
+  position: absolute;
+  height: 100%;
+  background-color: #6668ab;
+  animation: indeterminate_first 1.5s infinite ease-out;
+}
+
+.indeterminate:after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  background-color: rgba(102 104 171 /0.8);
+  animation: indeterminate_second 1.5s infinite ease-in;
+}
+
+@keyframes indeterminate_first {
+  0% {
+    left: -100%;
+    width: 100%;
+  }
+  100% {
+    left: 100%;
+    width: 10%;
+  }
+}
+
+@keyframes indeterminate_second {
+  0% {
+    left: -150%;
+    width: 100%;
+  }
+  100% {
+    left: 100%;
+    width: 10%;
+  }
 }
