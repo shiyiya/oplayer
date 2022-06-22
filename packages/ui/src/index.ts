@@ -48,14 +48,15 @@ const apply = (player: Player) => {
     <div class="oh-mask" @click=${() => player.togglePlay()}></div>
 
     ${
-      player.isLoading &&
-      html`<div class="oh-area">
-        <div class="oh-loading">
-          <div class="linear-activity">
-            <div class="indeterminate"></div>
-          </div>
-        </div>
-      </div>`
+      player.isLoading
+        ? html`<div class="oh-area">
+            <div class="oh-loading">
+              <div class="linear-activity">
+                <div class="indeterminate"></div>
+              </div>
+            </div>
+          </div>`
+        : null
     }
 
       <div
@@ -163,7 +164,7 @@ const apply = (player: Player) => {
 
   const ui = () => render(vn({ ...calculateWidth(player) }), player.$root)
 
-  player.on(['timeupdate', 'play', 'pause', 'volumechange', 'ratechange'], ui)
+  player.on(['timeupdate', 'play', 'pause', 'volumechange', 'ratechange', 'canplay'], ui)
   player.on('seeking', ui)
 
   const hideCtrl = () => {
