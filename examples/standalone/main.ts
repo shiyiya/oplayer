@@ -5,6 +5,9 @@ import hls from '../../packages/core/plugins/hls'
 import ui from '../../packages/ui/src/index'
 import { live } from 'lit/directives/live.js'
 
+//@ts-ignore
+import poster from './poster.png'
+
 const $container = document.getElementById('app')!
 const $meta = document.getElementById('meta')!
 
@@ -28,8 +31,8 @@ const p = Player.make($container, {
   volume: 0.1,
   autoplay: true,
   source: {
-    src
-    // poster: 'https://media.w3.org/2010/05/sintel/poster.png'
+    src,
+    poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
   .use([ui(), hls])
@@ -37,6 +40,8 @@ const p = Player.make($container, {
 
 const meta = () => html`
   <b>Oh-Player v${Player.version} </b>
+  <p>STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a></p>
+
   <p>
     <input
       type="text"
