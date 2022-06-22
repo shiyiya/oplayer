@@ -17,7 +17,7 @@ import './index.css'
 let $controller: HTMLDivElement
 let controllerIsActive = false
 
-let CTRL_HIDE_DELAY = isMobile ? 2000 : 1500
+let CTRL_HIDE_DELAY = 1200
 
 const calculateWidth = (player: Player) => {
   const { currentTime, duration } = player
@@ -46,25 +46,23 @@ const apply = (player: Player) => {
     })
   }
 
-  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <divclass="oh-ui">
+  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class="oh-ui">
     <div class="oh-mask" @click=${() => player.togglePlay()}></div>
-
-    ${
-      player.isLoading
-        ? html`<div class="oh-area">
+    <div class="oh-area">
+      ${player.isLoading
+        ? html`
             <div class="oh-loading">
               <div class="linear-activity">
                 <div class="indeterminate"></div>
               </div>
             </div>
-          </div>`
-        : null
-    }
+          `
+        : null}
 
       <div
         class="oh-play"
         aria-label="Play"
-        style="display:${player.isPlaying || !player.isLoaded || isMobile ? 'none' : 'block'}"
+        style="display:${player.isPlaying || !player.isLoaded ? 'none' : 'block'}"
       >
         <button
           aria-label="Play"
@@ -75,7 +73,7 @@ const apply = (player: Player) => {
           ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
         </button>
       </div>
-    </divclass=>
+    </div>
 
     <div
       class="oh-controller"
@@ -97,15 +95,17 @@ const apply = (player: Player) => {
 
       <div class="oh-controller-bottom">
         <div class="oh-controller-bl">
-          <button
-            aria-label="Play"
-            class="play icon"
-            type="button"
-            @click=${() => player.togglePlay()}
-          >
-            ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
-          </button>
-          <span class="time">
+          ${!isMobile
+            ? html`<button
+                aria-label="Play"
+                class="play icon"
+                type="button"
+                @click=${() => player.togglePlay()}
+              >
+                ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
+              </button>`
+            : null}
+          <span class="time" style="${isMobile ? 'padding-left:0' : ''}">
             ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
           </span>
         </div>
