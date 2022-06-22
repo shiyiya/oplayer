@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "main": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/src/index.d.ts",
   "sideEffects": false,
   "author": "",
   "license": "MIT",
@@ -15,7 +15,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "plugins"
   ],
   "browserslist": [
     "> 1%",

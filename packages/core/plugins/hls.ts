@@ -1,4 +1,4 @@
-import { PlayerPlugin } from '..'
+import { PlayerPlugin } from '../src'
 import type { HlsConfig } from 'hls.js'
 import Hls from 'hls.js'
 
@@ -13,7 +13,7 @@ const getHls = (options: Partial<HlsConfig> = {}) => {
 }
 
 const hlsPlugin: PlayerPlugin = {
-  name: 'hlsPlugin',
+  name: 'oh-hls',
   load: (src: string, { __video: video, on, emit }) => {
     if (!/m3u8(#|\?|$)/i.test(src)) return false
     if (

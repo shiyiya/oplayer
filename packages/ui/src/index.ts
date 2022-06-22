@@ -1,30 +1,17 @@
-import Player, { formatTime } from '@oplayer/core'
-import type { PlayerPlugin } from '@oplayer/core'
-import './index.css'
 import { render, html } from 'lit'
 import { ref } from 'lit/directives/ref.js'
-// import play from './icons/play.svg?raw'
+import type { PlayerPlugin } from '@oplayer/core'
+import Player, { formatTime } from '@oplayer/core'
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js'
 
-let hoverWidth: number = 0
-let $hit: HTMLDivElement
+import playSvg from './icons/play.svg?raw'
+import pauseSvg from './icons/pause.svg?raw'
+import expandSvg from './icons/expand.svg?raw'
+import compressSvg from './icons/compress.svg?raw'
+
+import './index.css'
+
 let $controller: HTMLDivElement
-
-const createHitRef = (el: Element | undefined) => {
-  $hit = el as HTMLDivElement
-  $hit.addEventListener('mousemove', (e: any) => {
-    hoverWidth = (e.offsetX / e.currentTarget?.offsetWidth) * 100
-  })
-}
-
-const debounce = (fn: () => void, ms: number = 1000) => {
-  let time: NodeJS.Timeout | null = null
-  return () => {
-    time && clearTimeout(time)
-    time = setTimeout(() => {
-      fn()
-    }, ms)
-  }
-}
 
 const calculateWidth = (player: Player) => {
   const { currentTime, duration } = player
@@ -35,26 +22,29 @@ const calculateWidth = (player: Player) => {
 }
 
 const apply = (player: Player) => {
-  const vn = ({ playedWidth = 0, bufferedWidth = 0, hoverWidth = 0 } = {}) => html` <div
-      class="oh-mask"
-      @click=${() => player.togglePlay()}
-    ></div>
+  const createHitRef = (el: Element | undefined) => {
+    const $hit = el!.querySelector('.oh-controller-progress-hit')! as HTMLDivElement
+    el!.addEventListener('mousemove', (e: any) => {
+      let hoverWidth = 0
+      if (e.target.classList.contains('oh-controller-progress-played-dot')) {
+        hoverWidth = (player.currentTime / player.duration) * 100
+      } else {
+        hoverWidth = (e.offsetX / e.currentTarget!.offsetWidth) * 100
+      }
+      $hit.innerText = formatTime(player.duration * (hoverWidth / 100))
+      $hit.style.left = `${hoverWidth}%`
+    })
+    el!.addEventListener('mousedown', (e: any) => {
+      if (!e.target.classList.contains('oh-controller-progress-played-dot'))
+        player.seek(player.duration * (e.offsetX / el!.clientWidth))
+    })
+  }
+
+  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html`
     <div class="oh-controller" ${ref((el) => ($controller = el as HTMLDivElement))}>
-      <div
-        class="oh-controller-progress-wrap"
-        ${ref(createHitRef)}
-        @mousedown=${(e: any) => {
-          player.seek(player.duration * (e.offsetX / e.currentTarget?.offsetWidth))
-        }}
-        @mousemove=${(e: any) => {
-          hoverWidth = (e.offsetX / e.currentTarget!.offsetWidth) * 100
-          render(vn({ playedWidth, bufferedWidth, hoverWidth: hoverWidth }), player.$root)
-        }}
-      >
+      <div class="oh-controller-progress-wrap" ${ref(createHitRef)}>
         <div class="oh-controller-progress">
-          <div class="oh-controller-progress-hit" style="left: ${hoverWidth}%;">
-            ${formatTime(player.duration * (hoverWidth / 100))}
-          </div>
+          <div class="oh-controller-progress-hit">00:00</div>
           <div class="oh-controller-progress-buffered" style="width:${bufferedWidth}%"></div>
           <div class="oh-controller-progress-played" style="width:${playedWidth}%"></div>
           <div
@@ -64,7 +54,31 @@ const apply = (player: Player) => {
         </div>
       </div>
 
-      <div class="oh-controller-bottom"></div>
+      <div class="oh-controller-bottom">
+        <div class="oh-controller-bl">
+          <button
+            aria-label="Play"
+            class="play icon"
+            type="button" @click=${() => player.togglePlay()}
+          >
+            ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
+          </button>
+          <span class="time">
+            ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
+          </time>
+
+          </div>
+        <div class="oh-controller-br">
+            <button
+              aria-label="Fullscreen"
+              class="expand icon"
+              type="button"
+              @click=${() => player.toggleFullScreen()}
+            >
+              ${unsafeSVG(player.isFullScreen ? compressSvg : expandSvg)}
+          </button>
+        </div>
+      </div>
     </div>`
 
   render(vn(), player.$root)
@@ -73,19 +87,22 @@ const apply = (player: Player) => {
     player.togglePlay()
   })
 
-  player.on('timeupdate', () => {
-    render(vn({ hoverWidth, ...calculateWidth(player) }), player.$root)
-  })
+  const ui = () => render(vn({ ...calculateWidth(player) }), player.$root)
 
-  const updateProgress = () => {
-    render(vn({ hoverWidth, ...calculateWidth(player) }), player.$root)
-  }
+  player.on(['timeupdate', 'play', 'pause'], ui)
+  player.on('seeking', ui)
 
   const debounceHideCtrl = debounce(() => {
-    $controller.classList.add('hide')
+    player.isPlaying && $controller.classList.add('hide')
   })
 
-  player.on('seeking', updateProgress).on('mouseenter', updateProgress)
+  player.on('play', () => {
+    debounceHideCtrl()
+  })
+
+  player.on('pause', () => {
+    $controller.classList.remove('hide')
+  })
 
   player.on('mousemove', () => {
     $controller.classList.contains('hide') && $controller.classList.remove('hide')
@@ -94,8 +111,18 @@ const apply = (player: Player) => {
 }
 
 const ui: PlayerPlugin = {
-  name: 'ui-controller',
+  name: 'oh-ui',
   apply
+}
+
+const debounce = (fn: () => void, ms: number = 1000) => {
+  let time: NodeJS.Timeout | null = null
+  return () => {
+    time && clearTimeout(time)
+    time = setTimeout(() => {
+      fn()
+    }, ms)
+  }
 }
 
 export default ui

@@ -4,6 +4,7 @@ import E, { Listener, OEvent } from './event'
 import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import { ref } from 'lit/directives/ref.js'
 
+//TODO: __VERSION__
 // @ts-ignore
 import pkg from '../package.json'
 
@@ -75,11 +76,13 @@ export class Player {
     return this
   }
 
-  readonly on = (name: string | Listener, listener?: Listener) => {
+  readonly on = (name: string | Listener | string[], listener?: Listener) => {
     if (typeof name === 'string') {
       this.#E.on(name, listener!)
-    } else {
-      this.#E.on('*', name)
+    } else if (Array.isArray(name)) {
+      this.#E.onAny(name, listener!)
+    } else if (typeof name === 'function') {
+      this.#E.on('*', name!)
     }
     return this
   }
@@ -254,6 +257,10 @@ export class Player {
     this.#video.loop = loop
   }
 
+  get isFullScreen() {
+    return document.fullscreenElement === this.$root
+  }
+
   get requestFullscreen(): Element['requestFullscreen'] {
     return (
       HTMLElement.prototype.requestFullscreen ||
@@ -282,7 +289,7 @@ export class Player {
   }
 
   toggleFullScreen() {
-    if (document.fullscreenElement === this.$root) {
+    if (this.isFullScreen) {
       this.exit()
     } else {
       this.enter()
@@ -310,6 +317,6 @@ export class Player {
   }
 
   static get version() {
-    return pkg.version
+    return pkg.version || '__VERSION__' //Not Working
   }
 }

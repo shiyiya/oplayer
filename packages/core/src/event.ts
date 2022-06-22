@@ -16,6 +16,10 @@ export default class E {
     this.events[name]!.push(callback)
   }
 
+  onAny(names: string[], callback: Listener) {
+    names.forEach((name) => this.on(name, callback))
+  }
+
   once(name: string, callback: Listener) {
     const once = (event: OEvent) => {
       callback({ type: name, payload: event.payload })

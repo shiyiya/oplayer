@@ -1,8 +1,7 @@
 import Player from '../../packages/core/src/index'
 import { html, render } from 'lit'
-import { formatTime } from '../../packages/core/src/utils/time'
 import { VIDEO_EVENTS } from '../../packages/core/src/constants'
-import hls from '../../packages/core/src/plugins/hls'
+import hls from '../../packages/core/plugins/hls'
 import ui from '../../packages/ui/src/index'
 import { live } from 'lit/directives/live.js'
 
@@ -33,36 +32,26 @@ const p = Player.make($container, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([hls, ui])
+  .use([ui, hls])
   .create()
 
 const meta = () => html`
-  <p>
-    <b>v${Player.version}</b>
-
-    <input
-    type="text"
-    @input=${(e: any) => (src = e.target.value)}
-    style="flex:1;" .value=${live(src)} />
-
-    <span
-      class="${p.isLoading && 'loading'}">
+  <b>Oh-Player v${Player.version} </b>
+  <p>Plugin: ${p.plugins.toString()}</p>
+    <span class="${p.isLoading ? 'loading' : ''}">
       ${p.isLoading ? '✳️' : p.isLoaded ? '✅' : '❌'}
     </span>
-    <button @click=${() => p.changeSource(src)}>changeSource</button>
- </p>
+  </p>
 
- <p>
-    <small> ${formatTime(p.currentTime)} / ${formatTime(p.duration)}</small>
+  <p>
+    <input
+      type="text"
+      @input=${(e: any) => (src = e.target.value)}
+      style="flex:1;"
+      .value=${live(src)}
+    />
 
-    <progress value=${p.currentTime} max=${p.duration}></progress>
-
-    buffered  &nbsp;
-    <progress
-      value=${p.buffered.length ? p.buffered.end(p.buffered.length - 1) : 0}
-      max=${p.duration}></progress>
-
-
+    <button @click=${() => p.changeSource(src)}>ChangeSource</button>
   </p>
 
   <p>
@@ -75,8 +64,10 @@ const meta = () => html`
       step="0.1"
       value=${p.currentTime}
     />
+  </p>
 
-    Volume:
+  <p>
+    Vol&nbsp;&nbsp;:
     <input
       type="range"
       @input=${(e: any) => p.setVolume(e.target.value)}
@@ -85,7 +76,9 @@ const meta = () => html`
       step="0.1"
       value=${p.volume}
     />
+  </p>
 
+  <p>
     Rate:
     <input
       type="range"
@@ -97,22 +90,26 @@ const meta = () => html`
     />
   </p>
 
-    <button @click=${() => p.togglePlay()}>${p.isPlaying ? 'Pause' : 'Play'}</button>
-    <button @click=${() => p.toggleFullScreen()}>requestFullscreen</button>
-    <button @click=${() => {
-      src =
-        dataSrcs[
-          currentDataSrcId + 1 >= dataSrcs.length ? (currentDataSrcId = 0) : (currentDataSrcId += 1)
-        ]!
-      p.changeSource(src)
-    }}>changeSource</button>
-
+  <p>
+    <button
+      @click=${() => {
+        src =
+          dataSrcs[
+            currentDataSrcId + 1 >= dataSrcs.length
+              ? (currentDataSrcId = 0)
+              : (currentDataSrcId += 1)
+          ]!
+        p.changeSource(src)
+      }}
+    >
+      QueueSource
+    </button>
   </p>
 `
 
 p.on((e) => {
-  if (Object.values(VIDEO_EVENTS).includes(e.type as any)) {
-    // console.log(e)
+  if (Object.values(VIDEO_EVENTS).includes(e.type as any) && e.type != 'timeupdate') {
+    console.log(e)
     render(meta(), $meta)
   }
 })

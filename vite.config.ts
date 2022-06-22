@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'fs'
 import type { Plugin } from 'rollup'
 import autoExternal from 'rollup-plugin-auto-external'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
@@ -33,10 +34,17 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
 
 export const viteConfig = (packageDirName: string, options: ViteUserConfig = {}) => {
   const vitePlugins = options.plugins ?? []
+  const version = JSON.parse(
+    fs.readFileSync(resolvePath(`packages/${packageDirName}/package.json`), { encoding: 'utf-8' })
+  ).version
+
   return defineConfig({
     ...options,
     build: viteBuild(packageDirName, options.build),
-    plugins: [...vitePlugins, ...rollupPlugins]
+    plugins: [...vitePlugins, ...rollupPlugins],
+    define: {
+      __VERSION__: version
+    }
   })
 }
 
