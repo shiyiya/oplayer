@@ -211,3 +211,35 @@
 icon.volume {
   transform: scale(1.12);
 }
+
+.dropdown.speed .speed-item {
+  font-size: 14px;
+  display: block;
+  padding: 6px 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown:hover .expand {
+  opacity: 1;
+}
+
+.dropdown .expand {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  transform: translate(0%, -100%);
+  /* width: 100%; */
+  box-sizing: border-box;
+  opacity: 0;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}

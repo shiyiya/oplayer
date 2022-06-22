@@ -97,15 +97,23 @@ const apply = (player: Player) => {
           </span>
         </div>
         <div class="oh-controller-br">
-          <div class="dropdown">
+          <div class="dropdown speed">
             <button
-              aria-label="Spped"
-              class="icon "
+              aria-label="Speed"
+              class="icon"
               type="button"
               @click=${() => player.toggleMute()}
             >
-              ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate.toFixed(1)}x`}
+              ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
+            <div class="expand">
+              ${['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'].map(
+                (sp) =>
+                  html`<span class="speed-item" @click=${() => player.setPlaybackRate(+sp)}
+                    >${sp}<small>x</small></span
+                  >`
+              )}
+            </div>
           </div>
 
           <div class="dropdown">

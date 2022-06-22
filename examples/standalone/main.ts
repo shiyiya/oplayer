@@ -9,9 +9,9 @@ const $container = document.getElementById('app')!
 const $meta = document.getElementById('meta')!
 
 const dataSrcs = [
+  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
-  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4'
 ] as const
 
@@ -28,8 +28,8 @@ const p = Player.make($container, {
   volume: 0.1,
   autoplay: true,
   source: {
-    src,
-    poster: 'https://media.w3.org/2010/05/sintel/poster.png'
+    src
+    // poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
   .use([ui(), hls])
@@ -37,12 +37,6 @@ const p = Player.make($container, {
 
 const meta = () => html`
   <b>Oh-Player v${Player.version} </b>
-  <p>Plugin: ${p.plugins.toString()}</p>
-    <span class="${p.isLoading ? 'loading' : ''}">
-      ${p.isLoading ? '✳️' : p.isLoaded ? '✅' : '❌'}
-    </span>
-  </p>
-
   <p>
     <input
       type="text"
@@ -50,33 +44,8 @@ const meta = () => html`
       style="flex:1;"
       .value=${live(src)}
     />
-
-    <button @click=${() => p.changeSource(src)}>ChangeSource</button>
   </p>
-
-  <p>
-    Vol&nbsp;&nbsp;:
-    <input
-      type="range"
-      @input=${(e: any) => p.setVolume(e.target.value)}
-      min="0"
-      max="1"
-      step="0.1"
-      .value=${live(p.isMuted ? 0 : p.volume)}
-    />
-  </p>
-
-  <p>
-    Rate:
-    <input
-      type="range"
-      @input=${(e: any) => p.setPlaybackRate(e.target.value)}
-      min="0.5"
-      max="5"
-      step="0.1"
-     .value=${live(p.playbackRate)}
-    />
-  </p>
+  <button @click=${() => p.changeSource(src)}>ChangeSource</button>
 
   <p>
     <button
@@ -92,6 +61,18 @@ const meta = () => html`
     >
       QueueSource
     </button>
+  </p>
+
+  <p>
+    Vol&nbsp;&nbsp;:
+    <input
+      type="range"
+      @input=${(e: any) => p.setVolume(e.target.value)}
+      min="0"
+      max="1"
+      step="0.1"
+      .value=${live(p.isMuted ? 0 : p.volume)}
+    />
   </p>
 `
 

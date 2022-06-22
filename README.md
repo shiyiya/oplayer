@@ -1,6 +1,8 @@
-<center><h1>WIP</h1></center>
+<h1><center>WIP</center></h1>
 
-Another web video player.
+[Oh!](https://shiyiya.github.io/oplayer) Another web video player.
+
+![](./oplayer.png)
 
 ## Usage
 
