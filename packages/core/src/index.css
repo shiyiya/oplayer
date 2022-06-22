@@ -1,7 +1,7 @@
 .oh-player {
   position: relative;
   user-select: none;
-  max-width: 100%;
+  width: 100%;
   overflow: hidden;
 }
 

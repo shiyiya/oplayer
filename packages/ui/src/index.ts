@@ -8,10 +8,14 @@ import playSvg from './icons/play.svg?raw'
 import pauseSvg from './icons/pause.svg?raw'
 import expandSvg from './icons/expand.svg?raw'
 import compressSvg from './icons/compress.svg?raw'
+import pipSvg from './icons/pip.svg?raw'
+import volumeSvg from './icons/volume.svg?raw'
+import volumeOffSvg from './icons/volume-off.svg?raw'
 
 import './index.css'
 
 let $controller: HTMLDivElement
+let controllerIsActive = false
 
 const calculateWidth = (player: Player) => {
   const { currentTime, duration } = player
@@ -40,8 +44,32 @@ const apply = (player: Player) => {
     })
   }
 
-  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html`
-    <div class="oh-controller" ${ref((el) => ($controller = el as HTMLDivElement))}>
+  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class="oh-ui">
+    <div class="oh-mask" @click=${() => player.togglePlay()}></div>
+
+    <div class="oh-area">
+      <div
+        class="oh-play"
+        aria-label="Play"
+        style="display:${player.isPlaying || !player.isLoaded ? 'none' : 'block'}"
+      >
+        <button
+          aria-label="Play"
+          class="play icon"
+          type="button"
+          @click=${() => player.togglePlay()}
+        >
+          ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="oh-controller"
+      @mouseenter=${() => (controllerIsActive = true)}
+      @mouseleave=${() => (controllerIsActive = false)}
+      ${ref((el) => ($controller = el as HTMLDivElement))}
+    >
       <div class="oh-controller-progress-wrap" ${ref(createHitRef)}>
         <div class="oh-controller-progress">
           <div class="oh-controller-progress-hit">00:00</div>
@@ -59,61 +87,90 @@ const apply = (player: Player) => {
           <button
             aria-label="Play"
             class="play icon"
-            type="button" @click=${() => player.togglePlay()}
+            type="button"
+            @click=${() => player.togglePlay()}
           >
             ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
           </button>
           <span class="time">
             ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
-          </time>
-
-          </div>
+          </span>
+        </div>
         <div class="oh-controller-br">
+          <div class="dropdown">
             <button
-              aria-label="Fullscreen"
-              class="expand icon"
+              aria-label="Spped"
+              class="icon "
               type="button"
-              @click=${() => player.toggleFullScreen()}
+              @click=${() => player.toggleMute()}
             >
-              ${unsafeSVG(player.isFullScreen ? compressSvg : expandSvg)}
+              ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate.toFixed(1)}x`}
+            </button>
+          </div>
+
+          <div class="dropdown">
+            <button
+              aria-label="Volume"
+              class="icon volume"
+              type="button"
+              @click=${() => player.toggleMute()}
+            >
+              ${unsafeSVG(player.isMuted ? volumeOffSvg : volumeSvg)}
+            </button>
+          </div>
+
+          <button
+            aria-label="Picture in Picture"
+            class="icon pip"
+            type="button"
+            @click=${() => player.togglePip()}
+          >
+            ${unsafeSVG(pipSvg)}
+          </button>
+
+          <button
+            aria-label="Fullscreen"
+            class="icon"
+            type="button"
+            @click=${() => player.toggleFullScreen()}
+          >
+            ${unsafeSVG(player.isFullScreen ? compressSvg : expandSvg)}
           </button>
         </div>
       </div>
-    </div>`
+    </div>
+  </div>`
 
   render(vn(), player.$root)
 
-  player.__video.addEventListener('click', () => {
-    player.togglePlay()
-  })
-
   const ui = () => render(vn({ ...calculateWidth(player) }), player.$root)
 
-  player.on(['timeupdate', 'play', 'pause'], ui)
+  player.on(['timeupdate', 'play', 'pause', 'volumechange', 'ratechange'], ui)
   player.on('seeking', ui)
 
-  const debounceHideCtrl = debounce(() => {
-    player.isPlaying && $controller.classList.add('hide')
-  })
+  const hideCtrl = () => {
+    !controllerIsActive && $controller.classList.add('hide')
+  }
+  const debounceHideCtrl = debounce(hideCtrl)
 
   player.on('play', () => {
     debounceHideCtrl()
   })
 
-  player.on('pause', () => {
-    $controller.classList.remove('hide')
-  })
+  player.on('pause', hideCtrl)
 
   player.on('mousemove', () => {
-    $controller.classList.contains('hide') && $controller.classList.remove('hide')
+    $controller.classList.remove('hide')
     debounceHideCtrl()
   })
+
+  player.on('mouseleave', hideCtrl)
 }
 
-const ui: PlayerPlugin = {
+const ui: PlayerPlugin = () => ({
   name: 'oh-ui',
   apply
-}
+})
 
 const debounce = (fn: () => void, ms: number = 1000) => {
   let time: NodeJS.Timeout | null = null

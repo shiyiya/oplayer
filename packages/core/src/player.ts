@@ -95,7 +95,7 @@ export class Player {
     this.render()
     this.initEvent()
     this.load(this.#options.source.src)
-    this.applyPlugins()
+    this.#applyPlugins()
     return this
   }
 
@@ -150,12 +150,124 @@ export class Player {
     }
   }
 
-  applyPlugins = () => {
+  #applyPlugins = () => {
     this.#plugins.forEach((plugin) => {
       if (plugin.apply) {
         plugin.apply(this)
       }
     })
+  }
+
+  play = () => {
+    if (this.canPlay) {
+      this.#video.play()
+    }
+  }
+
+  pause() {
+    this.#video.pause()
+  }
+
+  togglePlay() {
+    if (this.isPlaying) {
+      this.pause()
+    } else {
+      this.play()
+    }
+  }
+
+  mute() {
+    this.#video.muted = true
+  }
+
+  unmute() {
+    this.#video.muted = false
+  }
+
+  toggleMute() {
+    if (this.isMuted) {
+      this.unmute()
+    } else {
+      this.mute()
+    }
+  }
+  setVolume(volume: number) {
+    this.#video.volume = volume
+    if (volume > 0 && this.isMuted) {
+      this.unmute()
+    }
+  }
+
+  setPlaybackRate(rate: number) {
+    this.#video.playbackRate = rate
+  }
+
+  seek(time: number) {
+    this.#video.currentTime = time
+  }
+
+  setLoop(loop: boolean) {
+    this.#video.loop = loop
+  }
+
+  enterFullscreen() {
+    this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+  }
+
+  exitFullscreen() {
+    this.#_exitFullscreen.call(document)
+  }
+
+  get isFullScreen() {
+    return document.fullscreenElement === this.$root
+  }
+
+  toggleFullScreen() {
+    if (this.isFullScreen) {
+      this.exitFullscreen()
+    } else {
+      this.enterFullscreen()
+    }
+  }
+
+  enterPip() {
+    this.#video.requestPictureInPicture()
+  }
+
+  exitPip() {
+    if (this.isInPip) {
+      document.exitPictureInPicture()
+    }
+  }
+
+  get isInPip() {
+    return document.pictureInPictureElement == this.#video
+  }
+
+  togglePip() {
+    if (this.isInPip) {
+      document.exitPictureInPicture()
+    } else {
+      this.#video.requestPictureInPicture()
+    }
+  }
+
+  changeSource(sources: string | Source) {
+    this.hasError = false
+    this.#isCustomLoader = false
+    this.load(typeof sources === 'string' ? sources : sources.src)
+  }
+
+  destroy() {
+    this.pause()
+    this.isFullScreen && this.exitFullscreen()
+    this.#plugins.forEach((plugin) => plugin.destroy?.())
+    this.#plugins.clear()
+    this.#E.offAll()
+    this.#video.src = ''
+    this.#video.remove()
+    this.#container.remove()
+    this.emit('destroy')
   }
 
   //TODO: 不暴露接口
@@ -196,7 +308,7 @@ export class Player {
   }
 
   get duration() {
-    return this.#video.duration || 0
+    return this.#video.duration
   }
 
   get buffered() {
@@ -215,53 +327,7 @@ export class Player {
     return this.#video.playbackRate
   }
 
-  play = () => {
-    if (this.canPlay) {
-      this.#video.play()
-    }
-  }
-
-  pause() {
-    this.#video.pause()
-  }
-
-  togglePlay() {
-    if (this.isPlaying) {
-      this.pause()
-    } else {
-      this.play()
-    }
-  }
-
-  mute() {
-    this.#video.muted = true
-  }
-
-  unmute() {
-    this.#video.muted = false
-  }
-
-  setVolume(volume: number) {
-    this.#video.volume = volume
-  }
-
-  setPlaybackRate(rate: number) {
-    this.#video.playbackRate = rate
-  }
-
-  seek(time: number) {
-    this.#video.currentTime = time
-  }
-
-  setLoop(loop: boolean) {
-    this.#video.loop = loop
-  }
-
-  get isFullScreen() {
-    return document.fullscreenElement === this.$root
-  }
-
-  get requestFullscreen(): Element['requestFullscreen'] {
+  get #requestFullscreen(): Element['requestFullscreen'] {
     return (
       HTMLElement.prototype.requestFullscreen ||
       (HTMLElement.prototype as any).webkitRequestFullscreen ||
@@ -270,7 +336,7 @@ export class Player {
     )
   }
 
-  get exitFullscreen(): Document['exitFullscreen'] {
+  get #_exitFullscreen(): Document['exitFullscreen'] {
     return (
       Document.prototype.exitFullscreen ||
       (Document.prototype as any).webkitExitFullscreen ||
@@ -278,38 +344,6 @@ export class Player {
       (Document.prototype as any).mozCancelFullScreen ||
       (Document.prototype as any).msExitFullscreen
     )
-  }
-
-  enter() {
-    this.requestFullscreen.call(this.$root, { navigationUI: 'hide' })
-  }
-
-  exit() {
-    this.exitFullscreen.call(document)
-  }
-
-  toggleFullScreen() {
-    if (this.isFullScreen) {
-      this.exit()
-    } else {
-      this.enter()
-    }
-  }
-
-  changeSource(sources: string | Source) {
-    this.hasError = false
-    this.#isCustomLoader = false
-    this.load(typeof sources === 'string' ? sources : sources.src)
-  }
-
-  destroy() {
-    this.pause()
-    this.#video.src = ''
-    this.#video.remove()
-    this.#container.remove()
-    this.#E.offAll()
-    this.#plugins.clear()
-    this.emit('destroy')
   }
 
   get plugins() {

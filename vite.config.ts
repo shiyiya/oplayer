@@ -9,7 +9,7 @@ export const libFileName = (format: string) => `index.${format}.js`
 
 export const rollupPlugins: Plugin[] = [autoExternal()]
 
-export const external = ['@oplayer/core', 'lit']
+export const external = ['@oplayer/core', /lit.*/]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
   mergeDeep<BuildOptions>(

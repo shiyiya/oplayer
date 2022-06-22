@@ -6,6 +6,10 @@ Another web video player.
 
 ### ES
 
+```bash
+npm i @oplayer/core @oplayer/ui lit
+```
+
 ```js
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'

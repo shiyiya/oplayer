@@ -9,9 +9,9 @@ const $container = document.getElementById('app')!
 const $meta = document.getElementById('meta')!
 
 const dataSrcs = [
-  'https://v.v1kd.com/20220507/AQzU93SJ/2000kb/hls/index.m3u8',
-  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
+  'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
+  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4'
 ] as const
 
@@ -32,7 +32,7 @@ const p = Player.make($container, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui, hls])
+  .use([ui(), hls])
   .create()
 
 const meta = () => html`
@@ -55,18 +55,6 @@ const meta = () => html`
   </p>
 
   <p>
-    seek:
-    <input
-      type="range"
-      @input=${(e: any) => p.seek(e.target.value)}
-      min="0"
-      max=${p.duration}
-      step="0.1"
-      value=${p.currentTime}
-    />
-  </p>
-
-  <p>
     Vol&nbsp;&nbsp;:
     <input
       type="range"
@@ -74,7 +62,7 @@ const meta = () => html`
       min="0"
       max="1"
       step="0.1"
-      value=${p.volume}
+      .value=${live(p.isMuted ? 0 : p.volume)}
     />
   </p>
 
@@ -86,7 +74,7 @@ const meta = () => html`
       min="0.5"
       max="5"
       step="0.1"
-      value=${p.playbackRate}
+     .value=${live(p.playbackRate)}
     />
   </p>
 
