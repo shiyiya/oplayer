@@ -12,9 +12,9 @@ import playSvg from './icons/play.svg?raw'
 import volumeOffSvg from './icons/volume-off.svg?raw'
 import volumeSvg from './icons/volume.svg?raw'
 
-import './index.css'
+import './index.css' //TODO: emo
 
-let CTRL_HIDE_DELAY = 1200
+let CTRL_HIDE_DELAY = 1500
 
 let $controller: HTMLDivElement
 let controllerIsActive = false

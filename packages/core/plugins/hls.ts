@@ -3,7 +3,6 @@ import Hls from 'hls.js/dist/hls.light.min'
 import type { PlayerPlugin } from '../src'
 
 let hlsTnstance: Hls | null = null
-let prevSrc: string | null = null
 
 const getHls = (options?: Partial<HlsConfig>): Hls => {
   if (hlsTnstance) {
@@ -38,7 +37,6 @@ const hlsPlugin = (config?: Partial<HlsConfig>): PlayerPlugin => ({
     hlsTnstance!.attachMedia(video)
     hlsTnstance!.loadSource(src)
     hlsTnstance.startLoad()
-    prevSrc = src
 
     Object.values(Hls.Events).forEach((e) => {
       hlsTnstance!.on(e as any, (event: string, data: ErrorData) => {
