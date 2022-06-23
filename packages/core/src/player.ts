@@ -2,13 +2,10 @@ import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
 import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import E, { Listener, OEvent } from './event'
-import style from './index.css?raw'
+import { css, injectGlobal } from '@emotion/css'
+import type { Emotion } from '@emotion/css/types/create-instance'
 
-console.log(__VERSION__)
-
-//TODO: __VERSION__
-// @ts-ignore
-import pkg from '../package.json'
+export type { Emotion }
 
 export type Source = {
   src: string
@@ -18,10 +15,11 @@ export type Source = {
 export type PlayerPlugin = {
   name: string
   version?: string
-  beforeRender?: (player: Player) => void
-  apply?: (player: Player) => void
+  apply?: (
+    player: Player,
+    style: { css: Emotion['css']; injectGlobal: Emotion['injectGlobal'] }
+  ) => void
   load?: (player: Player, video: HTMLVideoElement, src: string) => boolean
-  destroy?: VoidFunction
 }
 
 export type Options = {
@@ -121,12 +119,21 @@ export class Player {
     this.#container.classList.add('oh-wrap')
     render(
       html`
-        <style>
-          ${style}
-        </style>
-        <div class="oh-player" ${ref((el) => (this.$root = el as HTMLDivElement))}>
+        <div
+          class=${css`
+            position: relative;
+            user-select: none;
+            width: 100%;
+            overflow: hidden;
+          `}
+          ${ref((el) => (this.$root = el as HTMLDivElement))}
+        >
           <video
-            class="oh-video"
+            class=${css`
+              width: 100%;
+              height: 100%;
+              display: block;
+            `}
             ${ref((el) => (this.#video = el as HTMLVideoElement))}
             ?autoplay=${this.#options.autoplay}
             ?muted=${this.#options.muted}
@@ -139,7 +146,6 @@ export class Player {
           />
         </div>
       `,
-      // src=${this.#options.src}
       this.#container
     )
   }
@@ -158,7 +164,7 @@ export class Player {
   #applyPlugins = () => {
     this.#plugins.forEach((plugin) => {
       if (plugin.apply) {
-        plugin.apply(this)
+        plugin.apply(this, { css, injectGlobal })
       }
     })
   }
@@ -270,7 +276,6 @@ export class Player {
   destroy() {
     this.pause()
     this.isFullScreen && this.exitFullscreen()
-    this.#plugins.forEach((plugin) => plugin.destroy?.())
     this.#plugins.clear()
     this.#E.offAll()
     this.#video.src = ''
@@ -355,6 +360,6 @@ export class Player {
   }
 
   static get version() {
-    return pkg.version || '__VERSION__' //Not Working
+    return __VERSION__
   }
 }

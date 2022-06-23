@@ -36,7 +36,8 @@
     "IE 11"
   ],
   "dependencies": {
-    "lit": "^2.2.6"
+    "lit": "^2.2.6",
+    "@emotion/css": "^11.9.0"
   },
   "peerDependencies": {
     "hls.js": "^1.1.5"
