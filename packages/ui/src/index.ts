@@ -172,8 +172,19 @@ const apply = (player: Player) => {
 
   const ui = () => render(vn({ ...calculateWidth(player) }), player.$root)
 
-  player.on(['timeupdate', 'play', 'pause', 'volumechange', 'ratechange', 'canplay'], ui)
-  player.on('seeking', ui)
+  player.on(
+    [
+      'timeupdate',
+      'play',
+      'pause',
+      'volumechange',
+      'ratechange',
+      'canplay',
+      'durationchange',
+      'seeking'
+    ],
+    ui
+  )
 
   const hideCtrl = () => {
     !controllerIsActive && $controller.classList.add('hide')

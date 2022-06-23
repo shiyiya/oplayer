@@ -26,8 +26,10 @@ const hlsPlugin: PlayerPlugin = {
     hlsTnstance = getHls({ autoStartLoad: false })
     if (!hlsTnstance || !Hls.isSupported()) {
       emit('error', {
-        type: 'hlsNotSupported',
-        payload: { message: 'HLS is not supported' }
+        payload: {
+          type: 'hlsNotSupported',
+          message: 'HLS is not supported'
+        }
       })
       return false
     }
@@ -47,7 +49,7 @@ const hlsPlugin: PlayerPlugin = {
         if (event === Hls.Events.ERROR) {
           emit('error', { type: event, payload: data })
         }
-        emit(event, { type: event, payload: data })
+        emit(event, data)
       })
     })
 

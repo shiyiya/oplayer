@@ -90,7 +90,7 @@ export class Player {
     return this
   }
 
-  readonly emit = (name: typeof EVENTS[number] | string, payload?: OEvent) => {
+  readonly emit = (name: typeof EVENTS[number] | string, payload?: OEvent['payload']) => {
     this.#E.emit(name as any, payload)
   }
 
