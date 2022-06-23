@@ -6,10 +6,15 @@
 
 ## Usage
 
-### ES
-
 ```bash
-npm i @oplayer/core @oplayer/ui lit
+pnpm i @oplayer/core @oplayer/ui
+# or
+yarn add  @oplayer/core @oplayer/ui
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.umd.js"></script>
 ```
 
 ```js
@@ -25,8 +30,6 @@ Player.make(document.body, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui, hls])
+  .use([ui, hls]) // Optional
   .create()
 ```
-
-### UMD
