@@ -6,13 +6,14 @@ let hlsTnstance: Hls | null = null
 let prevSrc: string | null = null
 
 const getHls = (options?: Partial<HlsConfig>): Hls => {
-  if (!hlsTnstance) {
-    hlsTnstance = new Hls(options)
+  if (hlsTnstance) {
+    hlsTnstance.destroy()
   }
-  return hlsTnstance!
+  hlsTnstance = new Hls(options)
+  return hlsTnstance
 }
 
-const hlsPlugin: PlayerPlugin = {
+const hlsPlugin = (config?: Partial<HlsConfig>): PlayerPlugin => ({
   name: 'oplayer-plugin-hls',
   load: ({ on, emit }, video, src: string) => {
     if (!/m3u8(#|\?|$)/i.test(src)) return false
@@ -23,7 +24,7 @@ const hlsPlugin: PlayerPlugin = {
       return false
     }
 
-    hlsTnstance = getHls({ autoStartLoad: false })
+    hlsTnstance = getHls({ autoStartLoad: false, ...config })
     if (!hlsTnstance || !Hls.isSupported()) {
       emit('error', {
         payload: {
@@ -32,11 +33,6 @@ const hlsPlugin: PlayerPlugin = {
         }
       })
       return false
-    }
-
-    if (prevSrc && prevSrc !== src) {
-      hlsTnstance.destroy()
-      hlsTnstance = new Hls({ autoStartLoad: video.autoplay })
     }
 
     hlsTnstance!.attachMedia(video)
@@ -60,6 +56,6 @@ const hlsPlugin: PlayerPlugin = {
 
     return true
   }
-}
+})
 
 export default hlsPlugin

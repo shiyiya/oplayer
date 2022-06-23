@@ -35,12 +35,15 @@ const p = Player.make($container, {
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui(), hls])
+  .use([ui(), hls()])
   .create()
 
 const meta = () => html`
-  <b>Oh-Player v${Player.version} </b>
+  <h4>Oh-Player v${Player.version}</h4>
   <p>STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a></p>
+
+  <h4>Plugin used:</h4>
+  <p>${p.plugins.map((plugin) => html`<li>${plugin}</li>`)}</p>
 
   <p>
     <input
@@ -51,7 +54,7 @@ const meta = () => html`
     />
   </p>
   <p>video type: ${new URL(src).pathname.split('.').pop()}</p>
-  <button @click=${() => p.changeSource(src)}>ChangeSource</button>
+  <p><button @click=${() => p.changeSource(src)}>ChangeSource</button></p>
 
   <p>
     <button
