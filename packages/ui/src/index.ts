@@ -14,11 +14,36 @@ import volumeSvg from './icons/volume.svg?raw'
 
 import './index.css'
 
+let CTRL_HIDE_DELAY = 1200
+
 let $controller: HTMLDivElement
 let controllerIsActive = false
 let ctrlAutoHideTimer: NodeJS.Timeout | null = null
 
-let CTRL_HIDE_DELAY = 1200
+const debounce = (fn: () => void, ms: number = CTRL_HIDE_DELAY) => {
+  let time: NodeJS.Timeout | null = null
+  return () => {
+    time && clearTimeout(time)
+    time = setTimeout(() => {
+      fn()
+    }, ms)
+  }
+}
+
+const hideCtrl = () => {
+  !controllerIsActive && $controller.classList.add('hide')
+}
+
+const debounceHideCtrl = debounce(hideCtrl)
+const autoHideCtrl = () => {
+  ctrlAutoHideTimer = setTimeout(() => {
+    $controller.classList.add('hide')
+  }, CTRL_HIDE_DELAY)
+}
+const showCtrl = () => {
+  ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
+  $controller.classList.remove('hide')
+}
 
 const calculateWidth = (player: Player) => {
   const { currentTime, duration } = player
@@ -186,20 +211,6 @@ const apply = (player: Player) => {
     ui
   )
 
-  const hideCtrl = () => {
-    !controllerIsActive && $controller.classList.add('hide')
-  }
-  const debounceHideCtrl = debounce(hideCtrl)
-  const autoHideCtrl = () => {
-    setTimeout(() => {
-      $controller.classList.add('hide')
-    }, CTRL_HIDE_DELAY)
-  }
-  const showCtrl = () => {
-    ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
-    $controller.classList.remove('hide')
-  }
-
   player.on('play', () => {
     autoHideCtrl()
   })
@@ -210,6 +221,11 @@ const apply = (player: Player) => {
     } else {
       hideCtrl()
     }
+  })
+
+  player.on('videosourcechange', () => {
+    showCtrl()
+    autoHideCtrl()
   })
 
   if (!isMobile) {
@@ -225,15 +241,5 @@ const ui = (): PlayerPlugin => ({
   name: 'oplayer-theme-snow',
   apply
 })
-
-const debounce = (fn: () => void, ms: number = CTRL_HIDE_DELAY) => {
-  let time: NodeJS.Timeout | null = null
-  return () => {
-    time && clearTimeout(time)
-    time = setTimeout(() => {
-      fn()
-    }, ms)
-  }
-}
 
 export default ui

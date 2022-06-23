@@ -48,7 +48,7 @@ function runInQueue(ps) {
 }
 
 const plugins = glob.sync(path.join(process.cwd(), 'plugins/*')).reduce((result, item) => {
-  const name = item.split(path.sep).pop()
+  const name = item.split('/').pop()
   // @ts-ignore
   result[name] = item
   return result

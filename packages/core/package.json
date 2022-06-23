@@ -9,9 +9,10 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently -n es,dts,plugins \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\" \"node ./build-plugins.js --watch\"",
+    "start": "concurrently -n es,dts,plugins \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build && tsc --emitDeclarationOnly && node ./build-plugins.js"
+    "build": "vite build && tsc --emitDeclarationOnly && pnpm run build:plugins",
+    "build:plugins": "node ./build-plugins.js"
   },
   "exports": {
     ".": {
