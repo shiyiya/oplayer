@@ -1,6 +1,6 @@
 import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
-import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS } from './constants'
 import E, { Listener, OEvent } from './event'
 import { css, injectGlobal } from '@emotion/css'
 import type { Emotion } from '@emotion/css/types/create-instance'
@@ -23,7 +23,7 @@ export type PlayerPlugin = {
 }
 
 export type Options = {
-  autoplay?: boolean
+  autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
   muted?: boolean
   loop?: boolean
   volume?: number
@@ -76,19 +76,22 @@ export class Player {
     return this
   }
 
-  readonly on = (name: string | Listener | string[], listener?: Listener) => {
+  readonly on = (
+    name: typeof EVENTS[number] | typeof EVENTS[number][] | Listener | string,
+    listener?: Listener
+  ) => {
     if (typeof name === 'string') {
       this.#E.on(name, listener!)
     } else if (Array.isArray(name)) {
-      this.#E.onAny(name, listener!)
+      this.#E.onAny(name as string[], listener!)
     } else if (typeof name === 'function') {
       this.#E.on('*', name!)
     }
     return this
   }
 
-  readonly emit = (name: string, payload?: OEvent) => {
-    this.#E.emit(name, payload)
+  readonly emit = (name: typeof EVENTS[number] | string, payload?: OEvent) => {
+    this.#E.emit(name as any, payload)
   }
 
   readonly create = () => {
@@ -104,14 +107,22 @@ export class Player {
       this.hasError = true
     })
     Object.values(VIDEO_EVENTS).forEach((event) => {
-      this.#video.addEventListener(event, (e) => {
-        this.#E.emit(event, e)
-      })
+      this.#video.addEventListener(
+        event,
+        (e) => {
+          this.#E.emit(event, e)
+        },
+        { passive: true }
+      )
     })
     Object.values(PLAYER_EVENTS).forEach((event) => {
-      this.$root.addEventListener(event, (e) => {
-        this.#E.emit(event, e)
-      })
+      this.$root.addEventListener(
+        event,
+        (e) => {
+          this.#E.emit(event, e)
+        },
+        { passive: true }
+      )
     })
   }
 
@@ -223,10 +234,12 @@ export class Player {
 
   enterFullscreen() {
     this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+    this.emit('fullscreenchange')
   }
 
   exitFullscreen() {
     this.#_exitFullscreen.call(document)
+    this.emit('fullscreenchange')
   }
 
   get isFullScreen() {
@@ -271,17 +284,18 @@ export class Player {
     this.hasError = false
     this.#isCustomLoader = false
     this.load(typeof sources === 'string' ? sources : sources.src)
+    this.emit('videosourcechange')
   }
 
   destroy() {
     this.pause()
     this.isFullScreen && this.exitFullscreen()
     this.#plugins.clear()
-    this.#E.offAll()
     this.#video.src = ''
     this.#video.remove()
     this.#container.remove()
     this.emit('destroy')
+    this.#E.offAll()
   }
 
   get container() {

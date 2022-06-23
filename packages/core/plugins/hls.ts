@@ -1,4 +1,4 @@
-import type { ErrorData, Events, HlsConfig } from 'hls.js'
+import type { ErrorData, HlsConfig } from 'hls.js'
 import Hls from 'hls.js/dist/hls.light.min'
 import type { PlayerPlugin } from '../src'
 
@@ -23,7 +23,7 @@ const hlsPlugin: PlayerPlugin = {
       return false
     }
 
-    hlsTnstance = getHls({ autoStartLoad: video.autoplay })
+    hlsTnstance = getHls({ autoStartLoad: false })
     if (!hlsTnstance || !Hls.isSupported()) {
       emit('error', {
         type: 'hlsNotSupported',
@@ -34,18 +34,20 @@ const hlsPlugin: PlayerPlugin = {
 
     if (prevSrc && prevSrc !== src) {
       hlsTnstance.destroy()
-      hlsTnstance.detachMedia()
       hlsTnstance = new Hls({ autoStartLoad: video.autoplay })
     }
 
     hlsTnstance!.attachMedia(video)
     hlsTnstance!.loadSource(src)
+    hlsTnstance.startLoad()
     prevSrc = src
 
-    hlsTnstance!.once(Hls.Events.ERROR, (event: Events.ERROR, data: ErrorData) => {
-      emit('error', {
-        type: event,
-        payload: data
+    Object.values(Hls.Events).forEach((e) => {
+      hlsTnstance!.on(e as any, (event: string, data: ErrorData) => {
+        if (event === Hls.Events.ERROR) {
+          emit('error', { type: event, payload: data })
+        }
+        emit(event, { type: event, payload: data })
       })
     })
 

@@ -31,20 +31,28 @@ const calculateWidth = (player: Player) => {
 const apply = (player: Player) => {
   const createHitRef = (el: Element | undefined) => {
     const $hit = el!.querySelector('.oh-controller-progress-hit')! as HTMLDivElement
-    el!.addEventListener('mousemove', (e: any) => {
-      let hoverWidth = 0
-      if (e.target.classList.contains('oh-controller-progress-played-dot')) {
-        hoverWidth = (player.currentTime / player.duration) * 100
-      } else {
-        hoverWidth = (e.offsetX / e.currentTarget!.offsetWidth) * 100
-      }
-      $hit.innerText = formatTime(player.duration * (hoverWidth / 100))
-      $hit.style.left = `${hoverWidth}%`
-    })
-    el!.addEventListener('mousedown', (e: any) => {
-      if (!e.target.classList.contains('oh-controller-progress-played-dot'))
-        player.seek(player.duration * (e.offsetX / el!.clientWidth))
-    })
+    el!.addEventListener(
+      'mousemove',
+      (e: any) => {
+        let hoverWidth = 0
+        if (e.target.classList.contains('oh-controller-progress-played-dot')) {
+          hoverWidth = (player.currentTime / player.duration) * 100
+        } else {
+          hoverWidth = (e.offsetX / e.currentTarget!.offsetWidth) * 100
+        }
+        $hit.innerText = formatTime(player.duration * (hoverWidth / 100))
+        $hit.style.left = `${hoverWidth}%`
+      },
+      { passive: true }
+    )
+    el!.addEventListener(
+      'mousedown',
+      (e: any) => {
+        if (!e.target.classList.contains('oh-controller-progress-played-dot'))
+          player.seek(player.duration * (e.offsetX / el!.clientWidth))
+      },
+      { passive: true }
+    )
   }
 
   const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class="oh-ui">
@@ -112,12 +120,7 @@ const apply = (player: Player) => {
         </div>
         <div class="oh-controller-br">
           <div class="dropdown speed">
-            <button
-              aria-label="Speed"
-              class="icon"
-              type="button"
-              @click=${() => player.toggleMute()}
-            >
+            <button aria-label="Speed" class="icon" type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class="expand">

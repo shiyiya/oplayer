@@ -5,7 +5,7 @@
     "target": "es2015",
     "module": "esnext",
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
-    "noEmitOnError": true,
+    "noEmitOnError": false,
 
     "declaration": true,
     "declarationMap": true,

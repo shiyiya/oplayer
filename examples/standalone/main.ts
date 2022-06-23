@@ -1,6 +1,6 @@
-import Player, { VIDEO_EVENTS } from '@oplayer/core'
-import hls from '@oplayer/core/plugins/hls'
-import ui from '@oplayer/ui'
+import Player, { VIDEO_EVENTS } from '../../packages/core'
+import hls from '../../packages/core/plugins/hls'
+import ui from '../../packages/ui'
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 
@@ -83,7 +83,7 @@ const meta = () => html`
 `
 
 p.on((e) => {
-  e.type != 'timeupdate' && e.type != 'mousemove' && console.log(e)
+  e.type != 'timeupdate' && e.type != 'mousemove' && console.log(e, p.state)
   if (Object.values(VIDEO_EVENTS).includes(e.type as any) && e.type != 'timeupdate') {
     render(meta(), $meta)
   }

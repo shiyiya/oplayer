@@ -1,45 +1,115 @@
-export enum VIDEO_EVENTS {
-  LOADSTART = 'loadstart',
-  LOADEDDATA = 'loadeddata',
-  LOADEDMETADATA = 'loadedmetadata',
-  CANPLAY = 'canplay',
-  CANPLAYTHROUGH = 'canplaythrough',
-  PLAY = 'play',
-  PAUSE = 'pause',
-  ENDED = 'ended',
-  TIMEUPDATE = 'timeupdate',
-  PROGRESS = 'progress',
-  SEEKED = 'seeked',
-  ERROR = 'error',
-  VOLUMECHANGE = 'volumechange',
-  RATECHANGE = 'ratechange',
-  DURATIONCHANGE = 'durationchange',
-  ABORT = 'abort',
-  SEEKING = 'seeking',
-  STALLED = 'stalled',
-  SUSPENDs = 'suspends',
-  WAITING = 'waiting'
+enum _VIDEO_EVENTS {
+  'abort',
+  'canplay',
+  'canplaythrough',
+  'durationchange',
+  'emptied',
+  'ended',
+  'error',
+  'loadeddata',
+  'loadedmetadata',
+  'loadstart',
+  'pause',
+  'play',
+  'playing',
+  'progress',
+  'ratechange',
+  'seeked',
+  'seeking',
+  'stalled',
+  'suspend',
+  'timeupdate',
+  'volumechange',
+  'waiting',
+  'encrypted',
+  'waitingforkey'
 }
 
-export enum PLAYER_EVENTS {
-  FOUCUS = 'focus',
-  BLUR = 'blur',
-  KEYDOWN = 'keydown',
-  KEYUP = 'keyup',
-  MOUSEDOWN = 'mousedown',
-  MOUSEUP = 'mouseup',
-  MOUSEMOVE = 'mousemove',
-  MOUSEENTER = 'mouseenter',
-  MOUSELEAVE = 'mouseleave',
-  TOUCHSTART = 'touchstart',
-  TOUCHEND = 'touchend',
-  TOUCHMOVE = 'touchmove',
-  TOUCHCANCEL = 'touchcancel',
-  CONTEXTMENU = 'contextmenu',
-  CLICK = 'click',
-  DBLCLICK = 'dblclick'
+enum _PLAYER_EVENTS {
+  'focus',
+  'blur',
+  'keydown',
+  'keyup',
+  'mousedown',
+  'mouseup',
+  'mousemove',
+  'mouseenter',
+  'mouseleave',
+  'touchstart',
+  'touchend',
+  'touchmove',
+  'touchcancel',
+  'contextmenu',
+  'click',
+  'dblclick',
+  'fullscreenchange',
+  'fullscreenerror'
 }
+
+enum _OH_EVENTS {
+  'videosourcechange'
+}
+
+export enum OH_ERRORS {
+  NETWORK_ERROR,
+  MEDIA_ERROR,
+  OTHER_ERROR
+}
+
+export const VIDEO_EVENTS = [
+  'abort',
+  'canplay',
+  'canplaythrough',
+  'durationchange',
+  'emptied',
+  'ended',
+  'error',
+  'loadeddata',
+  'loadedmetadata',
+  'loadstart',
+  'pause',
+  'play',
+  'playing',
+  'progress',
+  'ratechange',
+  'seeked',
+  'seeking',
+  'stalled',
+  'suspend',
+  'timeupdate',
+  'volumechange',
+  'waiting',
+  'encrypted',
+  'waitingforkey'
+] as const
+
+export const PLAYER_EVENTS = [
+  'focus',
+  'blur',
+  'keydown',
+  'keyup',
+  'mousedown',
+  'mouseup',
+  'mousemove',
+  'mouseenter',
+  'mouseleave',
+  'touchstart',
+  'touchend',
+  'touchmove',
+  'touchcancel',
+  'contextmenu',
+  'click',
+  'dblclick',
+  'fullscreenchange',
+  'fullscreenerror'
+] as const
+
+export const OH_EVENTS = ['videosourcechange', 'destroy'] as const
+
+export const EVENTS = [...VIDEO_EVENTS, ...PLAYER_EVENTS, ...OH_EVENTS] as const
 
 export declare interface Listeners {
-  [VIDEO_EVENTS.LOADSTART]: (type: string, event: any, data: any) => void
+  [_VIDEO_EVENTS.loadstart]: (type: string, event: any, data: any) => void
+  [_PLAYER_EVENTS.blur]: () => void
+  [_OH_EVENTS.videosourcechange]: () => void
 }
