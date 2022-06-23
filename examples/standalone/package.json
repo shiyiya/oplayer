@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "lit": "^2.2.6",
-    "@oplayer/core": "workspace:*"
+    "@oplayer/core": "workspace:*",
+    "@oplayer/ui": "workspace:*",
+    "hls.js": "^1.1.5"
   }
 }

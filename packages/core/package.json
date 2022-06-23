@@ -9,9 +9,19 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
+    "start": "concurrently -n es,dts,plugins \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\" \"node ./build-plugins.js --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build && tsc --emitDeclarationOnly "
+    "build": "vite build && tsc --emitDeclarationOnly && node ./build-plugins.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./plugins/*": {
+      "import": "./dist/plugins/*.es.js",
+      "require": "./dist/plugins/*.umd.js"
+    }
   },
   "files": [
     "dist",
@@ -26,7 +36,14 @@
     "IE 11"
   ],
   "dependencies": {
-    "hls.js": "^1.1.5",
     "lit": "^2.2.6"
+  },
+  "peerDependencies": {
+    "hls.js": "^1.1.5"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "glob": "^7.2.3",
+    "hls.js": "^1.1.5"
   }
 }

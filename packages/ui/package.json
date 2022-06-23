@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "./lib/index.es.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "author": "",
   "license": "MIT",
@@ -12,6 +12,13 @@
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
     "build": "vite build &&  tsc --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./dist/*": "./dist/*"
   },
   "files": [
     "dist",
@@ -24,7 +31,11 @@
     "not op_mini all",
     "IE 11"
   ],
-  "dependencies": {
+  "peerDependencies": {
+    "@oplayer/core": ">=1.0.0",
+    "lit": "^2.2.6"
+  },
+  "devDependencies": {
     "@oplayer/core": "workspace:*",
     "lit": "^2.2.6"
   }

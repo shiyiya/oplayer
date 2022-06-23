@@ -16,6 +16,7 @@ import './index.css'
 
 let $controller: HTMLDivElement
 let controllerIsActive = false
+let ctrlAutoHideTimer: NodeJS.Timeout | null = null
 
 let CTRL_HIDE_DELAY = 1200
 
@@ -105,7 +106,7 @@ const apply = (player: Player) => {
                 ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
               </button>`
             : null}
-          <span class="time" style="${isMobile ? 'padding-left:0' : ''}">
+          <span class="time" style="${isMobile ? 'padding-left: 0' : ''}">
             ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
           </span>
         </div>
@@ -140,14 +141,16 @@ const apply = (player: Player) => {
             </button>
           </div>
 
-          <button
-            aria-label="Picture in Picture"
-            class="icon pip"
-            type="button"
-            @click=${() => player.togglePip()}
-          >
-            ${unsafeSVG(pipSvg)}
-          </button>
+          ${player.isPipEnabled
+            ? html` <button
+                aria-label="Picture in Picture"
+                class="icon pip"
+                type="button"
+                @click=${() => player.togglePip()}
+              >
+                ${unsafeSVG(pipSvg)}
+              </button>`
+            : null}
 
           <button
             aria-label="Fullscreen"
@@ -173,14 +176,23 @@ const apply = (player: Player) => {
     !controllerIsActive && $controller.classList.add('hide')
   }
   const debounceHideCtrl = debounce(hideCtrl)
+  const autoHideCtrl = () => {
+    setTimeout(() => {
+      $controller.classList.add('hide')
+    }, CTRL_HIDE_DELAY)
+  }
+  const showCtrl = () => {
+    ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
+    $controller.classList.remove('hide')
+  }
 
   player.on('play', () => {
-    debounceHideCtrl()
+    autoHideCtrl()
   })
 
   player.on('pause', () => {
     if (isMobile) {
-      $controller.classList.remove('hide')
+      showCtrl()
     } else {
       hideCtrl()
     }
@@ -188,15 +200,15 @@ const apply = (player: Player) => {
 
   if (!isMobile) {
     player.on('mousemove', () => {
-      $controller.classList.remove('hide')
+      showCtrl()
       debounceHideCtrl()
     })
     player.on('mouseleave', hideCtrl)
   }
 }
 
-const ui: PlayerPlugin = () => ({
-  name: 'oh-ui',
+const ui = (): PlayerPlugin => ({
+  name: 'oplayer-theme-snow',
   apply
 })
 

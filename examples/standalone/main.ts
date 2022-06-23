@@ -1,12 +1,12 @@
-import Player from '../../packages/core/src/index'
+import Player, { VIDEO_EVENTS } from '@oplayer/core'
+import hls from '@oplayer/core/plugins/hls'
+import ui from '@oplayer/ui'
 import { html, render } from 'lit'
-import { VIDEO_EVENTS } from '../../packages/core/src/constants'
-import hls from '../../packages/core/plugins/hls'
-import ui from '../../packages/ui/src/index'
 import { live } from 'lit/directives/live.js'
 
 //@ts-ignore
 import poster from './poster.png'
+import '@oplayer/ui/dist/style.css'
 
 const $container = document.getElementById('app')!
 const $meta = document.getElementById('meta')!
@@ -50,6 +50,7 @@ const meta = () => html`
       .value=${live(src)}
     />
   </p>
+  <p>video type: ${new URL(src).pathname.split('.').pop()}</p>
   <button @click=${() => p.changeSource(src)}>ChangeSource</button>
 
   <p>
