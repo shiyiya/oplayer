@@ -1,20 +1,20 @@
-import { PlayerPlugin } from '../src'
-import type { HlsConfig } from 'hls.js'
-import Hls from 'hls.js'
+import type { ErrorData, Events, HlsConfig } from 'hls.js'
+import Hls from 'hls.js/dist/hls.light.min'
+import type { PlayerPlugin } from '../src'
 
-let hls: Hls | null = null
+let hlsTnstance: Hls | null = null
 let prevSrc: string | null = null
 
-const getHls = (options: Partial<HlsConfig> = {}) => {
-  if (!hls) {
-    hls = new Hls(options)
+const getHls = (options?: Partial<HlsConfig>): Hls => {
+  if (!hlsTnstance) {
+    hlsTnstance = new Hls(options)
   }
-  return hls
+  return hlsTnstance!
 }
 
 const hlsPlugin: PlayerPlugin = {
-  name: 'oh-hls',
-  load: (src: string, { __video: video, on, emit }) => {
+  name: 'oplayer-plugin-hls',
+  load: ({ on, emit }, video, src: string) => {
     if (!/m3u8(#|\?|$)/i.test(src)) return false
     if (
       video.canPlayType('application/x-mpegURL') ||
@@ -23,9 +23,8 @@ const hlsPlugin: PlayerPlugin = {
       return false
     }
 
-    hls = getHls()
-
-    if (!hls || !Hls.isSupported()) {
+    hlsTnstance = getHls({ autoStartLoad: video.autoplay })
+    if (!hlsTnstance || !Hls.isSupported()) {
       emit('error', {
         type: 'hlsNotSupported',
         payload: { message: 'HLS is not supported' }
@@ -33,16 +32,17 @@ const hlsPlugin: PlayerPlugin = {
       return false
     }
 
-    if (prevSrc !== src) {
-      hls.destroy()
-      hls = new Hls({ autoStartLoad: video.autoplay })
+    if (prevSrc && prevSrc !== src) {
+      hlsTnstance.destroy()
+      hlsTnstance.detachMedia()
+      hlsTnstance = new Hls({ autoStartLoad: video.autoplay })
     }
 
-    hls.attachMedia(video)
-    hls.loadSource(src)
+    hlsTnstance!.attachMedia(video)
+    hlsTnstance!.loadSource(src)
     prevSrc = src
 
-    hls.once(Hls.Events.ERROR, (event, data) => {
+    hlsTnstance!.once(Hls.Events.ERROR, (event: Events.ERROR, data: ErrorData) => {
       emit('error', {
         type: event,
         payload: data
@@ -50,8 +50,8 @@ const hlsPlugin: PlayerPlugin = {
     })
 
     on('destroy', () => {
-      hls!.destroy()
-      hls = null
+      hlsTnstance?.destroy()
+      hlsTnstance = null
     })
 
     return true

@@ -1,8 +1,10 @@
-import './index.css'
 import { html, render } from 'lit'
-import E, { Listener, OEvent } from './event'
-import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import { ref } from 'lit/directives/ref.js'
+import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import E, { Listener, OEvent } from './event'
+import style from './index.css?raw'
+
+console.log(__VERSION__)
 
 //TODO: __VERSION__
 // @ts-ignore
@@ -18,7 +20,7 @@ export type PlayerPlugin = {
   version?: string
   beforeRender?: (player: Player) => void
   apply?: (player: Player) => void
-  load?: (src: string, player: Player) => boolean
+  load?: (player: Player, video: HTMLVideoElement, src: string) => boolean
   destroy?: VoidFunction
 }
 
@@ -119,6 +121,9 @@ export class Player {
     this.#container.classList.add('oh-wrap')
     render(
       html`
+        <style>
+          ${style}
+        </style>
         <div class="oh-player" ${ref((el) => (this.$root = el as HTMLDivElement))}>
           <video
             class="oh-video"
@@ -142,7 +147,7 @@ export class Player {
   load = (src: string) => {
     this.#plugins.forEach((plugin) => {
       if (plugin.load && !this.#isCustomLoader) {
-        this.#isCustomLoader = plugin.load(src, this)
+        this.#isCustomLoader = plugin.load(this, this.#video, src)
       }
     })
     if (!this.#isCustomLoader) {
@@ -230,6 +235,10 @@ export class Player {
     }
   }
 
+  get isPipEnabled() {
+    return document.pictureInPictureEnabled
+  }
+
   enterPip() {
     this.#video.requestPictureInPicture()
   }
@@ -268,11 +277,6 @@ export class Player {
     this.#video.remove()
     this.#container.remove()
     this.emit('destroy')
-  }
-
-  //TODO: 不暴露接口
-  get __video() {
-    return this.#video
   }
 
   get container() {

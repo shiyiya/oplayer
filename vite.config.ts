@@ -43,7 +43,7 @@ export const viteConfig = (packageDirName: string, options: ViteUserConfig = {})
     build: viteBuild(packageDirName, options.build),
     plugins: [...vitePlugins, ...rollupPlugins],
     define: {
-      __VERSION__: version
+      __VERSION__: `'${version}'`
     }
   })
 }
