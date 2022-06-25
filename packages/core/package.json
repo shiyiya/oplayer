@@ -9,7 +9,7 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently -n es,dts,plugins \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
+    "start": "concurrently -n es,dts,plugins \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\" \"node ./build-plugins.js\"",
     "tsc": "tsc --noEmit && echo",
     "build": "vite build && tsc --emitDeclarationOnly && pnpm run build:plugins",
     "build:plugins": "node ./build-plugins.js"

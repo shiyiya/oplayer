@@ -1,30 +1,38 @@
-import type { ErrorData, HlsConfig } from 'hls.js'
+import { ErrorData, ErrorDetails, HlsConfig } from 'hls.js'
 import Hls from 'hls.js/dist/hls.light.min'
 import type { PlayerPlugin } from '../src'
 
-let hlsTnstance: Hls | null = null
+let isInitial = false
+let hlsInstance: Hls | null = null
 
 const getHls = (options?: Partial<HlsConfig>): Hls => {
-  if (hlsTnstance) {
-    hlsTnstance.destroy()
+  if (hlsInstance) {
+    hlsInstance.destroy()
   }
-  hlsTnstance = new Hls(options)
-  return hlsTnstance
+  hlsInstance = new Hls(options)
+  return hlsInstance
 }
 
-const hlsPlugin = (config?: Partial<HlsConfig>): PlayerPlugin => ({
+type hlsPluginOptions = {
+  hlsConfig?: Partial<HlsConfig>
+  matcher?: (video: HTMLVideoElement, src: string) => boolean
+}
+
+const defaultMatcher: hlsPluginOptions['matcher'] = (video, src) =>
+  /m3u8(#|\?|$)/i.test(src) ||
+  Boolean(video.canPlayType('application/x-mpegURL')) ||
+  Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
+
+const hlsPlugin = ({
+  hlsConfig = {},
+  matcher = defaultMatcher
+}: hlsPluginOptions = {}): PlayerPlugin => ({
   name: 'oplayer-plugin-hls',
   load: ({ on, emit }, video, src: string) => {
-    if (!/m3u8(#|\?|$)/i.test(src)) return false
-    if (
-      video.canPlayType('application/x-mpegURL') ||
-      video.canPlayType('application/vnd.apple.mpegURL')
-    ) {
-      return false
-    }
+    if (!matcher(video, src)) return false
 
-    hlsTnstance = getHls({ autoStartLoad: false, ...config })
-    if (!hlsTnstance || !Hls.isSupported()) {
+    hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
+    if (!hlsInstance || !Hls.isSupported()) {
       emit('error', {
         payload: {
           type: 'hlsNotSupported',
@@ -34,13 +42,18 @@ const hlsPlugin = (config?: Partial<HlsConfig>): PlayerPlugin => ({
       return false
     }
 
-    hlsTnstance!.attachMedia(video)
-    hlsTnstance!.loadSource(src)
-    hlsTnstance.startLoad()
+    if (!isInitial) {
+      emit('plugin:load', { name: 'oplayer-plugin-hls' })
+    }
+
+    isInitial = true
+    hlsInstance?.attachMedia(video)
+    hlsInstance?.loadSource(src)
+    hlsInstance?.startLoad()
 
     Object.values(Hls.Events).forEach((e) => {
-      hlsTnstance!.on(e as any, (event: string, data: ErrorData) => {
-        if (event === Hls.Events.ERROR) {
+      hlsInstance?.on(e as any, (event: string, data: ErrorData) => {
+        if (event === Hls.Events.ERROR && data.details == ErrorDetails.MANIFEST_LOAD_ERROR) {
           emit('error', { type: event, payload: data })
         }
         emit(event, data)
@@ -48,8 +61,8 @@ const hlsPlugin = (config?: Partial<HlsConfig>): PlayerPlugin => ({
     })
 
     on('destroy', () => {
-      hlsTnstance?.destroy()
-      hlsTnstance = null
+      hlsInstance?.destroy()
+      hlsInstance = null
     })
 
     return true
