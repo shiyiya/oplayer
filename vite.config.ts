@@ -15,6 +15,9 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
   mergeDeep<BuildOptions>(
     {
       sourcemap: true,
+      commonjsOptions: {
+        sourceMap: false
+      },
       lib: {
         entry: resolvePath(`packages/${packageDirName}/src/index.ts`),
         name: `oplayer_${packageDirName}`,

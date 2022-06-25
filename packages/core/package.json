@@ -37,15 +37,17 @@
     "IE 11"
   ],
   "dependencies": {
-    "lit": "^2.2.6",
-    "@emotion/css": "^11.9.0"
+    "@emotion/css": "^11.9.0",
+    "lit": "^2.2.6"
   },
   "peerDependencies": {
-    "hls.js": "^1.1.5"
+    "hls.js": "^1.1.5",
+    "webtorrent": "^1.8.24"
   },
   "devDependencies": {
     "chokidar": "^3.5.3",
     "glob": "^7.2.3",
-    "hls.js": "^1.1.5"
+    "hls.js": "^1.1.5",
+    "webtorrent": "^1.8.24"
   }
 }

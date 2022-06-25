@@ -36,7 +36,7 @@ const hlsPlugin = ({
       emit('error', {
         payload: {
           type: 'hlsNotSupported',
-          message: 'HLS is not supported'
+          message: 'hls is not supported'
         }
       })
       return false
@@ -44,9 +44,9 @@ const hlsPlugin = ({
 
     if (!isInitial) {
       emit('plugin:load', { name: 'oplayer-plugin-hls' })
+      isInitial = true
     }
 
-    isInitial = true
     hlsInstance?.attachMedia(video)
     hlsInstance?.loadSource(src)
     hlsInstance?.startLoad()

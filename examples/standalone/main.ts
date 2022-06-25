@@ -1,5 +1,7 @@
 import Player, { VIDEO_EVENTS } from '../../packages/core'
 import hls from '../../packages/core/plugins/hls'
+import torrent from '../../packages/core/plugins/torrent'
+
 import ui from '../../packages/ui'
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
@@ -12,6 +14,7 @@ const $container = document.getElementById('app')!
 const $meta = document.getElementById('meta')!
 
 const dataSrcs = [
+  'magnet:?xt=urn:btih:16E51415639B7A1F50AB99B4A0E7CE1DABD86712',
   'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -35,7 +38,7 @@ const p = Player.make($container, {
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui(), hls()])
+  .use([ui(), hls(), torrent()])
   .create()
 
 const meta = () => html`
