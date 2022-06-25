@@ -1,7 +1,7 @@
-import webtorrent from 'webtorrent/webtorrent.min'
 import type { PlayerPlugin } from '../src'
 
 let isInitial = false
+let webtorrent: any
 
 type torrentPluginOptions = {
   config?: Record<string, any>
@@ -17,6 +17,10 @@ const torrentPlugin = ({
   name: 'oplayer-plugin-torrent',
   load: ({ on, emit }, video, src: string) => {
     if (!matcher(src)) return false
+
+    if (!isInitial) {
+      webtorrent = require('webtorrent/webtorrent.min')
+    }
 
     if (!webtorrent.WEBRTC_SUPPORT) {
       emit('error', {
