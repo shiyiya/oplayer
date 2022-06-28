@@ -118,7 +118,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    & button.icon {
+    & button.oh-icon {
       display: inline-block;
       margin: 0px;
       padding: 0.5em;
@@ -149,7 +149,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
     right: 40px;
     bottom: 45px;
 
-    & > .icon {
+    & > .oh-icon {
       width: 3em;
 
       & > svg {
@@ -168,7 +168,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
         transform: translate(-50%, -50%);
       }
 
-      & > .icon {
+      & > .oh-icon {
         width: 2.5em;
       }
     }
@@ -291,13 +291,12 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
     align-items: center;
     justify-content: space-between;
 
-    & .oh-controller-bl,
-    & .oh-controller-br {
+    > div {
       display: flex;
       align-items: center;
     }
 
-    & .icon {
+    & .oh-icon {
       & svg {
         width: 1.3em;
         height: 1.3em;
@@ -428,7 +427,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
       >
         <button
           aria-label="Play"
-          class="play icon"
+          class="oh-icon play"
           type="button"
           @click=${()=>ce.togglePlay()}
         >
@@ -456,22 +455,24 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
       </div>
 
       <div class=${yr.ohcontrollerbottom(le)}>
-        <div class="oh-controller-bl">
+        <div>
           ${Sn?null:Fr`<button
                 aria-label="Play"
-                class="play icon"
+                class="oh-icon play"
                 type="button"
                 @click=${()=>ce.togglePlay()}
               >
                 ${on(ce.isPlaying?Vi:$i)}
               </button>`}
+
           <span class=${yr.ohcontrollertime(le)} style="${Sn?"padding-left: 0":""}">
             ${Jn(ce.currentTime)} / ${Jn(ce.duration)}
           </span>
         </div>
-        <div class="oh-controller-br">
+
+        <div>
           <div class=${yr.dropdown(le)}>
-            <button aria-label="Speed" class="icon" type="button">
+            <button aria-label="Speed" class="oh-icon" type="button">
               ${ce.playbackRate==1?"SPD":`${ce.playbackRate}x`}
             </button>
             <div class="expand">
@@ -486,7 +487,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
           <div class=${yr.dropdown(le)}>
             <button
               aria-label="Volume"
-              class="icon volume"
+              class="oh-icon volume"
               type="button"
               @click=${()=>ce.toggleMute()}
             >
@@ -496,7 +497,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
 
           ${ce.isPipEnabled?Fr` <button
                 aria-label="Picture in Picture"
-                class="icon pip"
+                class="oh-icon pip"
                 type="button"
                 @click=${()=>ce.togglePip()}
               >
@@ -505,7 +506,7 @@ use chrome, FireFox or Internet Explorer 11`)}function d(u,v){if(typeof u!="numb
 
           <button
             aria-label="Fullscreen"
-            class="icon"
+            class="oh-icon fullscreen"
             type="button"
             @click=${()=>ce.toggleFullScreen()}
           >
