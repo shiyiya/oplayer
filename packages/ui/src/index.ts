@@ -12,7 +12,36 @@ import playSvg from './icons/play.svg?raw'
 import volumeOffSvg from './icons/volume-off.svg?raw'
 import volumeSvg from './icons/volume.svg?raw'
 
-import './index.css' //TODO: emo
+import {
+  ohui,
+  ohmask,
+  oharea,
+  ohplay,
+  ohloading,
+  ohcontrollerwrap,
+  ohcontroller,
+  ohcontrollerprogress,
+  ohcontrollerbottom,
+  ohcontrollertime,
+  dropdown,
+  speeditem
+} from './index.style'
+import loadingStyles from './loading.style'
+
+const styles = {
+  ohui,
+  ohmask,
+  oharea,
+  ohplay,
+  ohloading,
+  ohcontrollerwrap,
+  ohcontroller,
+  ohcontrollerprogress,
+  ohcontrollerbottom,
+  ohcontrollertime,
+  dropdown,
+  speeditem
+}
 
 let CTRL_HIDE_DELAY = 1500
 
@@ -53,7 +82,7 @@ const calculateWidth = (player: Player) => {
   return { bufferedWidth, playedWidth }
 }
 
-const apply = (player: Player) => {
+const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
   const createHitRef = (el: Element | undefined) => {
     const $hit = el!.querySelector('.oh-controller-progress-hit')! as HTMLDivElement
     el!.addEventListener(
@@ -80,13 +109,13 @@ const apply = (player: Player) => {
     )
   }
 
-  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class="oh-ui">
-    <div class="oh-mask" @click=${() => player.togglePlay()}></div>
-    <div class="oh-area">
+  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class=${styles.ohui(css)}>
+    <div class=${styles.ohmask(css)} @click=${() => player.togglePlay()}></div>
+    <div class=${styles.oharea(css)}>
       ${player.isLoading
         ? html`
-            <div class="oh-loading">
-              <div class="linear-activity">
+            <div class=${styles.ohloading(css)}>
+              <div class=${loadingStyles(css)}>
                 <div class="indeterminate"></div>
               </div>
             </div>
@@ -94,7 +123,7 @@ const apply = (player: Player) => {
         : null}
 
       <div
-        class="oh-play"
+        class=${styles.ohplay(css)}
         aria-label="Play"
         style="display:${player.isPlaying || !player.isLoaded ? 'none' : 'block'}"
       >
@@ -110,13 +139,13 @@ const apply = (player: Player) => {
     </div>
 
     <div
-      class="oh-controller"
+      class=${styles.ohcontroller(css)}
       @mouseenter=${() => (controllerIsActive = true)}
       @mouseleave=${() => (controllerIsActive = false)}
       ${ref((el) => ($controller = el as HTMLDivElement))}
     >
-      <div class="oh-controller-progress-wrap" ${ref(createHitRef)}>
-        <div class="oh-controller-progress">
+      <div class=${styles.ohcontrollerwrap(css)} ${ref(createHitRef)}>
+        <div class=${styles.ohcontrollerprogress(css)}>
           <div class="oh-controller-progress-hit">00:00</div>
           <div class="oh-controller-progress-buffered" style="width:${bufferedWidth}%"></div>
           <div class="oh-controller-progress-played" style="width:${playedWidth}%"></div>
@@ -127,7 +156,7 @@ const apply = (player: Player) => {
         </div>
       </div>
 
-      <div class="oh-controller-bottom">
+      <div class=${styles.ohcontrollerbottom(css)}>
         <div class="oh-controller-bl">
           ${!isMobile
             ? html`<button
@@ -139,26 +168,28 @@ const apply = (player: Player) => {
                 ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
               </button>`
             : null}
-          <span class="time" style="${isMobile ? 'padding-left: 0' : ''}">
+          <span class=${styles.ohcontrollertime(css)} style="${isMobile ? 'padding-left: 0' : ''}">
             ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
           </span>
         </div>
         <div class="oh-controller-br">
-          <div class="dropdown speed">
+          <div class=${styles.dropdown(css)}>
             <button aria-label="Speed" class="icon" type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class="expand">
               ${['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'].map(
                 (sp) =>
-                  html`<span class="speed-item" @click=${() => player.setPlaybackRate(+sp)}
+                  html`<span
+                    class=${styles.speeditem(css)}
+                    @click=${() => player.setPlaybackRate(+sp)}
                     >${sp}<small>x</small></span
                   >`
               )}
             </div>
           </div>
 
-          <div class="dropdown">
+          <div class=${styles.dropdown(css)}>
             <button
               aria-label="Volume"
               class="icon volume"
