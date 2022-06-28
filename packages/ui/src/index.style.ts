@@ -24,6 +24,12 @@ export const ohui = (css: Emotion['css']) =>
       cursor: pointer;
       transition: color 300ms ease 0s;
     }
+
+    @media only screen and (max-width: 991px) {
+      & button.oh-icon {
+        padding: 4px 8px;
+      }
+    }
   `
 
 export const ohmask = (css: Emotion['css']) =>
@@ -61,7 +67,7 @@ export const ohplay = (css: Emotion['css']) =>
       }
     }
 
-    @media only screen and (max-width: 1000px) {
+    @media only screen and (max-width: 991px) {
       & {
         position: absolute;
         right: unset;
@@ -112,19 +118,25 @@ export const ohcontroller = (css: Emotion['css']) =>
     left: 0;
     right: 0;
     bottom: 0;
-    height: 56px;
+    /* height: 56px; */
     padding: 0 15px;
     transition: all 0.3s ease;
     box-sizing: border-box;
     background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
 
     &.hide {
-      bottom: -47px;
+      bottom: -46px;
       padding: 0;
 
       & .oh-controller-progress-buffered,
       .oh-controller-progress-played {
         border-radius: 0;
+      }
+    }
+
+    @media only screen and (max-width: 991px) {
+      &.hide {
+        bottom: -38px;
       }
     }
   `
