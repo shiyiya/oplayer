@@ -12,7 +12,7 @@ export const ohui = (css: Emotion['css']) =>
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    & button.icon {
+    & button.oh-icon {
       display: inline-block;
       margin: 0px;
       padding: 0.5em;
@@ -52,7 +52,7 @@ export const ohplay = (css: Emotion['css']) =>
     right: 40px;
     bottom: 45px;
 
-    & > .icon {
+    & > .oh-icon {
       width: 3em;
 
       & > svg {
@@ -71,7 +71,7 @@ export const ohplay = (css: Emotion['css']) =>
         transform: translate(-50%, -50%);
       }
 
-      & > .icon {
+      & > .oh-icon {
         width: 2.5em;
       }
     }
@@ -209,13 +209,12 @@ export const ohcontrollerbottom = (css: Emotion['css']) =>
     align-items: center;
     justify-content: space-between;
 
-    & .oh-controller-bl,
-    & .oh-controller-br {
+    > div {
       display: flex;
       align-items: center;
     }
 
-    & .icon {
+    & .oh-icon {
       & svg {
         width: 1.3em;
         height: 1.3em;

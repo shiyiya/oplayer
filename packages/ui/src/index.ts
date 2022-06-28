@@ -129,7 +129,7 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
       >
         <button
           aria-label="Play"
-          class="play icon"
+          class="oh-icon play"
           type="button"
           @click=${() => player.togglePlay()}
         >
@@ -157,24 +157,26 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
       </div>
 
       <div class=${styles.ohcontrollerbottom(css)}>
-        <div class="oh-controller-bl">
+        <div>
           ${!isMobile
             ? html`<button
                 aria-label="Play"
-                class="play icon"
+                class="oh-icon play"
                 type="button"
                 @click=${() => player.togglePlay()}
               >
                 ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
               </button>`
             : null}
+
           <span class=${styles.ohcontrollertime(css)} style="${isMobile ? 'padding-left: 0' : ''}">
             ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
           </span>
         </div>
-        <div class="oh-controller-br">
+
+        <div>
           <div class=${styles.dropdown(css)}>
-            <button aria-label="Speed" class="icon" type="button">
+            <button aria-label="Speed" class="oh-icon" type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class="expand">
@@ -192,7 +194,7 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
           <div class=${styles.dropdown(css)}>
             <button
               aria-label="Volume"
-              class="icon volume"
+              class="oh-icon volume"
               type="button"
               @click=${() => player.toggleMute()}
             >
@@ -203,7 +205,7 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
           ${player.isPipEnabled
             ? html` <button
                 aria-label="Picture in Picture"
-                class="icon pip"
+                class="oh-icon pip"
                 type="button"
                 @click=${() => player.togglePip()}
               >
@@ -213,7 +215,7 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
 
           <button
             aria-label="Fullscreen"
-            class="icon"
+            class="oh-icon fullscreen"
             type="button"
             @click=${() => player.toggleFullScreen()}
           >
