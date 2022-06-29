@@ -128,7 +128,6 @@ export class Player {
   }
 
   readonly render = () => {
-    this.#container.classList.add('oh-wrap')
     render(
       html`
         <div
@@ -136,6 +135,7 @@ export class Player {
             position: relative;
             user-select: none;
             width: 100%;
+            height: 100%;
             overflow: hidden;
           `}
           ${ref((el) => (this.$root = el as HTMLDivElement))}
