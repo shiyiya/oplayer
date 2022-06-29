@@ -1,13 +1,19 @@
 import type { Emotion } from '@oplayer/core'
+import { SnowConfig } from '.'
 
-export const ohui = (css: Emotion['css']) =>
+export const ohui = (css: Emotion['css'], theme: SnowConfig['theme']) =>
   css`
+    --primary-color: ${theme?.primaryColor};
+    /* https://stackoverflow.com/questions/7015302/css-hexadecimal-rgba */
+    --shadow-color: ${theme?.primaryColor}7F;
+
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
 
+    &,
     & > * {
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
@@ -63,7 +69,7 @@ export const ohplay = (css: Emotion['css']) =>
 
       & > svg {
         fill: currentcolor;
-        filter: drop-shadow(0px 0px 5px rgb(102 104 171 / 0.5));
+        filter: drop-shadow(0px 0px 5px var(--shadow-color));
       }
     }
 
@@ -167,7 +173,7 @@ export const ohcontrollerprogress = (css: Emotion['css']) =>
     }
 
     & > .oh-controller-progress-played {
-      background: #6668ab;
+      background: var(--primary-color);
     }
 
     & .oh-controller-progress-played-dot {

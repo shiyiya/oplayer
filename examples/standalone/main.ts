@@ -54,8 +54,7 @@ const meta = () => html`
       .value=${live(src)}
     />
   </p>
-  <p>video type: ${new URL(src).pathname.split('.').pop()}</p>
-  <p><button @click=${() => p.changeSource(src)}>ChangeSource</button></p>
+  <p><button @click=${() => p.changeSource({ src })}>ChangeSource</button></p>
 
   <p>
     <button
@@ -66,7 +65,7 @@ const meta = () => html`
               ? (currentDataSrcId = 0)
               : (currentDataSrcId += 1)
           ]!
-        p.changeSource(src)
+        p.changeSource({ src })
       }}
     >
       QueueSource

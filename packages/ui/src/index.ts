@@ -1,4 +1,4 @@
-import type { PlayerPlugin } from '@oplayer/core'
+import type { Emotion, PlayerPlugin } from '@oplayer/core'
 import Player, { formatTime, isMobile } from '@oplayer/core'
 import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
@@ -82,7 +82,7 @@ const calculateWidth = (player: Player) => {
   return { bufferedWidth, playedWidth }
 }
 
-const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
+const apply = (player: Player, { css }: { css: Emotion['css'] }, config: SnowConfig) => {
   const createHitRef = (el: Element | undefined) => {
     const $hit = el!.querySelector('.oh-controller-progress-hit')! as HTMLDivElement
     el!.addEventListener(
@@ -109,7 +109,9 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
     )
   }
 
-  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div class=${styles.ohui(css)}>
+  const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div
+    class=${styles.ohui(css, config.theme)}
+  >
     <div class=${styles.ohmask(css)} @click=${() => player.togglePlay()}></div>
     <div class=${styles.oharea(css)}>
       ${player.isLoading
@@ -180,7 +182,7 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class="expand">
-              ${['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'].map(
+              ${config.speed!.map(
                 (sp) =>
                   html`<span
                     class=${styles.speeditem(css)}
@@ -202,7 +204,7 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
             </button>
           </div>
 
-          ${player.isPipEnabled
+          ${!config.disablePictureInPicture && player.isPipEnabled
             ? html` <button
                 aria-label="Picture in Picture"
                 class="oh-icon pip"
@@ -212,15 +214,16 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
                 ${unsafeSVG(pipSvg)}
               </button>`
             : null}
-
-          <button
-            aria-label="Fullscreen"
-            class="oh-icon fullscreen"
-            type="button"
-            @click=${() => player.toggleFullScreen()}
-          >
-            ${unsafeSVG(player.isFullScreen ? compressSvg : expandSvg)}
-          </button>
+          ${!config.disableFullscreen
+            ? html` <button
+                aria-label="Fullscreen"
+                class="oh-icon fullscreen"
+                type="button"
+                @click=${() => player.toggleFullScreen()}
+              >
+                ${unsafeSVG(player.isFullScreen ? compressSvg : expandSvg)}
+              </button>`
+            : null}
         </div>
       </div>
     </div>
@@ -270,9 +273,27 @@ const apply: PlayerPlugin['apply'] = (player: Player, { css }) => {
   }
 }
 
-const ui = (): PlayerPlugin => ({
+export type SnowConfig = {
+  theme?: {
+    primaryColor: `#${string}`
+  }
+  speed?: string[]
+  disableFullscreen?: boolean
+  disablePictureInPicture?: boolean
+}
+
+const defaultConfig: SnowConfig = {
+  theme: {
+    primaryColor: '#6668ab'
+  },
+  speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
+  disableFullscreen: false,
+  disablePictureInPicture: false
+}
+
+const snow = (config: SnowConfig = defaultConfig): PlayerPlugin => ({
   name: 'oplayer-theme-snow',
-  apply
+  apply: (player, provide) => apply(player, provide, config)
 })
 
-export default ui
+export default snow
