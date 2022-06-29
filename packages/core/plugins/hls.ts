@@ -1,5 +1,5 @@
-import { ErrorData, ErrorDetails, HlsConfig } from 'hls.js'
 import Hls from 'hls.js/dist/hls.light.min'
+import type { ErrorData, HlsConfig } from 'hls.js'
 import type { PlayerPlugin, Source } from '../src'
 
 let isInitial = false
@@ -56,7 +56,10 @@ const hlsPlugin = ({
 
     Object.values(Hls.Events).forEach((e) => {
       hlsInstance?.on(e as any, (event: string, data: ErrorData) => {
-        if (event === Hls.Events.ERROR && data.details == ErrorDetails.MANIFEST_LOAD_ERROR) {
+        if (
+          event === Hls.Events.ERROR &&
+          data.details == 'manifestLoadError' /*ErrorDetails.MANIFEST_LOAD_ERROR*/
+        ) {
           emit('error', { type: event, payload: data })
         }
         emit(event, data)

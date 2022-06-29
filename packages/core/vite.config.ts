@@ -4,7 +4,7 @@ import { viteConfig } from '../../vite.config'
 export default viteConfig('core', {
   build: {
     lib: {
-      name: 'Player',
+      name: 'OPlayer',
       formats: ['umd', 'es']
     } as LibraryOptions
   }

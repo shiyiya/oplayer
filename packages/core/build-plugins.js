@@ -31,7 +31,8 @@ async function buildPugin(name) {
         output: {
           dir: 'dist/plugins',
           globals: {
-            'hls.js': 'Hls'
+            'hls.js/dist/hls.light.min': 'Hls',
+            'webtorrent/webtorrent.min': 'WebTorrent'
           }
         },
         plugins: rollupPlugins
