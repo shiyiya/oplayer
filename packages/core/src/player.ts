@@ -10,6 +10,7 @@ export type { Emotion }
 export type Source = {
   src: string
   poster?: string
+  format?: string
 }
 
 export type PlayerPlugin = {
@@ -19,7 +20,7 @@ export type PlayerPlugin = {
     player: Player,
     style: { css: Emotion['css']; injectGlobal: Emotion['injectGlobal'] }
   ) => void
-  load?: (player: Player, video: HTMLVideoElement, src: string) => boolean
+  load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
 }
 
 export type Options = {
@@ -97,7 +98,7 @@ export class Player {
   readonly create = () => {
     this.render()
     this.initEvent()
-    this.load(this.#options.source.src)
+    this.load(this.#options.source)
     this.#applyPlugins()
     return this
   }
@@ -161,14 +162,14 @@ export class Player {
     )
   }
 
-  load = (src: string) => {
+  load = (source: Source) => {
     this.#plugins.forEach((plugin) => {
       if (plugin.load && !this.#isCustomLoader) {
-        this.#isCustomLoader = plugin.load(this, this.#video, src)
+        this.#isCustomLoader = plugin.load(this, this.#video, source)
       }
     })
     if (!this.#isCustomLoader) {
-      this.#video.src = src
+      this.#video.src = source.src
     }
   }
 
@@ -280,10 +281,10 @@ export class Player {
     }
   }
 
-  changeSource(sources: string | Source) {
+  changeSource(sources: Source) {
     this.hasError = false
     this.#isCustomLoader = false
-    this.load(typeof sources === 'string' ? sources : sources.src)
+    this.load(sources)
     this.emit('videosourcechange')
   }
 

@@ -1,6 +1,6 @@
 import { ErrorData, ErrorDetails, HlsConfig } from 'hls.js'
 import Hls from 'hls.js/dist/hls.light.min'
-import type { PlayerPlugin } from '../src'
+import type { PlayerPlugin, Source } from '../src'
 
 let isInitial = false
 let hlsInstance: Hls | null = null
@@ -15,22 +15,25 @@ const getHls = (options?: Partial<HlsConfig>): Hls => {
 
 type hlsPluginOptions = {
   hlsConfig?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, src: string) => boolean
+  matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
-const defaultMatcher: hlsPluginOptions['matcher'] = (video, src) =>
-  /m3u8(#|\?|$)/i.test(src) ||
-  Boolean(video.canPlayType('application/x-mpegURL')) ||
-  Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
+const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
+  !(
+    Boolean(video.canPlayType('application/x-mpegURL')) ||
+    Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
+  ) &&
+  (source.format === 'm3u8' || /m3u8(#|\?|$)/i.test(source.src))
 
 const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher
 }: hlsPluginOptions = {}): PlayerPlugin => ({
   name: 'oplayer-plugin-hls',
-  load: ({ on, emit }, video, src: string) => {
-    if (!matcher(video, src)) return false
+  load: ({ on, emit }, video, source) => {
+    if (!matcher(video, source)) return false
 
+    video.poster = source.poster || ''
     hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
     if (!hlsInstance || !Hls.isSupported()) {
       emit('error', {
@@ -39,16 +42,16 @@ const hlsPlugin = ({
           message: 'hls is not supported'
         }
       })
-      return false
+      return true
     }
 
     if (!isInitial) {
-      emit('plugin:load', { name: 'oplayer-plugin-hls' })
+      emit('plugin:loaded', { name: 'oplayer-plugin-hls' })
       isInitial = true
     }
 
     hlsInstance?.attachMedia(video)
-    hlsInstance?.loadSource(src)
+    hlsInstance?.loadSource(source.src)
     hlsInstance?.startLoad()
 
     Object.values(Hls.Events).forEach((e) => {

@@ -1,6 +1,5 @@
 import Player, { VIDEO_EVENTS } from '@oplayer/core'
 import hls from '@oplayer/core/plugins/hls'
-import torrent from '@oplayer/core/plugins/torrent'
 
 import ui from '@oplayer/ui'
 import { html, render } from 'lit'
@@ -37,7 +36,7 @@ const p = Player.make($container, {
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui(), hls(), torrent()])
+  .use([ui(), hls()])
   .create()
 
 const meta = () => html`
