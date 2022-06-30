@@ -1,4 +1,5 @@
-import type { Emotion, PlayerPlugin } from '@oplayer/core'
+import { css } from '@emotion/css'
+import type { PlayerPlugin } from '@oplayer/core'
 import Player, { formatTime, isMobile } from '@oplayer/core'
 import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
@@ -12,36 +13,8 @@ import playSvg from './icons/play.svg?raw'
 import volumeOffSvg from './icons/volume-off.svg?raw'
 import volumeSvg from './icons/volume.svg?raw'
 
-import {
-  ohui,
-  ohmask,
-  oharea,
-  ohplay,
-  ohloading,
-  ohcontrollerwrap,
-  ohcontroller,
-  ohcontrollerprogress,
-  ohcontrollerbottom,
-  ohcontrollertime,
-  dropdown,
-  speeditem
-} from './index.style'
+import styles from './index.style'
 import loadingStyles from './loading.style'
-
-const styles = {
-  ohui,
-  ohmask,
-  oharea,
-  ohplay,
-  ohloading,
-  ohcontrollerwrap,
-  ohcontroller,
-  ohcontrollerprogress,
-  ohcontrollerbottom,
-  ohcontrollertime,
-  dropdown,
-  speeditem
-}
 
 let CTRL_HIDE_DELAY = 1500
 
@@ -82,7 +55,7 @@ const calculateWidth = (player: Player) => {
   return { bufferedWidth, playedWidth }
 }
 
-const apply = (player: Player, { css }: { css: Emotion['css'] }, config: SnowConfig) => {
+const apply = (player: Player, config: SnowConfig) => {
   const createHitRef = (el: Element | undefined) => {
     const $hit = el!.querySelector('.oh-controller-progress-hit')! as HTMLDivElement
     el!.addEventListener(
@@ -293,7 +266,7 @@ const defaultConfig: SnowConfig = {
 
 const snow = (config: SnowConfig = defaultConfig): PlayerPlugin => ({
   name: 'oplayer-theme-snow',
-  apply: (player, provide) => apply(player, provide, config)
+  apply: (player) => apply(player, config)
 })
 
 export default snow

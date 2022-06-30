@@ -1,4 +1,4 @@
-import type { Emotion } from '@oplayer/core'
+import type { Emotion } from '@emotion/css/types/create-instance'
 import { SnowConfig } from '.'
 
 export const ohui = (css: Emotion['css'], theme: SnowConfig['theme']) =>
@@ -292,20 +292,17 @@ export const speeditem = (css: Emotion['css']) =>
     cursor: pointer;
   `
 
-//TODO:  error TS2742: The inferred type of 'default' cannot be named without a reference to '.pnpm/@emotion+serialize@1.0.4/node_modules/@emotion/serialize'. This is likely not
-// export default {
-//   ohui,
-//   ohmask,
-//   oharea,
-//   ohplay,
-//   ohloading,
-//   ohcontrollerwrap,
-//   ohcontroller,
-//   ohcontrollerprogress,
-//   ohcontrollerprogressplayeddot,
-//   ohcontrollerprogresshit,
-//   ohcontrollerbottom,
-//   ohcontrollertime,
-//   dropdown,
-//   speeditem
-// }
+export default {
+  ohui,
+  ohmask,
+  oharea,
+  ohplay,
+  ohloading,
+  ohcontrollerwrap,
+  ohcontroller,
+  ohcontrollerprogress,
+  ohcontrollerbottom,
+  ohcontrollertime,
+  dropdown,
+  speeditem
+}

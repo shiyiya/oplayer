@@ -1,10 +1,6 @@
 import { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS } from './constants'
 import E, { Listener, OEvent } from './event'
-import { css, injectGlobal } from '@emotion/css'
-import type { Emotion } from '@emotion/css/types/create-instance'
 import { $ } from './utils'
-
-export type { Emotion }
 
 export type Source = {
   src: string
@@ -15,10 +11,7 @@ export type Source = {
 export type PlayerPlugin = {
   name: string
   version?: string
-  apply?: (
-    player: Player,
-    style: { css: Emotion['css']; injectGlobal: Emotion['injectGlobal'] }
-  ) => void
+  apply?: (player: Player) => void
   load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
 }
 
@@ -172,7 +165,7 @@ export class Player {
   #applyPlugins = () => {
     this.#plugins.forEach((plugin) => {
       if (plugin.apply) {
-        plugin.apply(this, { css, injectGlobal })
+        plugin.apply(this)
       }
     })
   }

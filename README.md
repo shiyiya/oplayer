@@ -1,5 +1,7 @@
 <h1><center>WIP</center></h1>
 
+[Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx)
+
 [Oh!](https://shiyiya.github.io/oplayer) Another web video player.
 
 ![](./oplayer.png)

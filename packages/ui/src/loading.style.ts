@@ -1,4 +1,4 @@
-import type { Emotion } from '@oplayer/core'
+import type { Emotion } from '@emotion/css/types/create-instance'
 
 const linearactivity = (css: Emotion['css']) =>
   css`
