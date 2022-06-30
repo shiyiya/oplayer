@@ -12,11 +12,13 @@ export namespace $ {
     if (isClassSelector) dom.classList.add(selector!)
     tpl && (dom.innerHTML = tpl)
     Object.keys(attrs).forEach((key) => {
-      const attr = attrs[key]!?.toString()
+      const attr = attrs[key]
       if (tag === 'video' && attr) {
-        dom.setAttribute(key, attr)
+        dom.setAttribute(key, `${attr}`)
       } else {
-        dom.setAttribute(key, attr)
+        if (typeof attr !== 'undefined') {
+          dom.setAttribute(key, `${attr}`)
+        }
       }
     })
     return dom as unknown as T
@@ -32,20 +34,16 @@ export namespace $ {
   }
 
   //TODO: more case
-  export const css = (raw: string) => {
-    const className = 'css-' + S4()
+  export const css = (raw: string, scop: string = 'css') => {
+    const className = `${scop}-${S5()}`
     const css = `.${className}{${raw}}`
     render($.create('style', {}, css), document.getElementsByTagName('head')[0]!)
     return className
   }
 }
 
-export function S4() {
+export function S5() {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16)
-}
-
-export function guid() {
-  return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4()
 }
 
 export function padZero(time: number): string {
