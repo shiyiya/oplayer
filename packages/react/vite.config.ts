@@ -5,7 +5,7 @@ export default viteConfig('react', {
   plugins: [react()],
   build: {
     lib: {
-      entry: './index.tsx'
+      entry: './src/index.tsx'
     }
   }
 })

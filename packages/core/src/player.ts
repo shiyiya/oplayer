@@ -1,9 +1,8 @@
-import { html, render } from 'lit'
-import { ref } from 'lit/directives/ref.js'
 import { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS } from './constants'
 import E, { Listener, OEvent } from './event'
 import { css, injectGlobal } from '@emotion/css'
 import type { Emotion } from '@emotion/css/types/create-instance'
+import { $ } from './utils'
 
 export type { Emotion }
 
@@ -128,38 +127,35 @@ export class Player {
   }
 
   readonly render = () => {
-    render(
-      html`
-        <div
-          class=${css`
+    this.#video = $.create<HTMLVideoElement>(
+      `video.${$.css(`
+              width: 100%;
+              height: 100%;
+              display: block;
+            `)}`,
+      {
+        autoplay: this.#options.autoplay,
+        muted: this.#options.muted,
+        loop: this.#options.loop,
+        playsinline: this.#options.playsinline,
+        volume: this.#options.volume,
+        preload: this.#options.preload,
+        poster: this.#options.source.poster
+      }
+    )
+
+    this.$root = $.create(
+      `div.${$.css(`
             position: relative;
             user-select: none;
             width: 100%;
             height: 100%;
             overflow: hidden;
-          `}
-          ${ref((el) => (this.$root = el as HTMLDivElement))}
-        >
-          <video
-            class=${css`
-              width: 100%;
-              height: 100%;
-              display: block;
-            `}
-            ${ref((el) => (this.#video = el as HTMLVideoElement))}
-            ?autoplay=${this.#options.autoplay}
-            ?muted=${this.#options.muted}
-            ?loop=${this.#options.loop}
-            ?playsinline=${this.#options.playsinline}
-            muted=${this.#options.muted}
-            volume=${this.#options.volume}
-            preload=${this.#options.preload}
-            poster=${this.#options.source.poster}
-          />
-        </div>
-      `,
-      this.#container
+          `)}`
     )
+
+    $.render(this.#video, this.$root)
+    $.render(this.$root, this.container)
   }
 
   load = (source: Source) => {
