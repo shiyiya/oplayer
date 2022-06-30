@@ -37,6 +37,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "lit": "^2.2.6"
+    "lit": "^2.2.7"
   }
 }

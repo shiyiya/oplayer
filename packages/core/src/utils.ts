@@ -5,8 +5,8 @@ export namespace $ {
     tpl: string = ''
   ) => {
     const isIdSelector = t.indexOf('#') !== -1
-    const isClassSelector = t.indexOf('.')! !== -1
-    const [tag, selector] = isIdSelector ? t.split('.') : isClassSelector ? t.split('#') : t
+    const isClassSelector = t.indexOf('.') !== -1
+    const [tag, selector] = isIdSelector ? t.split('#') : isClassSelector ? t.split('.') : [t]
     const dom = document.createElement(tag as keyof HTMLElementTagNameMap)
     if (isIdSelector) dom.id = selector!
     if (isClassSelector) dom.classList.add(selector!)
@@ -33,7 +33,7 @@ export namespace $ {
 
   //TODO: more case
   export const css = (raw: string) => {
-    const className = guid()
+    const className = 'css-' + S4()
     const css = `.${className}{${raw}}`
     render($.create('style', {}, css), document.getElementsByTagName('head')[0]!)
     return className
@@ -41,7 +41,7 @@ export namespace $ {
 }
 
 export function S4() {
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16)
 }
 
 export function guid() {

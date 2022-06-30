@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "./lib/index.es.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "keywords": [],
   "author": "",
@@ -20,14 +20,12 @@
   ],
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0",
-    "lit": "^2.2.6",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
     "@types/react": "^18.0.14",
-    "lit": "^2.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

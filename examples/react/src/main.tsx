@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react'
-import ui from '../../../packages/ui/dist'
-import hls from '../../../packages/core/plugins/hls'
-import ReactPlayer from '../../packages/react'
+import { useRef, useState } from 'react'
+import ReactPlayer from '@oplayer/react'
+import ui from '@oplayer/ui'
+import hls from '@oplayer/core/plugins/hls'
 
 import { createRoot } from 'react-dom/client'
 

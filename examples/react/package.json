@@ -12,6 +12,8 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@types/react": "^18.0.14"
+    "@types/react": "^18.0.14",
+    "@oplayer/core": "workspace:*",
+    "@oplayer/ui": "workspace:*"
   }
 }

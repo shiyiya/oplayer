@@ -5,10 +5,9 @@ interface OPlayerProps extends Options {
   plugins?: PlayerPlugin[]
 }
 
-
-const ReactPlayer = forwardRef(({ plugins, ...rest }: OPlayerProps, ref: Player) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [player, setPlayer] = useState<Player>()
+const ReactPlayer = forwardRef<Player | null, OPlayerProps>(({ plugins, ...rest }, ref) => {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [player, setPlayer] = useState<Player | null>(null)
 
   const isInitial = useRef(false)
 
@@ -31,7 +30,7 @@ const ReactPlayer = forwardRef(({ plugins, ...rest }: OPlayerProps, ref: Player)
     }
   }, [player, rest.source])
 
-  useImperativeHandle(ref, () => player, [player])
+  useImperativeHandle(ref, () => player as any, [player])
 
   return (
     <div
