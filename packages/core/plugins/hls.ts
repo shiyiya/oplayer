@@ -1,6 +1,8 @@
 import Hls from 'hls.js/dist/hls.light.min'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source } from '..'
+import type { PlayerPlugin, Source } from '../src/types'
+
+const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 let isInitial = false
 let hlsInstance: Hls | null = null
@@ -29,12 +31,17 @@ const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher
 }: hlsPluginOptions = {}): PlayerPlugin => ({
-  name: 'oplayer-plugin-hls',
+  name: PLUGIN_NAME,
   load: ({ on, emit }, video, source) => {
     if (!matcher(video, source)) return false
 
     video.poster = source.poster || ''
     hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
+    if (!isInitial) {
+      emit('plugin:loaded', { name: PLUGIN_NAME })
+      isInitial = true
+    }
+
     if (!hlsInstance || !Hls.isSupported()) {
       emit('error', {
         payload: {
@@ -43,11 +50,6 @@ const hlsPlugin = ({
         }
       })
       return true
-    }
-
-    if (!isInitial) {
-      emit('plugin:loaded', { name: 'oplayer-plugin-hls' })
-      isInitial = true
     }
 
     hlsInstance?.attachMedia(video)
