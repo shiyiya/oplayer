@@ -1,7 +1,7 @@
 import E from './event'
 import { $ } from './utils'
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
-import type { Listener, OplayerEvent, Options, PlayerPlugin, Source } from './types'
+import { Options, PlayerPlugin, Listener, OplayerEvent, Source } from './types'
 
 export class Player {
   constructor(el: HTMLElement, options: Options | string) {

@@ -1,5 +1,5 @@
 import Player, { VIDEO_EVENTS } from '@oplayer/core'
-import hls from '@oplayer/core/plugins/hls'
+import hls from '@oplayer/core/plugins/hls.js'
 
 import ui from '@oplayer/ui'
 import { html, render } from 'lit'
