@@ -36,6 +36,8 @@ const p = Player.make($container, {
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
+  //TODO: FIX THIS
+  // import hls from dist
   .use([ui(), hls()])
   .create()
 

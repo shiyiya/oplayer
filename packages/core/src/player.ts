@@ -1,30 +1,7 @@
-import { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS } from './constants'
-import E, { Listener, OEvent } from './event'
+import E from './event'
 import { $ } from './utils'
-
-export type Source = {
-  src: string
-  poster?: string
-  format?: string
-}
-
-export type PlayerPlugin = {
-  name: string
-  version?: string
-  apply?: (player: Player) => void
-  load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
-}
-
-export type Options = {
-  autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
-  muted?: boolean
-  loop?: boolean
-  volume?: number
-  preload?: 'auto' | 'metadata' | 'none'
-  playbackRate?: number
-  playsinline?: boolean
-  source: Source
-}
+import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import type { Listener, OplayerEvent, Options, PlayerPlugin, Source } from './types'
 
 export class Player {
   constructor(el: HTMLElement, options: Options | string) {
@@ -83,7 +60,7 @@ export class Player {
     return this
   }
 
-  readonly emit = (name: typeof EVENTS[number] | string, payload?: OEvent['payload']) => {
+  readonly emit = (name: typeof EVENTS[number] | string, payload?: OplayerEvent['payload']) => {
     this.#E.emit(name as any, payload)
   }
 

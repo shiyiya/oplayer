@@ -1,5 +1,5 @@
 import webtorrent from 'webtorrent/webtorrent.min'
-import type { PlayerPlugin, Source } from '../src'
+import type { PlayerPlugin, Source } from '..'
 
 let isInitial = false
 

@@ -1,10 +1,4 @@
-export type OEvent = {
-  type: string
-  payload: any
-  _raw?: any
-}
-
-export type Listener = (enevt: OEvent) => void
+import type { Listener, OplayerEvent } from './types'
 
 export default class E {
   events: Record<string, Listener[]> = Object.create(null)
@@ -21,7 +15,7 @@ export default class E {
   }
 
   once(name: string, callback: Listener) {
-    const once = (event: OEvent) => {
+    const once = (event: OplayerEvent) => {
       callback({ type: name, payload: event.payload })
       this.off(name, once)
     }

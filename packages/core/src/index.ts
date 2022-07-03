@@ -3,3 +3,5 @@ export * from './event'
 export * from './player'
 export { Player as default } from './player'
 export * from './utils'
+
+export * from './types'
