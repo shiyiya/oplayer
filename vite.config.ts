@@ -9,7 +9,14 @@ export const libFileName = (format: string) => `index.${format}.js`
 
 export const rollupPlugins: Plugin[] = [autoExternal()]
 
-export const external = ['@oplayer/core', /lit.*/]
+export const external = [
+  '@oplayer/core',
+  /lit.*/,
+  'hls.js/dist/hls.light.min',
+  'webtorrent/webtorrent.min',
+  'react',
+  'react-router-dom'
+]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
   mergeDeep<BuildOptions>(
@@ -27,7 +34,12 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
       rollupOptions: {
         external,
         output: {
-          dir: resolvePath(`packages/${packageDirName}/dist`)
+          dir: resolvePath(`packages/${packageDirName}/dist`),
+          globals: {
+            'hls.js/dist/hls.light.min': 'Hls',
+            'webtorrent/webtorrent.min': 'WebTorrent',
+            react: 'react'
+          }
         },
         plugins: rollupPlugins
       }
