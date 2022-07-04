@@ -12,7 +12,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@emotion/css": "^11.9.0",
     "@oplayer/core": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "hls.js": "^1.1.5",
