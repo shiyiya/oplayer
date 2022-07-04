@@ -33,26 +33,33 @@ export namespace $ {
     return container.appendChild(elm)
   }
 
-  export const css = (...rules: any[]) => {
-    if (!(rules[0] && rules[0].length && rules[0].raw)) {
-      throw new Error('Not yet implemented')
-    }
+  function makeStyleTag() {
+    let tag = document.createElement('style')
+    tag.setAttribute('data-oplayer', '')
+    tag.appendChild(document.createTextNode(''))
+    ;(document.head || document.getElementsByTagName('head')[0]).appendChild(tag)
 
-    let styles = ''
-    let strings = rules[0]
-    styles += strings[0]
-    for (let i = 1; i < rules.length; i++) {
-      styles += typeof rules[i] == 'boolean' ? '' : rules[i]
-      styles += strings[i]
+    for (let i = 0; i < document.styleSheets.length; i++) {
+      if (document.styleSheets[i]!.ownerNode === tag) {
+        return document.styleSheets[i]
+      }
     }
-
-    const className = `css-${S5()}`
-    render(
-      $.create('style', {}, `.${className}{${styles}}`),
-      document.getElementsByTagName('head')[0]!
-    )
-    return className
+    return null
   }
+
+  export const css = (() => {
+    const sheet = makeStyleTag()
+    return (...rules: any[]) => {
+      if (rules[0] && !rules.length && typeof rules === 'object') {
+        throw new Error('Not yet implemented')
+      }
+
+      //TODO: hash rules id
+      const className = `css-${S5()}`
+      sheet?.insertRule(`.${className}{${rules[0]}}`, sheet.cssRules.length)
+      return className
+    }
+  })()
 }
 
 export function S5() {

@@ -9,7 +9,7 @@ importers:
       '@rollup/plugin-json': ^4.1.0
       '@rollup/plugin-node-resolve': ^13.3.0
       '@rollup/plugin-typescript': ^8.3.3
-      '@types/node': ^18.0.0
+      '@types/node': ^18.0.1
       '@types/rollup-plugin-auto-external': ^2.0.2
       '@vitejs/plugin-react': ^1.3.2
       concurrently: ^7.2.2
@@ -33,14 +33,14 @@ importers:
       '@rollup/plugin-json': 4.1.0_rollup@2.75.7
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.75.7
       '@rollup/plugin-typescript': 8.3.3_g4qkabtmybowem44p7ts7jnbqm
-      '@types/node': 18.0.0
+      '@types/node': 18.0.1
       '@types/rollup-plugin-auto-external': 2.0.2
       '@vitejs/plugin-react': 1.3.2
       concurrently: 7.2.2
       cross-env: 7.0.3
       esbuild: 0.14.48
       lint-staged: 13.0.3
-      nx: 14.3.6
+      nx: 14.4.0
       prettier: 2.7.1
       rimraf: 3.0.2
       rollup: 2.75.7
@@ -85,12 +85,12 @@ importers:
       chokidar: ^3.5.3
       glob: ^7.2.3
       hls.js: ^1.1.5
-      webtorrent: ^1.8.24
+      webtorrent: ^1.8.26
     devDependencies:
       chokidar: 3.5.3
       glob: 7.2.3
       hls.js: 1.1.5
-      webtorrent: 1.8.24
+      webtorrent: 1.8.26
 
   packages/react:
     specifiers:
@@ -731,20 +731,20 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@nrwl/cli/14.3.6:
-    resolution: {integrity: sha512-MNCBzM3ZDsujEc5crltH/kEyNBKx6DofLHdpzY1EoiY+yF57W7E1B6ERkVUGDc52sR4snEUKpQLXdVFjwP+z8A==}
+  /@nrwl/cli/14.4.0:
+    resolution: {integrity: sha512-Hmn+Yj7VTmaztOgTCe0kYtZkBsp6NGPfvbm27FTgcda5TsxCkrCLah6btuS7hcX+h4Ss308z9hFMfNk2EvVWXA==}
     dependencies:
-      nx: 14.3.6
+      nx: 14.4.0
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
     dev: true
 
-  /@nrwl/tao/14.3.6:
-    resolution: {integrity: sha512-g3y6VRq4wNtbFZIclJwRR/1hcTesx6h64g7h80VWtyRw0pVq/0zAjb8abeQSTDLM15uc1pQJYPEfsR/KgI3Sow==}
+  /@nrwl/tao/14.4.0:
+    resolution: {integrity: sha512-8PFM72SMWyhIPPeGpIJzzST/yfMAsf0zRKNfB90ra7FlHXXXzDZmpJvV8JpnCtSBGjT8OrcpZ8siD4JXov4ueA==}
     hasBin: true
     dependencies:
-      nx: 14.3.6
+      nx: 14.4.0
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -756,7 +756,7 @@ packages:
     requiresBuild: true
     dependencies:
       node-addon-api: 3.2.1
-      node-gyp-build: 4.4.0
+      node-gyp-build: 4.5.0
     dev: true
 
   /@rollup/plugin-commonjs/22.0.1_rollup@2.75.7:
@@ -848,14 +848,14 @@ packages:
   /@types/fs-extra/8.1.2:
     resolution: {integrity: sha512-SvSrYXfWSc7R4eqnOzbQF4TZmfpNSM9FrSWLU3EUnWBuyZqNBOrv1B1JA3byUDPUl9z4Ab3jeZG2eDdySlgNMg==}
     dependencies:
-      '@types/node': 18.0.0
+      '@types/node': 18.0.1
     dev: true
 
   /@types/glob/7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 3.0.5
-      '@types/node': 18.0.0
+      '@types/node': 18.0.1
     dev: true
 
   /@types/is-ci/3.0.0:
@@ -880,8 +880,8 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: true
 
-  /@types/node/18.0.0:
-    resolution: {integrity: sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==}
+  /@types/node/18.0.1:
+    resolution: {integrity: sha512-CmR8+Tsy95hhwtZBKJBs0/FFq4XX7sDZHlGGf+0q+BRZfMbOTkzkj0AFAuTyXbObDIoanaBBW0+KEW+m3N16Wg==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -905,7 +905,7 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.0.0
+      '@types/node': 18.0.1
     dev: true
 
   /@types/rollup-plugin-auto-external/2.0.2:
@@ -1224,8 +1224,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001361
-      electron-to-chromium: 1.4.174
+      caniuse-lite: 1.0.30001363
+      electron-to-chromium: 1.4.177
       node-releases: 2.0.5
       update-browserslist-db: 1.0.4_browserslist@4.21.1
     dev: true
@@ -1264,7 +1264,7 @@ packages:
     engines: {node: '>=6.14.2'}
     requiresBuild: true
     dependencies:
-      node-gyp-build: 4.4.0
+      node-gyp-build: 4.5.0
     dev: true
 
   /builtin-modules/3.3.0:
@@ -1311,8 +1311,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /caniuse-lite/1.0.30001361:
-    resolution: {integrity: sha512-ybhCrjNtkFji1/Wto6SSJKkWk6kZgVQsDq5QI83SafsF6FXv2JB4df9eEdH6g8sdGgqTXrFLjAxqBGgYoU3azQ==}
+  /caniuse-lite/1.0.30001363:
+    resolution: {integrity: sha512-HpQhpzTGGPVMnCjIomjt+jvyUu8vNFo3TaDiZ/RcoTrlOq/5+tC8zHdsbgFB6MxmaY+jCpsH09aD80Bb4Ow3Sg==}
     dev: true
 
   /chalk/2.4.2:
@@ -1529,14 +1529,14 @@ packages:
     resolution: {integrity: sha512-PXHBvGLuL69u55IkLa5e5838fLhIMHxmkV4ge42a8alGyn7BtawYgI0hQ849EedvtHIOLNNH3i6eQU1BiE9SUA==}
     dev: true
 
-  /create-torrent/5.0.2:
-    resolution: {integrity: sha512-tNelixVeEkjiyeAuCW7uWFl1ARA+YapyZvdSWw6U3AXe/VXpxR4ihFNfjOzmvc5TBqK5EkGdsoKXAEKfQ8xlmQ==}
+  /create-torrent/5.0.4:
+    resolution: {integrity: sha512-59brGxFHoWWXzpFKAwD/vB/BYTALDuf+1Wmajxq2ZYnllJtg8SwfcmP7PHCKas5mDTZLD4om1cneC1YMZFuPUA==}
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
       bencode: 2.0.3
       block-stream2: 2.1.0
-      filestream: 5.0.0
+      fast-blob-stream: 1.0.3
       is-file: 1.0.0
       junk: 3.1.0
       minimist: 1.2.6
@@ -1681,8 +1681,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium/1.4.174:
-    resolution: {integrity: sha512-JER+w+9MV2MBVFOXxP036bLlNOnzbYAWrWU8sNUwoOO69T3w4564WhM5H5atd8VVS8U4vpi0i0kdoYzm1NPQgQ==}
+  /electron-to-chromium/1.4.177:
+    resolution: {integrity: sha512-FYPir3NSBEGexSZUEeht81oVhHfLFl6mhUKSkjHN/iB/TwEIt/WHQrqVGfTLN5gQxwJCQkIJBe05eOXjI7omgg==}
     dev: true
 
   /emoji-regex/8.0.0:
@@ -2036,6 +2036,13 @@ packages:
       tmp: 0.0.33
     dev: true
 
+  /fast-blob-stream/1.0.3:
+    resolution: {integrity: sha512-mftySLxeuGtC4C1WcsCNYkrD38LUfnEU/320P/104mEtlJcIlt7EF0cqm44TJkaZUrfwPbWVaOnEIaNVposu6Q==}
+    dependencies:
+      fast-readable-async-iterator: 1.0.1
+      streamx: 2.12.4
+    dev: true
+
   /fast-fifo/1.1.0:
     resolution: {integrity: sha512-Kl29QoNbNvn4nhDsLYjyIAaIqaJB6rBx5p3sL9VjaefJ+eMFBWVZiaoguaoZfzEKr5RhAti0UgM8703akGPJ6g==}
     dev: true
@@ -2062,6 +2069,10 @@ packages:
       micromatch: 4.0.5
     dev: true
 
+  /fast-readable-async-iterator/1.0.1:
+    resolution: {integrity: sha512-MLpTZQUy+9Zv8fsYMslQya+MCx3n7Rl2v7nReYABMRSuc312uMXOpuHcARQgflqUDzUNT2U2eshSPbJW7Eb2FA==}
+    dev: true
+
   /fastq/1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}
     dependencies:
@@ -2073,13 +2084,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       escape-string-regexp: 1.0.5
-    dev: true
-
-  /filestream/5.0.0:
-    resolution: {integrity: sha512-5H3RqSaJp12THfZiNWodYM7TiKfQvrpX+EIOrB1XvCceTys4yvfEIl8wDp+/yI8qj6Bxym8m0NYWwVXDAet/+A==}
-    dependencies:
-      readable-stream: 3.6.0
-      typedarray-to-buffer: 3.1.5
     dev: true
 
   /fill-range/7.0.1:
@@ -2249,7 +2253,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 3.0.5
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -2602,10 +2606,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-symbols: 1.0.3
-    dev: true
-
-  /is-typedarray/1.0.0:
-    resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
     dev: true
 
   /is-weakref/1.0.2:
@@ -3100,8 +3100,8 @@ packages:
     resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
     dev: true
 
-  /node-gyp-build/4.4.0:
-    resolution: {integrity: sha512-amJnQCcgtRVw9SvoebO3BKGESClrfXGCUTX9hSn1OuGQTQBOZmVd0Z0OlecpuRksKvbsUqALE8jls/ErClAPuQ==}
+  /node-gyp-build/4.5.0:
+    resolution: {integrity: sha512-2iGbaQBV+ITgCz76ZEjmhUKAKVf7xfY1sRl4UiKQspfZMH2h06SyhNsnSVy50cwkFQDGLyif6m/6uFXHkOZ6rg==}
     hasBin: true
     dev: true
 
@@ -3137,8 +3137,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nx/14.3.6:
-    resolution: {integrity: sha512-jBgqXEkRalo8PwXJzO4HVNN3P5pqyL5VawyNd34qPl+4t2XlDRqoK0J74i8liPGdKPBB1HjM2K1u+QNF2ROvQA==}
+  /nx/14.4.0:
+    resolution: {integrity: sha512-YemgZ3NHmO5Ik0lruoSCoT5ORaUrcI7gpqtmI1SL8hSPJs4kg2hYevoIb6sE0CTsxuqDHFnRR8qhdPLcSgHGxQ==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -3150,8 +3150,8 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 14.3.6
-      '@nrwl/tao': 14.3.6
+      '@nrwl/cli': 14.4.0
+      '@nrwl/tao': 14.4.0
       '@parcel/watcher': 2.0.4
       chalk: 4.1.0
       chokidar: 3.5.3
@@ -4288,12 +4288,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /typedarray-to-buffer/3.1.5:
-    resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
-    dependencies:
-      is-typedarray: 1.0.0
-    dev: true
-
   /typescript/4.7.4:
     resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
     engines: {node: '>=4.2.0'}
@@ -4369,7 +4363,7 @@ packages:
     engines: {node: '>=6.14.2'}
     requiresBuild: true
     dependencies:
-      node-gyp-build: 4.4.0
+      node-gyp-build: 4.5.0
     dev: true
 
   /util-deprecate/1.0.2:
@@ -4383,7 +4377,7 @@ packages:
     requiresBuild: true
     dependencies:
       napi-macros: 2.0.0
-      node-gyp-build: 4.4.0
+      node-gyp-build: 4.5.0
       readable-stream: 3.6.0
       timeout-refresh: 1.0.3
       unordered-set: 2.0.1
@@ -4442,8 +4436,8 @@ packages:
       defaults: 1.0.3
     dev: true
 
-  /webtorrent/1.8.24:
-    resolution: {integrity: sha512-ux/sY3DSdev4557LVARSVkIjheSZFxLwiYSxM0smMLCI9lkiniEmP8FEFvpq+k3x2t8yVLsR2B+q6/SOSV4J0A==}
+  /webtorrent/1.8.26:
+    resolution: {integrity: sha512-1bbCIDtbk4OA7xXmT87t6jDhnng6RNC9d7HNpRyvxF0GQTrIz1fB3oDnNcbOim9Upjy1GDqxAOe0Mejmc86TUg==}
     engines: {node: '>=12'}
     dependencies:
       '@webtorrent/http-node': 1.3.0
@@ -4455,7 +4449,7 @@ packages:
       chrome-net: 3.3.4
       chunk-store-stream: 4.3.0
       cpus: 1.0.3
-      create-torrent: 5.0.2
+      create-torrent: 5.0.4
       debug: 4.3.4
       end-of-stream: 1.4.4
       escape-html: 1.0.3
