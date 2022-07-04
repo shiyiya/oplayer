@@ -1,6 +1,4 @@
-import Player, { VIDEO_EVENTS } from '@oplayer/core'
-import hls from '@oplayer/core/dist/plugins/hls'
-
+import Player, { VIDEO_EVENTS, hls } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
