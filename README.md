@@ -20,9 +20,8 @@ yarn add  @oplayer/core @oplayer/ui
 ```
 
 ```js
-import Player from '@oplayer/core'
+import Player, { hlsPlugin } from '@oplayer/core'
 import ui from '@oplayer/ui'
-import hls from '@oplayer/core/dist/plugins/hls'
 
 Player.make(document.body, {
   source: {
@@ -30,6 +29,6 @@ Player.make(document.body, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui({ theme: { primaryColor: '#9370db' } }), hls()]) // Optional
+  .use([ui({ theme: { primaryColor: '#9370db' } }), hlsPlugin()]) // Optional
   .create()
 ```

@@ -61,4 +61,4 @@ const torrentPlugin = ({
   }
 })
 
-export default torrentPlugin
+export { torrentPlugin }

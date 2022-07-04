@@ -77,4 +77,4 @@ const hlsPlugin = ({
   }
 })
 
-export default hlsPlugin
+export { hlsPlugin }
