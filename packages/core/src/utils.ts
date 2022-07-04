@@ -1,3 +1,5 @@
+import hash from './hash'
+
 export namespace $ {
   export const create = <T = HTMLElement>(
     t: string = 'div',
@@ -54,16 +56,11 @@ export namespace $ {
         throw new Error('Not yet implemented')
       }
 
-      //TODO: hash rules id
-      const className = `css-${S5()}`
+      const className = `css-${hash(rules[0]).toString(36)}`
       sheet?.insertRule(`.${className}{${rules[0]}}`, sheet.cssRules.length)
       return className
     }
   })()
-}
-
-export function S5() {
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16)
 }
 
 export function padZero(time: number): string {
