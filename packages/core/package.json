@@ -18,14 +18,6 @@
     ".": {
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
-    },
-    "./plugins/hls.js": {
-      "import": "./dist/plugins/hls.es.js",
-      "require": "./dist/plugins/hls.umd.js"
-    },
-    "./plugins/torrent.js": {
-      "import": "./dist/plugins/torrent.es.js",
-      "require": "./dist/plugins/torrent.umd.js"
     }
   },
   "files": [
