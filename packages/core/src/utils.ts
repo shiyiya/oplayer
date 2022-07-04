@@ -33,11 +33,24 @@ export namespace $ {
     return container.appendChild(elm)
   }
 
-  //TODO: more case
-  export const css = (raw: string, scop: string = 'css') => {
-    const className = `${scop}-${S5()}`
-    const css = `.${className}{${raw}}`
-    render($.create('style', {}, css), document.getElementsByTagName('head')[0]!)
+  export const css = (...rules: any[]) => {
+    if (!(rules[0] && rules[0].length && rules[0].raw)) {
+      throw new Error('Not yet implemented')
+    }
+
+    let styles = ''
+    let strings = rules[0]
+    styles += strings[0]
+    for (let i = 1; i < rules.length; i++) {
+      styles += typeof rules[i] == 'boolean' ? '' : rules[i]
+      styles += strings[i]
+    }
+
+    const className = `css-${S5()}`
+    render(
+      $.create('style', {}, `.${className}{${styles}}`),
+      document.getElementsByTagName('head')[0]!
+    )
     return className
   }
 }
