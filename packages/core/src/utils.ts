@@ -50,13 +50,18 @@ export namespace $ {
   }
 
   export const css = (() => {
-    const sheet = makeStyleTag()
+    const sheet = makeStyleTag()!
     return (...rules: any[]) => {
       if (rules[0] && !rules.length && typeof rules === 'object') {
         throw new Error('Not yet implemented')
       }
 
       const className = `css-${hash(rules[0]).toString(36)}`
+      for (let i = 0; i < sheet.cssRules.length; i++) {
+        if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == className) {
+          return className
+        }
+      }
       sheet?.insertRule(`.${className}{${rules[0]}}`, sheet.cssRules.length)
       return className
     }
