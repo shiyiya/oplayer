@@ -1,6 +1,6 @@
 import Hls from 'hls.js/dist/hls.light.min'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source } from '../types'
+import type { PlayerPlugin, Source } from '@oplayer/core'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
@@ -77,4 +77,4 @@ const hlsPlugin = ({
   }
 })
 
-export { hlsPlugin }
+export default hlsPlugin

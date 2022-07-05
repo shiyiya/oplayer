@@ -1,5 +1,5 @@
 import webtorrent from 'webtorrent/webtorrent.min'
-import type { PlayerPlugin, Source } from '../types'
+import type { PlayerPlugin, Source } from '@oplayer/core'
 
 const PLUGIN_NAME = 'oplayer-plugin-torrent'
 
@@ -61,4 +61,4 @@ const torrentPlugin = ({
   }
 })
 
-export { torrentPlugin }
+export default torrentPlugin

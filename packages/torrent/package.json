@@ -1,18 +1,17 @@
 {
-  "name": "@oplayer/core",
+  "name": "@oplayer/torrent",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.es.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "author": "",
   "license": "MIT",
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build && tsc --emitDeclarationOnly",
-    "build:plugins": "node ./build-plugins.js"
+    "build": "vite build &&  tsc --emitDeclarationOnly"
   },
   "exports": {
     ".": {
@@ -31,8 +30,13 @@
     "not op_mini all",
     "IE 11"
   ],
+  "dependencies": {},
+  "peerDependencies": {
+    "@oplayer/core": ">=1.0.0",
+    "webtorrent": "^1.8.24"
+  },
   "devDependencies": {
-    "chokidar": "^3.5.3",
-    "glob": "^7.2.3"
+    "@oplayer/core": "workspace:*",
+    "webtorrent": "^1.8.24"
   }
 }

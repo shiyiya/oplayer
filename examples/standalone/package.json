@@ -14,6 +14,7 @@
   "dependencies": {
     "@oplayer/core": "workspace:*",
     "@oplayer/ui": "workspace:*",
+    "@oplayer/hls": "workspace:*",
     "hls.js": "^1.1.5",
     "lit": "^2.2.7"
   }

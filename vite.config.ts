@@ -14,8 +14,7 @@ export const external = [
   /lit.*/,
   'hls.js/dist/hls.light.min',
   'webtorrent/webtorrent.min',
-  'react',
-  'react-router-dom'
+  'react'
 ]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>

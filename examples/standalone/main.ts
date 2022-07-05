@@ -1,5 +1,7 @@
-import Player, { VIDEO_EVENTS, hlsPlugin } from '@oplayer/core'
+import Player, { VIDEO_EVENTS } from '@oplayer/core'
 import ui from '@oplayer/ui'
+import hls from '@oplayer/hls'
+
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 
@@ -34,7 +36,7 @@ const p = Player.make($container, {
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui({ theme: { primaryColor: '#9370db' } }), hlsPlugin()])
+  .use([ui({ theme: { primaryColor: '#9370db' } }), hls()])
   .create()
 
 const meta = () => html`
