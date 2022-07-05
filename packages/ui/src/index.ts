@@ -155,7 +155,7 @@ const apply = (player: Player, config: SnowConfig) => {
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class="expand">
-              ${config.speed!.map(
+              ${config.speed?.map(
                 (sp) =>
                   html`<span
                     class=${styles.speeditem(css)}
@@ -264,9 +264,9 @@ const defaultConfig: SnowConfig = {
   disablePictureInPicture: false
 }
 
-const snow = (config: SnowConfig = defaultConfig): PlayerPlugin => ({
+const snow = (config?: SnowConfig): PlayerPlugin => ({
   name: 'oplayer-theme-snow',
-  apply: (player) => apply(player, config)
+  apply: (player) => apply(player, Object.assign(defaultConfig, config))
 })
 
 export default snow
