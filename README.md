@@ -20,19 +20,21 @@ yarn add  @oplayer/core @oplayer/ui @oplayer/hls
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.umd.js"></script>
 
 <script>
-  const player = Player.make($container, {
+  OPlayer.make(document.body, {
     source: {
-      src,
+      src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
       poster: 'https://media.w3.org/2010/05/sintel/poster.png'
     }
-  }).use([OUI({ theme: { primaryColor: '#9370db' } }), OHls()])
+  })
+    .use([OUI({ theme: { primaryColor: '#9370db' } }), OHls()])
+    .create()
 </script>
 ```
 
 ```js
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
-import hlsPlugin from '@oplayer/hls'
+import hls from '@oplayer/hls'
 
 Player.make(document.body, {
   source: {
@@ -40,6 +42,6 @@ Player.make(document.body, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui({ theme: { primaryColor: '#9370db' } }), hlsPlugin()]) // Optional
+  .use([ui({ theme: { primaryColor: '#9370db' } }), hls()]) // Optional
   .create()
 ```

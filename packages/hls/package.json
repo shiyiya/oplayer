@@ -30,7 +30,6 @@
     "not op_mini all",
     "IE 11"
   ],
-  "dependencies": {},
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0",
     "hls.js": "^1.1.5"

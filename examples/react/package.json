@@ -10,11 +10,11 @@
     "start": "vite"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@types/react": "^18.0.14",
     "@oplayer/core": "workspace:*",
+    "@oplayer/hls": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "@oplayer/hls": "workspace:*"
+    "@types/react": "^18.0.14",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
