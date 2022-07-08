@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ReactPlayer from '@oplayer/react'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 
 //@ts-ignore
 import { createRoot } from 'react-dom/client'
-import { VIDEO_EVENTS } from '@oplayer/core'
+import Player, { OplayerEvent, VIDEO_EVENTS } from '@oplayer/core'
 
 const playlist = [
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -16,25 +16,36 @@ const playlist = [
 const plugins = [ui(), hls()]
 
 const App = () => {
+  const [alive, setAlive] = useState(true)
   const [index, update] = useState(0)
+  const player = useRef<Player | null>(null)
 
   return (
     <div style={{ width: '980px', margin: '0 auto' }}>
-      <ReactPlayer
-        ref={(p) => { p && console.log('player ==> ', p) }}
-        duration={5000}
-        plugins={plugins}
-        source={{ src: playlist[index]!, poster: 'https://media.w3.org/2010/05/sintel/poster.png' }}
-        onEvent={(e) => {
-          if (Object.values(VIDEO_EVENTS).includes(e.type as any) && e.type != 'timeupdate') {
-            console.log(e);
-          }
-        }}
-      />
+      {alive ? (
+        <ReactPlayer
+          ref={player}
+          duration={5000}
+          plugins={plugins}
+          source={{
+            src: playlist[index]!,
+            poster: 'https://media.w3.org/2010/05/sintel/poster.png'
+          }}
+          onEvent={(e: OplayerEvent) => {
+            if (Object.values(VIDEO_EVENTS).includes(e.type as any) && e.type != 'timeupdate') {
+              console.log(e)
+            }
+          }}
+        />
+      ) : null}
       <hr />
       <button onClick={() => update(1)}>mp4</button>
       &nbsp;
       <button onClick={() => update(2)}>m3u8</button>
+      &nbsp;
+      <button onClick={() => setAlive(true)}>create</button>
+      &nbsp;
+      <button onClick={() => setAlive(false)}>destroy</button>
     </div>
   )
 }

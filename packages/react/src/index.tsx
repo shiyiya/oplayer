@@ -31,6 +31,7 @@ const ReactPlayer = forwardRef<Player | null, OPlayerProps>(
     useEffect(() => {
       if (isInitial.current) {
         player?.changeSource(rest.source)
+        player?.setPlaybackRate(rest.playbackRate || 1)
       } else {
         isInitial.current = true
       }

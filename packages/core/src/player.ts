@@ -255,13 +255,13 @@ export class Player {
   }
 
   destroy() {
+    this.emit('destroy')
     this.pause()
     this.isFullScreen && this.exitFullscreen()
     this.#plugins.clear()
     this.#video.src = ''
     this.#video.remove()
     this.#container.remove()
-    this.emit('destroy')
     this.#E.offAll()
   }
 
@@ -295,6 +295,14 @@ export class Player {
 
   get isEnded() {
     return this.#video.ended
+  }
+
+  get isLoop() {
+    return this.#video.loop
+  }
+
+  get isAutoPlay() {
+    return this.#video.autoplay
   }
 
   get duration() {
