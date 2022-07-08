@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.tsx",
   "author": "",
   "license": "MIT",
   "scripts": {
@@ -13,6 +13,7 @@
     "@oplayer/core": "workspace:*",
     "@oplayer/hls": "workspace:*",
     "@oplayer/ui": "workspace:*",
+    "@oplayer/react": "workspace:*",
     "@types/react": "^18.0.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

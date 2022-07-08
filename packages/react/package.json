@@ -14,6 +14,11 @@
     "tsc": "tsc --noEmit && echo",
     "build": "vite build &&  tsc --emitDeclarationOnly"
   },
+  "exports": {
+    ".": {
+      "default": "./dist/index.es.js"
+    }
+  },
   "files": [
     "dist",
     "src"

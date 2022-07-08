@@ -1,58 +1,81 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import Player, { PlayerPlugin, Options } from '@oplayer/core'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import Player, { PlayerPlugin, Options, OplayerEvent } from '@oplayer/core'
 
 interface OPlayerProps extends Options {
   plugins?: PlayerPlugin[]
+  onEvent?: (e: OplayerEvent) => void
+  duration?: number
 }
 
-const ReactPlayer = forwardRef<Player | null, OPlayerProps>(({ plugins, ...rest }, ref) => {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const [player, setPlayer] = useState<Player | null>(null)
+const ReactPlayer = forwardRef<Player | null, OPlayerProps>(
+  ({ plugins, duration = 0, onEvent, ...rest }, ref) => {
+    const isInitial = useRef(false)
+    const [player, setPlayer] = useState<Player | null>(null)
 
-  const isInitial = useRef(false)
+    const onRefChange = useCallback((node: HTMLDivElement) => {
+      if (node !== null) {
+        const instance = Player.make(node, rest)
+          .use(plugins || [])
+          .create()
 
-  useEffect(() => {
-    const player = Player.make(containerRef.current!, rest)
-      .use(plugins || [])
-      .create()
-    setPlayer(player)
+        setPlayer(instance)
+        instance!.seek(duration / 1000)
+        if (onEvent) {
+          instance!.on(onEvent)
+        }
+      }
+    }, [])
 
-    return () => {
-      player.destroy()
-    }
-  }, [])
+    useEffect(() => () => player?.destroy(), [])
 
-  useEffect(() => {
-    if (isInitial.current) {
-      player?.changeSource(rest.source)
-    } else {
-      isInitial.current = true
-    }
-  }, [player, rest.source])
+    useEffect(() => {
+      if (isInitial.current) {
+        player?.changeSource(rest.source)
+      } else {
+        isInitial.current = true
+      }
+    }, [player, rest.source])
 
-  useImperativeHandle(ref, () => player as any, [player])
+    useEffect(() => {
+      player?.seek(duration / 1000)
+    }, [duration])
 
-  return (
-    <div
-      style={{
-        width: '100%',
-        paddingTop: `${(9 / 16) * 100}%`,
-        backgroundColor: '#f4f4f4',
-        position: 'relative'
-      }}
-    >
+    useEffect(() => {
+      if (rest.muted) {
+        player?.mute()
+      } else {
+        player?.unmute()
+      }
+    }, [rest.muted])
+
+    useEffect(() => {
+      player?.setPlaybackRate(rest.playbackRate!)
+    }, [rest.playbackRate])
+
+    useImperativeHandle(ref, () => player as Player, [player])
+
+    return (
       <div
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
           width: '100%',
-          height: '100%'
+          paddingTop: `${(9 / 16) * 100}%`,
+          backgroundColor: '#f4f4f4',
+          position: 'relative'
         }}
-        ref={containerRef}
-      ></div>
-    </div>
-  )
-})
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%'
+          }}
+          ref={onRefChange}
+        ></div>
+      </div>
+    )
+  }
+)
 
 export default ReactPlayer

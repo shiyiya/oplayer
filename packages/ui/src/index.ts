@@ -38,6 +38,7 @@ const hideCtrl = () => {
 
 const debounceHideCtrl = debounce(hideCtrl)
 const autoHideCtrl = () => {
+  ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
   ctrlAutoHideTimer = setTimeout(() => {
     $controller.classList.add('hide')
   }, CTRL_HIDE_DELAY)
