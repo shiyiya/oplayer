@@ -86,9 +86,8 @@ const apply = (player: Player, config: SnowConfig) => {
   const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div
     class=${styles.ohui(css, config.theme)}
   >
-    <div class=${styles.ohmask(css)} @click=${() => player.togglePlay()}></div>
     <div class=${styles.oharea(css)}>
-      ${player.isLoading
+      ${player.isLoading && player.isPlaying
         ? html`
             <div class=${styles.ohloading(css)}>
               <div class=${loadingStyles(css)}>
@@ -98,10 +97,12 @@ const apply = (player: Player, config: SnowConfig) => {
           `
         : null}
 
+      <div class=${styles.ohmask(css)} @click=${() => player.togglePlay()}></div>
+
       <div
         class=${styles.ohplay(css)}
         aria-label="Play"
-        style="display:${player.isPlaying || !player.isLoaded ? 'none' : 'block'}"
+        style="display:${player.isPlaying ? 'none' : 'block'}"
       >
         <button
           aria-label="Play"

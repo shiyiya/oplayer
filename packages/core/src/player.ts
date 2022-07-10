@@ -35,6 +35,9 @@ export class Player {
 
   hasError: boolean = false
 
+  //https://developer.chrome.com/blog/play-request-was-interrupted/
+  #playPromise: Promise<void> | undefined
+
   static make(el: HTMLElement, options: Options | string): Player {
     return new Player(el, options)
   }
@@ -148,13 +151,17 @@ export class Player {
   }
 
   play = () => {
-    if (this.canPlay) {
-      this.#video.play()
+    if (this.#isCustomLoader) {
+      this.#playPromise = this.#video.play()
+    } else {
+      if (this.canPlay) {
+        this.#playPromise = this.#video.play()
+      }
     }
   }
 
   pause() {
-    this.#video.pause()
+    ;(this.#playPromise || Promise.resolve()).then((_) => this.#video.pause())
   }
 
   togglePlay() {
@@ -248,8 +255,10 @@ export class Player {
   }
 
   changeSource(sources: Source) {
+    this.#playPromise = undefined
     this.hasError = false
     this.#isCustomLoader = false
+    this.#video.poster = sources.poster || ''
     this.load(sources)
     this.emit('videosourcechange')
   }

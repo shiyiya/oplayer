@@ -35,7 +35,6 @@ const hlsPlugin = ({
   load: ({ on, emit }, video, source) => {
     if (!matcher(video, source)) return false
 
-    video.poster = source.poster || ''
     hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
     if (!isInitial) {
       emit('plugin:loaded', { name: PLUGIN_NAME })
