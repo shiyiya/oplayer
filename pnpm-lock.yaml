@@ -54,10 +54,10 @@ importers:
 
   examples/react:
     specifiers:
-      '@oplayer/core': workspace:1.0.0
-      '@oplayer/hls': workspace:1.0.0
-      '@oplayer/react': workspace:1.0.0
-      '@oplayer/ui': workspace:1.0.0
+      '@oplayer/core': workspace:*
+      '@oplayer/hls': workspace:*
+      '@oplayer/react': workspace:*
+      '@oplayer/ui': workspace:*
       '@types/react': ^18.0.15
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -72,9 +72,9 @@ importers:
 
   examples/standalone:
     specifiers:
-      '@oplayer/core': workspace:1.0.0
-      '@oplayer/hls': workspace:1.0.0
-      '@oplayer/ui': workspace:1.0.0
+      '@oplayer/core': workspace:*
+      '@oplayer/hls': workspace:*
+      '@oplayer/ui': workspace:*
       hls.js: ^1.1.5
       lit: ^2.2.7
     dependencies:
@@ -94,7 +94,7 @@ importers:
 
   packages/hls:
     specifiers:
-      '@oplayer/core': workspace:1.0.0
+      '@oplayer/core': workspace:*
       hls.js: ^1.1.5
     devDependencies:
       '@oplayer/core': link:../core
@@ -114,7 +114,7 @@ importers:
 
   packages/torrent:
     specifiers:
-      '@oplayer/core': workspace:1.0.0
+      '@oplayer/core': workspace:*
       webtorrent: ^1.8.26
     devDependencies:
       '@oplayer/core': link:../core
@@ -123,7 +123,7 @@ importers:
   packages/ui:
     specifiers:
       '@emotion/css': ^11.9.0
-      '@oplayer/core': workspace:1.0.0
+      '@oplayer/core': workspace:*
       lit: ^2.2.7
     dependencies:
       '@emotion/css': 11.9.0
@@ -2269,7 +2269,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.5
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
