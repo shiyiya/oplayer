@@ -1,5 +1,5 @@
 import { hashify } from './hash'
-import { mergeDeep } from './index'
+import { mergeDeep, isObject } from './index'
 
 function isSelector(key: string) {
   let possibles = [':', '.', '[', '>', ' '],
@@ -61,6 +61,10 @@ function isMediaQuery(key: string) {
   return key.indexOf('@media') === 0
 }
 
+function isKeyframes(key: string) {
+  return key.indexOf('@keyframes') === 0
+}
+
 function build(
   selector: string,
   { rules, mediaQuery }: { rules: Record<string, any>; mediaQuery: string | undefined }
@@ -89,13 +93,32 @@ function build(
         css[mediaQuery][selector] ??= {}
         css[mediaQuery][selector][key] = rules[key]
       } else {
-        css[selector] ??= {}
-        css[selector][key] = rules[key]
+        if (isKeyframes(key)) {
+          css[key] = rules[key]
+        } else {
+          css[selector] ??= {}
+          css[selector][key] = rules[key]
+        }
       }
     }
   })
 
   return css
+}
+
+function deepStyleString(style: Record<string, any>): string {
+  let v = []
+  for (const key in style) {
+    if (Object.hasOwnProperty.call(style, key)) {
+      const element = style[key]
+      if (isObject(element)) {
+        v.push(`${key}{${deepStyleString(element)}}`)
+      } else {
+        v.push(`${key}:${element}`)
+      }
+    }
+  }
+  return v.join(';')
 }
 
 function styleString(style: Record<string, any>): string[] {
@@ -105,6 +128,8 @@ function styleString(style: Record<string, any>): string[] {
       const element = style[key]
       if (isMediaQuery(key)) {
         str.push(`${key}{${styleString(element)}}`)
+      } else if (isKeyframes(key)) {
+        str.push(`${key}{${deepStyleString(element)}}`)
       } else {
         const v = Object.entries(element)
           .map(([k, v]) => `${k}:${v}`)

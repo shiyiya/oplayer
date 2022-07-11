@@ -62,7 +62,7 @@ export namespace $ {
         }
       }
 
-      const strRules: any[] = isRaw ? [`${className}{${rules[0]}}`] : _css(rules[0], className)
+      const strRules: string[] = isRaw ? [`${className}{${rules[0]}}`] : _css(rules[0], className)
 
       strRules.forEach((rule) => {
         sheet?.insertRule(rule, sheet.cssRules.length)

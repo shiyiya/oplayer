@@ -14,7 +14,7 @@ export const isMobile = /Android|webOS|iPhone|Pad|Pod|BlackBerry|Windows Phone/i
   navigator.userAgent
 )
 
-function isObject(item: unknown): item is Record<string, unknown> {
+export function isObject(item: unknown): item is Record<string, unknown> {
   return Boolean(item && typeof item === 'object' && !Array.isArray(item))
 }
 
