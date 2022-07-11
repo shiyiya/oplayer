@@ -27,19 +27,19 @@ const linearactivity = css({
     height: '100%'
   },
 
-  '& .indeterminate:before': {
+  '& .indeterminate:before,& .indeterminate:after':{
+    display: 'block',
     content: "''",
     position: 'absolute',
     height: '100%',
     'background-color': 'var(--primary-color)',
+  },
+
+  '& .indeterminate:before': {
     animation: 'indeterminate_first 1.5s infinite ease-out'
   },
 
   '& .indeterminate:after': {
-    content: "''",
-    position: 'absolute',
-    height: '100%',
-    'background-color': 'rgba(102 104 171 /0.8)',
     animation: 'indeterminate_second 1.5s infinite ease-in'
   },
 
