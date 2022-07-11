@@ -1,4 +1,4 @@
-import hash, { hashify } from './hash'
+import { hashify } from './hash'
 import { css as _css } from './css'
 
 export namespace $ {
@@ -52,19 +52,31 @@ export namespace $ {
 
   export const css = (() => {
     const sheet = makeStyleTag()!
-    return (...rules: any[]) => {
-      const isRaw = typeof rules[0] === 'string'
-      const className = `.css-${isRaw ? hash(rules[0]).toString(36) : hashify(rules[0])}`
+    return (...arg: any[]) => {
+      const isRaw = arg[0] && arg[0].length && arg[0].raw
 
+      const className = `.css-${hashify(isRaw ? arg[0].raw : arg[0])}`
       for (let i = 0; i < sheet.cssRules.length; i++) {
         if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == className) {
           return className.substring(1)
         }
       }
 
-      const strRules: string[] = isRaw ? [`${className}{${rules[0]}}`] : _css(rules[0], className)
+      let styles: string | Array<string> = ''
+      if (isRaw) {
+        let strings = arg[0]
+        styles += strings[0]
+        for (let i = 1; i < arg.length; i++) {
+          styles += typeof arg[i] !== 'string' ? '' : arg[i]
+        }
+        styles = [`${className}{${styles}}`]
+      } else if (typeof arg[0] == 'string') {
+        styles = [`${className}{${arg[0]}}`]
+      } else {
+        styles = _css(arg[0], className)
+      }
 
-      strRules.forEach((rule) => {
+      styles.forEach((rule) => {
         sheet?.insertRule(rule, sheet.cssRules.length)
       })
 

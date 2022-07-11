@@ -3,9 +3,6 @@ import { viteConfig } from '../../vite.config'
 
 export default viteConfig('ui', {
   build: {
-    lib: {
-      name: 'OUI',
-      formats: ['umd', 'es']
-    } as LibraryOptions
+    lib: { name: 'OUI' } as LibraryOptions
   }
 })

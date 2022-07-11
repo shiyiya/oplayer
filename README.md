@@ -14,6 +14,21 @@ pnpm i @oplayer/core @oplayer/ui @oplayer/hls
 yarn add  @oplayer/core @oplayer/ui @oplayer/hls
 ```
 
+```js
+import Player from '@oplayer/core'
+import ui from '@oplayer/ui'
+import hls from '@oplayer/hls'
+
+Player.make(document.body, {
+  source: {
+    src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+    poster: 'https://media.w3.org/2010/05/sintel/poster.png'
+  }
+})
+  .use([ui({ theme: { primaryColor: '#9370db' } }), hls()]) // Optional
+  .create()
+```
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.umd.js"></script>
@@ -29,19 +44,4 @@ yarn add  @oplayer/core @oplayer/ui @oplayer/hls
     .use([OUI({ theme: { primaryColor: '#9370db' } }), OHls()])
     .create()
 </script>
-```
-
-```js
-import Player from '@oplayer/core'
-import ui from '@oplayer/ui'
-import hls from '@oplayer/hls'
-
-Player.make(document.body, {
-  source: {
-    src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    poster: 'https://media.w3.org/2010/05/sintel/poster.png'
-  }
-})
-  .use([ui({ theme: { primaryColor: '#9370db' } }), hls()]) // Optional
-  .create()
 ```

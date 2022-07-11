@@ -3,9 +3,6 @@ import { viteConfig } from '../../vite.config'
 
 export default viteConfig('torrent', {
   build: {
-    lib: {
-      name: 'OTorrent',
-      formats: ['umd', 'es']
-    } as LibraryOptions
+    lib: { name: 'OTorrent' } as LibraryOptions
   }
 })

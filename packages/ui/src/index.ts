@@ -1,5 +1,5 @@
 import type { PlayerPlugin } from '@oplayer/core'
-import Player, { formatTime, isMobile, $ } from '@oplayer/core'
+import Player, { formatTime, isMobile } from '@oplayer/core'
 import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js'
@@ -14,8 +14,6 @@ import volumeSvg from './icons/volume.svg?raw'
 
 import styles from './index.style'
 import loadingStyles from './loading.style'
-
-const css = $.css
 
 let CTRL_HIDE_DELAY = 1500
 
@@ -85,23 +83,23 @@ const apply = (player: Player, config: SnowConfig) => {
   }
 
   const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div
-    class=${styles.ohui(css, config.theme)}
+    class=${styles.ohui(config.theme)}
   >
-    <div class=${styles.oharea(css)}>
+    <div class=${styles.oharea}>
       ${player.isLoading && player.isPlaying
         ? html`
-            <div class=${styles.ohloading(css)}>
-              <div class=${loadingStyles(css)}>
+            <div class=${styles.ohloading}>
+              <div class=${loadingStyles}>
                 <div class="indeterminate"></div>
               </div>
             </div>
           `
         : null}
 
-      <div class=${styles.ohmask(css)} @click=${() => player.togglePlay()}></div>
+      <div class=${styles.ohmask} @click=${() => player.togglePlay()}></div>
 
       <div
-        class=${styles.ohplay(css)}
+        class=${styles.ohplay}
         aria-label="Play"
         style="display:${player.isPlaying ? 'none' : 'block'}"
       >
@@ -117,13 +115,13 @@ const apply = (player: Player, config: SnowConfig) => {
     </div>
 
     <div
-      class=${styles.ohcontroller(css)}
+      class=${styles.ohcontroller}
       @mouseenter=${() => (controllerIsActive = true)}
       @mouseleave=${() => (controllerIsActive = false)}
       ${ref((el) => ($controller = el as HTMLDivElement))}
     >
-      <div class=${styles.ohcontrollerwrap(css)} ${ref(createHitRef)}>
-        <div class=${styles.ohcontrollerprogress(css)}>
+      <div class=${styles.ohcontrollerwrap} ${ref(createHitRef)}>
+        <div class=${styles.ohcontrollerprogress}>
           <div class="oh-controller-progress-hit">00:00</div>
           <div class="oh-controller-progress-buffered" style="width:${bufferedWidth}%"></div>
           <div class="oh-controller-progress-played" style="width:${playedWidth}%"></div>
@@ -134,7 +132,7 @@ const apply = (player: Player, config: SnowConfig) => {
         </div>
       </div>
 
-      <div class=${styles.ohcontrollerbottom(css)}>
+      <div class=${styles.ohcontrollerbottom}>
         <div>
           ${!isMobile
             ? html`<button
@@ -147,29 +145,27 @@ const apply = (player: Player, config: SnowConfig) => {
               </button>`
             : null}
 
-          <span class=${styles.ohcontrollertime(css)} style="${isMobile ? 'padding-left: 0' : ''}">
+          <span class=${styles.ohcontrollertime} style="${isMobile ? 'padding-left: 0' : ''}">
             ${formatTime(player.currentTime)} / ${formatTime(player.duration)}
           </span>
         </div>
 
         <div>
-          <div class=${styles.dropdown(css)}>
+          <div class=${styles.dropdown}>
             <button aria-label="Speed" class="oh-icon" type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class="expand">
               ${config.speed?.map(
                 (sp) =>
-                  html`<span
-                    class=${styles.speeditem(css)}
-                    @click=${() => player.setPlaybackRate(+sp)}
+                  html`<span class=${styles.speeditem} @click=${() => player.setPlaybackRate(+sp)}
                     >${sp}<small>x</small></span
                   >`
               )}
             </div>
           </div>
 
-          <div class=${styles.dropdown(css)}>
+          <div class=${styles.dropdown}>
             <button
               aria-label="Volume"
               class="oh-icon volume"
