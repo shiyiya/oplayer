@@ -86,7 +86,7 @@ const apply = (player: Player, config: SnowConfig) => {
     class=${styles.ohui(config.theme)}
   >
     <div class=${styles.oharea}>
-      ${player.isLoading && player.isPlaying
+      ${player.isLoading
         ? html`
             <div class=${styles.ohloading}>
               <div class=${loadingStyles}>
@@ -101,7 +101,7 @@ const apply = (player: Player, config: SnowConfig) => {
       <div
         class=${styles.ohplay}
         aria-label="Play"
-        style="display:${player.isPlaying ? 'none' : 'block'}"
+        style="display:${player.isPlaying || player.isLoading ? 'none' : 'block'}"
       >
         <button
           aria-label="Play"

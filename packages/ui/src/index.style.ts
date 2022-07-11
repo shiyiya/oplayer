@@ -48,10 +48,16 @@ export const ohmask = css`
 `
 
 export const oharea = css`
-  display: flex;
   width: 100%;
   height: 100%;
-  flex-direction: column;
+`
+
+export const ohloading = css`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export const ohplay = css({
@@ -84,15 +90,6 @@ export const ohplay = css({
     }
   }
 })
-
-export const ohloading = css`
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
 
 export const ohcontrollerwrap = css({
   transition: 'width 0.3s ease',

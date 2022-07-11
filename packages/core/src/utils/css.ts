@@ -118,7 +118,14 @@ function deepStyleString(style: Record<string, any>): string {
       }
     }
   }
-  return v.join(';')
+
+  //Keyframes
+  //@keyframes indeterminate_first{
+  //  0% { left: -100 % width: 100%} <!;>
+  //  100% { left: 100 % width: 10%}
+  //}
+
+  return /^\d%/.test(v[0]!) ? v.join(' ') : v.join(';')
 }
 
 function styleString(style: Record<string, any>): string[] {
