@@ -217,7 +217,11 @@ const apply = (player: Player, config: SnowConfig) => {
       'ratechange',
       'canplay',
       'durationchange',
-      'seeking'
+      'seeking',
+      'play',
+      'waiting',
+      'pause',
+      'videosourcechange'
     ],
     ui
   )

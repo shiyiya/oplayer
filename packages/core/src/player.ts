@@ -1,5 +1,5 @@
 import E from './event'
-import { $ } from './utils'
+import $ from './utils/dom'
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import { Options, PlayerPlugin, Listener, OplayerEvent, Source } from './types'
 
