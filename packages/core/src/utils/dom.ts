@@ -1,6 +1,7 @@
-import hash from './hash'
+import hash, { hashify } from './hash'
+import { css as _css } from './css'
 
-namespace $ {
+export namespace $ {
   export const create = <T = HTMLElement>(
     t: string = 'div',
     attrs: Record<string, string | boolean | number | undefined> = {},
@@ -52,18 +53,22 @@ namespace $ {
   export const css = (() => {
     const sheet = makeStyleTag()!
     return (...rules: any[]) => {
-      if (rules[0] && !rules.length && typeof rules === 'object') {
-        throw new Error('Not yet implemented')
-      }
+      const isRaw = typeof rules[0] === 'string'
+      const className = `.css-${isRaw ? hash(rules[0]).toString(36) : hashify(rules[0])}`
 
-      const className = `css-${hash(rules[0]).toString(36)}`
       for (let i = 0; i < sheet.cssRules.length; i++) {
         if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == className) {
-          return className
+          return className.substring(1)
         }
       }
-      sheet?.insertRule(`.${className}{${rules[0]}}`, sheet.cssRules.length)
-      return className
+
+      const strRules: any[] = isRaw ? [`${className}{${rules[0]}}`] : _css(rules[0], className)
+
+      strRules.forEach((rule) => {
+        sheet?.insertRule(rule, sheet.cssRules.length)
+      })
+
+      return className.substring(1)
     }
   })()
 }

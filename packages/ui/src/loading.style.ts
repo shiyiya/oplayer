@@ -1,6 +1,4 @@
-import type { Emotion } from '@emotion/css/types/create-instance'
-
-const linearactivity = (css: Emotion['css']) =>
+const linearactivity = (css: any) =>
   css`
     overflow: hidden;
     width: 20%;

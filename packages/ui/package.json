@@ -32,7 +32,6 @@
     "IE 11"
   ],
   "dependencies": {
-    "@emotion/css": "^11.9.0",
     "lit": "^2.2.7"
   },
   "peerDependencies": {

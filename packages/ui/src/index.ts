@@ -1,6 +1,5 @@
-import { css } from '@emotion/css'
 import type { PlayerPlugin } from '@oplayer/core'
-import Player, { formatTime, isMobile } from '@oplayer/core'
+import Player, { formatTime, isMobile, $ } from '@oplayer/core'
 import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js'
@@ -15,6 +14,8 @@ import volumeSvg from './icons/volume.svg?raw'
 
 import styles from './index.style'
 import loadingStyles from './loading.style'
+
+const css = $.css
 
 let CTRL_HIDE_DELAY = 1500
 
