@@ -29,6 +29,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.2
         with:
+          version: latest
           run_install: false
 
       - name: Get pnpm store directory
