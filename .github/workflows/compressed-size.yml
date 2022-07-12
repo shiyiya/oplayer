@@ -4,6 +4,10 @@ env:
   NODE_OPTIONS: --max-old-space-size=6144
 
 on:
+  push:
+    branches: main
+    paths-ignore:
+      - '**/*.md'
   pull_request:
     types:
       - 'opened'
