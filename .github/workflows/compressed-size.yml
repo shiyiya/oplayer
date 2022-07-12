@@ -46,6 +46,6 @@ jobs:
 
       - uses: preactjs/compressed-size-action@v2
         with:
-          build-script: 'build'
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          build-script: 'build:packs'
+          repo-token: '${{ secrets.GIT_HUB_TOKEN }}'
           pattern: './packages/*/{dist,compiled}/**/*.{js,d.ts}'
