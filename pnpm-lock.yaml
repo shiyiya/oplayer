@@ -85,12 +85,7 @@ importers:
       lit: 2.2.7
 
   packages/core:
-    specifiers:
-      chokidar: ^3.5.3
-      glob: ^7.2.3
-    devDependencies:
-      chokidar: 3.5.3
-      glob: 7.2.3
+    specifiers: {}
 
   packages/hls:
     specifiers:
