@@ -3,8 +3,8 @@ name: ci
 on:
   push:
     branches: main
-      paths-ignore:
-        - '**/*.md'
+    paths-ignore:
+      - '**/*.md'
 
 env:
   CI: true
