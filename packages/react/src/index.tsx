@@ -7,10 +7,10 @@ interface OPlayerProps extends PlayerOptions {
   onEvent?: (e: PlayerEvent) => void
 }
 
-const ReactPlayer = forwardRef<Player | null, OPlayerProps>(
+const ReactPlayer = forwardRef<Player, OPlayerProps>(
   ({ plugins, duration = 0, onEvent, ...rest }, ref) => {
     const isInitial = useRef(false)
-    const [player, setPlayer] = useState<Player | null>(null)
+    const [player, setPlayer] = useState<Player>()
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
       if (node !== null) {
