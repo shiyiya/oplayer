@@ -1,15 +1,21 @@
 import path from 'path'
 import fs from 'fs'
 import type { Plugin } from 'rollup'
-import autoExternal from 'rollup-plugin-auto-external'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
 import { defineConfig } from 'vite'
 
 export const libFileName = (format: string) => `index.${format}.js`
 
-export const rollupPlugins: Plugin[] = [autoExternal()]
+export const rollupPlugins: Plugin[] = []
 
-export const external = ['@oplayer/core', '@oplayer/hls', '@oplayer/torrent', 'react']
+export const external = [
+  '@oplayer/core',
+  '@oplayer/hls',
+  'hls.js/dist/hls.light.min',
+  '@oplayer/torrent',
+  'webtorrent/webtorrent.min',
+  'react',
+]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
   mergeDeep<BuildOptions>(
