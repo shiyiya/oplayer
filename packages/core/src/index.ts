@@ -5,4 +5,4 @@ export { $ } from './utils/dom'
 export { Player } from './player'
 export { Player as default } from './player'
 
-export type { Source, Options, PlayerPlugin, OplayerEvent, Listener } from './types'
+export type { Source, PlayerOptions, PlayerEvent, PlayerListener, PlayerPlugin } from './types'

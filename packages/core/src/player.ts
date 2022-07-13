@@ -1,10 +1,10 @@
 import E from './event'
 import $ from './utils/dom'
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
-import { Options, PlayerPlugin, Listener, OplayerEvent, Source } from './types'
+import { PlayerOptions, PlayerPlugin, PlayerListener, PlayerEvent, Source } from './types'
 
 export class Player {
-  constructor(el: HTMLElement, options: Options | string) {
+  constructor(el: HTMLElement, options: PlayerOptions | string) {
     this.#container = el
     this.#options = Object.assign(
       {
@@ -23,7 +23,7 @@ export class Player {
     )
   }
 
-  readonly #options: Required<Options>
+  readonly #options: Required<PlayerOptions>
   readonly #container: HTMLElement
 
   readonly #E = new E()
@@ -38,7 +38,7 @@ export class Player {
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   #playPromise: Promise<void> | undefined
 
-  static make(el: HTMLElement, options: Options | string): Player {
+  static make(el: HTMLElement, options: PlayerOptions | string): Player {
     return new Player(el, options)
   }
 
@@ -50,8 +50,8 @@ export class Player {
   }
 
   readonly on = (
-    name: typeof EVENTS[number] | typeof EVENTS[number][] | Listener | string,
-    listener?: Listener
+    name: typeof EVENTS[number] | typeof EVENTS[number][] | PlayerListener | string,
+    listener?: PlayerListener
   ) => {
     if (typeof name === 'string') {
       this.#E.on(name, listener!)
@@ -63,7 +63,7 @@ export class Player {
     return this
   }
 
-  readonly emit = (name: typeof EVENTS[number] | string, payload?: OplayerEvent['payload']) => {
+  readonly emit = (name: typeof EVENTS[number] | string, payload?: PlayerEvent['payload']) => {
     this.#E.emit(name as any, payload)
   }
 
@@ -124,6 +124,7 @@ export class Player {
             width: 100%;
             height: 100%;
             overflow: hidden;
+            background-color: #000;
           `)}`
     )
 

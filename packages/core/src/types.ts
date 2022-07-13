@@ -6,7 +6,7 @@ export type Source = {
   format?: string
 }
 
-export type Options = {
+export type PlayerOptions = {
   autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
   muted?: boolean
   loop?: boolean
@@ -24,10 +24,10 @@ export type PlayerPlugin = {
   load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
 }
 
-export type OplayerEvent = {
+export type PlayerEvent = {
   type: string
   payload: any
   _raw?: any
 }
 
-export type Listener = (enevt: OplayerEvent) => void
+export type PlayerListener = (enevt: PlayerEvent) => void

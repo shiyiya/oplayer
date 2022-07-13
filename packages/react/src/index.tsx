@@ -1,10 +1,10 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import Player, { PlayerPlugin, Options, OplayerEvent } from '@oplayer/core'
+import Player, { PlayerPlugin, PlayerOptions, PlayerEvent } from '@oplayer/core'
 
-interface OPlayerProps extends Options {
-  plugins?: PlayerPlugin[]
-  onEvent?: (e: OplayerEvent) => void
+interface OPlayerProps extends PlayerOptions {
   duration?: number
+  plugins?: PlayerPlugin[]
+  onEvent?: (e: PlayerEvent) => void
 }
 
 const ReactPlayer = forwardRef<Player | null, OPlayerProps>(

@@ -5,7 +5,7 @@ import hls from '@oplayer/hls'
 
 //@ts-ignore
 import { createRoot } from 'react-dom/client'
-import Player, { OplayerEvent, VIDEO_EVENTS } from '@oplayer/core'
+import Player, { PlayerEvent, VIDEO_EVENTS } from '@oplayer/core'
 
 const playlist = [
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -31,7 +31,7 @@ const App = () => {
             src: playlist[index]!,
             poster: 'https://media.w3.org/2010/05/sintel/poster.png'
           }}
-          onEvent={(e: OplayerEvent) => {
+          onEvent={(e: PlayerEvent) => {
             if (Object.values(VIDEO_EVENTS).includes(e.type as any) && e.type != 'timeupdate') {
               console.log(e)
             }

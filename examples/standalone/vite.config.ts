@@ -5,6 +5,5 @@ export default defineConfig((env: ConfigEnv) => ({
   build: {
     assetsDir: 'assets',
     outDir: '../../docs',
-    emptyOutDir: true
   }
 }))
