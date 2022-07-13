@@ -1,6 +1,6 @@
 <h1>OPlayer</h1>
 
-[![npm](https://flat.badgen.net/npm/v/@oplayer/core/?color=fb3e44)](https://www.npmjs.com/package/@oplayer/typecho-theme-sagiri)
+[![npm](https://flat.badgen.net/npm/v/@oplayer/core/?color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 
 [Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx)
 
