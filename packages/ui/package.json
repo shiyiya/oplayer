@@ -1,12 +1,16 @@
 {
   "name": "@oplayer/ui",
   "version": "1.0.1",
-  "description": "",
+  "description": "Snow theme for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "author": "",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer-theme"
+  ],
   "license": "MIT",
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
@@ -17,8 +21,7 @@
     ".": {
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
-    },
-    "./dist/*": "./dist/*"
+    }
   },
   "files": [
     "dist",

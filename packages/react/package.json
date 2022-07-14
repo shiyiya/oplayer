@@ -1,13 +1,16 @@
 {
   "name": "@oplayer/react",
   "version": "1.0.1",
-  "description": "",
+  "description": "React wrapper for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
-  "keywords": [],
   "author": "",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer-plugin"
+  ],
   "license": "MIT",
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
@@ -29,7 +32,7 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@oplayer/core": "workspace:1.0.0",
+    "@oplayer/core": "workspace:*",
     "@types/react": "^18.0.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

@@ -1,4 +1,4 @@
-import Hls from 'hls.js/dist/hls.light.min'
+import Hls from 'hls.js/dist/hls.light.min.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
 import type { PlayerPlugin, Source } from '@oplayer/core'
 

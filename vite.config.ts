@@ -11,9 +11,9 @@ export const rollupPlugins: Plugin[] = []
 export const external = [
   '@oplayer/core',
   '@oplayer/hls',
-  'hls.js/dist/hls.light.min',
+  'hls.js/dist/hls.light.min.js',
   '@oplayer/torrent',
-  'webtorrent/webtorrent.min',
+  'webtorrent/webtorrent.min.js',
   'react',
 ]
 

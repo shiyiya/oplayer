@@ -1,4 +1,4 @@
-import webtorrent from 'webtorrent/webtorrent.min'
+import webtorrent from 'webtorrent/webtorrent.min.js'
 import type { PlayerPlugin, Source } from '@oplayer/core'
 
 const PLUGIN_NAME = 'oplayer-plugin-torrent'

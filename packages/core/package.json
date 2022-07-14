@@ -1,12 +1,17 @@
 {
   "name": "@oplayer/core",
   "version": "1.0.1",
-  "description": "",
+  "description": "Oh! Another web video player.",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/src/index.d.ts",
   "sideEffects": false,
   "author": "",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer",
+    "video-player"
+  ],
   "license": "MIT",
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",

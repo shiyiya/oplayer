@@ -1,12 +1,17 @@
 {
   "name": "@oplayer/torrent",
   "version": "1.0.1",
-  "description": "",
+  "description": "Torrent plugin for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "author": "",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer-plugin",
+    "torrent"
+  ],
   "license": "MIT",
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",

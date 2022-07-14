@@ -79,7 +79,7 @@ export class Player {
     this.on('error', () => {
       this.hasError = true
     })
-    Object.values(VIDEO_EVENTS).forEach((event) => {
+    VIDEO_EVENTS.forEach((event) => {
       this.#video.addEventListener(
         event,
         (e) => {
@@ -88,7 +88,7 @@ export class Player {
         { passive: true }
       )
     })
-    Object.values(PLAYER_EVENTS).forEach((event) => {
+    PLAYER_EVENTS.forEach((event) => {
       this.$root.addEventListener(
         event,
         (e) => {
