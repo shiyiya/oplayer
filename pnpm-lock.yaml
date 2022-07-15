@@ -118,9 +118,6 @@ importers:
   packages/ui:
     specifiers:
       '@oplayer/core': workspace:*
-      lit: ^2.2.7
-    dependencies:
-      lit: 2.2.7
     devDependencies:
       '@oplayer/core': link:../core
 

@@ -50,12 +50,22 @@ export namespace $ {
     return null
   }
 
+  const cachedCss = new WeakMap()
+
   export const css = (() => {
     const sheet = makeStyleTag()!
     return (...arg: any[]) => {
       const isRaw = arg[0] && arg[0].length && arg[0].raw
+      const cssString: string[] = isRaw ? arg[0].raw : [arg[0]]
+      let className: string
 
-      const className = `.css-${hashify(isRaw ? arg[0].raw : arg[0])}`
+      if (cachedCss.has(cssString)) {
+        className = cachedCss.get(cssString)
+      } else {
+        className = `.css-${hashify(cssString)}`
+        cachedCss.set(cssString, className)
+      }
+
       for (let i = 0; i < sheet.cssRules.length; i++) {
         if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == className) {
           return className.substring(1)
@@ -64,6 +74,7 @@ export namespace $ {
 
       let styles: string | Array<string> = ''
       if (isRaw) {
+        //css``
         let strings = arg[0]
         styles += strings[0]
         for (let i = 1; i < arg.length; i++) {
@@ -71,8 +82,10 @@ export namespace $ {
         }
         styles = [`${className}{${styles}}`]
       } else if (typeof arg[0] == 'string') {
+        //css('')
         styles = [`${className}{${arg[0]}}`]
       } else {
+        //css({})
         styles = _css(arg[0], className)
       }
 

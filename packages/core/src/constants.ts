@@ -110,8 +110,7 @@ export const EVENTS = [...VIDEO_EVENTS, ...PLAYER_EVENTS, ...OH_EVENTS] as const
 //   OTHER_ERROR
 // }
 
-// #endregoin 
-
+// #endregoin
 
 //todo: impl type declare
 // export declare interface Listeners {

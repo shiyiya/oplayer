@@ -1,8 +1,7 @@
 import { $ } from '@oplayer/core'
+import { icon } from '../style'
+import playSvg from '../icons/play.svg?raw'
 import type Player from '@oplayer/core'
-import pauseSvg from './icons/pause.svg?raw'
-import playSvg from './icons/play.svg?raw'
-import { unsafeSVG } from 'lit/directives/unsafe-svg'
 
 const styles = $.css({
   fill: 'currentcolor',
@@ -10,7 +9,7 @@ const styles = $.css({
   right: '40px',
   bottom: '45px',
 
-  '& > .oh-icon': {
+  [`& > .${icon}`]: {
     width: '3em',
 
     '& > svg': {
@@ -29,7 +28,7 @@ const styles = $.css({
       transform: 'translate(-50%, -50%)'
     },
 
-    '& > .oh-icon': {
+    [`& > .${icon}`]: {
       width: '2.5em'
     }
   }
@@ -37,20 +36,19 @@ const styles = $.css({
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
-    `<div class=${styles} aria-label="Play">
-        <button
-          aria-label="Play"
-          class="oh-icon play"
-          type="button"
-          @click=${() => player.togglePlay()}
-        >
-          ${unsafeSVG(player.isPlaying ? pauseSvg : playSvg)}
-        </button>
-      </div>`
+    `div.${styles}`,
+    { 'aria-label': 'Play' },
+    `<button aria-label="Play" class="${icon} play" type="button">
+        ${playSvg}
+      </button>`
   )
 
+  $dom.querySelector('button')?.addEventListener('click', () => {
+    player.togglePlay()
+  })
+
   player.on(['play', 'pause', 'seeking', 'canplay'], () => {
-    if (player.isLoading || player.isLoading) {
+    if (player.isPlaying || player.isLoading) {
       $dom.style.display = 'none'
     } else {
       $dom.removeAttribute('style')

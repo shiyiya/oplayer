@@ -2,15 +2,15 @@ import { $ } from '@oplayer/core'
 import type Player from '@oplayer/core'
 
 const render = (player: Player, el: HTMLElement) => {
-  const $dom = $.create(`
-  <div class=${$.css`
+  const $dom = $.create(
+    `div.${$.css`
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    `}>
-    <div class=${$.css({
+    justify-content: center;`}`,
+    {},
+    `<div class=${$.css({
       overflow: 'hidden',
       width: '20%',
       height: '4px',
@@ -67,12 +67,12 @@ const render = (player: Player, el: HTMLElement) => {
         }
       })}"></div>
     </div>
-  </div>
-  `)
+    `
+  )
 
   $.render($dom, el)
 
-  player.on(['play', 'pause', 'seeking', 'canplay'], () => {
+  player.on(['play', 'pause', 'seeking', 'canplay', 'videosourcechange'], () => {
     if (player.isLoading) {
       $dom.removeAttribute('style')
     } else {
