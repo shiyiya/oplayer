@@ -14,7 +14,7 @@ const styles = $.css({
 
     '& > svg': {
       fill: 'currentcolor',
-      filter: 'drop-shadow(0px 0px 5px var(--shadow-color))'
+      filter: 'drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.3))'
     }
   },
 

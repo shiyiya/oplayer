@@ -4,10 +4,10 @@ import renderControllerBottom from './ControllerBottom'
 import type { SnowConfig } from '../types'
 
 const hide = $.css({
-  bottom: '-46px',
-  padding: '0',
+  bottom: '-46px !important',
+  padding: '0 !important',
   '@media only screen and (max-width: 991px)': {
-    bottom: '-38px'
+    bottom: '-38px !important'
   }
 })
 
@@ -43,7 +43,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
   const hideCtrl = () => {
     $dom.classList.add(hide)
-    player.emit('theme-snow:bar::hide')
+    player.emit('theme/snow:bar/hide')
   }
 
   const debounceHideCtrl = debounce(hideCtrl)

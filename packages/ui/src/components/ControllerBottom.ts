@@ -154,7 +154,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         </div>`
   )
 
-  player.on(['timeupdate', 'videosourcechange'], () => {
+  player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
     $dom.querySelector<HTMLSpanElement>('.' + ohcontrollertime)!.innerText =
       // prettire-ignore
       `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`

@@ -63,7 +63,7 @@ const render = (player: Player, el: HTMLElement) => {
       cursor: 'pointer',
       width: '100%',
 
-      [`'&:hover .${dot}::before'`]: {
+      [`&:hover .${dot}::before`]: {
         transform: 'scale(1)'
       },
 
@@ -78,7 +78,6 @@ const render = (player: Player, el: HTMLElement) => {
       width: '100%',
       background: 'hsla(0, 0%, 100%, 0.2)',
       cursor: 'pointer',
-      'border-radius': `${BORRDER_RADIUS}px`,
 
       [`& .${buffered},& .${played}`]: {
         position: 'absolute',
@@ -99,10 +98,10 @@ const render = (player: Player, el: HTMLElement) => {
   </div>`
   )
 
-  const $hit = $dom.querySelector<HTMLDivElement>(hit)!
-  const $buffered = $dom.querySelector<HTMLDivElement>(buffered)!
-  const $played = $dom.querySelector<HTMLDivElement>(played)!
-  const $playedDto = $dom.querySelector<HTMLDivElement>(dot)!
+  const $hit = $dom.querySelector<HTMLDivElement>(`.${hit}`)!
+  const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
+  const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
+  const $playedDto = $dom.querySelector<HTMLDivElement>(`.${dot}`)!
 
   $dom.addEventListener(
     'mousemove',
@@ -122,6 +121,7 @@ const render = (player: Player, el: HTMLElement) => {
   $dom.addEventListener(
     'mousedown',
     (e: MouseEvent) => {
+      if (!player.isLoaded) return
       const target = <HTMLDivElement>e.target
       const rect = target.getBoundingClientRect()
       if (!(<HTMLDivElement>e.target!).classList.contains('oh-controller-progress-played-dot')) {
@@ -139,13 +139,13 @@ const render = (player: Player, el: HTMLElement) => {
     ;[$played, $buffered].forEach((el) => (el.style.borderRadius = '0px'))
   })
 
-  player.on('timeupdate', () => {
+  player.on(['timeupdate', 'seeking', 'videosourcechange'], () => {
     const { currentTime, duration } = player
     const buffered = player.buffered.length ? player.buffered.end(player.buffered.length - 1) : 0
     const bufferedWidth = (buffered / duration) * 100
     const playedWidth = (currentTime / duration) * 100
-    $buffered.style.width = bufferedWidth + '%'
-    $played.style.width = playedWidth + '%'
+    $buffered.style.width = (bufferedWidth || 0) + '%'
+    $played.style.width = (playedWidth || 0) + '%'
     $playedDto.style.transform = `translateX(${playedWidth}%)`
   })
 
