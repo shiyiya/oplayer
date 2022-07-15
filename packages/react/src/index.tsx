@@ -2,13 +2,14 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useSta
 import Player, { PlayerPlugin, PlayerOptions, PlayerEvent } from '@oplayer/core'
 
 interface OPlayerProps extends PlayerOptions {
+  playing?: boolean
   duration?: number
   plugins?: PlayerPlugin[]
   onEvent?: (e: PlayerEvent) => void
 }
 
 const ReactPlayer = forwardRef<Player, OPlayerProps>(
-  ({ plugins, duration = 0, onEvent, ...rest }, ref) => {
+  ({ playing, duration = 0, plugins, onEvent, ...rest }, ref) => {
     const isInitial = useRef(false)
     const [player, setPlayer] = useState<Player>()
 
@@ -27,6 +28,14 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [])
 
     useEffect(() => () => player?.destroy(), [])
+
+    useEffect(() => {
+      if (playing) {
+        player?.play()
+      } else {
+        player?.pause()
+      }
+    }, [playing])
 
     useEffect(() => {
       if (isInitial.current) {
