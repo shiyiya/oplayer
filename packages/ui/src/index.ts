@@ -1,5 +1,5 @@
-import type { PlayerPlugin } from '@oplayer/core'
-import Player, { formatTime, isMobile } from '@oplayer/core'
+import type { PlayerPlugin, PlayerEvent } from '@oplayer/core'
+import Player, { formatTime, isMobile, $ } from '@oplayer/core'
 import { html, render } from 'lit'
 import { ref } from 'lit/directives/ref.js'
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js'
@@ -15,11 +15,16 @@ import volumeSvg from './icons/volume.svg?raw'
 import styles from './index.style'
 import loadingStyles from './loading.style'
 
+import renderLoding from './components/Loading'
+import renderMask from './components/Mask'
+import renderButton from './components/CoverButton'
+
 let CTRL_HIDE_DELAY = 1500
 
 let $controller: HTMLDivElement
 let controllerIsActive = false
 let ctrlAutoHideTimer: NodeJS.Timeout | null = null
+let err: PlayerEvent | null = null
 
 const debounce = (fn: () => void, ms: number = CTRL_HIDE_DELAY) => {
   let time: NodeJS.Timeout | null = null
@@ -55,6 +60,22 @@ const calculateWidth = (player: Player) => {
   return { bufferedWidth, playedWidth }
 }
 
+const apply2 = (player: Player, config: SnowConfig) => {
+  const $dom = $.create(`<div class=${styles.ohui(config.theme)}></div>`)
+  const $area = $.create(`<div. class=${$.css`width: 100%;height: 100%;`}></div>`)
+
+  // error
+
+  // area
+  $.render($area, $dom)
+  renderLoding(player, $area)
+  renderMask(player, $area)
+  renderButton(player, $area)
+
+  // root
+  $.render($dom, player.$root)
+}
+
 const apply = (player: Player, config: SnowConfig) => {
   const createHitRef = (el: Element | undefined) => {
     const $hit = el!.querySelector('.oh-controller-progress-hit')! as HTMLDivElement
@@ -85,6 +106,8 @@ const apply = (player: Player, config: SnowConfig) => {
   const vn = ({ playedWidth = 0, bufferedWidth = 0 } = {}) => html` <div
     class=${styles.ohui(config.theme)}
   >
+    <div class=${styles.oherror}></div>
+
     <div class=${styles.oharea}>
       ${player.isLoading
         ? html`

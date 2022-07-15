@@ -3,7 +3,7 @@ import { $ } from '@oplayer/core'
 
 const css = $.css
 
-export const ohui = (theme: SnowConfig['theme']) =>
+const ohui = (theme: SnowConfig['theme']) =>
   css({
     '--primary-color': `${theme?.primaryColor}`,
     /* https://stackoverflow.com/questions/7015302/css-hexadecimal-rgba */
@@ -40,19 +40,26 @@ export const ohui = (theme: SnowConfig['theme']) =>
     }
   })
 
-export const ohmask = css`
+const oherror = css`
+  position: absolute;
+  inset: 0;
+  font-color: #fff;
+  font-size: 1.2em;
+`
+
+const ohmask = css`
   width: 100%;
   height: 100%;
   position: absolute;
   inset: 0;
 `
 
-export const oharea = css`
+const oharea = css`
   width: 100%;
   height: 100%;
 `
 
-export const ohloading = css`
+const ohloading = css`
   position: absolute;
   inset: 0;
   display: flex;
@@ -60,7 +67,7 @@ export const ohloading = css`
   justify-content: center;
 `
 
-export const ohplay = css({
+const ohplay = css({
   fill: 'currentcolor',
   position: 'absolute',
   right: '40px',
@@ -91,7 +98,7 @@ export const ohplay = css({
   }
 })
 
-export const ohcontrollerwrap = css({
+const ohcontrollerwrap = css({
   transition: 'width 0.3s ease',
   'box-sizing': 'border-box',
   padding: '5px 0',
@@ -107,7 +114,7 @@ export const ohcontrollerwrap = css({
   }
 })
 
-export const ohcontroller = css({
+const ohcontroller = css({
   position: 'absolute',
   left: '0',
   right: '0',
@@ -134,7 +141,7 @@ export const ohcontroller = css({
   }
 })
 
-export const ohcontrollerprogress = css({
+const ohcontrollerprogress = css({
   position: 'relative',
   height: '4px',
   width: '100%',
@@ -205,7 +212,7 @@ export const ohcontrollerprogress = css({
   }
 })
 
-export const ohcontrollerbottom = css({
+const ohcontrollerbottom = css({
   display: 'flex',
   'align-items': 'center',
   'justify-content': 'space-between',
@@ -232,7 +239,7 @@ export const ohcontrollerbottom = css({
     }
   }
 })
-export const ohcontrollertime = css`
+const ohcontrollertime = css`
   display: flex;
   align-items: center;
   padding: 0px 0.5em;
@@ -243,7 +250,7 @@ export const ohcontrollertime = css`
   font-variant-numeric: tabular-nums;
 `
 
-export const dropdown = css({
+const dropdown = css({
   position: 'relative',
 
   '& .expand': {
@@ -265,7 +272,7 @@ export const dropdown = css({
   }
 })
 
-export const speeditem = css`
+const speeditem = css`
   font-size: 14px;
   display: block;
   padding: 6px 15px;
@@ -275,6 +282,7 @@ export const speeditem = css`
 
 export default {
   ohui,
+  oherror,
   ohmask,
   oharea,
   ohplay,
