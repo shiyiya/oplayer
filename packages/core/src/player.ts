@@ -151,6 +151,10 @@ export class Player {
     })
   }
 
+  setPoster(poster: string) {
+    this.#video.poster = poster
+  }
+
   play = () => {
     if (this.#isCustomLoader) {
       this.#playPromise = this.#video.play()

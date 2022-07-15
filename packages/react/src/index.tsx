@@ -1,17 +1,18 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import Player, { PlayerPlugin, PlayerOptions, PlayerEvent } from '@oplayer/core'
 
 interface OPlayerProps extends PlayerOptions {
   playing?: boolean
   duration?: number
+  aspectRatio?: number
   plugins?: PlayerPlugin[]
   onEvent?: (e: PlayerEvent) => void
 }
 
 const ReactPlayer = forwardRef<Player, OPlayerProps>(
-  ({ playing, duration = 0, plugins, onEvent, ...rest }, ref) => {
-    const isInitial = useRef(false)
-    const [player, setPlayer] = useState<Player>()
+  ({ playing, duration = 0, aspectRatio = 9 / 16, plugins, onEvent, ...rest }, ref) => {
+    const player = useRef<Player>()
+    const preSource = usePrevious(rest.source)
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
       if (node !== null) {
@@ -19,7 +20,7 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
           .use(plugins || [])
           .create()
 
-        setPlayer(instance)
+        player.current = instance
         instance!.seek(duration / 1000)
         if (onEvent) {
           instance!.on(onEvent)
@@ -27,48 +28,47 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
       }
     }, [])
 
-    useEffect(() => () => player?.destroy(), [])
+    useEffect(() => () => player.current?.destroy(), [])
 
     useEffect(() => {
       if (playing) {
-        player?.play()
+        player.current?.play()
       } else {
-        player?.pause()
+        player.current?.pause()
       }
     }, [playing])
 
     useEffect(() => {
-      if (isInitial.current) {
-        player?.changeSource(rest.source)
-        player?.setPlaybackRate(rest.playbackRate || 1)
-      } else {
-        isInitial.current = true
+      if (preSource?.src !== rest.source.src) {
+        player.current?.changeSource(rest.source)
+        player.current?.setPlaybackRate(rest.playbackRate || 1)
       }
-    }, [player, rest.source])
+      player.current?.setPoster(rest.source.poster || '')
+    }, [rest.source])
 
     useEffect(() => {
-      player?.seek(duration / 1000)
+      player.current?.seek(duration / 1000)
     }, [duration])
 
     useEffect(() => {
       if (rest.muted) {
-        player?.mute()
+        player.current?.mute()
       } else {
-        player?.unmute()
+        player.current?.unmute()
       }
     }, [rest.muted])
 
     useEffect(() => {
-      player?.setPlaybackRate(rest.playbackRate!)
+      player.current?.setPlaybackRate(rest.playbackRate!)
     }, [rest.playbackRate])
 
-    useImperativeHandle(ref, () => player as Player, [player])
+    useImperativeHandle(ref, () => player.current as Player, [player])
 
     return (
       <div
         style={{
           width: '100%',
-          paddingTop: `${(9 / 16) * 100}%`,
+          paddingTop: `${aspectRatio * 100}%`,
           backgroundColor: '#f4f4f4',
           position: 'relative'
         }}
@@ -87,5 +87,15 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     )
   }
 )
+
+export function usePrevious<T>(value: T) {
+  const ref = useRef<T>()
+
+  useEffect(() => {
+    ref.current = value
+  }, [value])
+
+  return ref.current
+}
 
 export default ReactPlayer
