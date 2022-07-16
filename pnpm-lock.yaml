@@ -40,7 +40,7 @@ importers:
       cross-env: 7.0.3
       esbuild: 0.14.49
       lint-staged: 13.0.3
-      nx: 14.4.2
+      nx: 14.4.3
       prettier: 2.7.1
       rimraf: 3.0.2
       rollup: 2.76.0
@@ -74,12 +74,14 @@ importers:
     specifiers:
       '@oplayer/core': workspace:*
       '@oplayer/hls': workspace:*
+      '@oplayer/torrent': workspace:*
       '@oplayer/ui': workspace:*
       hls.js: ^1.1.5
       lit: ^2.2.7
     dependencies:
       '@oplayer/core': link:../../packages/core
       '@oplayer/hls': link:../../packages/hls
+      '@oplayer/torrent': link:../../packages/torrent
       '@oplayer/ui': link:../../packages/ui
       hls.js: 1.1.5
       lit: 2.2.7
@@ -657,20 +659,20 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@nrwl/cli/14.4.2:
-    resolution: {integrity: sha512-JNV4kP9goZD4BlTQGKdKhCRc1bhiWYp1TaDJHdk4ZfhiLt1NzXNxxgc/eX2obFZ3Hw+KdM/gM5F7KfWBbtSGSw==}
+  /@nrwl/cli/14.4.3:
+    resolution: {integrity: sha512-9WzOOXgdf9YJxqte5e8KNkM3NWOuBgM7hz9jEOyw53Ht1Y2H8xLDPVkqDTS9kROgcyMQxHIjIcw80wZNaZL8Mw==}
     dependencies:
-      nx: 14.4.2
+      nx: 14.4.3
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
     dev: true
 
-  /@nrwl/tao/14.4.2:
-    resolution: {integrity: sha512-Ygw3skKZfFhi4MBHZKQ8A67pDQxeyDdY78tFWViMN0SEn9ExL41Q8V9aSMfir8VZYGca6ZOXX5MRhbeHdcgMLQ==}
+  /@nrwl/tao/14.4.3:
+    resolution: {integrity: sha512-sHlnqTlJ/XEc/lv0MIKYI1R643CWFvYL6QyZD7f38FvP1RblZ6eVqvOJcrkpwcvRWcZNEY+GrQpb1Io1ZvMEmQ==}
     hasBin: true
     dependencies:
-      nx: 14.4.2
+      nx: 14.4.3
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -3032,8 +3034,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nx/14.4.2:
-    resolution: {integrity: sha512-bYO//HuwQL4X8y+2BjUPtkPLDiYI1zMejQo6+uJl3+VdYPcsjwW/ca581tBPHiPH95XnHiBartnMrMJtn11grw==}
+  /nx/14.4.3:
+    resolution: {integrity: sha512-XPaoEAfJI9056qdwTvkutQSwwA3iihqNDwhvk3dmgpT35j8Uzm/y67goACaCUBCjP2dIQqXfNfJVWQIpcG3MTw==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -3045,8 +3047,8 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 14.4.2
-      '@nrwl/tao': 14.4.2
+      '@nrwl/cli': 14.4.3
+      '@nrwl/tao': 14.4.3
       '@parcel/watcher': 2.0.4
       chalk: 4.1.0
       chokidar: 3.5.3

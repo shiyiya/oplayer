@@ -45,7 +45,7 @@ const hlsPlugin = ({
       emit('error', {
         payload: {
           type: 'hlsNotSupported',
-          message: 'hls is not supported'
+          message: 'hlsNotSupported'
         }
       })
       return true
@@ -61,7 +61,7 @@ const hlsPlugin = ({
           event === Hls.Events.ERROR &&
           data.details == 'manifestLoadError' /*ErrorDetails.MANIFEST_LOAD_ERROR*/
         ) {
-          emit('error', { type: event, payload: data })
+          emit('error', { message: data.type, ...data })
         }
         emit(event, data)
       })

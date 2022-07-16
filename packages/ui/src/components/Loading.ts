@@ -73,7 +73,7 @@ const render = (player: Player, el: HTMLElement) => {
   $.render($dom, el)
 
   player.on(['play', 'pause', 'seeking', 'canplay', 'videosourcechange'], () => {
-    if (player.isLoading && !player.isPlaying) {
+    if (player.isLoading && player.isPlaying) {
       $dom.removeAttribute('style')
     } else {
       $dom.style.display = 'none'

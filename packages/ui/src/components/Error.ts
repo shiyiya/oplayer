@@ -8,7 +8,7 @@ const render = (player: Player, el: HTMLElement) => {
       position: absolute;
       inset: 0;
       color: #fff;
-      font-size: 1.2em;
+      font-size: 1.5em;
       background: #000;
       z-index: 99;
       justify-content: center;
@@ -18,7 +18,7 @@ const render = (player: Player, el: HTMLElement) => {
 
   player.on('error', (e) => {
     $dom.style.display = 'flex'
-    $dom.innerText = e.type
+    $dom.innerText = e.payload.message
   })
 
   player.on('videosourcechange', () => {
