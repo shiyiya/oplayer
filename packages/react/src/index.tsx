@@ -11,6 +11,8 @@ interface OPlayerProps extends PlayerOptions {
 
 const ReactPlayer = forwardRef<Player, OPlayerProps>(
   ({ playing, duration = 0, aspectRatio = 9 / 16, plugins, onEvent, ...rest }, ref) => {
+    const isInitialMount = useRef(true)
+
     const player = useRef<Player>()
     const preSource = usePrevious(rest.source)
 
@@ -21,7 +23,7 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
           .create()
 
         player.current = instance
-        instance!.seek(duration / 1000)
+        instance.seek(duration / 1000)
         if (onEvent) {
           instance!.on(onEvent)
         }
@@ -39,6 +41,7 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [playing])
 
     useEffect(() => {
+      if (isInitialMount) return
       if (preSource?.src !== rest.source.src) {
         player.current?.changeSource(rest.source)
         player.current?.setPlaybackRate(rest.playbackRate || 1)
@@ -47,10 +50,12 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [rest.source])
 
     useEffect(() => {
+      if (isInitialMount) return
       player.current?.seek(duration / 1000)
     }, [duration])
 
     useEffect(() => {
+      if (isInitialMount) return
       if (rest.muted) {
         player.current?.mute()
       } else {
@@ -59,6 +64,7 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [rest.muted])
 
     useEffect(() => {
+      if (isInitialMount) return
       player.current?.setPlaybackRate(rest.playbackRate!)
     }, [rest.playbackRate])
 

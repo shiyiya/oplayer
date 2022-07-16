@@ -18,7 +18,7 @@ const render = (player: Player, el: HTMLElement) => {
 
   player.on('error', (e) => {
     $dom.style.display = 'flex'
-    $dom.innerText = e.payload.message
+    $dom.innerText = e.payload.message || 'Unknown Error'
   })
 
   player.on('videosourcechange', () => {
