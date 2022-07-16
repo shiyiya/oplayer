@@ -19,7 +19,7 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
       z-index: 99;
       justify-content: center;
       align-items: center;
-      `}`);E.on("error",T=>{p.style.display="flex",p.innerText=T.payload.message}),E.on("videosourcechange",()=>{p.style.display="none",p.innerText=""}),Le.render(p,c)},zn=(E,c)=>{const p=Le.create(`div.${Le.css`
+      `}`);E.on("error",T=>{p.style.display="flex",p.innerText=T.payload.message||"Unknown Error"}),E.on("videosourcechange",()=>{p.style.display="none",p.innerText=""}),Le.render(p,c)},zn=(E,c)=>{const p=Le.create(`div.${Le.css`
       position: absolute;
       inset: 0;
       display: flex;
