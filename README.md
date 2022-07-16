@@ -1,10 +1,12 @@
-<h1>OPlayer</h1>
+<h1 align="center">OPlayer</h1>
 
-[![npm](https://flat.badgen.net/npm/v/@oplayer/core/?color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
+[Oh!](https://shiyiya.github.io/oplayer) Another web video player.
 
 [Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx)
 
-[Oh!](https://shiyiya.github.io/oplayer) Another web video player.
+[![npm](https://flat.badgen.net/npm/v/@oplayer/core/?color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square)
+[![](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 
 ![](./oplayer.png)
 
@@ -31,19 +33,6 @@ Player.make(document.body, {
   .create()
 ```
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.umd.js"></script>
+## Who use OPlayer?
 
-<script>
-  OPlayer.make(document.body, {
-    source: {
-      src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-      poster: 'https://media.w3.org/2010/05/sintel/poster.png'
-    }
-  })
-    .use([OUI({ theme: { primaryColor: '#9370db' } }), OHls()])
-    .create()
-</script>
-```
+- [UPV](https://月色真美.life) : free animes no ad
