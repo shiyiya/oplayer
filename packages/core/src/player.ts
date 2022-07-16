@@ -70,7 +70,7 @@ export class Player {
   readonly create = () => {
     this.render()
     this.initEvent()
-    this.load(this.#options.source)
+    if (this.#options.source.src) this.load(this.#options.source)
     this.#applyPlugins()
     return this
   }
@@ -156,6 +156,8 @@ export class Player {
   }
 
   play = () => {
+    if (!this.#options.source.src) throw Error('The element has no supported sources.')
+
     if (this.#isCustomLoader) {
       this.#playPromise = this.#video.play()
     } else {
