@@ -154,7 +154,7 @@ export class Player {
   }
 
   play = () => {
-    if (!this.#options.source.src) throw Error('The element has no supported sources.')
+    if (!this.#video.src) throw Error('The element has no supported sources.')
 
     if (this.#isCustomLoader) {
       this.#playPromise = this.#video.play()
@@ -167,7 +167,7 @@ export class Player {
 
   pause() {
     if (this.#playPromise?.then) {
-      this.#playPromise.then(this.#video.pause)
+      this.#playPromise.then(() => this.#video.pause())
     } else {
       this.#video.pause()
     }
