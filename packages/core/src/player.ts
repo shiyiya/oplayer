@@ -12,8 +12,6 @@ export class Player {
         muted: false,
         loop: false,
         volume: 1,
-        width: el.offsetWidth,
-        height: el.offsetHeight,
         preload: 'auto',
         poster: '',
         playbackRate: 1,

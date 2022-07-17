@@ -8,14 +8,16 @@ export const libFileName = (format: string) => `index.${format}.js`
 
 export const rollupPlugins: Plugin[] = []
 
-export const external = [
-  '@oplayer/core',
-  '@oplayer/hls',
-  'hls.js/dist/hls.light.min.js',
-  '@oplayer/torrent',
-  'webtorrent/webtorrent.min.js',
-  'react',
-]
+const globals = {
+  '@oplayer/core': 'OPlayer',
+  '@oplayer/hls': 'OHls',
+  'hls.js/dist/hls.light.min.js': 'Hls',
+  '@oplayer/torrent': 'OTorrent',
+  'webtorrent/webtorrent.min.js': 'WebTorrent',
+  react: 'react'
+}
+
+export const external = Object.keys(globals)
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
   mergeDeep<BuildOptions>(
@@ -28,19 +30,15 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
         entry: resolvePath(`packages/${packageDirName}/src/index.ts`),
         name: `oplayer_${packageDirName}`,
         fileName: libFileName,
-        formats: ['es']
+        formats: ['es', 'umd']
       },
       rollupOptions: {
         external,
         output: {
           dir: resolvePath(`packages/${packageDirName}/dist`),
-          globals: {
-            'hls.js/dist/hls.light.min': 'Hls',
-            'webtorrent/webtorrent.min': 'WebTorrent',
-            react: 'react'
-          }
+          globals: globals
         },
-        plugins: rollupPlugins
+        plugins: rollupPlugins as any
       }
     },
     options
@@ -55,7 +53,7 @@ export const viteConfig = (packageDirName: string, options: ViteUserConfig = {})
   return defineConfig({
     ...options,
     build: viteBuild(packageDirName, options.build),
-    plugins: [...vitePlugins, ...rollupPlugins],
+    plugins: [...vitePlugins, ...rollupPlugins] as any,
     define: {
       __VERSION__: `'${version}'`
     }
