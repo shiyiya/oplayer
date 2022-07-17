@@ -30,8 +30,6 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
       }
     }, [])
 
-    useEffect(() => () => player.current?.destroy(), [])
-
     useEffect(() => {
       if (playing) {
         player.current?.play()
@@ -41,7 +39,7 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [playing])
 
     useEffect(() => {
-      if (isInitialMount) return
+      if (isInitialMount.current) return
       if (preSource?.src !== rest.source.src) {
         player.current?.changeSource(rest.source)
         player.current?.setPlaybackRate(rest.playbackRate || 1)
@@ -50,12 +48,12 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [rest.source])
 
     useEffect(() => {
-      if (isInitialMount) return
+      if (isInitialMount.current) return
       player.current?.seek(duration / 1000)
     }, [duration])
 
     useEffect(() => {
-      if (isInitialMount) return
+      if (isInitialMount.current) return
       if (rest.muted) {
         player.current?.mute()
       } else {
@@ -64,9 +62,14 @@ const ReactPlayer = forwardRef<Player, OPlayerProps>(
     }, [rest.muted])
 
     useEffect(() => {
-      if (isInitialMount) return
+      if (isInitialMount.current) return
       player.current?.setPlaybackRate(rest.playbackRate!)
     }, [rest.playbackRate])
+
+    useEffect(() => {
+      isInitialMount.current = false
+      return () => player.current?.destroy()
+    }, [])
 
     useImperativeHandle(ref, () => player.current as Player, [player])
 

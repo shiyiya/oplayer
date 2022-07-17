@@ -17,7 +17,7 @@ const plugins = [ui(), hls()]
 
 const App = () => {
   const [alive, setAlive] = useState(true)
-  const [index, update] = useState(0)
+  const [index, update] = useState(-1)
   const player = useRef<Player | null>(null)
 
   return (
@@ -25,6 +25,7 @@ const App = () => {
       {alive ? (
         <ReactPlayer
           ref={player}
+          autoplay={true}
           duration={5000}
           plugins={plugins}
           source={{
@@ -39,6 +40,8 @@ const App = () => {
         />
       ) : null}
       <hr />
+      <button onClick={() => update(0)}>setup</button>
+      &nbsp;
       <button onClick={() => update(1)}>mp4</button>
       &nbsp;
       <button onClick={() => update(2)}>m3u8</button>
