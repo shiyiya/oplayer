@@ -7,12 +7,22 @@
     <title>ie11</title>
   </head>
   <body style="max-width: 980px; margin: 40px auto">
-    <script src="https://cdn.jsdelivr.net/npm/@babel/polyfill/dist/polyfill.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+    <!--[if IE]>
+      <script src="https://cdn.jsdelivr.net/npm/core-js/client/core.js"></script>
 
+      <script src="https://cdn.jsdelivr.net/npm/@babel/polyfill/dist/polyfill.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+      <script type="text/babel" src="../packages/core/dist/index.umd.js"></script>
+      <script type="text/babel" src="../packages/ui/dist/index.umd.js"></script>
+      <script type="text/babel" src="../packages/hls/dist/index.umd.js"></script>
+    <![endif]-->
+
+    <!--[if !IE]-->
     <script src="../packages/core/dist/index.umd.js"></script>
     <script src="../packages/ui/dist/index.umd.js"></script>
     <script src="../packages/hls/dist/index.umd.js"></script>
+    <!--[endif]-->
 
     <script>
       OPlayer.default
