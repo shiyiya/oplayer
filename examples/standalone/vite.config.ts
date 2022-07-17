@@ -7,5 +7,10 @@ export default defineConfig((env: ConfigEnv) => ({
     assetsDir: 'assets',
     outDir: '../../docs'
   },
-  plugins: [legacy({ targets: ['ie >= 11'] }) as any]
+  plugins: [
+    legacy({
+      targets: ['ie >= 11'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime']
+    }) as any
+  ]
 }))
