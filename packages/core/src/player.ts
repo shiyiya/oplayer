@@ -166,7 +166,11 @@ export class Player {
   }
 
   pause() {
-    ;(this.#playPromise || Promise.resolve()).then((_) => this.#video.pause())
+    if (this.#playPromise?.then) {
+      this.#playPromise.then(this.#video.pause)
+    } else {
+      this.#video.pause()
+    }
   }
 
   togglePlay() {
