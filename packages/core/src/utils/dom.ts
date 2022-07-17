@@ -16,8 +16,8 @@ export namespace $ {
     tpl && (dom.innerHTML = tpl)
     Object.keys(attrs).forEach((key) => {
       const attr = attrs[key]
-      if (tag === 'video' && attr) {
-        dom.setAttribute(key, `${attr}`)
+      if (tag === 'video' || tag === 'audio') {
+        attr && dom.setAttribute(key, `${attr}`)
       } else {
         if (typeof attr !== 'undefined') {
           dom.setAttribute(key, `${attr}`)

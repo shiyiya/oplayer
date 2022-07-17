@@ -1,8 +1,6 @@
 import { $, formatTime } from '@oplayer/core'
 import type Player from '@oplayer/core'
 
-const BORRDER_RADIUS = 2
-
 const buffered = $.css({
   background: 'hsla(0, 0%, 100%, 0.4)'
 })
@@ -87,7 +85,6 @@ const render = (player: Player, el: HTMLElement) => {
         height: '4px',
         'will-change': 'width',
         transition: 'all 0.2s ease',
-        'border-radius': `${BORRDER_RADIUS}px`,
         'pointer-events': 'none'
       }
     })}>
@@ -130,14 +127,6 @@ const render = (player: Player, el: HTMLElement) => {
     },
     { passive: true }
   )
-
-  player.on('theme/snow:bar/show', () => {
-    ;[$played, $buffered].forEach((el) => (el.style.borderRadius = `${BORRDER_RADIUS}px`))
-  })
-
-  player.on('theme/snow:bar/hide', () => {
-    ;[$played, $buffered].forEach((el) => (el.style.borderRadius = '0px'))
-  })
 
   player.on(['timeupdate', 'seeking', 'videosourcechange'], () => {
     const { currentTime, duration } = player
