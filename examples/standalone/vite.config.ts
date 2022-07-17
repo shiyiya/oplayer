@@ -5,7 +5,8 @@ export default defineConfig((env: ConfigEnv) => ({
   base: env.command == 'build' ? '/oplayer/' : '/',
   build: {
     assetsDir: 'assets',
-    outDir: '../../docs'
+    outDir: '../../docs',
+    emptyOutDir: true
   },
   plugins: [
     legacy({

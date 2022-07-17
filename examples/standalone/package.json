@@ -17,7 +17,9 @@
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "hls.js": "^1.1.5",
-    "lit": "^2.2.7",
+    "lit": "^2.2.7"
+  },
+  "devDependencies": {
     "@vitejs/plugin-legacy": "^2.0.0"
   }
 }
