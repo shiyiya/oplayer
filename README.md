@@ -15,7 +15,7 @@
 ```bash
 pnpm i @oplayer/core @oplayer/ui @oplayer/hls
 # or
-yarn add  @oplayer/core @oplayer/ui @oplayer/hls
+yarn add @oplayer/core @oplayer/ui @oplayer/hls
 ```
 
 ```js
