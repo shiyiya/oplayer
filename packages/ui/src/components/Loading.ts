@@ -1,5 +1,5 @@
 import { $ } from '@oplayer/core'
-import type Player from '@oplayer/core'
+import { Player, PlayerEvent } from '@oplayer/core'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -72,13 +72,16 @@ const render = (player: Player, el: HTMLElement) => {
 
   $.render($dom, el)
 
-  player.on(['play', 'pause', 'seeking', 'canplay', 'videosourcechange'], () => {
-    if (player.isLoading && player.isPlaying) {
-      $dom.removeAttribute('style')
-    } else {
-      $dom.style.display = 'none'
+  player.on(
+    ['play', 'pause', 'seeking', 'waiting', 'canplaythrough', 'videosourcechange'],
+    (e: PlayerEvent) => {
+      if (player.isLoading && (player.isPlaying || e.type == 'videosourcechange')) {
+        $dom.removeAttribute('style')
+      } else {
+        $dom.style.display = 'none'
+      }
     }
-  })
+  )
 }
 
 export default render

@@ -13,8 +13,8 @@ const styles = $.css({
     width: '3em',
 
     '& > svg': {
-      fill: 'currentcolor',
-      filter: 'drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.3))'
+      fill: '#fff',
+      filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
     }
   },
 
@@ -47,8 +47,8 @@ const render = (player: Player, el: HTMLElement) => {
     player.togglePlay()
   })
 
-  player.on(['play', 'pause', 'seeking', 'canplay'], () => {
-    if (player.isPlaying || player.isLoading) {
+  player.on(['play', 'pause', 'seeking', 'canplaythrough'], () => {
+    if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
       $dom.style.display = 'none'
     } else {
       $dom.removeAttribute('style')

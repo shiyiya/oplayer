@@ -2,11 +2,11 @@ import { $, formatTime } from '@oplayer/core'
 import type Player from '@oplayer/core'
 
 const buffered = $.css({
-  background: 'hsla(0, 0%, 100%, 0.4)'
+  'background-color': 'hsla(0, 0%, 100%, 0.4)'
 })
 
 const played = $.css({
-  background: 'var(--primary-color)'
+  'background-color': 'var(--primary-color)'
 })
 
 const dot = $.css({
@@ -25,7 +25,7 @@ const dot = $.css({
     bottom: '0',
     height: '0.8em',
     width: '0.8em',
-    background: '#fff',
+    'background-color': '#fff',
     'margin-top': '-4.5px',
     'z-index': '1',
     'border-radius': '50%',
@@ -74,7 +74,7 @@ const render = (player: Player, el: HTMLElement) => {
       position: 'relative',
       height: '4px',
       width: '100%',
-      background: 'hsla(0, 0%, 100%, 0.2)',
+      'background-color': 'hsla(0, 0%, 100%, 0.2)',
       cursor: 'pointer',
 
       [`& .${buffered},& .${played}`]: {

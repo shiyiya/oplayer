@@ -103,6 +103,7 @@ export class Player {
               width: 100%;
               height: 100%;
               display: block;
+              position: relative;
             `)}`,
       {
         autoplay: this.#options.autoplay,
@@ -292,7 +293,11 @@ export class Player {
   }
 
   get isLoading() {
-    return this.#video.readyState < this.#video.HAVE_FUTURE_DATA && !this.hasError
+    /**
+     * @HAVE_FUTURE_DATA canplay: fired when video ready to play but buffering not complete
+     * @HAVE_ENOUGH_DATA canplaythrough : fired when video ready to play and buffering complete
+     */
+    return this.#video.readyState < this.#video.HAVE_ENOUGH_DATA && !this.hasError
   }
 
   get isLoaded() {
