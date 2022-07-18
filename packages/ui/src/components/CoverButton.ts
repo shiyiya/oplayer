@@ -8,6 +8,7 @@ const styles = $.css({
   position: 'absolute',
   right: '40px',
   bottom: '45px',
+  display: 'none',
 
   [`& > .${icon}`]: {
     width: '3em',
@@ -47,11 +48,11 @@ const render = (player: Player, el: HTMLElement) => {
     player.togglePlay()
   })
 
-  player.on(['play', 'pause', 'seeking', 'canplaythrough'], () => {
+  player.on(['canplaythrough', 'play', 'pause', 'seeking', 'videosourcechange'], () => {
     if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
       $dom.style.display = 'none'
     } else {
-      $dom.removeAttribute('style')
+      $dom.style.display = 'block'
     }
   })
 

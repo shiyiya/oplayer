@@ -75,7 +75,10 @@ const render = (player: Player, el: HTMLElement) => {
   player.on(
     ['play', 'pause', 'seeking', 'waiting', 'canplaythrough', 'videosourcechange'],
     (e: PlayerEvent) => {
-      if (player.isLoading && (player.isPlaying || e.type == 'videosourcechange')) {
+      if (
+        player.isLoading &&
+        (player.isPlaying || e.type == 'videosourcechange' || e.type === 'seeking')
+      ) {
         $dom.removeAttribute('style')
       } else {
         $dom.style.display = 'none'

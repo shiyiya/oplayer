@@ -71,18 +71,6 @@ const meta = () => html`
       QueueSource
     </button>
   </p>
-
-  <p>
-    Vol&nbsp;&nbsp;:
-    <input
-      type="range"
-      @input=${(e: any) => p.setVolume(e.target.value)}
-      min="0"
-      max="1"
-      step="0.1"
-      .value=${live(p.isMuted ? 0 : p.volume)}
-    />
-  </p>
 `
 
 p.on((e) => {

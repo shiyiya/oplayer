@@ -1,6 +1,7 @@
 import { $, isMobile, formatTime } from '@oplayer/core'
 import { icon } from '../style'
 import type Player from '@oplayer/core'
+import renderVolumeBar from './VolumeBar'
 import type { SnowConfig } from '../types'
 
 import compressSvg from '../icons/compress.svg?raw'
@@ -103,7 +104,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
         <div>
           <div class=${dropdown}>
-            <button class="${icon}" type="button">
+            <button class="${icon}"  type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class=${expand}>
@@ -126,6 +127,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
               ${volumeSvg}
               ${volumeOffSvg}
             </button>
+            <div class=${expand}>
+            </div>
           </div>
 
           ${
@@ -162,7 +165,11 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
+  const $volumeSlider = $dom.querySelector('button[aria-label="Volume"]')!
+    .nextElementSibling! as HTMLDivElement
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
+
+  renderVolumeBar(player, $volumeSlider)
 
   const switcher = (el: HTMLCollection, key: number) => {
     el[key]!.removeAttribute('style')
@@ -191,6 +198,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   player.on('volumechange', volumeSwitcher)
   player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
 
+  let preVolumn = player.volume
+
   $dom.addEventListener('click', (e) => {
     const key = (e.target! as HTMLDivElement).getAttribute('aria-label')
     switch (key) {
@@ -198,11 +207,20 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         player.togglePlay()
         break
       case 'Speed': {
-        player.setPlaybackRate(+(e.target! as HTMLDivElement).getAttribute('data-value')!)
+        const target = e.target! as HTMLDivElement
+        const speed = target.getAttribute('data-value')!
+        target.parentElement!.previousElementSibling!.textContent = speed + 'x'
+        player.setPlaybackRate(+speed)
         break
       }
       case 'Volume':
-        player.isMuted ? player.unmute() : player.mute()
+        if (player.isMuted) {
+          player.unmute()
+          player.setVolume(preVolumn)
+        } else {
+          preVolumn = player.volume
+          player.mute()
+        }
         break
       case 'Picture in Picture':
         player.togglePip()
