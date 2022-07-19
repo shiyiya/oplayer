@@ -1,64 +1,26 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
+import path from 'path'
 import babel from '@rollup/plugin-babel'
-import { DEFAULT_EXTENSIONS as DEFAULT_BABEL_EXTENSIONS } from '@babel/core'
+import typescript from '@rollup/plugin-typescript'
 
-import pkg from './package.json'
-
-const isProd = process.env.NODE_ENV === 'production'
-const isTesting = process.env.NODE_ENV === 'testing'
-const processEnv = isProd || isTesting ? 'production' : 'development'
-
-export const baseConfig = ({
-  mainFile = pkg.main,
-  moduleFile = pkg.module,
-  injectCSS = true
-} = {}) => ({
-  input: 'src/index.ts',
-  external: ['react', 'react-dom', (id) => id.includes('@babel/runtime')],
-  onwarn(warning, rollupWarn) {
-    if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-      rollupWarn(warning)
-    }
-  },
+export const baseConfig = (packageDirName) => ({
+  input: path.resolve(__dirname, `packages/${packageDirName}/src/index.ts`),
   output: [
     {
-      file: mainFile,
-      format: 'cjs',
-      sourcemap: true,
-      exports: 'named'
-    },
-    {
-      file: moduleFile,
-      format: 'esm',
-      sourcemap: true,
-      exports: 'named'
+      file: path.resolve(__dirname, `packages/${packageDirName}/dist/index.min.js`),
+      format: 'iife',
+      strict: false,
+      name: 'TEST'
     }
   ],
   plugins: [
-    replace({}),
-    resolve(),
     typescript({
-      clean: true
-    }),
-    commonjs({
-      include: 'node_modules/**'
+      tsconfig: path.resolve(__dirname, `packages/${packageDirName}/tsconfig.json`)
     }),
     babel({
-      extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
-      exclude: /^(.+\/)?node_modules\/.+$/,
-      babelHelpers: 'runtime'
+      babelHelpers: 'bundled',
+      configFile: path.resolve(__dirname, `babel.config.js`)
     })
   ]
 })
 
-export default isProd && !isTesting
-  ? [
-      baseConfig(),
-      baseConfig({
-        mainFile: 'dist/min.js',
-        moduleFile: 'dist/es.js',
-        injectCSS: false
-      })
-    ]
-  : baseConfig()
+export default [baseConfig('core')]
