@@ -2,7 +2,7 @@
 
 [Oh!](https://shiyiya.github.io/oplayer) Another web video player.
 
-[Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | ~~[Script Tag Example](./examples/ie11.html)~~
+[Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/ie11.html)
 
 [![npm](https://flat.badgen.net/npm/v/@oplayer/core/?color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square)

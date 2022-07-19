@@ -3,10 +3,27 @@ import fs from 'fs'
 import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
 import { defineConfig } from 'vite'
+// import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 export const libFileName = (format: string) => `index.${format}.js`
 
-export const rollupPlugins: Plugin[] = []
+export const rollupPlugins: Plugin[] = [
+  // getBabelOutputPlugin({
+  //   presets: [
+  //     [
+  //       '@babel/env',
+  //       {
+  //         modules: 'umd',
+  //         targets: {
+  //           browsers: ['last 2 versions', '> 1%', 'not dead', 'ie >= 11']
+  //         },
+  //         useBuiltIns: 'usage',
+  //         corejs: 3
+  //       }
+  //     ]
+  //   ]
+  // })
+]
 
 const globals = {
   '@oplayer/core': 'OPlayer',
@@ -31,7 +48,7 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
         entry: resolvePath(`packages/${packageDirName}/src/index.ts`),
         name: `oplayer_${packageDirName}`,
         fileName: libFileName,
-        formats: ['es', 'umd']
+        formats: ['es']
       },
       rollupOptions: {
         external,

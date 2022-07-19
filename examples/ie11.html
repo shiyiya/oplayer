@@ -19,9 +19,9 @@
     <![endif]-->
 
     <!--[if !IE]-->
-    <script src="../packages/core/dist/index.umd.js"></script>
-    <script src="../packages/ui/dist/index.umd.js"></script>
-    <script src="../packages/hls/dist/index.umd.js"></script>
+    <script src="../packages/core/dist/index.min.js"></script>
+    <script src="../packages/ui/dist/index.min.js"></script>
+    <script src="../packages/hls/dist/index.min.js"></script>
     <!--[endif]-->
 
     <script>
@@ -32,7 +32,7 @@
             poster: 'https://media.w3.org/2010/05/sintel/poster.png'
           }
         })
-        .use([OUI(), OHls()])
+        .use([OUI.default(), OHls.default()])
         .create()
     </script>
   </body>

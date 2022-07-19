@@ -17,7 +17,8 @@
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
     "build": "vite build && tsc --emitDeclarationOnly",
-    "build:plugins": "node ./build-plugins.js"
+    "build:plugins": "node ./build-plugins.js",
+    "babel": "../../node_modules/.bin/babel dist/index.es.js --config-file ../../babel.config.js -format --out-file dist/index.min.js --minified --module-id OPlayer"
   },
   "exports": {
     ".": {
