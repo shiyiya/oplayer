@@ -20,12 +20,6 @@
     "build:plugins": "node ./build-plugins.js",
     "babel": "../../node_modules/.bin/babel dist/index.es.js --config-file ../../babel.config.js -format --out-file dist/index.min.js --minified --module-id OPlayer"
   },
-  "exports": {
-    ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
-    }
-  },
   "files": [
     "dist",
     "src"
