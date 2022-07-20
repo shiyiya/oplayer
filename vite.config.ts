@@ -1,41 +1,15 @@
 import path from 'path'
 import fs from 'fs'
+import { defineConfig } from 'vite'
 import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
-import { defineConfig } from 'vite'
-// import { getBabelOutputPlugin } from '@rollup/plugin-babel'
+
+//@ts-ignore
+import { external, globals } from './config'
 
 export const libFileName = (format: string) => `index.${format}.js`
 
-export const rollupPlugins: Plugin[] = [
-  // getBabelOutputPlugin({
-  //   presets: [
-  //     [
-  //       '@babel/env',
-  //       {
-  //         modules: 'umd',
-  //         targets: {
-  //           browsers: ['last 2 versions', '> 1%', 'not dead', 'ie >= 11']
-  //         },
-  //         useBuiltIns: 'usage',
-  //         corejs: 3
-  //       }
-  //     ]
-  //   ]
-  // })
-]
-
-const globals = {
-  '@oplayer/core': 'OPlayer',
-  '@oplayer/ui': 'OUI',
-  '@oplayer/hls': 'OHls',
-  'hls.js/dist/hls.light.min.js': 'Hls',
-  '@oplayer/torrent': 'OTorrent',
-  'webtorrent/webtorrent.min.js': 'WebTorrent',
-  react: 'React'
-}
-
-export const external = Object.keys(globals)
+export const rollupPlugins: Plugin[] = []
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
   mergeDeep<BuildOptions>(
@@ -54,7 +28,7 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
         external,
         output: {
           dir: resolvePath(`packages/${packageDirName}/dist`),
-          globals: globals
+          globals
         },
         plugins: rollupPlugins as any
       }

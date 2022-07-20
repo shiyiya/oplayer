@@ -7,32 +7,18 @@
     <title>ie11</title>
   </head>
   <body style="max-width: 980px; margin: 40px auto">
-    <!--[if IE]>
-      <script src="https://cdn.jsdelivr.net/npm/core-js/client/core.js"></script>
-
-      <script src="https://cdn.jsdelivr.net/npm/@babel/polyfill/dist/polyfill.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-
-      <script type="text/babel" src="../packages/core/dist/index.umd.js"></script>
-      <script type="text/babel" src="../packages/ui/dist/index.umd.js"></script>
-      <script type="text/babel" src="../packages/hls/dist/index.umd.js"></script>
-    <![endif]-->
-
-    <!--[if !IE]-->
     <script src="../packages/core/dist/index.min.js"></script>
     <script src="../packages/ui/dist/index.min.js"></script>
     <script src="../packages/hls/dist/index.min.js"></script>
-    <!--[endif]-->
 
     <script>
-      OPlayer.default
-        .make(document.body, {
-          source: {
-            src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-            poster: 'https://media.w3.org/2010/05/sintel/poster.png'
-          }
-        })
-        .use([OUI.default(), OHls.default()])
+      OPlayer.make(document.body, {
+        source: {
+          src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+          poster: 'https://media.w3.org/2010/05/sintel/poster.png'
+        }
+      })
+        .use([OUI(), OHls()])
         .create()
     </script>
   </body>

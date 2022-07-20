@@ -3,12 +3,12 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        // modules: 'umd',
-        useBuiltIns: 'usage',
         targets: {
           browsers: ['last 2 versions', '> 1%', 'not dead', 'ie >= 11']
         },
         spec: true,
+        modules: false,
+        useBuiltIns: 'usage',
         forceAllTransforms: true,
         corejs: {
           version: 3,

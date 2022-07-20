@@ -15,9 +15,7 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build &&  tsc --emitDeclarationOnly",
-        "babel": "../../node_modules/.bin/babel dist/index.es.js --config-file ../../babel.config.js -format --out-file dist/index.min.js --minified"
-
+    "build": "vite build &&  tsc --emitDeclarationOnly"
   },
   "exports": {
     ".": {
