@@ -7,9 +7,10 @@ module.exports = {
           browsers: ['last 2 versions', '> 1%', 'not dead', 'ie >= 11']
         },
         spec: true,
-        modules: false,
+        modules: 'auto',
         useBuiltIns: 'usage',
         forceAllTransforms: true,
+        loose: true,
         corejs: {
           version: 3,
           proposals: false
@@ -17,20 +18,5 @@ module.exports = {
       }
     ]
   ],
-  plugins: [
-    [
-      'babel-plugin-import-global',
-      {
-        globals: {
-          '@oplayer/core': 'OPlayer',
-          '@oplayer/ui': 'OUI',
-          '@oplayer/hls': 'OHls',
-          'hls.js/dist/hls.light.min.js': 'Hls',
-          '@oplayer/torrent': 'OTorrent',
-          'webtorrent/webtorrent.min.js': 'WebTorrent',
-          react: 'React'
-        }
-      }
-    ]
-  ]
+  plugins: ['@babel/plugin-transform-runtime']
 }
