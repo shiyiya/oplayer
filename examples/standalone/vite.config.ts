@@ -12,6 +12,6 @@ export default defineConfig((env: ConfigEnv) => ({
     legacy({
       targets: ['ie >= 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
-    }) as any
+    })
   ]
 }))

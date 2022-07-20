@@ -9,7 +9,7 @@
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "vite build"
+    "build": "vite build && copy ie11.html ../docs/"
   },
   "dependencies": {
     "@oplayer/core": "workspace:*",

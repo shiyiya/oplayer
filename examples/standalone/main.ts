@@ -71,6 +71,9 @@ const meta = () => html`
       QueueSource
     </button>
   </p>
+
+  <br />
+  <a href="./ie11.html" target="_blank">UMD DEMO HERE</a>
 `
 
 p.on((e) => {
