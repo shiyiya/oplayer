@@ -48,11 +48,13 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-esbuild": "^4.9.1",
+    "rollup-plugin-inline-svg": "^3.0.3",
     "rollup-plugin-typescript2": "^0.32.1",
     "terser": "^5.14.2",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.2"
+    "vite": "^3.0.2",
+    "vite-svg-loader": "^3.4.0"
   }
 }

@@ -1,1 +1,1 @@
-declare module '*.svg?raw'
+declare module '*.svg'

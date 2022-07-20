@@ -6,6 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { globals } from './config'
 import commonjs from '@rollup/plugin-commonjs'
 import { DEFAULT_EXTENSIONS } from '@babel/core'
+import InlineSvg from 'rollup-plugin-inline-svg'
 
 const makeExternalPredicate = (externalArr) => {
   if (externalArr.length === 0) {
@@ -30,7 +31,6 @@ const resolveConfig = (packageDirName) => {
       {
         file: path.resolve(__dirname, `packages/${packageDirName}/dist/index.min.js`),
         format: 'umd',
-        sourcemap: true,
         strict: false,
         name: globals[`@oplayer/${packageDirName}`],
         globals

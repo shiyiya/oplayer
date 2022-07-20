@@ -1,6 +1,6 @@
 import { $ } from '@oplayer/core'
 import { icon } from '../style'
-import playSvg from '../icons/play.svg?raw'
+import playSvg from '../icons/play.svg'
 import type Player from '@oplayer/core'
 
 const styles = $.css({

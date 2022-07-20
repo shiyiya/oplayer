@@ -3,13 +3,14 @@ import fs from 'fs'
 import { defineConfig } from 'vite'
 import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
+import svgLoader from 'vite-svg-loader'
 
 //@ts-ignore
 import { external, globals } from './config'
 
 export const libFileName = (format: string) => `index.${format}.js`
 
-export const rollupPlugins: Plugin[] = []
+export const rollupPlugins: Plugin[] = [svgLoader({ defaultImport: 'raw', })]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
   mergeDeep<BuildOptions>(

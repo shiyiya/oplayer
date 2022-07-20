@@ -4,13 +4,13 @@ import type Player from '@oplayer/core'
 import renderVolumeBar from './VolumeBar'
 import type { SnowConfig } from '../types'
 
-import compressSvg from '../icons/compress.svg?raw'
-import expandSvg from '../icons/expand.svg?raw'
-import pauseSvg from '../icons/pause.svg?raw'
-import pipSvg from '../icons/pip.svg?raw'
-import playSvg from '../icons/play.svg?raw'
-import volumeOffSvg from '../icons/volume-off.svg?raw'
-import volumeSvg from '../icons/volume.svg?raw'
+import compressSvg from '../icons/compress.svg'
+import expandSvg from '../icons/expand.svg'
+import pauseSvg from '../icons/pause.svg'
+import pipSvg from '../icons/pip.svg'
+import playSvg from '../icons/play.svg'
+import volumeOffSvg from '../icons/volume-off.svg'
+import volumeSvg from '../icons/volume.svg'
 
 const ohcontrollertime = $.css`
   display: flex;
