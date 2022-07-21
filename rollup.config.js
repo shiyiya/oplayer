@@ -50,6 +50,7 @@ const resolveConfig = (packageDirName) => {
       InlineSvg(),
       babel({
         babelHelpers: 'runtime',
+        exclude: 'node_modules/**',
         configFile: path.resolve(__dirname, `babel.config.js`)
       }),
       terser()
@@ -57,6 +58,7 @@ const resolveConfig = (packageDirName) => {
   }
 }
 
+//TODO: support IE11
 export default [
   resolveConfig('core'),
   resolveConfig('ui'),
