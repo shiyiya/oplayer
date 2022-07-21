@@ -7,6 +7,7 @@ import { globals } from './config'
 import commonjs from '@rollup/plugin-commonjs'
 import { DEFAULT_EXTENSIONS } from '@babel/core'
 import InlineSvg from 'rollup-plugin-inline-svg'
+import { terser } from 'rollup-plugin-terser'
 
 const makeExternalPredicate = (externalArr) => {
   if (externalArr.length === 0) {
@@ -45,14 +46,13 @@ const resolveConfig = (packageDirName) => {
       typescript({
         tsconfig: path.resolve(__dirname, `packages/${packageDirName}/tsconfig.json`)
       }),
+      commonjs(),
+      InlineSvg(),
       babel({
-        comments: false,
-        minified: true,
         babelHelpers: 'runtime',
-        exclude: 'node_modules/**',
         configFile: path.resolve(__dirname, `babel.config.js`)
       }),
-      commonjs()
+      terser()
     ]
   }
 }

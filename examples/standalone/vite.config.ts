@@ -1,5 +1,4 @@
 import { ConfigEnv, defineConfig } from 'vite'
-import legacy from '@vitejs/plugin-legacy'
 
 export default defineConfig((env: ConfigEnv) => ({
   base: env.command == 'build' ? '/oplayer/' : '/',
@@ -7,11 +6,5 @@ export default defineConfig((env: ConfigEnv) => ({
     assetsDir: 'assets',
     outDir: '../../docs',
     emptyOutDir: true
-  },
-  plugins: [
-    legacy({
-      targets: ['ie >= 11'],
-      additionalLegacyPolyfills: ['regenerator-runtime/runtime']
-    })
-  ]
+  }
 }))

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "vite build && copy ie11.html ../docs/"
+    "build": "vite build && cp ../ie11.html ../../docs/"
   },
   "dependencies": {
     "@oplayer/core": "workspace:*",
@@ -18,8 +18,5 @@
     "@oplayer/ui": "workspace:*",
     "hls.js": "^1.1.5",
     "lit": "^2.2.7"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-legacy": "^2.0.0"
   }
 }
