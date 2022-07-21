@@ -1,4 +1,3 @@
-import { hashify } from './hash'
 import { mergeDeep, isObject } from './index'
 
 function isSelector(key: string) {
@@ -149,9 +148,6 @@ function styleString(style: Record<string, any>): string[] {
   return str
 }
 
-export function css(
-  css: Record<string, any>,
-  selector: string = '.css-' + hashify(JSON.stringify(css))
-) {
+export function css(css: Record<string, any>, selector: string) {
   return styleString(build(selector, { rules: css, mediaQuery: undefined }))
 }

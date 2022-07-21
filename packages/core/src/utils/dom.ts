@@ -1,4 +1,4 @@
-import { hashify } from './hash'
+import hash from './hash'
 import { css as _css } from './css'
 
 export namespace $ {
@@ -50,50 +50,53 @@ export namespace $ {
     return null
   }
 
-  const cachedCss = new WeakMap()
+  const createSelector = (() => {
+    const cachedCss: Record<string, string> = Object.create({})
+    return (s: string | Record<string, any>): string => {
+      const key = typeof s == 'object' ? JSON.stringify(s) : s
+
+      if (!cachedCss[key]) {
+        cachedCss[key] = 'css-' + hash(key).toString(36)
+      }
+
+      return cachedCss[key]!
+    }
+  })()
 
   export const css = (() => {
     const sheet = makeStyleTag()!
     return (...arg: any[]) => {
       const isRaw = arg[0] && arg[0].length && arg[0].raw
-      const cssString: string[] = isRaw ? arg[0].raw : [arg[0]]
-      let className: string
 
-      if (cachedCss.has(cssString)) {
-        className = cachedCss.get(cssString)
-      } else {
-        className = `.css-${hashify(cssString)}`
-        cachedCss.set(cssString, className)
-      }
-
-      for (let i = 0; i < sheet.cssRules.length; i++) {
-        if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == className) {
-          return className.substring(1)
-        }
-      }
-
-      let styles: string | Array<string> = ''
+      let stringify = ''
       if (isRaw) {
         //css``
-        let strings = arg[0]
-        styles += strings[0]
-        for (let i = 1; i < arg.length; i++) {
-          styles += typeof arg[i] !== 'string' ? '' : arg[i]
-        }
-        styles = [`${className}{${styles}}`]
+        stringify = arg.slice(1).reduce((p, c) => (p + typeof c !== 'string' ? '' : c), arg[0][0])
       } else if (typeof arg[0] == 'string') {
         //css('')
-        styles = [`${className}{${arg[0]}}`]
+        stringify = arg[0]
       } else {
         //css({})
-        styles = _css(arg[0], className)
+        stringify = JSON.stringify(arg[0])
+      }
+
+      const cls = createSelector(stringify)
+      for (let i = 0; i < sheet.cssRules.length; i++) {
+        if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == '.' + cls) {
+          return cls
+        }
+      }
+
+      let styles = [`.${cls}{${stringify}}`]
+      if (!isRaw && typeof arg[0] == 'object') {
+        styles = _css(arg[0], `.${cls}`)
       }
 
       styles.forEach((rule) => {
         sheet?.insertRule(rule, sheet.cssRules.length)
       })
 
-      return className.substring(1)
+      return cls
     }
   })()
 }
