@@ -18,7 +18,7 @@
     "build:rollup": "rollup -c",
     "build:packs": "pnpm --filter=@oplayer/* run build && pnpm run build:rollup",
     "build:doc": "pnpm --filter=@oplayer/standalone-example run build",
-    "build:cache": "nx run-many --target=build --all --parallel",
+    "build:cache": "nx run-many --target=build --all --parallel && pnpm run build:rollup",
     "build:affected": "nx Affected --target=build",
     "graph": "nx dep-graph",
     "clear": "rimraf 'packages/*/{dist,tsconfig.tsbuildinfo,node_modules,.rollup.cache}' && rimraf node_modules &&  rimraf docs",
