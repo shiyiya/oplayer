@@ -8,7 +8,7 @@ const render = (player: Player, el: HTMLElement) => {
       position: absolute;
       inset: 0;
       color: #fff;
-      font-size: 1.5em;
+      font-size: 1.2em;
       background: #000;
       z-index: 99;
       justify-content: center;

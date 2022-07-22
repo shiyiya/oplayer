@@ -85,8 +85,8 @@ const render = (player: Player, el: HTMLElement) => {
       'durationchange'
     ],
     (e: PlayerEvent) => {
-      // 第一次能播放  移动端 canplaythrough 后还不能播放，使用 durationchange
-      if (e.type == 'durationchange' && !isInit) {
+      // 移动端 canplaythrough 后还不能播放，使用 durationchange
+      if ('durationchange' === e.type && !isNaN(e.payload.target?.duration) && !isInit) {
         isInit = true
         $dom.style.display = 'none'
         return
@@ -98,7 +98,7 @@ const render = (player: Player, el: HTMLElement) => {
         return
       }
 
-      // durationchange 之后 loading 逻辑
+      // TODO: 根据 Hls 判断是否 loading
       if (isInit) {
         if (player.isLoading && player.isPlaying) {
           $dom.removeAttribute('style')
