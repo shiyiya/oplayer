@@ -24,11 +24,15 @@ const render = (player: Player, el: HTMLElement) => {
     'MEDIA_ERR_SRC_NOT_SUPPORTED'
   ]
 
-  player.on('error', (e) => {
+  player.on(['error', 'plugin:error'], (e) => {
     $dom.style.display = 'flex'
-    const code = e.payload.target?.error?.code
-    // native media error | custom error | unknown error
-    $dom.innerText = code ? MediaError[code] : e.payload.message || 'Unknown Error'
+
+    if ('plugin:error' == e.type) {
+      $dom.innerText = e.payload.message || MediaError[0]
+    } else {
+      const code = e.payload.target?.error?.code
+      $dom.innerText = MediaError[code] || MediaError[0]
+    }
   })
 
   player.on('videosourcechange', () => {

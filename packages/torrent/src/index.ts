@@ -28,7 +28,7 @@ const torrentPlugin = ({
     }
 
     if (!webtorrent.WEBRTC_SUPPORT) {
-      emit('error', {
+      emit('plugin:error', {
         payload: {
           type: 'torrentNotSupported',
           message: 'torrent is not supported'
