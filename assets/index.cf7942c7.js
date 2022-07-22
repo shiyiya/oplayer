@@ -15,7 +15,7 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
       position: absolute;
       inset: 0;
       color: #fff;
-      font-size: 1.5em;
+      font-size: 1.2em;
       background: #000;
       z-index: 99;
       justify-content: center;
@@ -28,7 +28,7 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
       justify-content: center;`}`,{},`<div class=${be.css({overflow:"hidden",width:"20%",height:"4px","background-color":"var(--shadow-color-4)","border-radius":"4px"})}>
       <div class="${be.css({"&":{position:"relative",width:"100%",height:"100%","-webkit-transition":"width 500ms ease-out 1s","-moz-transition":"width 500ms ease-out 1s","-o-transition":"width 500ms ease-out 1s",transition:"width 500ms ease-out 1s"},"&::before,&::after":{display:"block",content:"''",position:"absolute",height:"100%","background-color":"var(--primary-color)"},"&::before":{animation:"indeterminate_first 1.5s infinite ease-out"},"&::after":{animation:"indeterminate_second 1.5s infinite ease-in"},"@keyframes indeterminate_first":{"0%":{left:"-100%",width:"100%"},"100%":{left:"100%",width:"10%"}},"@keyframes indeterminate_second":{"0%":{left:"-150%",width:"100%"},"100%":{left:"100%",width:"10%"}}})}"></div>
     </div>
-    `);be.render(v,c);let m=!1;T.on(["play","pause","seeking","waiting","canplaythrough","videosourcechange","durationchange"],y=>{if(y.type=="durationchange"&&!m){m=!0,v.style.display="none";return}if(y.type=="videosourcechange"){m=!1,v.removeAttribute("style");return}m&&(T.isLoading&&T.isPlaying?v.removeAttribute("style"):v.style.display="none")})},qn=(T,c)=>{const v=be.create(`div.${be.css`
+    `);be.render(v,c);let m=!1;T.on(["play","pause","seeking","waiting","canplaythrough","videosourcechange","durationchange"],y=>{var k;if(y.type==="durationchange"&&!isNaN((k=y.payload.target)==null?void 0:k.duration)&&!m){m=!0,v.style.display="none";return}if(y.type=="videosourcechange"){m=!1,v.removeAttribute("style");return}m&&(T.isLoading&&T.isPlaying?v.removeAttribute("style"):v.style.display="none")})},qn=(T,c)=>{const v=be.create(`div.${be.css`
       width: 100%;
       height: 100%;
       position: absolute;
