@@ -22,7 +22,7 @@ const render = (player: Player, el: HTMLElement) => {
     'MEDIA_ERR_NETWORK',
     'MEDIA_ERR_DECODE',
     'MEDIA_ERR_SRC_NOT_SUPPORTED'
-  ]
+  ] as const
 
   player.on(['error', 'plugin:error'], (e) => {
     $dom.style.display = 'flex'
@@ -30,7 +30,7 @@ const render = (player: Player, el: HTMLElement) => {
     if ('plugin:error' == e.type) {
       $dom.innerText = e.payload.message || MediaError[0]
     } else {
-      const code = e.payload.target?.error?.code
+      const code: number = e.payload.target.error.code
       $dom.innerText = MediaError[code] || MediaError[0]
     }
   })
