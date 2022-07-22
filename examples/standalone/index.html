@@ -54,12 +54,15 @@
         color: #2c3e50;
         margin: 0 auto;
         padding: 3.6rem 1rem 0;
-        display: flex;
-        justify-content: center;
       }
 
       a {
         color: #ff69b4;
+      }
+
+      #top {
+        display: flex;
+        justify-content: center;
       }
 
       #app {
@@ -71,6 +74,9 @@
         body {
           flex-direction: column;
           padding: 1em;
+        }
+        #top {
+          display: block;
         }
         #app {
           width: 100%;
@@ -86,8 +92,12 @@
     </style>
   </head>
   <body>
-    <div id="app"></div>
-    <div id="meta"></div>
+    <div id="top">
+      <div id="app"></div>
+      <div id="meta"></div>
+    </div>
+    <br />
+    <div id="logs"></div>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>

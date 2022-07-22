@@ -72,9 +72,12 @@ const meta = () => html`
     </button>
   </p>
 
-  <br />
   <a href="./ie11.html" target="_blank">UMD DEMO HERE</a>
 `
+
+const logs: string[] = []
+const $log = document.getElementById('logs')!
+const log = () => html`${logs.map((log) => html`<li>${log}</li>`)} `
 
 p.on((e) => {
   if (
@@ -82,7 +85,8 @@ p.on((e) => {
       .filter((_) => !['timeupdate', 'progress'].includes(_))
       .includes(e.type as any)
   ) {
-    console.log(e)
+    logs.unshift(e.type)
+    render(log(), $log)
     render(meta(), $meta)
   }
 })
