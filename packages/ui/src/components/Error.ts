@@ -16,9 +16,19 @@ const render = (player: Player, el: HTMLElement) => {
       `}`
   )
 
+  const MediaError = [
+    'UNKNOWN_ERROR',
+    'MEDIA_ERR_ABORTED',
+    'MEDIA_ERR_NETWORK',
+    'MEDIA_ERR_DECODE',
+    'MEDIA_ERR_SRC_NOT_SUPPORTED'
+  ]
+
   player.on('error', (e) => {
     $dom.style.display = 'flex'
-    $dom.innerText = e.payload.message || 'Unknown Error'
+    const code = e.payload.target?.error?.code
+    // native media error | custom error | unknown error
+    $dom.innerText = code ? MediaError[code] : e.payload.message || 'Unknown Error'
   })
 
   player.on('videosourcechange', () => {

@@ -72,16 +72,39 @@ const render = (player: Player, el: HTMLElement) => {
 
   $.render($dom, el)
 
+  let isInit = false
+
   player.on(
-    ['play', 'pause', 'seeking', 'waiting', 'canplaythrough', 'videosourcechange'],
+    [
+      'play',
+      'pause',
+      'seeking',
+      'waiting',
+      'canplaythrough',
+      'videosourcechange',
+      'durationchange'
+    ],
     (e: PlayerEvent) => {
-      if (
-        player.isLoading &&
-        (player.isPlaying || e.type == 'videosourcechange' || e.type === 'seeking')
-      ) {
-        $dom.removeAttribute('style')
-      } else {
+      // 第一次能播放  移动端 canplaythrough 后还不能播放，使用 durationchange
+      if (e.type == 'durationchange' && !isInit) {
+        isInit = true
         $dom.style.display = 'none'
+        return
+      }
+
+      if ('videosourcechange' == e.type) {
+        isInit = false
+        $dom.removeAttribute('style')
+        return
+      }
+
+      // durationchange 之后 loading 逻辑
+      if (isInit) {
+        if (player.isLoading && player.isPlaying) {
+          $dom.removeAttribute('style')
+        } else {
+          $dom.style.display = 'none'
+        }
       }
     }
   )

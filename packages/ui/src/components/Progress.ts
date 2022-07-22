@@ -135,7 +135,7 @@ const render = (player: Player, el: HTMLElement) => {
     const playedWidth = (currentTime / duration) * 100
     $buffered.style.width = (bufferedWidth || 0) + '%'
     $played.style.width = (playedWidth || 0) + '%'
-    $playedDto.style.transform = `translateX(${playedWidth}%)`
+    $playedDto.style.transform = `translateX(${playedWidth || 0}%)`
   })
 
   $.render($dom, el)
