@@ -10,6 +10,7 @@ const slider = $.css(`
   width: 33px;
   margin: 0 auto;
   height: 70px;
+  cursor: pointer;
 `)
 
 const thumb = $.css`
@@ -23,7 +24,6 @@ const thumb = $.css`
   background-color: var(--primary-color);
   vertical-align: middle;
   pointer-events: none;
-  cursor: pointer;
   `
 
 const volumeValue = $.css(`
