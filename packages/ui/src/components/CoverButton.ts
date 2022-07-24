@@ -4,19 +4,15 @@ import playSvg from '../icons/play.svg'
 import type Player from '@oplayer/core'
 
 const styles = $.css({
-  fill: 'currentcolor',
   position: 'absolute',
   right: '40px',
-  bottom: '45px',
+  bottom: '50px',
   display: 'none',
+  fill: '#fff',
+  width: '3em',
 
-  [`& > .${icon}`]: {
-    width: '3em',
-
-    '& > svg': {
-      fill: '#fff',
-      filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
-    }
+  '& svg': {
+    filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
   },
 
   '@media only screen and (max-width: 991px)': {

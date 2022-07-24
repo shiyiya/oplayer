@@ -20,19 +20,14 @@ export const root = (theme: SnowConfig['theme']) =>
   })
 
 export const icon = $.css({
-  display: 'inline-block',
-  margin: '0px',
-  padding: '0.5em',
-  border: 'none',
-  'border-radius': '0px',
-  'font-size': 'inherit',
-  color: 'rgba(255, 255, 255, 0.7)',
   background: 'none',
+  border: 'none',
   cursor: 'pointer',
-  transition: 'color 300ms ease 0s',
-  '@media only screen and (max-width: 991px)': {
-    '&': {
-      padding: '4px 8px'
-    }
-  }
+  padding: 0,
+  outline: 'none',
+  font: 'inherit',
+  color: 'inherit',
+  'line-height': 'inherit',
+  'text-align': 'inherit',
+  width: '100%'
 })

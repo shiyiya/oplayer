@@ -4,13 +4,13 @@ import type Player from '@oplayer/core'
 import renderVolumeBar from './VolumeBar'
 import type { SnowConfig } from '../types'
 
-import compressSvg from '../icons/compress.svg'
-import expandSvg from '../icons/expand.svg'
+import compressSvg from '../icons/fullscreen-exit.svg'
+import expandSvg from '../icons/fullscreen-enter.svg'
 import pauseSvg from '../icons/pause.svg'
 import pipSvg from '../icons/pip.svg'
 import playSvg from '../icons/play.svg'
-import volumeOffSvg from '../icons/volume-off.svg'
-import volumeSvg from '../icons/volume.svg'
+import volumeOffSvg from '../icons/sound-off.svg'
+import volumeSvg from '../icons/sound-on.svg'
 
 const ohcontrollertime = $.css`
   display: flex;
@@ -39,6 +39,7 @@ const expand = $.css(`
 
 const dropdown = $.css({
   position: 'relative',
+  'line-height': '100%',
 
   [`&:hover .${expand}`]: {
     visibility: 'visible'
@@ -58,27 +59,32 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     `div.${$.css({
       display: 'flex',
       'justify-content': 'space-between',
+      'font-size': '14px',
+      color: 'hsla(0,0%,100%,.8)',
+      fill: 'hsla(0,0%,100%,.9)',
+      height: '30px',
+      'padding-bottom': '5px',
+      'line-height': '22px',
+      'text-align': 'center',
+
+      [`& .${icon}`]: {
+        width: '36px',
+        height: '22px',
+
+        ['> svg']: {
+          width: '100%',
+          height: '100%',
+          'pointer-events': 'none'
+        }
+      },
 
       '> div': {
         display: 'flex',
-        'align-items': 'center'
-      },
+        'align-items': 'center',
 
-      '& button': {
-        '& > svg': {
-          'pointer-events': 'none',
-          width: '1.3em',
-          height: '1.3em',
-          fill: 'currentcolor'
-        },
-
-        '&.pip': {
-          transform: 'scale(1.12)',
-          'margin-right': '1px'
-        },
-
-        '&.volume': {
-          transform: 'scale(1.12)'
+        '> div:hover': {
+          color: '#fff',
+          fill: '#fff'
         }
       }
     })}`,
@@ -88,7 +94,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
             !isMobile
               ? `<button
                   aria-label="Play"
-                  class="${icon} play"
+                  class="${icon}"
                   type="button"
                 >
                 ${playSvg}
@@ -104,9 +110,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
         <div>
           <div class=${dropdown}>
-            <button class="${icon}"  type="button">
-              ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
-            </button>
+            <button class="${icon}"  type="button">${
+      player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`
+    }</button>
             <div class=${expand}>
               ${config.speed
                 ?.map(
@@ -123,7 +129,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
           </div>
 
           <div class=${dropdown}>
-            <button aria-label="Volume" class="${icon} volume" type="button">
+            <button aria-label="Volume" class="${icon}" type="button">
               ${volumeSvg}
               ${volumeOffSvg}
             </button>
@@ -135,7 +141,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
             !config.disablePictureInPicture && player.isPipEnabled
               ? `<button
                   aria-label="Picture in Picture"
-                  class="${icon} pip"
+                  class="${icon}"
                   type="button"
                 >
                   ${pipSvg}
@@ -146,7 +152,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
             !config.disableFullscreen
               ? `<button
                   aria-label="Fullscreen"
-                  class="${icon} fullscreen"
+                  class="${icon}"
                   type="button"
                 >
                   ${expandSvg}

@@ -4,11 +4,9 @@ import renderControllerBottom from './ControllerBottom'
 import type { SnowConfig } from '../types'
 
 const hide = $.css({
-  bottom: '-46px !important',
-  padding: '0 !important',
-  '@media only screen and (max-width: 991px)': {
-    bottom: '-38px !important'
-  }
+  bottom: '-41.5px !important',
+  padding: '0 !important'
+  // 'background-image': 'none !important' // TODO:
 })
 
 const controllerBar = $.css({
