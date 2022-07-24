@@ -48,6 +48,7 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
   width: 33px;
   margin: 0 auto;
   height: 70px;
+  cursor: pointer;
 `),Gi=bt.css`
   position:absolute;
   bottom: 0;
@@ -59,7 +60,6 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
   background-color: var(--primary-color);
   vertical-align: middle;
   pointer-events: none;
-  cursor: pointer;
   `,ji=bt.css(`
   color: #e5e9ef;
   width: 100%;
