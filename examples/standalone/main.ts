@@ -25,7 +25,7 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
 
-const logs: string[] = []
+let logs: string[] = []
 
 const p = Player.make(document.getElementById('player')!, {
   volume: 0.1,
@@ -87,6 +87,10 @@ p.on((e) => {
     logs.unshift(e.type)
     render(actions(), document.getElementById('actions')!)
     render(meta(), document.getElementById('meta')!)
+  }
+
+  if (e.type == 'videosourcechange') {
+    logs = []
   }
 })
 

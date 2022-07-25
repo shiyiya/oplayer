@@ -16,7 +16,7 @@
       h4,
       p {
         margin: 0;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
       }
 
       #actions button {
@@ -29,24 +29,39 @@
         margin-right: 40px;
       }
 
-      #player,
-      #actions {
-        width: 980px;
-        margin-bottom: 1em;
-      }
-
       @media only screen and (max-width: 991px) {
+        body {
+          padding: 1em 10px;
+        }
         body,
         #player,
         #actions {
           width: 100%;
         }
       }
+
+      .asp {
+        padding-top: 56.25%;
+        background-color: #f4f4f4;
+        position: relative;
+      }
+
+      .asp > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     </style>
   </head>
   <body>
     <div id="meta"></div>
-    <div id="player"></div>
+    <div class="asp">
+      <div id="player"></div>
+    </div>
+
+    <br />
     <div id="actions"></div>
     <script type="module" src="/main.ts"></script>
   </body>

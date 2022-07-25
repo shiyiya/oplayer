@@ -35,7 +35,7 @@ const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
     `div.${styles}`,
     { 'aria-label': 'Play' },
-    `<button aria-label="Play" class="${icon} play" type="button">
+    `<button aria-label="Play" class="${icon}" type="button">
         ${playSvg}
       </button>`
   )

@@ -35,9 +35,12 @@ export default class E {
   }
 
   emit(name: string, payload: any) {
-    this.events[name]?.forEach((callback) => {
-      callback({ type: name, payload })
-    })
+    if (this.events[name]?.length) {
+      ;[...this.events[name]!].forEach((callback) => {
+        callback({ type: name, payload })
+      })
+    }
+
     this.events['*']?.forEach((callback) => {
       callback({ type: name, payload })
     })
