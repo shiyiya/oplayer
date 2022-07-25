@@ -83,8 +83,11 @@ const render = (player: Player, el: HTMLElement) => {
     player.on(
       'canplaythrough',
       () => {
-        $dom.style.display = 'none'
         isInit = true
+        // 在播放的话，由下面定时器接管
+        if(!player.isPlaying){
+          $dom.style.display = 'none'
+        }
       },
       { once: true }
     )
