@@ -3,6 +3,11 @@ import { viteConfig } from '../../vite.config'
 
 export default viteConfig('core', {
   build: {
-    lib: { name: 'OPlayer', formats: ['es'] } as LibraryOptions
+    emptyOutDir: false,
+    lib: {
+      entry: './src/index.umd.ts',
+      name: 'OPlayer',
+      formats: ['umd']
+    } as LibraryOptions
   }
 })

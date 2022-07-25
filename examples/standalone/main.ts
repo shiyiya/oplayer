@@ -72,7 +72,7 @@ const meta = () => html`
     </button>
   </p>
 
-  <a href="./ie11.html" target="_blank">UMD DEMO HERE</a>
+  <a href="./umd.html" target="_blank">UMD DEMO HERE</a>
 `
 
 const logs: string[] = []

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "vite build && cp ../ie11.html ../../docs/"
+    "build": "vite build && cp ../umd.html ../../docs/"
   },
   "dependencies": {
     "@oplayer/core": "workspace:*",

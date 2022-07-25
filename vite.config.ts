@@ -3,17 +3,36 @@ import fs from 'fs'
 import { defineConfig } from 'vite'
 import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
-import svgLoader from 'vite-svg-loader'
 
-//@ts-ignore
-import { external, globals } from './config'
+export const globals = {
+  '@oplayer/core': 'OPlayer',
+  '@oplayer/ui': 'OUI',
+  '@oplayer/hls': 'OHls',
+  'hls.js/dist/hls.light.min.js': 'Hls',
+  '@oplayer/torrent': 'OTorrent',
+  'webtorrent/webtorrent.min.js': 'WebTorrent',
+  react: 'React'
+}
+
+const makeExternalPredicate = (externalArr: string[]) => {
+  if (externalArr.length === 0) {
+    return () => false
+  }
+  const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`)
+  return (id: string) => pattern.test(id)
+}
 
 export const libFileName = (format: string) => `index.${format}.js`
 
-export const rollupPlugins: Plugin[] = [svgLoader({ defaultImport: 'raw', })]
+export const rollupPlugins: Plugin[] = []
 
-export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions =>
-  mergeDeep<BuildOptions>(
+export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions => {
+  const pkg = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, `packages/${packageDirName}/package.json`), {
+      encoding: 'utf-8'
+    })
+  )
+  return mergeDeep<BuildOptions>(
     {
       sourcemap: true,
       commonjsOptions: {
@@ -23,10 +42,13 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
         entry: resolvePath(`packages/${packageDirName}/src/index.ts`),
         name: `oplayer_${packageDirName}`,
         fileName: libFileName,
-        formats: ['es']
+        formats: ['es', 'umd']
       },
       rollupOptions: {
-        external,
+        external: makeExternalPredicate([
+          ...Object.keys(pkg.dependencies || {}),
+          ...Object.keys(pkg.peerDependencies || {})
+        ]),
         output: {
           dir: resolvePath(`packages/${packageDirName}/dist`),
           globals
@@ -36,6 +58,7 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
     },
     options
   )
+}
 
 export const viteConfig = (packageDirName: string, options: ViteUserConfig = {}) => {
   const vitePlugins = options.plugins ?? []

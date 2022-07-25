@@ -16,7 +16,7 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build && tsc --emitDeclarationOnly",
+    "build": "vite build && tsc --emitDeclarationOnly && vite build --config vite.umd.config.ts",
     "build:plugins": "node ./build-plugins.js"
   },
   "files": [

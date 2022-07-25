@@ -15,10 +15,9 @@
     "doc": "pnpm --filter=@oplayer/standalone-example start",
     "doc:preview": "pnpm --filter=@oplayer/standalone-example run preview",
     "start": "concurrently -n watch,doc \"pnpm watch\" \"pnpm doc\"",
-    "build:rollup": "rollup -c",
-    "build:packs": "pnpm --filter=@oplayer/* run build && pnpm run build:rollup",
+    "build:packs": "pnpm --filter=@oplayer/* run build",
     "build:doc": "pnpm --filter=@oplayer/standalone-example run build",
-    "build:cache": "nx run-many --target=build --all --parallel && pnpm run build:rollup",
+    "build:cache": "nx run-many --target=build --all --parallel",
     "build:affected": "nx Affected --target=build",
     "graph": "nx dep-graph",
     "clear": "rimraf 'packages/*/{dist,tsconfig.tsbuildinfo,node_modules,.rollup.cache}' && rimraf node_modules &&  rimraf docs",
@@ -27,38 +26,19 @@
     "test": "echo 1"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.9",
-    "@babel/plugin-transform-runtime": "^7.18.9",
-    "@babel/preset-env": "^7.18.9",
     "@changesets/cli": "^2.23.2",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^22.0.1",
-    "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/node": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.0",
     "concurrently": "^7.3.0",
-    "core-js": "^3.23.5",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.14.49",
     "lint-staged": "^13.0.3",
     "nx": "latest",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.77.0",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-dts": "^4.2.2",
-    "rollup-plugin-esbuild": "^4.9.1",
-    "rollup-plugin-inline-svg": "^3.0.3",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.32.1",
     "terser": "^5.14.2",
-    "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.2",
-    "vite-svg-loader": "^3.4.0"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.18.9"
+    "vite": "^3.0.2"
   }
 }
