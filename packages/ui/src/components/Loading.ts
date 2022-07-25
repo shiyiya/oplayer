@@ -1,5 +1,5 @@
 import { $ } from '@oplayer/core'
-import { Player, PlayerEvent } from '@oplayer/core'
+import { Player } from '@oplayer/core'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -72,42 +72,31 @@ const render = (player: Player, el: HTMLElement) => {
 
   $.render($dom, el)
 
-  let isInit = false
+  let lastTime = 0
+  let currentTime = 0
+  let bufferingDetected = false
+  let enable = true
 
-  player.on(
-    [
-      'play',
-      'pause',
-      'seeking',
-      'waiting',
-      'canplaythrough',
-      'videosourcechange',
-      'durationchange'
-    ],
-    (e: PlayerEvent) => {
-      // 移动端 canplaythrough 后还不能播放，使用 durationchange
-      if ('durationchange' === e.type && !isNaN(e.payload.target?.duration) && !isInit) {
-        isInit = true
-        $dom.style.display = 'none'
-        return
-      }
+  player.on(['videosourcechange', 'pause', 'play'], (e) => {
+    enable = e.type != 'pause'
+  })
 
-      if ('videosourcechange' == e.type) {
-        isInit = false
+  setInterval(() => {
+    if (enable) {
+      // loading
+      if (!bufferingDetected && currentTime === lastTime) {
         $dom.removeAttribute('style')
-        return
+        bufferingDetected = true
       }
+      currentTime = player.currentTime
 
-      // TODO: 根据 Hls 判断是否 loading
-      if (isInit) {
-        if (player.isLoading && player.isPlaying) {
-          $dom.removeAttribute('style')
-        } else {
-          $dom.style.display = 'none'
-        }
+      if (bufferingDetected && currentTime > lastTime) {
+        $dom.style.display = 'none'
+        bufferingDetected = false
       }
+      lastTime = currentTime
     }
-  )
+  }, 100)
 }
 
 export default render

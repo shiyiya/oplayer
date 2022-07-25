@@ -128,14 +128,24 @@ const render = (player: Player, el: HTMLElement) => {
     { passive: true }
   )
 
-  player.on(['timeupdate', 'seeking', 'videosourcechange'], () => {
+  player.on(['timeupdate', 'seeking'], () => {
     const { currentTime, duration } = player
-    const buffered = player.buffered.length ? player.buffered.end(player.buffered.length - 1) : 0
-    const bufferedWidth = (buffered / duration) * 100
-    const playedWidth = (currentTime / duration) * 100
-    $buffered.style.width = (bufferedWidth || 0) + '%'
-    $played.style.width = (playedWidth || 0) + '%'
-    $playedDto.style.transform = `translateX(${playedWidth || 0}%)`
+    const playedWidth = (currentTime / duration) * 100 || 0
+    $played.style.width = playedWidth + '%'
+    $playedDto.style.transform = `translateX(${playedWidth}%)`
+  })
+
+  player.on(['progress'], () => {
+    const buffered = player.buffered.length
+      ? (player.buffered.end(player.buffered.length - 1) / player.duration) * 100
+      : 0
+    $buffered.style.width = buffered + '%'
+  })
+
+  player.on(['videosourcechange'], () => {
+    $buffered.style.width = '0%'
+    $played.style.width = '0%'
+    $playedDto.style.transform = `translateX(0%)`
   })
 
   $.render($dom, el)
