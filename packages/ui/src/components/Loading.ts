@@ -77,7 +77,26 @@ const render = (player: Player, el: HTMLElement) => {
   let bufferingDetected = false
   let enable = player.isAutoPlay
 
-  player.on(['videosourcechange', 'pause', 'play'], (e) => {
+  player.on(
+    'canplaythrough',
+    () => {
+      $dom.style.display = 'none'
+    },
+    { once: true }
+  )
+
+  player.on(['videosourcechange', 'pause', 'play', 'seeking'], (e) => {
+    if (!player.isPlaying && 'pause' != e.type) {
+      $dom.style.display = 'flex'
+      player.on(
+        'canplaythrough',
+        () => {
+          $dom.style.display = 'none'
+        },
+        { once: true }
+      )
+    }
+
     enable = e.type != 'pause'
   })
 
@@ -86,12 +105,12 @@ const render = (player: Player, el: HTMLElement) => {
       currentTime = player.currentTime
 
       // loading
-      if (!bufferingDetected && currentTime === lastTime) {
-        $dom.removeAttribute('style')
+      if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
+        $dom.style.display = 'flex'
         bufferingDetected = true
       }
 
-      if (bufferingDetected && currentTime > lastTime) {
+      if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
         $dom.style.display = 'none'
         bufferingDetected = false
       }
