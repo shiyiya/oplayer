@@ -63,7 +63,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       color: 'hsla(0,0%,100%,.8)',
       fill: 'hsla(0,0%,100%,.9)',
       height: '30px',
-      padding: '5px',
+      padding: '5px 0px',
       'line-height': '22px',
       'text-align': 'center',
 
