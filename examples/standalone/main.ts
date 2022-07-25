@@ -8,9 +8,6 @@ import { live } from 'lit/directives/live.js'
 //@ts-ignore
 import poster from './poster.png'
 
-const $container = document.getElementById('app')!
-const $meta = document.getElementById('meta')!
-
 const dataSrcs = [
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -28,7 +25,9 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
 
-const p = Player.make($container, {
+const logs: string[] = []
+
+const p = Player.make(document.getElementById('player')!, {
   volume: 0.1,
   autoplay: true,
   source: {
@@ -40,23 +39,26 @@ const p = Player.make($container, {
   .create()
 
 const meta = () => html`
-  <h4>Oh-Player v${Player.version}</h4>
-  <p>STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a></p>
+  <div>
+    <h4>Oh-Player v${Player.version}</h4>
+    <p>
+      STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a> |
+      <a href="./umd.html" target="_blank">UMD DEMO HERE</a>
+    </p>
+    <p>Plugin used: ${p.plugins.join('  ')}</p>
+  </div>
+`
 
-  <h4>Plugin used:</h4>
-  <p>${p.plugins.map((plugin) => html`<li>${plugin}</li>`)}</p>
-
-  <p>
+const actions = () => html`<p style="display:flex;">
     <input
       type="text"
       @input=${(e: any) => (src = e.target.value)}
-      style="flex:1;"
+      style="width:100%;"
       .value=${live(src)}
     />
-  </p>
-  <p><button @click=${() => p.changeSource({ src })}>ChangeSource</button></p>
 
-  <p>
+    <button @click=${() => p.changeSource({ src })}>Play</button>
+
     <button
       @click=${() => {
         src =
@@ -68,16 +70,13 @@ const meta = () => html`
         p.changeSource({ src })
       }}
     >
-      QueueSource
+      Q
     </button>
   </p>
 
-  <a href="./umd.html" target="_blank">UMD DEMO HERE</a>
-`
+  ${logs.map((log) => html`<li>${log}</li>`)} `
 
-const logs: string[] = []
-const $log = document.getElementById('logs')!
-const log = () => html`${logs.map((log) => html`<li>${log}</li>`)} `
+render(actions(), document.getElementById('actions')!)
 
 p.on((e) => {
   if (
@@ -86,11 +85,11 @@ p.on((e) => {
       .includes(e.type as any)
   ) {
     logs.unshift(e.type)
-    render(log(), $log)
-    render(meta(), $meta)
+    render(actions(), document.getElementById('actions')!)
+    render(meta(), document.getElementById('meta')!)
   }
 })
 
-render(meta(), $meta)
+render(meta(), document.getElementById('meta')!)
 
 console.log(p)
