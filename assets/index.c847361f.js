@@ -23,12 +23,12 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
       `}`),m=["UNKNOWN_ERROR","MEDIA_ERR_ABORTED","MEDIA_ERR_NETWORK","MEDIA_ERR_DECODE","MEDIA_ERR_SRC_NOT_SUPPORTED"];T.on(["error","plugin:error"],y=>{if(v.style.display="flex",y.type=="plugin:error")v.innerText=y.payload.message||m[0];else{const w=y.payload.target.error.code;v.innerText=m[w]||m[0]}}),T.on("videosourcechange",()=>{v.style.display="none",v.innerText=""}),bt.render(v,c)},zn=(T,c)=>{const v=bt.create(`div.${bt.css`
       position: absolute;
       inset: 0;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;`}`,{},`<div class=${bt.css({overflow:"hidden",width:"20%",height:"4px","background-color":"var(--shadow-color-4)","border-radius":"4px"})}>
       <div class="${bt.css({"&":{position:"relative",width:"100%",height:"100%","-webkit-transition":"width 500ms ease-out 1s","-moz-transition":"width 500ms ease-out 1s","-o-transition":"width 500ms ease-out 1s",transition:"width 500ms ease-out 1s"},"&::before,&::after":{display:"block",content:"''",position:"absolute",height:"100%","background-color":"var(--primary-color)"},"&::before":{animation:"indeterminate_first 1.5s infinite ease-out"},"&::after":{animation:"indeterminate_second 1.5s infinite ease-in"},"@keyframes indeterminate_first":{"0%":{left:"-100%",width:"100%"},"100%":{left:"100%",width:"10%"}},"@keyframes indeterminate_second":{"0%":{left:"-150%",width:"100%"},"100%":{left:"100%",width:"10%"}}})}"></div>
     </div>
-    `);bt.render(v,c);let m=0,y=0,w=!1,L=T.isAutoPlay;T.on("canplaythrough",()=>{v.style.display="none"},{once:!0}),T.on(["videosourcechange","pause","play","seeking"],p=>{!T.isPlaying&&p.type!="pause"&&(v.style.display="flex",T.on("canplaythrough",()=>{v.style.display="none"},{once:!0})),L=p.type!="pause"}),setInterval(()=>{L&&(y=T.currentTime,!w&&y===m&&T.isPlaying&&(v.style.display="flex",w=!0),w&&y>m&&T.isPlaying&&(v.style.display="none",w=!1),m=y)},100)},qn=(T,c)=>{const v=bt.create(`div.${bt.css`
+    `);bt.render(v,c);let m=0,y=0,w=!1,L=T.isAutoPlay;T.on(["videosourcechange","pause","play"],p=>{L=p.type!="pause"}),setInterval(()=>{L&&(y=T.currentTime,!w&&y===m&&T.isPlaying&&(v.style.display="flex",w=!0),w&&y>m&&T.isPlaying&&(v.style.display="none",w=!1),m=y)},100)},qn=(T,c)=>{const v=bt.create(`div.${bt.css`
       width: 100%;
       height: 100%;
       position: absolute;
