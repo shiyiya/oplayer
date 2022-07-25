@@ -139,7 +139,7 @@ const Mn=function(){const c=document.createElement("link").relList;if(c&&c.suppo
   padding: 6px 15px;
   text-align: center;
   cursor: pointer;
-`,sa=(T,c,v)=>{var m;const y=bt.create(`div.${bt.css({display:"flex","justify-content":"space-between","font-size":"14px",color:"hsla(0,0%,100%,.8)",fill:"hsla(0,0%,100%,.9)",height:"30px",padding:"5px","line-height":"22px","text-align":"center",[`& .${Oe}`]:{width:"36px",height:"22px",["> svg"]:{width:"100%",height:"100%","pointer-events":"none"}},"> div":{display:"flex","align-items":"center","> div:hover":{color:"#fff",fill:"#fff"}}})}`,{},`<div>
+`,sa=(T,c,v)=>{var m;const y=bt.create(`div.${bt.css({display:"flex","justify-content":"space-between","font-size":"14px",color:"hsla(0,0%,100%,.8)",fill:"hsla(0,0%,100%,.9)",height:"30px",padding:"5px 0px","line-height":"22px","text-align":"center",[`& .${Oe}`]:{width:"36px",height:"22px",["> svg"]:{width:"100%",height:"100%","pointer-events":"none"}},"> div":{display:"flex","align-items":"center","> div:hover":{color:"#fff",fill:"#fff"}}})}`,{},`<div>
           ${Dr?"":`<button
                   aria-label="Play"
                   class="${Oe}"
