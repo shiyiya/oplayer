@@ -68,8 +68,8 @@ export class Player {
   readonly create = () => {
     this.render()
     this.initEvent()
-    if (this.#options.source.src) this.load(this.#options.source)
     this.#applyPlugins()
+    if (this.#options.source.src) this.load(this.#options.source)
     return this
   }
 

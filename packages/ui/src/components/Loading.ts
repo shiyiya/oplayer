@@ -75,7 +75,7 @@ const render = (player: Player, el: HTMLElement) => {
   let lastTime = 0
   let currentTime = 0
   let bufferingDetected = false
-  let enable = true
+  let enable = player.isAutoPlay
 
   player.on(['videosourcechange', 'pause', 'play'], (e) => {
     enable = e.type != 'pause'
@@ -83,12 +83,13 @@ const render = (player: Player, el: HTMLElement) => {
 
   setInterval(() => {
     if (enable) {
+      currentTime = player.currentTime
+
       // loading
       if (!bufferingDetected && currentTime === lastTime) {
         $dom.removeAttribute('style')
         bufferingDetected = true
       }
-      currentTime = player.currentTime
 
       if (bufferingDetected && currentTime > lastTime) {
         $dom.style.display = 'none'
