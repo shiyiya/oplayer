@@ -49,10 +49,15 @@ export class Player {
 
   readonly on = (
     name: typeof EVENTS[number] | typeof EVENTS[number][] | PlayerListener | string,
-    listener?: PlayerListener
+    listener?: PlayerListener,
+    options = { once: false }
   ) => {
     if (typeof name === 'string') {
-      this.#E.on(name, listener!)
+      if (options.once) {
+        this.#E.once(name, listener!)
+      } else {
+        this.#E.on(name, listener!)
+      }
     } else if (Array.isArray(name)) {
       this.#E.onAny(name as string[], listener!)
     } else if (typeof name === 'function') {

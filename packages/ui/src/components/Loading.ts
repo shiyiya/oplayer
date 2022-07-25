@@ -6,7 +6,7 @@ const render = (player: Player, el: HTMLElement) => {
     `div.${$.css`
       position: absolute;
       inset: 0;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;`}`,
     {},
@@ -86,12 +86,12 @@ const render = (player: Player, el: HTMLElement) => {
       currentTime = player.currentTime
 
       // loading
-      if (!bufferingDetected && currentTime === lastTime) {
-        $dom.removeAttribute('style')
+      if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
+        $dom.style.display = 'flex'
         bufferingDetected = true
       }
 
-      if (bufferingDetected && currentTime > lastTime) {
+      if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
         $dom.style.display = 'none'
         bufferingDetected = false
       }
