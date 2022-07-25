@@ -200,7 +200,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   }
 
   playerSwitcher(), volumeSwitcher(), fullscreenSwitcher()
-  player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
+  player.on(['play', 'pause'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
   player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
 
