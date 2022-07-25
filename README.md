@@ -18,7 +18,7 @@ pnpm i @oplayer/core @oplayer/ui @oplayer/hls
 yarn add @oplayer/core @oplayer/ui @oplayer/hls
 ```
 
-```js
+```ts
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
@@ -31,6 +31,37 @@ Player.make(document.body, {
 })
   .use([ui({ theme: { primaryColor: '#9370db' } }), hls()]) // Optional
   .create()
+```
+
+## Write a plugin
+
+```ts
+import { Player, PlayerPlugin } from '@oplayer/core'
+
+const autoPipPlugin: PlayerPlugin = {
+  name: 'oplayer-plugin-autopip',
+  apply: (player: Player) => {
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            player.exitPip()
+          } else {
+            player.enterPip()
+          }
+        })
+      },
+      { threshold: [0.15] }
+    )
+
+    intersectionObserver.observe(player.$root)
+    player.on('destroy', () => {
+      intersectionObserver.unobserve(player.$root)
+    })
+  }
+}
+
+Player.make(..options).use([autoPipPlugin]).create()
 ```
 
 ## Who use OPlayer?
