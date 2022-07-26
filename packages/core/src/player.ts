@@ -1,7 +1,14 @@
 import E from './event'
 import $ from './utils/dom'
-import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
-import { PlayerOptions, PlayerPlugin, PlayerListener, PlayerEvent, Source } from './types'
+import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import type {
+  PlayerOptions,
+  PlayerPlugin,
+  PlayerListener,
+  PlayerEvent,
+  Source,
+  PlayerEventName
+} from './types'
 
 export class Player {
   constructor(el: HTMLElement, options: PlayerOptions | string) {
@@ -47,11 +54,7 @@ export class Player {
     return this
   }
 
-  readonly on = (
-    name: typeof EVENTS[number] | typeof EVENTS[number][] | PlayerListener | string,
-    listener?: PlayerListener,
-    options = { once: false }
-  ) => {
+  readonly on = (name: PlayerEventName, listener?: PlayerListener, options = { once: false }) => {
     if (typeof name === 'string') {
       if (options.once) {
         this.#E.once(name, listener!)
@@ -66,7 +69,11 @@ export class Player {
     return this
   }
 
-  readonly emit = (name: typeof EVENTS[number] | string, payload?: PlayerEvent['payload']) => {
+  readonly off = (name: PlayerEventName, listener: PlayerListener) => {
+    this.#E.off(name as string, listener)
+  }
+
+  readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
     this.#E.emit(name as any, payload)
   }
 

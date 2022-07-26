@@ -1,5 +1,5 @@
 import { $ } from '@oplayer/core'
-import { Player } from '@oplayer/core'
+import { Player, isMobile } from '@oplayer/core'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -78,26 +78,38 @@ const render = (player: Player, el: HTMLElement) => {
   let enable = player.isAutoPlay
   let isInit = false
 
-  const init = () => {
+  const initListener = () => {
+    isInit = false
     $dom.style.display = 'flex'
-    player.on(
-      'canplaythrough',
-      () => {
-        isInit = true
-        // 在播放的话，由下面定时器接管
-        if(!player.isPlaying){
-          $dom.style.display = 'none'
+
+    const init = () => {
+      isInit = true
+      if (!player.isPlaying) {
+        $dom.style.display = 'none'
+      }
+    }
+
+    // https://www.cnblogs.com/taoze/p/5783928.html
+    if (isMobile) {
+      player.on('durationchange', function durationchange() {
+        if (player.duration !== 1 && player.duration !== Infinity && player.duration != NaN) {
+          init()
+          player.off('durationchange', durationchange)
         }
-      },
-      { once: true }
-    )
+      })
+    } else {
+      player.on(
+        'canplaythrough',
+        () => {
+          init()
+        },
+        { once: true }
+      )
+    }
   }
 
-  init()
-  player.on('videosourcechange', () => {
-    isInit = false
-    init()
-  })
+  initListener()
+  player.on('videosourcechange', initListener)
 
   player.on(['videosourcechange', 'pause', 'play'], (e) => {
     enable = e.type != 'pause'

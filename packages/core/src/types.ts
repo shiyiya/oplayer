@@ -1,3 +1,4 @@
+import { EVENTS } from './constants'
 import type { Player } from './player'
 
 export type Source = {
@@ -24,8 +25,14 @@ export type PlayerPlugin = {
   load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
 }
 
+export type PlayerEventName =
+  | typeof EVENTS[number]
+  | typeof EVENTS[number][]
+  | PlayerListener
+  | string
+
 export type PlayerEvent = {
-  type: string
+  type: PlayerEventName
   payload: any
   _raw?: any
 }
