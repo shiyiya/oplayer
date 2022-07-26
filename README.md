@@ -1,11 +1,12 @@
-<h1 align="center">OPlayer</h1>
+# OPlayer
 
 [Oh!](https://shiyiya.github.io/oplayer) Another web video player.
 
 [Demo](https://shiyiya.github.io/oplayer) ｜ [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html)
 
-[![npm](https://flat.badgen.net/npm/v/@oplayer/core/?color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square)
+![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/react?style=flat-square&label=react)
 [![](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 
 ![](./oplayer.png)
@@ -13,15 +14,14 @@
 ## Usage
 
 ```bash
-pnpm i @oplayer/core @oplayer/ui @oplayer/hls
+pnpm i @oplayer/core @oplayer/ui
 # or
-yarn add @oplayer/core @oplayer/ui @oplayer/hls
+yarn add @oplayer/core @oplayer/ui
 ```
 
 ```ts
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
-import hls from '@oplayer/hls'
 
 Player.make(document.body, {
   source: {
@@ -29,9 +29,16 @@ Player.make(document.body, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui({ theme: { primaryColor: '#9370db' } }), hls()]) // Optional
+  .use([ui({ theme: { primaryColor: '#9370db' } })]) // Optional
   .create()
 ```
+
+## Official plugin
+
+- [@oplayer/react](./packages/react/)
+- [@oplayer/ui](./packages//ui/)
+- [@oplayer/hls](./packages/hls/)
+- [@oplayer/torrent](./packages/torrent/)
 
 ## Write a plugin
 
