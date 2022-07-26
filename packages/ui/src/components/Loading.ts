@@ -92,7 +92,12 @@ const render = (player: Player, el: HTMLElement) => {
     // https://www.cnblogs.com/taoze/p/5783928.html
     if (isMobile) {
       player.on('durationchange', function durationchange() {
-        if (player.duration !== 1 && player.duration !== Infinity && player.duration != NaN) {
+        if (
+          player.duration !== 1 &&
+          player.duration !== Infinity &&
+          player.duration != NaN &&
+          player.duration > 1
+        ) {
           init()
           player.off('durationchange', durationchange)
         }
