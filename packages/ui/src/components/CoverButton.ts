@@ -48,7 +48,11 @@ const render = (player: Player, el: HTMLElement) => {
   initListener.listener(
     player,
     () => ($dom.style.display = 'none'),
-    () => ($dom.style.display = 'block')
+    () => {
+      if (!player.isPlaying) {
+        $dom.style.display = 'block'
+      }
+    }
   )
 
   player.on(['canplaythrough', 'play', 'pause', 'seeking', 'videosourcechange'], () => {

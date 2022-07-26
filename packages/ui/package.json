@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/ui",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Snow theme for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",

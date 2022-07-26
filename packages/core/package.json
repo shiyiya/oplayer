@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/core",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Oh! Another web video player.",
   "type": "module",
   "main": "./dist/index.es.js",
