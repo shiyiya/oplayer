@@ -1,5 +1,6 @@
+import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { Player, isMobile } from '@oplayer/core'
+import { initListener } from '../utils'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -76,42 +77,36 @@ const render = (player: Player, el: HTMLElement) => {
   let currentTime = 0
   let bufferingDetected = false
   let enable = player.isAutoPlay
-  let isInit = false
 
-  const initListener = () => {
-    isInit = false
-    $dom.style.display = 'flex'
-
-    const init = () => {
-      isInit = true
+  initListener.listener(
+    player,
+    () => {
+      currentTime = lastTime = 0
+      $dom.style.display = 'flex'
+    },
+    () => {
       if (!player.isPlaying) {
         $dom.style.display = 'none'
       }
     }
-
-    // https://www.cnblogs.com/taoze/p/5783928.html
-    if (isMobile) {
-      player.on('durationchange', function durationchange() {
-        if (
-          player.duration !== 1 &&
-          player.duration !== Infinity &&
-          player.duration != NaN &&
-          player.duration > 1
-        ) {
-          init()
-          player.off('durationchange', durationchange)
-        }
-      })
-    } else {
-      player.on('canplaythrough', init, { once: true })
-    }
-  }
-
-  initListener()
-  player.on('videosourcechange', initListener)
+  )
 
   player.on(['videosourcechange', 'pause', 'play'], (e) => {
     enable = e.type != 'pause'
+  })
+
+  player.on('seeking', () => {
+    if (!player.isPlaying) {
+      $dom.style.display = 'flex'
+
+      player.on(
+        'canplaythrough',
+        () => {
+          $dom.style.display = 'none'
+        },
+        { once: true }
+      )
+    }
   })
 
   setInterval(() => {
@@ -119,12 +114,20 @@ const render = (player: Player, el: HTMLElement) => {
       currentTime = player.currentTime
 
       // loading
-      if (!bufferingDetected && currentTime === lastTime && (player.isPlaying || !isInit)) {
+      if (
+        !bufferingDetected &&
+        currentTime === lastTime &&
+        (player.isPlaying || !initListener.isInit())
+      ) {
         $dom.style.display = 'flex'
         bufferingDetected = true
       }
 
-      if (bufferingDetected && currentTime > lastTime && (player.isPlaying || !isInit)) {
+      if (
+        bufferingDetected &&
+        currentTime > lastTime &&
+        (player.isPlaying || !initListener.isInit())
+      ) {
         $dom.style.display = 'none'
         bufferingDetected = false
       }

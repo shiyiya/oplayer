@@ -1,5 +1,6 @@
-import { $, formatTime } from '@oplayer/core'
 import type Player from '@oplayer/core'
+import { $ } from '@oplayer/core'
+import { formatTime } from '../utils'
 
 const buffered = $.css({
   'background-color': 'hsla(0, 0%, 100%, 0.4)'

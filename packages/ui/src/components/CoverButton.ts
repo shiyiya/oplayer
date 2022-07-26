@@ -1,7 +1,8 @@
-import { $ } from '@oplayer/core'
-import { icon } from '../style'
-import playSvg from '../icons/play.svg?raw'
 import type Player from '@oplayer/core'
+import { $ } from '@oplayer/core'
+import playSvg from '../icons/play.svg?raw'
+import { icon } from '../style'
+import { initListener } from '../utils'
 
 const styles = $.css({
   position: 'absolute',
@@ -44,7 +45,15 @@ const render = (player: Player, el: HTMLElement) => {
     player.togglePlay()
   })
 
+  initListener.listener(
+    player,
+    () => ($dom.style.display = 'none'),
+    () => ($dom.style.display = 'block')
+  )
+
   player.on(['canplaythrough', 'play', 'pause', 'seeking', 'videosourcechange'], () => {
+    if (!initListener.isInit()) return
+
     if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
       $dom.style.display = 'none'
     } else {

@@ -1,11 +1,13 @@
-import { $, isMobile, formatTime } from '@oplayer/core'
+import { $ } from '@oplayer/core'
 import { icon } from '../style'
-import type Player from '@oplayer/core'
+import { formatTime, isMobile } from '../utils'
 import renderVolumeBar from './VolumeBar'
+
+import type Player from '@oplayer/core'
 import type { SnowConfig } from '../types'
 
-import compressSvg from '../icons/fullscreen-exit.svg?raw'
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
+import compressSvg from '../icons/fullscreen-exit.svg?raw'
 import pauseSvg from '../icons/pause.svg?raw'
 import pipSvg from '../icons/pip.svg?raw'
 import playSvg from '../icons/play.svg?raw'

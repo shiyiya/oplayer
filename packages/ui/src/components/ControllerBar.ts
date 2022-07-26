@@ -1,7 +1,8 @@
-import Player, { $, isMobile } from '@oplayer/core'
-import renderProgress from './Progress'
-import renderControllerBottom from './ControllerBottom'
+import Player, { $ } from '@oplayer/core'
 import type { SnowConfig } from '../types'
+import { isMobile } from '../utils'
+import renderControllerBottom from './ControllerBottom'
+import renderProgress from './Progress'
 
 const hide = $.css({
   bottom: '-46px !important',
