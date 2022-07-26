@@ -98,13 +98,7 @@ const render = (player: Player, el: HTMLElement) => {
         }
       })
     } else {
-      player.on(
-        'canplaythrough',
-        () => {
-          init()
-        },
-        { once: true }
-      )
+      player.on('canplaythrough', init, { once: true })
     }
   }
 

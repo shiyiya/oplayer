@@ -84,7 +84,11 @@ p.on((e) => {
       .filter((_) => !['timeupdate', 'progress'].includes(_))
       .includes(e.type as any)
   ) {
-    logs.unshift(e.type)
+    let eventName = e.type
+    if ('durationchange' == e.type) {
+      eventName += ` : ${p.duration}`
+    }
+    logs.unshift(eventName)
     render(actions(), document.getElementById('actions')!)
     render(meta(), document.getElementById('meta')!)
   }

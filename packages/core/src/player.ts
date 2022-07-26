@@ -54,7 +54,11 @@ export class Player {
     return this
   }
 
-  readonly on = (name: PlayerEventName, listener?: PlayerListener, options = { once: false }) => {
+  readonly on = (
+    name: PlayerEventName | PlayerListener,
+    listener?: PlayerListener,
+    options = { once: false }
+  ) => {
     if (typeof name === 'string') {
       if (options.once) {
         this.#E.once(name, listener!)

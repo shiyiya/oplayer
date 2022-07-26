@@ -25,11 +25,7 @@ export type PlayerPlugin = {
   load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
 }
 
-export type PlayerEventName =
-  | typeof EVENTS[number]
-  | typeof EVENTS[number][]
-  | PlayerListener
-  | string
+export type PlayerEventName = typeof EVENTS[number] | typeof EVENTS[number][] | string
 
 export type PlayerEvent = {
   type: PlayerEventName
