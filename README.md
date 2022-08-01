@@ -1,8 +1,8 @@
 # OPlayer
 
-[Oh!](https://shiyiya.github.io/oplayer) Another HTML5 video player.
+[Oh!](https://oplayer-p1j0i7azs-shiyiya.vercel.app) Another HTML5 video player.
 
-[Demo](https://shiyiya.github.io/oplayer) ｜ [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html)
+[Demo](https://oplayer-p1j0i7azs-shiyiya.vercel.app) ｜ [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
