@@ -45,8 +45,7 @@ const render = (player: Player, el: HTMLElement) => {
     player.togglePlay()
   })
 
-  initListener.listener(
-    player,
+  initListener.add(
     () => ($dom.style.display = 'none'),
     () => {
       if (!player.isPlaying) {

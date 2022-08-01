@@ -78,8 +78,7 @@ const render = (player: Player, el: HTMLElement) => {
   let bufferingDetected = false
   let enable = player.isAutoPlay
 
-  initListener.listener(
-    player,
+  initListener.add(
     () => {
       currentTime = lastTime = 0
       $dom.style.display = 'flex'

@@ -18,18 +18,24 @@ export const isMobile = /Android|webOS|iPhone|Pad|Pod|BlackBerry|Windows Phone/i
 
 export const initListener = (() => {
   let isInit = false
+  let before = <Function[]>[]
+  let after = <Function[]>[]
+
+  const initStart = () => {
+    isInit = false
+    before.forEach((f) => f())
+  }
+
+  const initEnd = () => {
+    if (isInit) return
+    isInit = true
+    after.forEach((f) => f())
+  }
 
   return {
     isInit: () => isInit,
-    listener: function listener(player: Player, before: Function, after: Function) {
-      isInit = false
-      before()
-
-      const init = () => {
-        isInit = true
-        after()
-      }
-
+    startListener: function listener(player: Player) {
+      initStart()
       // https://www.cnblogs.com/taoze/p/5783928.html
       if (isMobile) {
         player.on('durationchange', function durationchange() {
@@ -39,18 +45,19 @@ export const initListener = (() => {
             player.duration != NaN &&
             player.duration > 1
           ) {
-            init()
+            initEnd()
             player.off('durationchange', durationchange)
           }
         })
       } else {
-        player.on('canplaythrough', init, { once: true })
+        player.on('canplaythrough', initEnd)
       }
 
-      player.on('videosourcechange', function next() {
-        player.off('videosourcechange', next)
-        listener(player, before, after)
-      })
+      player.on('videosourcechange', initStart)
+    },
+    add: (be: Function, af: Function) => {
+      before.push(be)
+      after.push(af)
     }
   }
 })()

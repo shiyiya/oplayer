@@ -1,13 +1,14 @@
-import { $, PlayerPlugin } from '@oplayer/core'
 import type Player from '@oplayer/core'
-import type { SnowConfig } from './types'
+import { $, PlayerPlugin } from '@oplayer/core'
 import { root } from './style'
+import type { SnowConfig } from './types'
 
+import renderControllerBar from './components/ControllerBar'
+import renderButton from './components/CoverButton'
 import renderError from './components/Error'
 import renderLoding from './components/Loading'
 import renderMask from './components/Mask'
-import renderButton from './components/CoverButton'
-import renderControllerBar from './components/ControllerBar'
+import { initListener } from './utils'
 
 const apply = (player: Player, config: SnowConfig) => {
   const $dom = $.create(`div.${root(config.theme)}`)
@@ -25,6 +26,8 @@ const apply = (player: Player, config: SnowConfig) => {
 
   // root
   $.render($dom, player.$root)
+
+  initListener.startListener(player)
 }
 
 const defaultConfig: SnowConfig = {
