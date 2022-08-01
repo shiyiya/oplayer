@@ -1,3 +1,7 @@
+# oplayer-plugin-hls
+
+Hls plugin for oplayer
+
 ## Usage
 
 ```ts

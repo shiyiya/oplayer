@@ -1,3 +1,3 @@
-[Oh!](https://oplayer.vercel.app/) webtorrent plugin for oplayer.
+# oplayer-plugin-torrent
 
-![](https://raw.githubusercontent.com/shiyiya/oplayer/main/oplayer.png)
+Torrent plugin for oplayer

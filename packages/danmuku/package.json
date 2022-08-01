@@ -1,7 +1,7 @@
 {
-  "name": "@oplayer/ui",
+  "name": "@oplayer/danmuku",
   "version": "1.0.11",
-  "description": "Offical ui for oplayer",
+  "description": "Danmuku plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
@@ -9,7 +9,8 @@
   "author": "",
   "homepage": "https://github.com/shiyiya/oplayer",
   "keywords": [
-    "oplayer-theme"
+    "oplayer-plugin",
+    "danmuku"
   ],
   "license": "MIT",
   "scripts": {
