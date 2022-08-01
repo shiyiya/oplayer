@@ -7,7 +7,6 @@ import renderControllerBar from './components/ControllerBar'
 import renderButton from './components/CoverButton'
 import renderError from './components/Error'
 import renderLoding from './components/Loading'
-import renderMask from './components/Mask'
 import { initListener } from './utils'
 
 const apply = (player: Player, config: SnowConfig) => {
@@ -20,14 +19,13 @@ const apply = (player: Player, config: SnowConfig) => {
   // area
   $.render($area, $dom)
   renderLoding(player, $area)
-  renderMask(player, $area)
   renderButton(player, $area)
   renderControllerBar(player, $area, config)
 
   // root
   $.render($dom, player.$root)
 
-  initListener.startListener(player)
+  initListener.startListening(player)
 }
 
 const defaultConfig: SnowConfig = {

@@ -34,7 +34,7 @@ export const initListener = (() => {
 
   return {
     isInit: () => isInit,
-    startListener: function listener(player: Player) {
+    startListening: function listener(player: Player) {
       initStart()
       // https://www.cnblogs.com/taoze/p/5783928.html
       if (isMobile) {
