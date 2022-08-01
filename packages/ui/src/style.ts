@@ -6,7 +6,6 @@ export const root = (theme: SnowConfig['theme']) =>
     '--primary-color': `${theme?.primaryColor}`,
     /* https://stackoverflow.com/questions/7015302/css-hexadecimal-rgba */
     '--shadow-color': `${theme?.primaryColor}7F`,
-    '--shadow-color-4': `${theme?.primaryColor}66`,
 
     width: '100%',
     height: '100%',

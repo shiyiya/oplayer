@@ -56,10 +56,6 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     player.emit('theme/snow:bar/show')
   }
 
-  $dom.addEventListener('click', () => {
-    player.togglePlay()
-  })
-
   player.on('play', () => {
     autoHideCtrl()
   })

@@ -5,19 +5,23 @@ import { icon } from '../style'
 import { initListener } from '../utils'
 
 const styles = $.css({
-  position: 'absolute',
-  right: '40px',
-  bottom: '50px',
-  display: 'none',
-  fill: '#fff',
-  width: '3em',
+  height: '100%',
+  width: '100%',
+
+  '& > button': {
+    position: 'absolute',
+    right: '40px',
+    bottom: '50px',
+    fill: '#fff',
+    width: '3.5em'
+  },
 
   '& svg': {
     filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
   },
 
   '@media only screen and (max-width: 991px)': {
-    '&': {
+    '& > button': {
       position: 'absolute',
       right: 'unset',
       bottom: 'unset',
@@ -40,16 +44,22 @@ const render = (player: Player, el: HTMLElement) => {
         ${playSvg}
       </button>`
   )
+  const $button = <HTMLButtonElement>$dom.querySelector('button')!
 
-  $dom.querySelector('button')?.addEventListener('click', () => {
+  $button.addEventListener('click', (e) => {
+    e.stopPropagation()
+    player.togglePlay()
+  })
+
+  $dom.addEventListener('click', () => {
     player.togglePlay()
   })
 
   initListener.add(
-    () => ($dom.style.display = 'none'),
+    () => ($button.style.display = 'none'),
     () => {
       if (!player.isPlaying) {
-        $dom.style.display = 'block'
+        $button.style.display = 'block'
       }
     }
   )
@@ -58,9 +68,9 @@ const render = (player: Player, el: HTMLElement) => {
     if (!initListener.isInit()) return
 
     if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
-      $dom.style.display = 'none'
+      $button.style.display = 'none'
     } else {
-      $dom.style.display = 'block'
+      $button.style.display = 'block'
     }
   })
 
