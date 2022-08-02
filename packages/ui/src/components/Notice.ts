@@ -51,7 +51,7 @@ const render = (player: Player, el: HTMLElement) => {
   player.on(
     'volumechange',
     toggle(() => {
-      $text.innerText = `Vol: ${~~(player.volume * 100)}% `
+      $text.innerText = `Vol: ${~~(player.volume * 100)}%`
     })
   )
 

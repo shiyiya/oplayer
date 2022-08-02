@@ -33,6 +33,9 @@ const p = Player.make(document.getElementById('player')!, {
   source: {
     src,
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
+  },
+  videoAttr: {
+    crossorigin: 'anonymous'
   }
 })
   .use([ui({ theme: { primaryColor: '#ff69b4' } }), hls()])

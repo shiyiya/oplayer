@@ -16,6 +16,7 @@ export type PlayerOptions = {
   playbackRate?: number
   playsinline?: boolean
   source: Source
+  videoAttr?: Record<string, boolean | string>
 }
 
 export type PlayerPlugin = {

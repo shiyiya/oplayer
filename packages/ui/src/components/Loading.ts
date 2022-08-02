@@ -84,9 +84,7 @@ const render = (player: Player, el: HTMLElement) => {
       $dom.style.display = 'flex'
     },
     () => {
-      if (!player.isPlaying) {
-        $dom.style.display = 'none'
-      }
+      $dom.style.display = 'none'
     }
   )
 

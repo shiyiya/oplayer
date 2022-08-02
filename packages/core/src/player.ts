@@ -22,20 +22,21 @@ export class Player {
         preload: 'auto',
         poster: '',
         playbackRate: 1,
-        playsinline: true
+        playsinline: true,
+        videoAttr: {}
       },
       typeof options === 'string' ? { source: { src: options } } : options
     )
   }
 
-  readonly #options: Required<PlayerOptions>
+  readonly #options: PlayerOptions
   readonly #container: HTMLElement
 
   readonly #E = new E()
   readonly #plugins: Set<PlayerPlugin> = new Set()
 
   $root: HTMLElement
-  #video: HTMLVideoElement
+  $video: HTMLVideoElement
   #isCustomLoader: boolean
 
   hasError: boolean = false
@@ -94,7 +95,7 @@ export class Player {
       this.hasError = true
     })
     VIDEO_EVENTS.forEach((event) => {
-      this.#video.addEventListener(
+      this.$video.addEventListener(
         event,
         (e) => {
           this.#E.emit(event, e)
@@ -114,7 +115,7 @@ export class Player {
   }
 
   readonly render = () => {
-    this.#video = $.create<HTMLVideoElement>(
+    this.$video = $.create<HTMLVideoElement>(
       `video.${$.css(`
               width: 100%;
               height: 100%;
@@ -128,7 +129,8 @@ export class Player {
         playsinline: this.#options.playsinline,
         volume: this.#options.volume,
         preload: this.#options.preload,
-        poster: this.#options.source.poster
+        poster: this.#options.source.poster,
+        ...this.#options.videoAttr
       }
     )
 
@@ -143,18 +145,18 @@ export class Player {
           `)}`
     )
 
-    $.render(this.#video, this.$root)
+    $.render(this.$video, this.$root)
     $.render(this.$root, this.container)
   }
 
   load = (source: Source) => {
     this.#plugins.forEach((plugin) => {
       if (plugin.load && !this.#isCustomLoader) {
-        this.#isCustomLoader = plugin.load(this, this.#video, source)
+        this.#isCustomLoader = plugin.load(this, this.$video, source)
       }
     })
     if (!this.#isCustomLoader) {
-      this.#video.src = source.src
+      this.$video.src = source.src
     }
   }
 
@@ -167,26 +169,26 @@ export class Player {
   }
 
   setPoster(poster: string) {
-    this.#video.poster = poster
+    this.$video.poster = poster
   }
 
   play = () => {
-    if (!this.#video.src) throw Error('The element has no supported sources.')
+    if (!this.$video.src) throw Error('The element has no supported sources.')
 
     if (this.#isCustomLoader) {
-      this.#playPromise = this.#video.play()
+      this.#playPromise = this.$video.play()
     } else {
       if (this.canPlay) {
-        this.#playPromise = this.#video.play()
+        this.#playPromise = this.$video.play()
       }
     }
   }
 
   pause() {
     if (this.#playPromise?.then) {
-      this.#playPromise.then(() => this.#video.pause())
+      this.#playPromise.then(() => this.$video.pause())
     } else {
-      this.#video.pause()
+      this.$video.pause()
     }
   }
 
@@ -199,11 +201,11 @@ export class Player {
   }
 
   mute() {
-    this.#video.muted = true
+    this.$video.muted = true
   }
 
   unmute() {
-    this.#video.muted = false
+    this.$video.muted = false
   }
 
   toggleMute() {
@@ -214,22 +216,22 @@ export class Player {
     }
   }
   setVolume(volume: number) {
-    this.#video.volume = volume > 1 ? 1 : volume < 0 ? 0 : volume
-    if (this.#video.volume > 0 && this.isMuted) {
+    this.$video.volume = volume > 1 ? 1 : volume < 0 ? 0 : volume
+    if (this.$video.volume > 0 && this.isMuted) {
       this.unmute()
     }
   }
 
   setPlaybackRate(rate: number) {
-    this.#video.playbackRate = rate
+    this.$video.playbackRate = rate
   }
 
   seek(time: number) {
-    this.#video.currentTime = time
+    this.$video.currentTime = time
   }
 
   setLoop(loop: boolean) {
-    this.#video.loop = loop
+    this.$video.loop = loop
   }
 
   enterFullscreen() {
@@ -259,7 +261,7 @@ export class Player {
   }
 
   enterPip() {
-    this.#video.requestPictureInPicture()
+    this.$video.requestPictureInPicture()
   }
 
   exitPip() {
@@ -269,14 +271,14 @@ export class Player {
   }
 
   get isInPip() {
-    return document.pictureInPictureElement == this.#video
+    return document.pictureInPictureElement == this.$video
   }
 
   togglePip() {
     if (this.isInPip) {
       document.exitPictureInPicture()
     } else {
-      this.#video.requestPictureInPicture()
+      this.$video.requestPictureInPicture()
     }
   }
 
@@ -284,7 +286,7 @@ export class Player {
     this.#playPromise = undefined
     this.hasError = false
     this.#isCustomLoader = false
-    this.#video.poster = sources.poster || ''
+    this.$video.poster = sources.poster || ''
     this.load(sources)
     this.emit('videosourcechange')
   }
@@ -294,8 +296,8 @@ export class Player {
     this.pause()
     this.isFullScreen && this.exitFullscreen()
     this.#plugins.clear()
-    this.#video.src = ''
-    this.#video.remove()
+    this.$video.src = ''
+    this.$video.remove()
     this.#container.remove()
     this.#E.offAll()
   }
@@ -305,7 +307,7 @@ export class Player {
   }
 
   get state() {
-    return this.#video.readyState
+    return this.$video.readyState
   }
 
   get isLoading() {
@@ -313,55 +315,55 @@ export class Player {
      * @HAVE_FUTURE_DATA canplay: fired when video ready to play but buffering not complete
      * @HAVE_ENOUGH_DATA canplaythrough : fired when video ready to play and buffering complete
      */
-    return this.#video.readyState < this.#video.HAVE_ENOUGH_DATA && !this.hasError
+    return this.$video.readyState < this.$video.HAVE_ENOUGH_DATA && !this.hasError
   }
 
   get isLoaded() {
-    return this.#video.readyState >= this.#video.HAVE_FUTURE_DATA // 3
+    return this.$video.readyState >= this.$video.HAVE_FUTURE_DATA // 3
   }
 
   get canPlay() {
-    return this.#video.readyState >= this.#video.HAVE_ENOUGH_DATA // 4
+    return this.$video.readyState >= this.$video.HAVE_ENOUGH_DATA // 4
   }
 
   get isPlaying() {
-    return this.#video.paused === false
+    return this.$video.paused === false
   }
 
   get isMuted() {
-    return this.#video.muted
+    return this.$video.muted
   }
 
   get isEnded() {
-    return this.#video.ended
+    return this.$video.ended
   }
 
   get isLoop() {
-    return this.#video.loop
+    return this.$video.loop
   }
 
   get isAutoPlay() {
-    return this.#video.autoplay
+    return this.$video.autoplay
   }
 
   get duration() {
-    return this.#video.duration
+    return this.$video.duration
   }
 
   get buffered() {
-    return this.#video.buffered
+    return this.$video.buffered
   }
 
   get currentTime() {
-    return this.#video.currentTime
+    return this.$video.currentTime
   }
 
   get volume() {
-    return this.#video.volume
+    return this.$video.volume
   }
 
   get playbackRate() {
-    return this.#video.playbackRate
+    return this.$video.playbackRate
   }
 
   get #requestFullscreen(): Element['requestFullscreen'] {

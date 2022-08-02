@@ -1,6 +1,7 @@
 import type Player from '@oplayer/core'
 import { focusListener } from '../listeners/focus'
 import { webFullScreen } from '../style'
+import { screenShot } from '../utils'
 
 const VOLUME_SETUP = 0.1
 const SEEK_SETUP = 5
@@ -22,17 +23,36 @@ const HOTKEY_FN = {
     if (player.$root.classList.contains(webFullScreen)) {
       player.emit('webfullscreen')
     }
-  }
+  },
+
+  's+s': screenShot
 }
+
+type HotKeyName = keyof typeof HOTKEY_FN
+
+let preKey: string | undefined
 
 export default function hotKey(player: Player) {
   function keydown(e: KeyboardEvent) {
     if (document.activeElement?.getAttribute('contenteditable') || !focusListener.isFocus()) return
 
-    if (HOTKEY_FN[e.key as keyof typeof HOTKEY_FN]) {
+    const key = e.key as HotKeyName
+
+    if (HOTKEY_FN[key]) {
       e.preventDefault()
-      HOTKEY_FN[e.key as keyof typeof HOTKEY_FN](player)
+      HOTKEY_FN[key](player)
     }
+
+    //double key
+    if (preKey && preKey === key && HOTKEY_FN[`${preKey}+${key}` as HotKeyName]) {
+      e.preventDefault()
+      HOTKEY_FN[`${preKey}+${key}` as HotKeyName](player)
+    }
+
+    preKey = key
+    setTimeout(() => {
+      preKey = undefined
+    }, 200)
   }
 
   document.addEventListener('keydown', keydown)

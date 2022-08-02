@@ -1,6 +1,6 @@
 import { $ } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
-import { formatTime, isMobile } from '../utils'
+import { formatTime, isMobile, screenShot } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
 import type Player from '@oplayer/core'
@@ -14,6 +14,7 @@ import pipSvg from '../icons/pip.svg?raw'
 import playSvg from '../icons/play.svg?raw'
 import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
+import screenshotSvg from '../icons/screenshot.svg?raw'
 
 const ohcontrollertime = $.css`
   display: flex;
@@ -130,6 +131,14 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                 .join('')}
             </div>
           </div>
+
+          <button
+            aria-label="screenshot"
+            class="${icon}"
+            type="button"
+          >
+          ${screenshotSvg}
+          </button>
 
           <div class=${dropdown}>
             <button aria-label="Volume" class="${icon}" type="button">
@@ -254,6 +263,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         break
       case 'WebFullscreen':
         player.emit('webfullscreen')
+        break
+      case 'screenshot':
+        screenShot(player)
         break
       default:
         break
