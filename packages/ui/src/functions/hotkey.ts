@@ -1,7 +1,7 @@
 import type Player from '@oplayer/core'
 import { focusListener } from '../listeners/focus'
 import { webFullScreen } from '../style'
-import { screenShot } from '../utils'
+import { isMobile, screenShot } from '../utils'
 
 const VOLUME_SETUP = 0.1
 const SEEK_SETUP = 5
@@ -33,6 +33,8 @@ type HotKeyName = keyof typeof HOTKEY_FN
 let preKey: string | undefined
 
 export default function hotKey(player: Player) {
+  if (isMobile) return
+
   function keydown(e: KeyboardEvent) {
     if (document.activeElement?.getAttribute('contenteditable') || !focusListener.isFocus()) return
 
