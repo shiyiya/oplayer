@@ -1,6 +1,7 @@
 import Player, { $ } from '@oplayer/core'
+import { initListener } from '../listeners/init'
 import type { SnowConfig } from '../types'
-import { initListener, isMobile } from '../utils'
+import { isMobile } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 

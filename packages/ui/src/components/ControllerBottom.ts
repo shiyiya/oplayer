@@ -1,5 +1,5 @@
 import { $ } from '@oplayer/core'
-import { icon } from '../style'
+import { icon, webFullScreen } from '../style'
 import { formatTime, isMobile } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
@@ -7,6 +7,7 @@ import type Player from '@oplayer/core'
 import type { SnowConfig } from '../types'
 
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
+import webExpandSvg from '../icons/web-fullscreen.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
 import pauseSvg from '../icons/pause.svg?raw'
 import pipSvg from '../icons/pip.svg?raw'
@@ -84,7 +85,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         display: 'flex',
         'align-items': 'center',
 
-        '> div:hover': {
+        '> div:hover, > button:hover': {
           color: '#fff',
           fill: '#fff'
         }
@@ -140,7 +141,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
           </div>
 
           ${
-            !config.disablePictureInPicture && player.isPipEnabled
+            config.pictureInPicture && player.isPipEnabled
               ? `<button
                   aria-label="Picture in Picture"
                   class="${icon}"
@@ -150,16 +151,28 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                 </button>`
               : ''
           }
+
           ${
-            !config.disableFullscreen
-              ? `<button
-                  aria-label="Fullscreen"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${expandSvg}
-                  ${compressSvg}
-                </button>`
+            config.fullscreen
+              ? `<div class=${dropdown}>
+            <button
+                aria-label="Fullscreen"
+                class="${icon}"
+                type="button"
+            >
+              ${expandSvg}
+              ${compressSvg}
+            </button>
+            <div class=${expand}>
+              <button
+                aria-label="WebFullscreen"
+                class="${icon}"
+                type="button"
+              >
+              ${webExpandSvg}
+            </button>
+            </div>
+          </div>`
               : ''
           }
         </div>`
@@ -194,7 +207,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   }
 
   const volumeSwitcher = () => {
-    switcher($volume.children, player.isMuted ? 1 : 0)
+    switcher($volume.children, player.isMuted || player.volume == 0 ? 1 : 0)
   }
 
   const fullscreenSwitcher = () => {
@@ -205,6 +218,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
   player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
+  player.on('webfullscreen', () => {
+    player.$root.classList.toggle(webFullScreen)
+  })
 
   let preVolumn = player.volume
 
@@ -235,6 +251,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         break
       case 'Fullscreen':
         player.toggleFullScreen()
+        break
+      case 'WebFullscreen':
+        player.emit('webfullscreen')
         break
       default:
         break

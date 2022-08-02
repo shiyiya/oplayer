@@ -7,7 +7,7 @@ export const root = (theme: SnowConfig['theme']) =>
     /* https://stackoverflow.com/questions/7015302/css-hexadecimal-rgba */
     '--shadow-color': `${theme?.primaryColor}7F`,
     '--shadow-color-4': `${theme?.primaryColor}66`,
-    
+
     width: '100%',
     height: '100%',
     position: 'absolute',
@@ -18,6 +18,13 @@ export const root = (theme: SnowConfig['theme']) =>
       '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
     }
   })
+
+export const webFullScreen = $.css`
+    z-index: 9999 !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: fixed !important;
+    inset: 0; !important`
 
 export const icon = $.css({
   background: 'none',

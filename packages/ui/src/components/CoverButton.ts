@@ -1,8 +1,8 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import playSvg from '../icons/play.svg?raw'
+import { initListener } from '../listeners/init'
 import { icon } from '../style'
-import { initListener } from '../utils'
 
 const styles = $.css({
   height: '100%',

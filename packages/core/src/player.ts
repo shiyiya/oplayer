@@ -214,8 +214,8 @@ export class Player {
     }
   }
   setVolume(volume: number) {
-    this.#video.volume = volume
-    if (volume > 0 && this.isMuted) {
+    this.#video.volume = volume > 1 ? 1 : volume < 0 ? 0 : volume
+    if (this.#video.volume > 0 && this.isMuted) {
       this.unmute()
     }
   }
