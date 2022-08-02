@@ -1,6 +1,6 @@
 import Player, { $ } from '@oplayer/core'
 import type { SnowConfig } from '../types'
-import { isMobile } from '../utils'
+import { initListener, isMobile } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 
@@ -41,6 +41,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   $.render($dom, el)
 
   const hideCtrl = () => {
+    if (!initListener.isInit()) return
     $dom.classList.add(hide)
     player.emit('theme/snow:bar/hide')
   }

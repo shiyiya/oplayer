@@ -46,7 +46,6 @@ export const initListener = (() => {
             player.duration > 1
           ) {
             initEnd()
-            player.off('durationchange', durationchange)
           }
         })
       } else {
