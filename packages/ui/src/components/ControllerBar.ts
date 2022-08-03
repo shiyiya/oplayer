@@ -5,13 +5,13 @@ import { isMobile } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 
-const hide = $.css({
+const mini = $.css({
   bottom: '-46px !important',
   padding: '0 !important'
   // 'background-image': 'none !important' // TODO:
 })
 
-const mini = $.css({
+const hide = $.css({
   bottom: '-50px !important'
 })
 
@@ -45,7 +45,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
 
-  const hideCls = config.miniProgressBar ? hide : mini
+  const hideCls = config.miniProgressBar ? mini : hide
 
   const hideCtrl = () => {
     if (!initListener.isInit()) return
