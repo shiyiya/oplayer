@@ -7,11 +7,11 @@ import renderControllerBar from './components/ControllerBar'
 import renderButton from './components/CoverButton'
 import renderError from './components/Error'
 import renderLoding from './components/Loading'
+import renderMask from './components/Mask'
 import renderNotice from './components/Notice'
 
-import { hotKey } from './functions'
-import { focusListener } from './listeners/focus'
-import { initListener } from './listeners/init'
+import initListener from './listeners/init'
+import { isMobile } from './utils'
 
 const apply = (player: Player, config: SnowConfig) => {
   const $dom = $.create(`div.${root(config.theme)}`)
@@ -22,6 +22,7 @@ const apply = (player: Player, config: SnowConfig) => {
   // area
   const $area = $.create(`div.${$.css`width: 100%;height: 100%;`}`)
   renderLoding(player, $area)
+  renderMask(player, $area)
   renderButton(player, $area)
   renderControllerBar(player, $area, config)
   renderNotice(player, $area)
@@ -31,8 +32,16 @@ const apply = (player: Player, config: SnowConfig) => {
   $.render($dom, player.$root)
 
   initListener.startListening(player)
-  focusListener.startListening(player)
-  hotKey(player)
+
+  if (!isMobile) {
+    import('./listeners/focus').then((h) => {
+      h.default.startListening(player)
+    })
+
+    import('./functions/hotkey').then((h) => {
+      h.default(player)
+    })
+  }
 }
 
 const defaultConfig: SnowConfig = {

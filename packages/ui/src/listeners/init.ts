@@ -1,7 +1,7 @@
 import type Player from '@oplayer/core'
 import { isMobile } from '../utils'
 
-export const initListener = (() => {
+const initListener = (() => {
   let isInit = false
   let before = <Function[]>[]
   let after = <Function[]>[]
@@ -45,3 +45,5 @@ export const initListener = (() => {
     }
   }
 })()
+
+export default initListener

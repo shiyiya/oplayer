@@ -1,6 +1,6 @@
 import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { initListener } from '../listeners/init'
+import initListener from '../listeners/init'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(

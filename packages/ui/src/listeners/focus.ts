@@ -1,6 +1,6 @@
 import type Player from '@oplayer/core'
 
-export const focusListener = (() => {
+const focusListener = (() => {
   let isFocus = false
 
   return {
@@ -21,3 +21,5 @@ export const focusListener = (() => {
     }
   }
 })()
+
+export default focusListener

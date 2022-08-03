@@ -1,5 +1,5 @@
 import Player, { $ } from '@oplayer/core'
-import { initListener } from '../listeners/init'
+import initListener from '../listeners/init'
 import type { SnowConfig } from '../types'
 import { isMobile } from '../utils'
 import renderControllerBottom from './ControllerBottom'
@@ -44,7 +44,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const hideCtrl = () => {
     if (!initListener.isInit()) return
     $dom.classList.add(hide)
-    player.emit('theme/snow:bar/hide')
+    player.emit('ui/controllerbar:hide')
   }
 
   const debounceHideCtrl = debounce(hideCtrl)
@@ -55,7 +55,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const showCtrl = () => {
     ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
     $dom.classList.remove(hide)
-    player.emit('theme/snow:bar/show')
+    player.emit('ui/controllerbar:show')
   }
 
   player.on('play', () => {
@@ -81,6 +81,14 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       debounceHideCtrl()
     })
     player.on('mouseleave', hideCtrl)
+  } else {
+    player.on('ui/controller:toggle', () => {
+      if ($dom.classList.contains(hide)) {
+        showCtrl()
+      } else {
+        hideCtrl()
+      }
+    })
   }
 }
 
