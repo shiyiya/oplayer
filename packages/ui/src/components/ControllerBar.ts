@@ -11,6 +11,10 @@ const hide = $.css({
   // 'background-image': 'none !important' // TODO:
 })
 
+const mini = $.css({
+  bottom: '-50px !important'
+})
+
 const controllerBar = $.css({
   position: 'absolute',
   left: '0',
@@ -41,9 +45,11 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
 
+  const hideCls = config.miniProgressBar ? hide : mini
+
   const hideCtrl = () => {
     if (!initListener.isInit()) return
-    $dom.classList.add(hide)
+    $dom.classList.add(hideCls)
     player.emit('ui/controllerbar:hide')
   }
 
@@ -54,7 +60,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   }
   const showCtrl = () => {
     ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
-    $dom.classList.remove(hide)
+    $dom.classList.remove(hideCls)
     player.emit('ui/controllerbar:show')
   }
 
@@ -83,7 +89,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     player.on('mouseleave', hideCtrl)
   } else {
     player.on('ui/controller:toggle', () => {
-      if ($dom.classList.contains(hide)) {
+      if ($dom.classList.contains(hideCls)) {
         showCtrl()
       } else {
         hideCtrl()
