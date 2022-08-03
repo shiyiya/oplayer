@@ -26,6 +26,8 @@ const styles = $.css({
       position: 'absolute',
       inset: 0,
       margin: 'auto',
+      width: '3em',
+      fill: 'hsla(0,0%,100%,.9)',
       display: 'flex',
       'align-items': 'center'
     }

@@ -7,14 +7,14 @@ import type Player from '@oplayer/core'
 import type { SnowConfig } from '../types'
 
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
-import webExpandSvg from '../icons/web-fullscreen.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
 import pauseSvg from '../icons/pause.svg?raw'
 import pipSvg from '../icons/pip.svg?raw'
 import playSvg from '../icons/play.svg?raw'
+import screenshotSvg from '../icons/screenshot.svg?raw'
 import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
-import screenshotSvg from '../icons/screenshot.svg?raw'
+import webExpandSvg from '../icons/web-fullscreen.svg?raw'
 
 const ohcontrollertime = $.css`
   display: flex;
