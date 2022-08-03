@@ -6,12 +6,11 @@
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/ui?style=flat-square&label=ui)
 ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/react?style=flat-square&label=react)
 [![](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 
-<p style="width:80%;text-align:center;display:block;margin:0 auto">
-<img src="./oplayer.png"/>
-</p>
+![](./oplayer.png)
 
 ## Usage
 
@@ -48,7 +47,7 @@ Player.make(document.body, {
         }
       ]
     })
-  ]) // Optional
+  ])
   .create()
 ```
 
