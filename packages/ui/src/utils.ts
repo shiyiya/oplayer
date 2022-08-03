@@ -46,3 +46,13 @@ export const screenShot = (player: Player) => {
     download(resp, `${formatTime(player.currentTime).replaceAll(':', '-')}-OPlayer-ScreenShot.png`)
   }
 }
+
+export const debounce = (fn: () => void, ms: number = 1500) => {
+  let time: NodeJS.Timeout | null = null
+  return () => {
+    time && clearTimeout(time)
+    time = setTimeout(() => {
+      fn()
+    }, ms)
+  }
+}

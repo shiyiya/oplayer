@@ -1,7 +1,7 @@
 import Player, { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
 import type { SnowConfig } from '../types'
-import { isMobile } from '../utils'
+import { debounce, isMobile } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 
@@ -28,19 +28,8 @@ const controllerBar = $.css({
 let CTRL_HIDE_DELAY = 1500
 let ctrlAutoHideTimer: NodeJS.Timeout | null = null
 
-const debounce = (fn: () => void, ms: number = CTRL_HIDE_DELAY) => {
-  let time: NodeJS.Timeout | null = null
-  return () => {
-    time && clearTimeout(time)
-    time = setTimeout(() => {
-      fn()
-    }, ms)
-  }
-}
-
 const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $dom = $.create(`div.${controllerBar}`)
-
   renderProgress(player, $dom)
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
@@ -48,16 +37,17 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const hideCls = config.miniProgressBar ? mini : hide
 
   const hideCtrl = () => {
-    if (!initListener.isInit()) return
+    if (!initListener.isInit() || (!player.isPlaying && !isMobile)) return
     $dom.classList.add(hideCls)
     player.emit('ui/controllerbar:hide')
   }
 
-  const debounceHideCtrl = debounce(hideCtrl)
+  const debounceHideCtrl = debounce(hideCtrl, CTRL_HIDE_DELAY)
   const autoHideCtrl = () => {
     ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
     ctrlAutoHideTimer = setTimeout(hideCtrl, CTRL_HIDE_DELAY)
   }
+
   const showCtrl = () => {
     ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
     $dom.classList.remove(hideCls)
