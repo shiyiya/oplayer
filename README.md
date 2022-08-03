@@ -9,7 +9,9 @@
 ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/react?style=flat-square&label=react)
 [![](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 
-![](./oplayer.png)
+<p style="width:80%;text-align:center;display:block;margin:0 auto">
+<img src="./oplayer.png"/>
+</p>
 
 ## Usage
 
@@ -29,7 +31,24 @@ Player.make(document.body, {
     poster: 'https://media.w3.org/2010/05/sintel/poster.png'
   }
 })
-  .use([ui({ theme: { primaryColor: '#9370db' } })]) // Optional
+  .use([
+    ui({
+      theme: { primaryColor: '#9370db' },
+      subtitle: [
+        {
+          text: 'EN',
+          type: 'vtt',
+          default: true,
+          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
+        },
+        {
+          text: 'ZH',
+          type: 'vtt',
+          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
+        }
+      ]
+    })
+  ]) // Optional
   .create()
 ```
 
