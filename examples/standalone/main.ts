@@ -9,9 +9,9 @@ import { live } from 'lit/directives/live.js'
 import poster from './poster.png'
 
 const dataSrcs = [
+  'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
-  'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
   'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'magnet:?xt=urn:btih:16E51415639B7A1F50AB99B4A0E7CE1DABD86712'
 ] as const
@@ -38,7 +38,16 @@ const p = Player.make(document.getElementById('player')!, {
     crossorigin: 'anonymous'
   }
 })
-  .use([ui({ theme: { primaryColor: '#ff69b4' } }), hls()])
+  .use([
+    ui({
+      subtitle: [
+        {
+          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
+        }
+      ]
+    }),
+    hls()
+  ])
   .create()
 
 const meta = () => html`

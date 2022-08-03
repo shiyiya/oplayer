@@ -1,3 +1,11 @@
+export type Subtitle = {
+  default?: boolean
+  text?: string
+  url: string
+  encoding?: string
+  type?: string
+}
+
 export type SnowConfig = {
   theme?: {
     primaryColor: `#${string}`
@@ -29,5 +37,5 @@ export type SnowConfig = {
 
   thumbnails?: {}
 
-  subtitle?: {}
+  subtitle?: Subtitle[]
 }

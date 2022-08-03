@@ -7,8 +7,12 @@ const VOLUME_SETUP = 0.1
 const SEEK_SETUP = 5
 
 const HOTKEY_FN = {
-  ArrowUp: (player: Player) => player.setVolume(player.volume + VOLUME_SETUP),
-  ArrowDown: (player: Player) => player.setVolume(player.volume - VOLUME_SETUP),
+  ArrowUp: (player: Player) => (
+    player.emit('volumechange'), player.setVolume(player.volume + VOLUME_SETUP)
+  ),
+  ArrowDown: (player: Player) => (
+    player.emit('volumechange'), player.setVolume(player.volume - VOLUME_SETUP)
+  ),
 
   ArrowLeft: (player: Player) => player.seek(player.currentTime - SEEK_SETUP),
   ArrowRight: (player: Player) => player.seek(player.currentTime + SEEK_SETUP),

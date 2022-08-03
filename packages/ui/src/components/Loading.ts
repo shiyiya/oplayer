@@ -88,7 +88,7 @@ const render = (player: Player, el: HTMLElement) => {
     }
   )
 
-  player.on(['videosourcechange', 'pause', 'play'], (e) => {
+  player.on(['videosourcechange', 'pause', 'play', 'ended'], (e) => {
     enable = e.type != 'pause'
   })
 

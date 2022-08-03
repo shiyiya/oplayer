@@ -14,6 +14,7 @@ import playSvg from '../icons/play.svg?raw'
 import screenshotSvg from '../icons/screenshot.svg?raw'
 import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
+import subtitleSvg from '../icons/subtitle.svg?raw'
 import webExpandSvg from '../icons/web-fullscreen.svg?raw'
 
 const ohcontrollertime = $.css`
@@ -71,6 +72,16 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       'line-height': '22px',
       'text-align': 'center',
 
+      ['@media only screen and (max-width: 991px)']: {
+        '&': {
+          padding: '0px'
+        }
+      },
+
+      [`& .${icon}[data-value='false']`]: {
+        opacity: 0.6
+      },
+
       [`& .${icon}`]: {
         width: '36px',
         height: '22px',
@@ -101,8 +112,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                   class="${icon}"
                   type="button"
                 >
-                ${playSvg}
-                ${pauseSvg}
+                  ${playSvg}
+                  ${pauseSvg}
                 </button>`
               : ''
           }
@@ -140,13 +151,25 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
           ${screenshotSvg}
           </button>
 
+          ${
+            config.subtitle
+              ? `<button
+                  aria-label="subtitle"
+                  data-value="${true}"
+                  class="${icon}"
+                  type="button"
+                >
+                  ${subtitleSvg}
+                </button>`
+              : ''
+          }
+
           <div class=${dropdown}>
             <button aria-label="Volume" class="${icon}" type="button">
               ${volumeSvg}
               ${volumeOffSvg}
             </button>
-            <div class=${expand}>
-            </div>
+            <div class=${expand}></div>
           </div>
 
           ${
@@ -163,25 +186,26 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           ${
             config.fullscreen
-              ? `<div class=${dropdown}>
-            <button
-                aria-label="Fullscreen"
-                class="${icon}"
-                type="button"
-            >
-              ${expandSvg}
-              ${compressSvg}
-            </button>
-            <div class=${expand}>
+              ? `
+            <div class=${dropdown}>
               <button
-                aria-label="WebFullscreen"
-                class="${icon}"
-                type="button"
+                  aria-label="Fullscreen"
+                  class="${icon}"
+                  type="button"
               >
-              ${webExpandSvg}
-            </button>
-            </div>
-          </div>`
+                ${expandSvg}
+                ${compressSvg}
+              </button>
+              <div class=${expand}>
+                <button
+                  aria-label="WebFullscreen"
+                  class="${icon}"
+                  type="button"
+                >
+                  ${webExpandSvg}
+                </button>
+              </div>
+            </div>`
               : ''
           }
         </div>`
@@ -237,8 +261,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     const key = (e.target! as HTMLDivElement).getAttribute('aria-label')
     switch (key) {
       case 'Play':
-        player.togglePlay()
-        break
+        return player.togglePlay()
       case 'Speed': {
         const target = e.target! as HTMLDivElement
         const speed = target.getAttribute('data-value')!
@@ -256,16 +279,19 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         }
         break
       case 'Picture in Picture':
-        player.togglePip()
-        break
+        return player.togglePip()
       case 'Fullscreen':
-        player.toggleFullScreen()
-        break
+        return player.toggleFullScreen()
       case 'WebFullscreen':
         player.emit('webfullscreen')
         break
       case 'screenshot':
         screenShot(player)
+        break
+      case 'subtitle':
+        const state = (e.target! as HTMLDivElement).getAttribute('data-value')! == 'true'
+        ;(e.target! as HTMLDivElement).setAttribute('data-value', state ? 'false' : 'true')
+        player.emit(state ? 'hiddensubtitle' : 'showsubtitle')
         break
       default:
         break

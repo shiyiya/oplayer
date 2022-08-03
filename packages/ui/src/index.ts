@@ -26,6 +26,13 @@ const apply = (player: Player, config: SnowConfig) => {
   renderButton(player, $area)
   renderControllerBar(player, $area, config)
   renderNotice(player, $area)
+
+  if (config.subtitle) {
+    import('./components/Subtitle').then((h) => {
+      h.default(player, $area, config)
+    })
+  }
+
   $.render($area, $dom)
 
   // root
