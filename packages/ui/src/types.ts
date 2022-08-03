@@ -1,6 +1,6 @@
 export type Subtitle = {
   default?: boolean
-  text?: string
+  name?: string
   url: string
   encoding?: string
   type?: string
@@ -25,7 +25,7 @@ export type SnowConfig = {
   /**
    * default: false
    */
-  fullscreenWeb?: false
+  fullscreenWeb?: boolean
   /**
    * default: true
    */

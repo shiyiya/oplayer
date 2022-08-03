@@ -58,7 +58,9 @@ const defaultConfig: SnowConfig = {
   hotkey: true,
   speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
   fullscreen: true,
-  pictureInPicture: true
+  fullscreenWeb: true,
+  pictureInPicture: true,
+  miniProgressBar: true
 }
 
 const snow = (config?: SnowConfig): PlayerPlugin => ({

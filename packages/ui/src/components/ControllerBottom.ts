@@ -196,15 +196,22 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                 ${expandSvg}
                 ${compressSvg}
               </button>
-              <div class=${expand}>
-                <button
-                  aria-label="WebFullscreen"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${webExpandSvg}
-                </button>
-              </div>
+
+              ${
+                config.fullscreenWeb
+                  ? `
+                  <div class=${expand}>
+                    <button
+                      aria-label="WebFullscreen"
+                      class="${icon}"
+                      type="button"
+                    >
+                    ${webExpandSvg}
+                    </button>
+                  </div>`
+                  : ''
+              }
+
             </div>`
               : ''
           }
