@@ -1,4 +1,5 @@
 import { $ } from '@oplayer/core'
+import { siblings } from '../utils'
 
 export type Setting = {
   name: string
@@ -141,14 +142,11 @@ function createPanel($panels: HTMLElement[], options: Setting[], sub = false, on
     $item.addEventListener('click', function () {
       if (item.type == 'switcher') {
         if (sub) {
-          ;[...this.parentElement!.children].forEach((bro) => {
-            if (bro != this) {
-              bro.setAttribute('data-value', 'false')
-              bro.children[0]!.setAttribute('data-value', 'false')
-            } else {
-              this.setAttribute('data-value', 'true')
-              this.children[0]!.setAttribute('data-value', 'true')
-            }
+          this.setAttribute('data-value', 'true')
+          this.children[0]!.setAttribute('data-value', 'true')
+          siblings(this, () => {
+            this.setAttribute('data-value', 'false')
+            this.children[0]!.setAttribute('data-value', 'false')
           })
           onChange!(item, index)
         } else {

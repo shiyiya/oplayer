@@ -1,6 +1,6 @@
 import { $ } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
-import { formatTime, isMobile, screenShot } from '../utils'
+import { formatTime, isMobile, screenShot, siblings } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
 import type Player from '@oplayer/core'
@@ -32,14 +32,16 @@ const expand = $.css(`
     position: absolute;
     top: 0;
     right: 0px;
+    z-index: 10;
     transform: translate(0%, -100%);
     box-sizing: border-box;
     border-radius: 4px;
     background-color: rgba(0, 0, 0, 0.9);
-    color: #fff;
+    color: #fffc;
     font-size: 12px;
     visibility: hidden;
     transition: opacity 0.1s ease-in-out;
+    padding: 4px;
 `)
 
 const dropdown = $.css({
@@ -51,13 +53,32 @@ const dropdown = $.css({
   }
 })
 
-const speeditem = $.css`
-  font-size: 14px;
-  display: block;
-  padding: 6px 15px;
-  text-align: center;
-  cursor: pointer;
-`
+const dropitem = $.css({
+  'font-size': '14px',
+  display: 'block',
+  padding: '6px 15px',
+  'text-align': 'center',
+  cursor: 'pointer',
+  'border-radius': '4px',
+  'margin-bottom': '2px',
+
+  '&:nth-last-child(1)': {
+    'margin-bottom': '0px'
+  },
+
+  '& *': {
+    'pointer-events': 'none'
+  },
+
+  '&[data-selected="true"]': {
+    'font-weight': 'bold',
+    color: 'var(--primary-color)'
+  },
+
+  '&[data-selected="true"],&:hover': {
+    'background-color': '#ffffff1a'
+  }
+})
 
 const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $dom = $.create(
@@ -133,7 +154,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                 ?.map(
                   (sp) =>
                     `<span
-                    class=${speeditem}
+                    class=${dropitem}
                     aria-label="Speed"
                     data-value=${sp}>
                       ${sp}<small>x</small>
@@ -153,14 +174,32 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           ${
             config.subtitle
-              ? `<button
+              ? `
+              <div class=${dropdown}>
+                <button
                   aria-label="subtitle"
                   data-value="${true}"
                   class="${icon}"
                   type="button"
                 >
                   ${subtitleSvg}
-                </button>`
+                </button>
+                <div class=${expand}>
+                  ${config.subtitle
+                    ?.map(
+                      (s, i) => `
+                      <span
+                        class=${dropitem}
+                        aria-label="subtitle"
+                        data-value=${i}
+                        data-selected=${s.default ? 'true' : 'false'}
+                      >
+                        ${s.name || 'default'}
+                      </span>`
+                    )
+                    .join('')}
+                </div>
+              </div>`
               : ''
           }
 
@@ -232,14 +271,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
   renderVolumeBar(player, $volumeSlider)
 
-  const switcher = (el: HTMLCollection, key: number) => {
+  const switcher = (el: HTMLCollection, key: 0 | 1) => {
     el[key]!.removeAttribute('style')
-
-    Array(el.length)
-      .fill(1)
-      .forEach((_, i) => {
-        i !== key && el.item(i) && ((el.item(i) as HTMLDivElement).style.display = 'none')
-      })
+    ;(el.item(key == 1 ? 0 : 1) as HTMLDivElement).style.display = 'none'
   }
 
   const playerSwitcher = () => {
@@ -272,6 +306,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       case 'Speed': {
         const target = e.target! as HTMLDivElement
         const speed = target.getAttribute('data-value')!
+        target.setAttribute('data-selected', 'true')
+        siblings(target, (t) => t.setAttribute('data-selected', 'false'))
         target.parentElement!.previousElementSibling!.textContent = speed + 'x'
         player.setPlaybackRate(+speed)
         break
@@ -296,9 +332,18 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         screenShot(player)
         break
       case 'subtitle':
-        const state = (e.target! as HTMLDivElement).getAttribute('data-value')! == 'true'
-        ;(e.target! as HTMLDivElement).setAttribute('data-value', state ? 'false' : 'true')
-        player.emit(state ? 'hiddensubtitle' : 'showsubtitle')
+        {
+          const target = e.target! as HTMLDivElement
+          const state = target.getAttribute('data-value')!
+          if (isNaN(+state)) {
+            target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
+            player.emit(state ? 'hiddensubtitle' : 'showsubtitle')
+          } else {
+            target.setAttribute('data-selected', 'true')
+            siblings(target, (t) => t.setAttribute('data-selected', 'false'))
+            player.emit('subtitlechange', config.subtitle![+target.getAttribute('data-value')!])
+          }
+        }
         break
       default:
         break

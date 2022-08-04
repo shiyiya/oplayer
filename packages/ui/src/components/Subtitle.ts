@@ -51,8 +51,8 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
 
   $track.addEventListener('cuechange', update)
 
-  player.on('subtitlechange', (e: PlayerEvent) => {
-    e.payload && initSubtitle(player, $track, e.payload)
+  player.on('subtitlechange', ({ payload }: PlayerEvent) => {
+    payload.url && (($dom.innerHTML = ''), initSubtitle(player, $track, payload))
   })
 
   //TODO: typescript: override event name

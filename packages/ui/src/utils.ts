@@ -56,3 +56,15 @@ export const debounce = (fn: () => void, ms: number = 1500) => {
     }, ms)
   }
 }
+
+export const siblings = (el: HTMLElement, cb?: (el: HTMLElement) => void) => {
+  var nodes = []
+  var children = el.parentNode!.children
+  for (let i = 0, len = children.length; i < len; i++) {
+    if (children[i] !== el) {
+      cb?.(<HTMLElement>children[i])
+      nodes.push(children[i])
+    }
+  }
+  return nodes
+}

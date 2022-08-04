@@ -29,7 +29,6 @@ let logs: string[] = []
 
 const p = Player.make(document.getElementById('player')!, {
   volume: 0.1,
-  autoplay: true,
   source: {
     src,
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
@@ -42,6 +41,12 @@ const p = Player.make(document.getElementById('player')!, {
     ui({
       subtitle: [
         {
+          name: 'Default',
+          default: true,
+          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
+        },
+        {
+          name: 'Japenese',
           url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
         }
       ]
