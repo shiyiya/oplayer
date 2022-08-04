@@ -59,11 +59,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   })
 
   player.on('pause', () => {
-    if (isMobile) {
-      showCtrl()
-    } else {
-      hideCtrl()
-    }
+    showCtrl()
   })
 
   player.on('videosourcechange', () => {

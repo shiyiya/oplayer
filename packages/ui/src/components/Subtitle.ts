@@ -21,8 +21,8 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
 
       ['@media only screen and (max-width: 991px)']: {
         '&': {
-          'font-size': '14px',
-          bottom: '0px'
+          'font-size': '1em',
+          bottom: '6px'
         }
       }
     })}`,

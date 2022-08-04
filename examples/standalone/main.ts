@@ -100,7 +100,7 @@ p.on((e) => {
     if ('durationchange' == e.type) {
       eventName += ` : ${p.duration}`
     }
-    logs.unshift(eventName)
+    logs.unshift(eventName as string)
     render(actions(), document.getElementById('actions')!)
     render(meta(), document.getElementById('meta')!)
   }
