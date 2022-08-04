@@ -6,13 +6,13 @@ import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 
 const mini = $.css({
-  bottom: '-46px !important',
+  bottom: isMobile ? '-36px !important' : '-46px !important',
   padding: '0 !important'
   // 'background-image': 'none !important' // TODO:
 })
 
 const hide = $.css({
-  bottom: '-50px !important'
+  bottom: isMobile ? '-40px !important' : '-50px !important'
 })
 
 const controllerBar = $.css({
