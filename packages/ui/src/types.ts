@@ -21,6 +21,10 @@ export type SnowConfig = {
   /**
    * default: true
    */
+  screenshot?: boolean
+  /**
+   * default: true
+   */
   fullscreen?: boolean
   /**
    * default: false

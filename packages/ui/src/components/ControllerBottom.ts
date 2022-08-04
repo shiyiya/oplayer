@@ -164,13 +164,17 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
             </div>
           </div>
 
-          <button
-            aria-label="screenshot"
-            class="${icon}"
-            type="button"
-          >
-          ${screenshotSvg}
-          </button>
+         ${
+           config.screenshot
+             ? `<button
+                  aria-label="screenshot"
+                  class="${icon}"
+                  type="button"
+                >
+                  ${screenshotSvg}
+                </button>`
+             : ''
+         }
 
           ${
             config.subtitle
