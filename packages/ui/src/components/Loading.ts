@@ -1,92 +1,35 @@
 import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
+import { addClass, removeClass } from '../utils'
+import { line, loading, wrap } from './Loading.style'
+
+const showCls = $.css('display: flex;')
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
-    `div.${$.css`
-      position: absolute;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;`}`,
+    `div.${wrap}`,
     {},
-    `<div class=${$.css({
-      overflow: 'hidden',
-      width: '20%',
-      height: '4px',
-      'background-color': 'var(--shadow-color-4)',
-      'border-radius': '4px'
-    })}>
-      <div class="${$.css({
-        '&': {
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          '-webkit-transition': 'width 500ms ease-out 1s',
-          '-moz-transition': 'width 500ms ease-out 1s',
-          '-o-transition': 'width 500ms ease-out 1s',
-          transition: 'width 500ms ease-out 1s'
-        },
-
-        '&::before,&::after': {
-          display: 'block',
-          content: "''",
-          position: 'absolute',
-          height: '100%',
-          'background-color': 'var(--primary-color)'
-        },
-
-        '&::before': {
-          animation: 'indeterminate_first 1.5s infinite ease-out'
-        },
-
-        '&::after': {
-          animation: 'indeterminate_second 1.5s infinite ease-in'
-        },
-
-        '@keyframes indeterminate_first': {
-          '0%': {
-            left: '-100%',
-            width: '100%'
-          },
-          '100%': {
-            left: '100%',
-            width: '10%'
-          }
-        },
-
-        '@keyframes indeterminate_second': {
-          '0%': {
-            left: '-150%',
-            width: '100%'
-          },
-          '100%': {
-            left: '100%',
-            width: '10%'
-          }
-        }
-      })}"></div>
+    `<div class=${loading}>
+      <div class="${line}"></div>
     </div>
     `
   )
 
   $.render($dom, el)
 
+  const show = () => addClass($dom, showCls)
+  const hide = () => removeClass($dom, showCls)
+
   let lastTime = 0
   let currentTime = 0
   let bufferingDetected = false
   let enable = player.isAutoPlay
 
-  initListener.add(
-    () => {
-      currentTime = lastTime = 0
-      $dom.style.display = 'flex'
-    },
-    () => {
-      $dom.style.display = 'none'
-    }
-  )
+  initListener.add(() => {
+    currentTime = lastTime = 0
+    show()
+  }, hide)
 
   player.on(['videosourcechange', 'pause', 'play', 'ended'], (e) => {
     enable = e.type != 'pause'
@@ -94,15 +37,8 @@ const render = (player: Player, el: HTMLElement) => {
 
   player.on('seeking', () => {
     if (!player.isPlaying) {
-      $dom.style.display = 'flex'
-
-      player.on(
-        'canplaythrough',
-        () => {
-          $dom.style.display = 'none'
-        },
-        { once: true }
-      )
+      show()
+      player.on('canplaythrough', hide, { once: true })
     }
   })
 
@@ -116,7 +52,7 @@ const render = (player: Player, el: HTMLElement) => {
         currentTime === lastTime &&
         (player.isPlaying || !initListener.isInit())
       ) {
-        $dom.style.display = 'flex'
+        show()
         bufferingDetected = true
       }
 
@@ -125,7 +61,7 @@ const render = (player: Player, el: HTMLElement) => {
         currentTime > lastTime &&
         (player.isPlaying || !initListener.isInit())
       ) {
-        $dom.style.display = 'none'
+        hide()
         bufferingDetected = false
       }
       lastTime = currentTime

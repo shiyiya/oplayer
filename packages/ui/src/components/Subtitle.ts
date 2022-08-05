@@ -116,7 +116,7 @@ const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
         $track.src = url
       })
       .catch((err) => {
-        player.emit('notice', (<Error>err).message)
+        player.emit('notice', { text: (<Error>err).message })
       })
   }
 }

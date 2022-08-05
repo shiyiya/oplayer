@@ -1,4 +1,4 @@
-import type Player from '@oplayer/core'
+import type { Player, PlayerEvent } from '@oplayer/core'
 import focusListener from '../listeners/focus'
 import { webFullScreen } from '../style'
 import { screenShot } from '../utils'
@@ -6,7 +6,7 @@ import { screenShot } from '../utils'
 const VOLUME_SETUP = 0.1
 const SEEK_SETUP = 5
 
-const HOTKEY_FN = {
+const HOTKEY_FN: Record<string, (player: Player) => void> = {
   ArrowUp: (player: Player) => (
     player.emit('volumechange'), player.setVolume(player.volume + VOLUME_SETUP)
   ),
@@ -32,25 +32,23 @@ const HOTKEY_FN = {
   's+s': screenShot
 }
 
-type HotKeyName = keyof typeof HOTKEY_FN
-
 export default function hotKey(player: Player) {
-  let preKey: HotKeyName | undefined
+  let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {
     if (document.activeElement?.getAttribute('contenteditable') || !focusListener.isFocus()) return
 
-    const key = e.key as HotKeyName
+    const key = e.key
 
     if (HOTKEY_FN[key]) {
       e.preventDefault()
-      HOTKEY_FN[key](player)
+      HOTKEY_FN[key!]!(player)
     }
 
     //double key
-    if (preKey && preKey === key && HOTKEY_FN[`${preKey}+${key}` as HotKeyName]) {
+    if (preKey && preKey === key && HOTKEY_FN[`${preKey}+${key}`]) {
       e.preventDefault()
-      HOTKEY_FN[`${preKey}+${key}` as HotKeyName](player)
+      HOTKEY_FN[`${preKey}+${key}`]!(player)
     }
 
     preKey = key
@@ -58,6 +56,20 @@ export default function hotKey(player: Player) {
       preKey = undefined
     }, 200)
   }
+
+  player.on('addhotkey', ({ payload }: PlayerEvent) => {
+    for (const key in payload) {
+      if (Object.prototype.hasOwnProperty.call(payload, key)) {
+        HOTKEY_FN[key] = payload[key]
+      }
+    }
+  })
+
+  player.on('removehotkey', ({ payload }: PlayerEvent) => {
+    ;(<string[]>payload).forEach((k) => {
+      delete HOTKEY_FN[k]
+    })
+  })
 
   document.addEventListener('keydown', keydown)
   player.on('destroy', () => {

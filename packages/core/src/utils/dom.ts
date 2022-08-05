@@ -32,8 +32,13 @@ export namespace $ {
     style.setProperty(name as string, value)
   }
 
-  export const render = (elm: HTMLElement, container: HTMLElement) => {
-    return container.appendChild(elm)
+  export const render = (elm: HTMLElement | string, container: HTMLElement) => {
+    if (elm instanceof Element) {
+      container.appendChild(elm)
+    } else {
+      container.insertAdjacentHTML('beforeend', String(elm))
+    }
+    return container.lastElementChild || container.lastChild
   }
 
   function makeStyleTag() {

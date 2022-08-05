@@ -1,13 +1,15 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import playSvg from '../icons/play.svg?raw'
 import pauseSvg from '../icons/pause.svg?raw'
+import playSvg from '../icons/play.svg?raw'
 
 import initListener from '../listeners/init'
 import { icon } from '../style'
-import { isMobile } from '../utils'
+import { addClass, isMobile, removeClass } from '../utils'
 
 const styles = $.css({
+  display: 'none',
+
   '& > button': {
     position: 'absolute',
     right: '40px',
@@ -34,39 +36,40 @@ const styles = $.css({
   }
 })
 
+const showCls = $.css('display: block;')
+
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
     `div.${styles}`,
-    { 'aria-label': 'Play' },
-    `<button aria-label="Play" class="${icon}" type="button">
+    {},
+    `<button aria-label="Play" class=${icon} type="button">
         ${playSvg}
         ${isMobile ? pauseSvg : ''}
       </button>`
   )
   const $button = <HTMLButtonElement>$dom.querySelector('button')!
 
-  $button.addEventListener('click', (e) => {
+  $dom.addEventListener('click', (e) => {
     e.stopPropagation()
     player.togglePlay()
   })
 
-  if (!isMobile) {
-    initListener.add(
-      () => ($button.style.display = 'none'),
-      () => {
-        if (!player.isPlaying) {
-          $button.style.display = 'block'
-        }
-      }
-    )
+  const show = () => addClass($dom, showCls)
+  const hide = () => removeClass($dom, showCls)
 
+  initListener.add(hide, () => {
+    if (!player.isPlaying) {
+      show()
+    }
+  })
+
+  if (!isMobile) {
     player.on(['canplaythrough', 'play', 'pause', 'seeking', 'videosourcechange'], () => {
       if (!initListener.isInit()) return
-
       if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
-        $button.style.display = 'none'
+        hide()
       } else {
-        $button.style.display = 'block'
+        show()
       }
     })
   } else {
@@ -84,23 +87,8 @@ const render = (player: Player, el: HTMLElement) => {
     }
     siwtcher()
 
-    initListener.add(
-      () => ($dom.style.display = 'none'),
-      () => {
-        if (!player.isPlaying) {
-          $dom.style.display = 'block'
-        }
-      }
-    )
-
-    player.on('ui/controllerbar:show', () => {
-      $dom.style.display = 'block'
-    })
-
-    player.on('ui/controllerbar:hide', () => {
-      $dom.style.display = 'none'
-    })
-
+    player.on('ui/controllerbar:show', show)
+    player.on('ui/controllerbar:hide', hide)
     player.on(['play', 'pause'], siwtcher)
   }
 

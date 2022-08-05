@@ -68,3 +68,28 @@ export const siblings = (el: HTMLElement, cb?: (el: HTMLElement) => void) => {
   }
   return nodes
 }
+
+export function addClass(target: HTMLElement, className: string) {
+  target.classList.add(className)
+  return target
+}
+
+export function removeClass(target: HTMLElement, className: string) {
+  target.classList.remove(className)
+  return target
+}
+
+export function toggleClass(target: HTMLElement, className: string) {
+  target.classList.toggle(className)
+  return target
+}
+
+export function hasClass(target: HTMLElement, className: string) {
+  return target.classList.contains(className)
+}
+
+export const TOUCHEVENTS = {
+  dragStart: isMobile ? 'touchstart' : 'mousedown',
+  dragMove: isMobile ? 'touchmove' : 'mousemove',
+  dragEnd: isMobile ? 'touchend' : 'mouseup'
+} as const

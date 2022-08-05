@@ -1,6 +1,6 @@
 import { $ } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
-import { formatTime, isMobile, screenShot, siblings } from '../utils'
+import { formatTime, isMobile, screenShot, siblings, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
 import type { Player, PlayerEvent } from '@oplayer/core'
@@ -17,68 +17,7 @@ import volumeSvg from '../icons/sound-on.svg?raw'
 import subtitleSvg from '../icons/subtitle.svg?raw'
 import webExpandSvg from '../icons/web-fullscreen.svg?raw'
 
-const ohcontrollertime = $.css`
-  display: flex;
-  align-items: center;
-  padding: 0px 0.5em;
-  min-width: 100px;
-  font-size: 0.875em;
-  color: rgba(255, 255, 255, 0.9);
-  box-sizing: content-box;
-  font-variant-numeric: tabular-nums;
-`
-
-const expand = $.css(`
-    position: absolute;
-    top: 0;
-    right: 0px;
-    z-index: 10;
-    transform: translate(0%, -100%);
-    box-sizing: border-box;
-    border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: #fffc;
-    font-size: 12px;
-    visibility: hidden;
-    transition: opacity 0.1s ease-in-out;
-    padding: 4px;
-`)
-
-const dropdown = $.css({
-  position: 'relative',
-  'line-height': '100%',
-
-  [`&:hover .${expand}`]: {
-    visibility: 'visible'
-  }
-})
-
-const dropitem = $.css({
-  'font-size': '14px',
-  display: 'block',
-  padding: '6px 15px',
-  'text-align': 'center',
-  cursor: 'pointer',
-  'border-radius': '4px',
-  'margin-bottom': '2px',
-
-  '&:nth-last-child(1)': {
-    'margin-bottom': '0px'
-  },
-
-  '& *': {
-    'pointer-events': 'none'
-  },
-
-  '&[data-selected="true"]': {
-    'font-weight': 'bold',
-    color: 'var(--primary-color)'
-  },
-
-  '&[data-selected="true"],&:hover': {
-    'background-color': '#ffffff1a'
-  }
-})
+import { controllerBottom, dropdown, dropitem, expand, time } from './ControllerBottom.style'
 
 const subtitleListHTML = (subtitle: Subtitle[]) =>
   subtitle
@@ -97,48 +36,7 @@ const subtitleListHTML = (subtitle: Subtitle[]) =>
 
 const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $dom = $.create(
-    `div.${$.css({
-      display: 'flex',
-      'justify-content': 'space-between',
-      'font-size': '14px',
-      color: 'hsla(0,0%,100%,.8)',
-      fill: 'hsla(0,0%,100%,.9)',
-      height: '30px',
-      padding: '5px 0px',
-      'line-height': '22px',
-      'text-align': 'center',
-
-      ['@media only screen and (max-width: 991px)']: {
-        '&': {
-          padding: '0px'
-        }
-      },
-
-      [`& .${icon}[data-value='false']`]: {
-        opacity: 0.6
-      },
-
-      [`& .${icon}`]: {
-        width: '36px',
-        height: '22px',
-
-        ['> svg']: {
-          width: '100%',
-          height: '100%',
-          'pointer-events': 'none'
-        }
-      },
-
-      '> div': {
-        display: 'flex',
-        'align-items': 'center',
-
-        '> div:hover, > button:hover': {
-          color: '#fff',
-          fill: '#fff'
-        }
-      }
-    })}`,
+    `div.${controllerBottom}`,
     {},
     `<div>
           ${
@@ -154,14 +52,12 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
               : ''
           }
 
-          <span class=${ohcontrollertime} style="${isMobile ? 'padding-left: 0' : ''}">
-            00:00 / --:--
-          </span>
+          <span class=${time}>00:00 / --:--</span>
         </div>
 
         <div>
           <div class=${dropdown}>
-            <button class="${icon}"  type="button">
+            <button class=${icon} type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
             <div class=${expand}>
@@ -194,26 +90,25 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
          }
 
           ${
-            config.subtitle
-              ? `
-              <div class=${dropdown}>
-                <button
-                  aria-label="subtitle"
-                  data-value="${true}"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${subtitleSvg}
-                </button>
-                <div class=${expand}>
-                  ${subtitleListHTML(config.subtitle)}
-                </div>
-              </div>`
+            config.subtitle?.length
+              ? `<div class=${dropdown}>
+                  <button
+                    aria-label="subtitle"
+                    data-value="${true}"
+                    class="${icon}"
+                    type="button"
+                  >
+                    ${subtitleSvg}
+                  </button>
+                  <div class=${expand}>
+                    ${subtitleListHTML(config.subtitle)}
+                  </div>
+                </div>`
               : ''
           }
 
           <div class=${dropdown}>
-            <button aria-label="Volume" class="${icon}" type="button">
+            <button aria-label="Volume" class=${icon} type="button">
               ${volumeSvg}
               ${volumeOffSvg}
             </button>
@@ -234,51 +129,44 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           ${
             config.fullscreen
-              ? `
-            <div class=${dropdown}>
-              <button
-                  aria-label="Fullscreen"
-                  class="${icon}"
-                  type="button"
-              >
-                ${expandSvg}
-                ${compressSvg}
-              </button>
-
-              ${
-                config.fullscreenWeb
-                  ? `
-                  <div class=${expand}>
-                    <button
-                      aria-label="WebFullscreen"
+              ? `<div class=${dropdown}>
+                  <button
+                      aria-label="Fullscreen"
                       class="${icon}"
                       type="button"
-                    >
-                    ${webExpandSvg}
-                    </button>
-                  </div>`
-                  : ''
-              }
+                  >
+                    ${expandSvg}
+                    ${compressSvg}
+                  </button>
 
-            </div>`
+                  ${
+                    config.fullscreenWeb
+                      ? `<div class=${expand}>
+                          <button
+                            aria-label="WebFullscreen"
+                            class="${icon}"
+                            type="button"
+                          >
+                          ${webExpandSvg}
+                          </button>
+                        </div>`
+                      : ''
+                  }
+                </div>`
               : ''
           }
         </div>`
   )
 
-  player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
-    $dom.querySelector<HTMLSpanElement>('.' + ohcontrollertime)!.innerText =
-      // prettire-ignore
-      `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
-  })
+  renderVolumeBar(
+    player,
+    $dom.querySelector('button[aria-label="Volume"]')!.nextElementSibling! as HTMLDivElement
+  )
 
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
-  const $volumeSlider = $dom.querySelector('button[aria-label="Volume"]')!
-    .nextElementSibling! as HTMLDivElement
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
-
-  renderVolumeBar(player, $volumeSlider)
+  const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
 
   const switcher = (el: HTMLCollection, key: 0 | 1) => {
     el[key]!.removeAttribute('style')
@@ -297,12 +185,14 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     switcher($fullscreen.children, player.isFullScreen ? 1 : 0)
   }
 
+  // TODO: 使用 css 控制，player root 添加状态 class
   playerSwitcher(), volumeSwitcher(), fullscreenSwitcher()
-  player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
+  !isMobile && player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
   player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
-  player.on('webfullscreen', () => {
-    player.$root.classList.toggle(webFullScreen)
+
+  player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
+    $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
 
   player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
@@ -318,12 +208,13 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   let preVolumn = player.volume
 
   $dom.addEventListener('click', (e) => {
-    const key = (e.target! as HTMLDivElement).getAttribute('aria-label')
-    switch (key) {
+    const target = e.target! as HTMLDivElement
+    const label = target.getAttribute('aria-label')
+
+    switch (label) {
       case 'Play':
         return player.togglePlay()
       case 'Speed': {
-        const target = e.target! as HTMLDivElement
         const speed = target.getAttribute('data-value')!
         target.setAttribute('data-selected', 'true')
         siblings(target, (t) => t.setAttribute('data-selected', 'false'))
@@ -346,14 +237,16 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         return player.toggleFullScreen()
       case 'WebFullscreen':
         player.emit('webfullscreen')
+        toggleClass(player.$root, webFullScreen)
+        toggleClass(document.body, webFullScreen)
         break
       case 'screenshot':
         screenShot(player)
         break
       case 'subtitle':
         {
-          const target = e.target! as HTMLDivElement
           const state = target.getAttribute('data-value')!
+
           if (isNaN(+state)) {
             target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
             player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')

@@ -1,7 +1,7 @@
 import Player, { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
 import type { SnowConfig } from '../types'
-import { debounce, isMobile } from '../utils'
+import { addClass, debounce, hasClass, isMobile, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 
@@ -38,8 +38,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
   const hideCtrl = () => {
     if (!initListener.isInit() || (!player.isPlaying && !isMobile)) return
-    $dom.classList.add(hideCls)
     player.emit('ui/controllerbar:hide')
+    addClass($dom, hideCls)
   }
 
   const debounceHideCtrl = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -49,23 +49,13 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   }
 
   const showCtrl = () => {
-    ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
-    $dom.classList.remove(hideCls)
     player.emit('ui/controllerbar:show')
+    ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
+    removeClass($dom, hideCls)
   }
 
-  player.on('play', () => {
-    autoHideCtrl()
-  })
-
-  player.on('pause', () => {
-    showCtrl()
-  })
-
-  player.on('videosourcechange', () => {
-    showCtrl()
-    autoHideCtrl()
-  })
+  player.on('play', autoHideCtrl)
+  player.on(['pause', 'videosourcechange'], showCtrl)
 
   if (!isMobile) {
     player.on('mousemove', () => {
@@ -75,7 +65,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     player.on('mouseleave', hideCtrl)
   } else {
     player.on('ui/controller:toggle', () => {
-      if ($dom.classList.contains(hideCls)) {
+      if (hasClass($dom, hideCls)) {
         showCtrl()
       } else {
         hideCtrl()

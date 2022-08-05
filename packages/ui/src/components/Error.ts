@@ -1,5 +1,6 @@
 import { $ } from '@oplayer/core'
-import type Player from '@oplayer/core'
+import type { Player, PlayerEvent } from '@oplayer/core'
+import { addClass, removeClass } from '../utils'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -16,27 +17,23 @@ const render = (player: Player, el: HTMLElement) => {
       `}`
   )
 
-  const MediaError = [
-    'UNKNOWN_ERROR',
-    'MEDIA_ERR_ABORTED',
-    'MEDIA_ERR_NETWORK',
-    'MEDIA_ERR_DECODE',
-    'MEDIA_ERR_SRC_NOT_SUPPORTED'
-  ] as const
+  const showCls = $.css('display: flex;')
+  player.on(['error', 'plugin:error'], ({ payload }: PlayerEvent) => {
+    addClass($dom, showCls)
 
-  player.on(['error', 'plugin:error'], (e) => {
-    $dom.style.display = 'flex'
-
-    if ('plugin:error' == e.type) {
-      $dom.innerText = e.payload.message || MediaError[0]
-    } else {
-      const code: number = e.payload.target.error.code
-      $dom.innerText = MediaError[code] || MediaError[0]
+    let message: string = payload.message
+    if (payload instanceof Error) {
+      message = payload.message
+    } else if (payload instanceof Event) {
+      // @ts-ignore
+      message = (payload.target?.error as Error)?.message
     }
+
+    $dom.innerText = message || 'UNKNOWN_ERROR'
   })
 
   player.on('videosourcechange', () => {
-    $dom.style.display = 'none'
+    removeClass($dom, showCls)
     $dom.innerText = ''
   })
 

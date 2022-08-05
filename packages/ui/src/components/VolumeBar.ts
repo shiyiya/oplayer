@@ -1,5 +1,6 @@
-import { $ } from '@oplayer/core'
 import type Player from '@oplayer/core'
+import { $ } from '@oplayer/core'
+import { TOUCHEVENTS } from '../utils'
 
 const slider = $.css(`
   position:relative;
@@ -94,13 +95,17 @@ const render = (player: Player, el: HTMLElement) => {
   const $volumeSlider = $dom.querySelector<HTMLDivElement>(`.${volumeSlider}`)!
   const $volumeValue = $dom.querySelector<HTMLDivElement>(`.${volumeValue}`)!
 
-  const getSlidingValue = (event: MouseEvent) => {
+  const getSlidingValue = (event: MouseEvent | TouchEvent) => {
     const rect = $slider.getBoundingClientRect()
-    const value = (rect.bottom - event.clientY) / rect.height
+    const value =
+      (rect.bottom -
+        ((<MouseEvent>event).clientY || (<TouchEvent>event).changedTouches[0]!.clientY)) /
+      rect.height
     return value >= 1 ? 1 : value <= 0 ? 0 : value
   }
 
-  const sync = (e: MouseEvent) => {
+  const sync = (e: MouseEvent | TouchEvent) => {
+    e.preventDefault()
     setter(getSlidingValue(e))
   }
 
@@ -116,14 +121,14 @@ const render = (player: Player, el: HTMLElement) => {
     setter(player.isMuted ? 0 : player.volume)
   })
 
-  $slider.addEventListener('mousedown', (e: MouseEvent) => {
+  $slider.addEventListener(TOUCHEVENTS.dragStart, (e: MouseEvent | TouchEvent) => {
     sync(e)
 
-    document.addEventListener('mousemove', sync, { passive: true })
+    document.addEventListener(TOUCHEVENTS.dragMove, sync, { passive: true })
     document.addEventListener(
-      'mouseup',
+      TOUCHEVENTS.dragEnd,
       () => {
-        document.removeEventListener('mousemove', sync)
+        document.removeEventListener(TOUCHEVENTS.dragMove, sync)
       },
       { once: true }
     )
