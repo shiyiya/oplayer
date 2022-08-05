@@ -2,8 +2,12 @@ import { $, PlayerEvent } from '@oplayer/core'
 import type { Player } from '@oplayer/core'
 import { SnowConfig, Subtitle } from '../types'
 
-const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) => {
-  const defaultSubtitle = subtitle?.find((st) => st.default) || subtitle[0]
+function findDefault(o: any) {
+  return o?.find((st: any) => st.default) || o?.[0]
+}
+
+const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
+  const defaultSubtitle = findDefault(subtitle)
   if (!defaultSubtitle || !window.TextDecoder) return
 
   const $dom = $.create(
@@ -28,11 +32,50 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
     })}`,
     {}
   )
+  $.render($dom, el)
 
-  const $track = document.createElement('track')
-  $track.default = true
-  $track.kind = 'metadata'
-  player.$video.appendChild($track)
+  const $track = <HTMLTrackElement>$.render(
+    $.create('track', {
+      default: true,
+      kind: 'metadata'
+    }),
+    player.$video
+  )
+
+  $track.addEventListener('cuechange', update)
+
+  player.on('showsubtitle', () => {
+    $track.addEventListener('cuechange', update)
+  })
+
+  //TODO: typescript: override event name
+  //@ts-ignore
+  player.on(['hiddensubtitle', 'videosourcechange'], () => {
+    $dom.innerHTML = ''
+    $track.removeEventListener('cuechange', update)
+  })
+
+  player.on('subtitlechange', ({ payload }: PlayerEvent) => {
+    $dom.innerHTML = ''
+    initSubtitle(payload)
+  })
+
+  player.on('videosourcechange', () => {
+    player.emit('subtitleconfigchange', undefined)
+  })
+
+  player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
+    if (payload?.length) {
+      initSubtitle(findDefault(payload))
+    }
+  })
+
+  player.on('destroy', () => {
+    if ($track.src) URL.revokeObjectURL($track.src)
+    $track.removeEventListener('cuechange', update)
+  })
+
+  initSubtitle(defaultSubtitle)
 
   function update() {
     $dom.innerHTML = ''
@@ -49,58 +92,36 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
     }
   }
 
-  $track.addEventListener('cuechange', update)
+  function initSubtitle(subtitle: Subtitle) {
+    fetch(subtitle.url)
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        const decoder = new TextDecoder(subtitle.encoding)
+        const text = decoder.decode(buffer)
+        player.emit('subtitleloaded', subtitle)
 
-  player.on('subtitlechange', ({ payload }: PlayerEvent) => {
-    payload.url && (($dom.innerHTML = ''), initSubtitle(player, $track, payload))
-  })
-
-  //TODO: typescript: override event name
-  //@ts-ignore
-  player.on(['hiddensubtitle', 'destroy', 'videosourcechange'], () => {
-    $dom.innerHTML = ''
-    $track.removeEventListener('cuechange', update)
-  })
-
-  //@ts-ignore
-  player.on(['showsubtitle', 'subtitlechange'], () => {
-    $track.addEventListener('cuechange', update)
-  })
-
-  initSubtitle(player, $track, defaultSubtitle)
-
-  $.render($dom, el)
+        switch (subtitle.type || new URL(subtitle.url).pathname.split('.')[1]) {
+          case 'srt':
+            return vttToBlob(srtToVtt(text))
+          case 'ass':
+            return vttToBlob(assToVtt(text))
+          case 'vtt':
+            return vttToBlob(text)
+          default:
+            return subtitle.url
+        }
+      })
+      .then((url) => {
+        if ($track.src) URL.revokeObjectURL($track.src)
+        $track.src = url
+      })
+      .catch((err) => {
+        player.emit('notice', (<Error>err).message)
+      })
+  }
 }
 
 export default render
-
-function initSubtitle(player: Player, $track: HTMLTrackElement, subtitle: Subtitle) {
-  fetch(subtitle.url)
-    .then((response) => response.arrayBuffer())
-    .then((buffer) => {
-      const decoder = new TextDecoder(subtitle.encoding)
-      const text = decoder.decode(buffer)
-      player.emit('subtitleloaded', subtitle)
-
-      switch (subtitle.type || new URL(subtitle.url).pathname.split('.')[1]) {
-        case 'srt':
-          return vttToBlob(srtToVtt(text))
-        case 'ass':
-          return vttToBlob(assToVtt(text))
-        case 'vtt':
-          return vttToBlob(text)
-        default:
-          return subtitle.url
-      }
-    })
-    .then((url) => {
-      if ($track.src) URL.revokeObjectURL($track.src)
-      $track.src = url
-    })
-    .catch((err) => {
-      player.emit('notice', (<Error>err).message)
-    })
-}
 
 function fixSrt(srt: string) {
   return srt.replace(/(\d\d:\d\d:\d\d)[,.](\d+)/g, (_, $1, $2) => {

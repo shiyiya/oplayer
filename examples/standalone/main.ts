@@ -39,6 +39,7 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     ui({
+      speed: ['0.5', '1.0', '2.0', '10.0'],
       subtitle: [
         {
           name: 'Default',

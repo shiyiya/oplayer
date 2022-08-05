@@ -3,8 +3,8 @@ import { icon, webFullScreen } from '../style'
 import { formatTime, isMobile, screenShot, siblings } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
-import type Player from '@oplayer/core'
-import type { SnowConfig } from '../types'
+import type { Player, PlayerEvent } from '@oplayer/core'
+import type { SnowConfig, Subtitle } from '../types'
 
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
@@ -80,6 +80,21 @@ const dropitem = $.css({
   }
 })
 
+const subtitleListHTML = (subtitle: Subtitle[]) =>
+  subtitle
+    .map(
+      (s, i) => `
+            <span
+              class=${dropitem}
+              aria-label="subtitle"
+              data-value=${i}
+              data-selected=${s.default ? 'true' : 'false'}
+            >
+              ${s.name || 'default'}
+            </span>`
+    )
+    .join('')
+
 const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $dom = $.create(
     `div.${$.css({
@@ -146,17 +161,19 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
         <div>
           <div class=${dropdown}>
-            <button class="${icon}"  type="button">${
-      player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`
-    }</button>
+            <button class="${icon}"  type="button">
+              ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
+            </button>
             <div class=${expand}>
               ${config.speed
                 ?.map(
                   (sp) =>
                     `<span
-                    class=${dropitem}
-                    aria-label="Speed"
-                    data-value=${sp}>
+                      class=${dropitem}
+                      aria-label="Speed"
+                      data-value=${sp}
+                      data-selected=${String(+sp == player.playbackRate)}
+                    >
                       ${sp}<small>x</small>
                     </span>`
                 )
@@ -189,19 +206,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                   ${subtitleSvg}
                 </button>
                 <div class=${expand}>
-                  ${config.subtitle
-                    ?.map(
-                      (s, i) => `
-                      <span
-                        class=${dropitem}
-                        aria-label="subtitle"
-                        data-value=${i}
-                        data-selected=${s.default ? 'true' : 'false'}
-                      >
-                        ${s.name || 'default'}
-                      </span>`
-                    )
-                    .join('')}
+                  ${subtitleListHTML(config.subtitle)}
                 </div>
               </div>`
               : ''
@@ -300,6 +305,16 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     player.$root.classList.toggle(webFullScreen)
   })
 
+  player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
+    const $subtitle = $dom.querySelector<HTMLButtonElement>('button[aria-label="subtitle"]')!
+    if (payload?.length) {
+      $subtitle.parentElement!.style.display = 'block'
+      $subtitle.nextElementSibling!.innerHTML = subtitleListHTML(payload)
+    } else {
+      $subtitle.parentElement!.style.display = 'none'
+    }
+  })
+
   let preVolumn = player.volume
 
   $dom.addEventListener('click', (e) => {
@@ -341,11 +356,13 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
           const state = target.getAttribute('data-value')!
           if (isNaN(+state)) {
             target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
-            player.emit(state ? 'hiddensubtitle' : 'showsubtitle')
+            player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
           } else {
-            target.setAttribute('data-selected', 'true')
+            $dom.querySelector('button[aria-label=subtitle]')!.setAttribute('data-value', 'true')
             siblings(target, (t) => t.setAttribute('data-selected', 'false'))
             player.emit('subtitlechange', config.subtitle![+target.getAttribute('data-value')!])
+            target.setAttribute('data-selected', 'true')
+            player.emit('showsubtitle')
           }
         }
         break
