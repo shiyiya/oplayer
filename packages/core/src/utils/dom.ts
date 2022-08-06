@@ -71,12 +71,17 @@ export namespace $ {
   export const css = (() => {
     const sheet = makeStyleTag()!
     return (...arg: any[]) => {
-      const isRaw = arg[0] && arg[0].length && arg[0].raw
+      const isRaw = Boolean(arg[0] && arg[0].length && arg[0].raw)
 
       let stringify = ''
       if (isRaw) {
         //css``
-        stringify = arg.slice(1).reduce((p, c) => (p + typeof c !== 'string' ? '' : c), arg[0][0])
+        let strings = arg[0]
+        stringify += strings[0]
+        for (let i = 1; i < arg.length; i++) {
+          stringify += typeof arg[i] !== 'string' ? '' : arg[i]
+          stringify += strings[i]
+        }
       } else if (typeof arg[0] == 'string') {
         //css('')
         stringify = arg[0]

@@ -42,7 +42,6 @@ export const controllerBottom = $.css({
 
 export const time = $.css`
   padding: ${isMobile ? 0 : '0px 0.5em'};
-  min-width: 100px;
   color: rgba(255, 255, 255, 0.9);
   font-variant-numeric: tabular-nums;
 `

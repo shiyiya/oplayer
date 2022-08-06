@@ -88,7 +88,7 @@ export function hasClass(target: HTMLElement, className: string) {
   return target.classList.contains(className)
 }
 
-export const TOUCHEVENTS = {
+export const DRAG_EVENT_MAP = {
   dragStart: isMobile ? 'touchstart' : 'mousedown',
   dragMove: isMobile ? 'touchmove' : 'mousemove',
   dragEnd: isMobile ? 'touchend' : 'mouseup'
