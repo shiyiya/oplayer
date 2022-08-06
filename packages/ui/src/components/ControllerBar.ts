@@ -49,9 +49,11 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   }
 
   const showCtrl = () => {
-    player.emit('ui/controllerbar:show')
-    ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
-    removeClass($dom, hideCls)
+    if (hasClass($dom, hideCls)) {
+      player.emit('ui/controllerbar:show')
+      ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
+      removeClass($dom, hideCls)
+    }
   }
 
   player.on('play', autoHideCtrl)

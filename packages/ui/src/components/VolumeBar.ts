@@ -49,7 +49,6 @@ const render = (player: Player, el: HTMLElement) => {
     `div.${$.css`
       width: 35px;
       height: 110px;
-      background: rgba(21,21,21,.9);
       border-radius: 2px;
       user-select: none;
       `}`,

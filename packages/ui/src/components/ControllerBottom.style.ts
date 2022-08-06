@@ -56,7 +56,7 @@ export const expand = $.css(`
     border-radius: 4px;
     box-sizing: border-box;
     transform: translate(0%, -100%);
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(21, 21, 21, .9);
     color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
     visibility: hidden;

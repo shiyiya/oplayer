@@ -1,6 +1,8 @@
-import { $ } from '@oplayer/core'
 import type { Player, PlayerEvent } from '@oplayer/core'
+import { $ } from '@oplayer/core'
 import { addClass, removeClass } from '../utils'
+
+const showCls = $.css('display: flex !important;')
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -17,7 +19,6 @@ const render = (player: Player, el: HTMLElement) => {
       `}`
   )
 
-  const showCls = $.css('display: flex;')
   player.on(['error', 'plugin:error'], ({ payload }: PlayerEvent) => {
     addClass($dom, showCls)
 

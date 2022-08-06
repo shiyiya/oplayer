@@ -1,4 +1,4 @@
-import Player, { VIDEO_EVENTS } from '@oplayer/core'
+import Player, { PlayerEvent } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 
@@ -39,7 +39,7 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     ui({
-      speed: ['0.5', '1.0', '2.0', '10.0'],
+      speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
         {
           name: 'Default',
@@ -96,20 +96,17 @@ const actions = () => html`<p style="display:flex;">
 
 render(actions(), document.getElementById('actions')!)
 
-p.on((e) => {
-  if (
-    Object.values(VIDEO_EVENTS)
-      .filter((_) => !['timeupdate', 'progress'].includes(_))
-      .includes(e.type as any)
-  ) {
-    let eventName = e.type
-    if ('durationchange' == e.type) {
-      eventName += ` : ${p.duration}`
-    }
-    logs.unshift(eventName as string)
-    render(actions(), document.getElementById('actions')!)
-    render(meta(), document.getElementById('meta')!)
+p.on((e: PlayerEvent) => {
+  if (e.type == 'mousemove') return
+
+  render(actions(), document.getElementById('actions')!)
+  render(meta(), document.getElementById('meta')!)
+
+  let eventName = e.type
+  if ('durationchange' == e.type) {
+    eventName += ` : ${p.duration}`
   }
+  logs.unshift(eventName as string)
 
   if (e.type == 'videosourcechange') {
     logs = []
@@ -117,5 +114,3 @@ p.on((e) => {
 })
 
 render(meta(), document.getElementById('meta')!)
-
-console.log(p)
