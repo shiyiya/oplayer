@@ -23,8 +23,8 @@ const apply = (player: Player, config: SnowConfig) => {
   const $area = $.create(`div.${$.css`width: 100%;height: 100%;`}`)
   renderLoding(player, $area)
   renderMask(player, $area)
-  renderButton(player, $area)
-  renderControllerBar(player, $area, config)
+  const { show, hide } = renderButton(player, $area)
+  renderControllerBar(player, $area, config, show, hide)
   renderNotice(player, $area)
 
   if (config.subtitle) {

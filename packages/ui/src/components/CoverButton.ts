@@ -5,7 +5,7 @@ import playSvg from '../icons/play.svg?raw'
 
 import initListener from '../listeners/init'
 import { icon } from '../style'
-import { addClass, hasClass, isMobile, removeClass } from '../utils'
+import { addClass, isMobile, removeClass } from '../utils'
 
 const styles = $.css({
   display: 'none',
@@ -49,7 +49,7 @@ const render = (player: Player, el: HTMLElement) => {
   )
   const $button = <HTMLButtonElement>$dom.querySelector('button')!
 
-  $dom.addEventListener('click', (e) => {
+  $dom.addEventListener('click', (e: Event) => {
     e.stopPropagation()
     player.togglePlay()
   })
@@ -58,9 +58,7 @@ const render = (player: Player, el: HTMLElement) => {
   const hide = () => removeClass($dom, showCls)
 
   initListener.add(hide, () => {
-    if (!player.isPlaying) {
-      show()
-    }
+    if (!player.isPlaying) show()
   })
 
   if (!isMobile) {
@@ -87,18 +85,13 @@ const render = (player: Player, el: HTMLElement) => {
     }
     siwtcher()
 
-    player.on('ui/controller:toggle', () => {
-      if (hasClass($dom, showCls)) {
-        hide()
-      } else {
-        show()
-      }
-    })
-
     player.on(['play', 'pause'], siwtcher)
   }
 
   $.render($dom, el)
+
+  // 手机上跟随 controller 显示/隐藏
+  return isMobile ? { show, hide } : {}
 }
 
 export default render

@@ -28,7 +28,13 @@ const controllerBar = $.css({
 let CTRL_HIDE_DELAY = 1500
 let ctrlAutoHideTimer: NodeJS.Timeout | null = null
 
-const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
+const render = (
+  player: Player,
+  el: HTMLElement,
+  config: SnowConfig,
+  onShow?: Function,
+  onHide?: Function
+) => {
   const $dom = $.create(`div.${controllerBar}`)
   renderProgress(player, $dom)
   renderControllerBottom(player, $dom, config)
@@ -41,6 +47,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       return
     }
     addClass($dom, hideCls)
+    onShow?.()
   }
 
   const debounceHideCtrl = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -53,6 +60,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     if (hasClass($dom, hideCls)) {
       ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
       removeClass($dom, hideCls)
+      onHide?.()
     }
   }
 
