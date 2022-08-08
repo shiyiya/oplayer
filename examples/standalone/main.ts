@@ -1,11 +1,13 @@
 import Player, { PlayerEvent } from '@oplayer/core'
-import ui from '@oplayer/ui'
+import danmuku from '@oplayer/danmuku'
 import hls from '@oplayer/hls'
+import ui from '@oplayer/ui'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
+import type { DanmukuItem } from '@oplayer/danmuku'
 //@ts-ignore
 import poster from './poster.png'
 
@@ -40,6 +42,22 @@ const p = Player.make(document.getElementById('player')!, {
   }
 })
   .use([
+    hls(),
+    danmuku({
+      danmuku: 'https://oplayer.vercel.app/danmuku.xml',
+      speed: 5, // 持续时间，单位秒，范围在[1 ~ 10]
+      opacity: 1, // 透明度，范围在[0 ~ 1]
+      fontSize: 25, // 字体大小
+      color: '#FFFFFF', // 默认字体颜色
+      mode: 0, // 默认模式，0-滚动，1-静止
+      margin: [0, 0], // 上下边距
+      antiOverlap: true, // 是否防重叠
+      useWorker: true, // 是否使用 web worker
+      synchronousPlayback: true, // 是否同步到播放速度
+      filter: (danmuku: DanmukuItem) => {
+        return danmuku.text.length > 6
+      }
+    }),
     ui({
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
@@ -53,8 +71,7 @@ const p = Player.make(document.getElementById('player')!, {
           url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
         }
       ]
-    }),
-    hls()
+    })
   ])
   .create()
 
@@ -123,7 +140,7 @@ p.on((e: PlayerEvent) => {
     logs.style.height = '200px'
   }
 
-  console.info(e)
+  // console.info(e)
 })
 
 render(meta(), document.getElementById('meta')!)

@@ -9,13 +9,14 @@
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "vite build && cp ../umd.html ../../docs/"
+    "build": "vite build && cp ../umd.html ../../docs/ && cp ./danmuku.xml ../../docs/"
   },
   "dependencies": {
     "@oplayer/core": "workspace:*",
     "@oplayer/hls": "workspace:*",
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
+    "@oplayer/danmuku": "workspace:*",
     "hls.js": "^1.2.0",
     "lit": "^2.2.8"
   }

@@ -1,6 +1,11 @@
-import type { PlayerPlugin } from '@oplayer/core'
+import type { Player, PlayerPlugin } from '@oplayer/core'
+import Danmuku from './danmuku'
 
-export default <PlayerPlugin>{
+export * from './types'
+
+export default (option: any): PlayerPlugin => ({
   name: 'oplayer-plugin-danmuku',
-  apply: () => {}
-}
+  apply: (player: Player) => {
+    new Danmuku(player, option)
+  }
+})
