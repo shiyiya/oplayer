@@ -85,7 +85,7 @@ const render = (player: Player, el: HTMLElement) => {
     }
     siwtcher()
 
-    player.on(['play', 'pause'], siwtcher)
+    player.on(['play', 'pause', 'videosourcechange'], siwtcher)
   }
 
   $.render($dom, el)
