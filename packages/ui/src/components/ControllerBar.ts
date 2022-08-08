@@ -47,7 +47,7 @@ const render = (
       return
     }
     addClass($dom, hideCls)
-    onShow?.()
+    onHide?.()
   }
 
   const debounceHideCtrl = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -60,7 +60,7 @@ const render = (
     if (hasClass($dom, hideCls)) {
       ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
       removeClass($dom, hideCls)
-      onHide?.()
+      onShow?.()
     }
   }
 
