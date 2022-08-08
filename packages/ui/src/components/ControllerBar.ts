@@ -43,7 +43,11 @@ const render = (
   const hideCls = config.miniProgressBar ? mini : hide
 
   const hideCtrl = () => {
-    if (!initListener.isInit() || (!player.isPlaying && !isMobile) || hasClass($dom, hideCls)) {
+    if (
+      !initListener.isInitialized() ||
+      (!player.isPlaying && !isMobile) ||
+      hasClass($dom, hideCls)
+    ) {
       return
     }
     addClass($dom, hideCls)

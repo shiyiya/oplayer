@@ -63,7 +63,7 @@ const render = (player: Player, el: HTMLElement) => {
 
   if (!isMobile) {
     player.on(['canplaythrough', 'play', 'pause', 'seeking', 'videosourcechange'], () => {
-      if (!initListener.isInit()) return
+      if (!initListener.isInitialized()) return
       if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
         hide()
       } else {

@@ -29,7 +29,8 @@ const quailitySrcs = [
 let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
-  volume: 0.1,
+  autoplay: true,
+  muted: true,
   source: {
     src,
     poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'

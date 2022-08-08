@@ -13,7 +13,7 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   $dom.addEventListener('click', () => {
-    if (!initListener.isInit()) return
+    if (!initListener.isInitialized()) return
     if (isMobile) {
       player.emit('ui/controller:toggle')
     } else {

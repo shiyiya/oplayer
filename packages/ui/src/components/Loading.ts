@@ -24,7 +24,7 @@ const render = (player: Player, el: HTMLElement) => {
   let lastTime = 0
   let currentTime = 0
   let bufferingDetected = false
-  let enable = player.isAutoPlay
+  let enable = false
 
   initListener.add(() => {
     currentTime = lastTime = 0
@@ -43,24 +43,16 @@ const render = (player: Player, el: HTMLElement) => {
   })
 
   setInterval(() => {
-    if (enable) {
+    if (enable && initListener.isInitialized()) {
       currentTime = player.currentTime
 
       // loading
-      if (
-        !bufferingDetected &&
-        currentTime === lastTime &&
-        (player.isPlaying || !initListener.isInit())
-      ) {
+      if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
         show()
         bufferingDetected = true
       }
 
-      if (
-        bufferingDetected &&
-        currentTime > lastTime &&
-        (player.isPlaying || !initListener.isInit())
-      ) {
+      if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
         hide()
         bufferingDetected = false
       }

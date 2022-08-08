@@ -2,23 +2,23 @@ import type Player from '@oplayer/core'
 import { isMobile } from '../utils'
 
 const initListener = (() => {
-  let isInit = false
+  let isInitialized = false
   let before = <Function[]>[]
   let after = <Function[]>[]
 
   const initStart = () => {
-    isInit = false
+    isInitialized = false
     before.forEach((f) => f())
   }
 
   const initEnd = () => {
-    if (isInit) return
-    isInit = true
+    if (isInitialized) return
+    isInitialized = true
     after.forEach((f) => f())
   }
 
   return {
-    isInit: () => isInit,
+    isInitialized: () => isInitialized,
     startListening: function listener(player: Player) {
       initStart()
       // https://www.cnblogs.com/taoze/p/5783928.html
