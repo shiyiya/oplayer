@@ -14,7 +14,7 @@ const styles = $.css({
     position: 'absolute',
     right: '40px',
     bottom: '50px',
-    fill: '#fff',
+    fill: 'hsla(0, 0%, 100%, .8)',
     width: '3.5em'
   },
 
@@ -28,8 +28,7 @@ const styles = $.css({
       position: 'absolute',
       inset: 0,
       margin: 'auto',
-      width: '3em',
-      fill: 'hsla(0,0%,100%,.9)',
+      width: '2.8em',
       display: 'flex',
       'align-items': 'center'
     }

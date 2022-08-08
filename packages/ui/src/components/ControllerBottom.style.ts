@@ -7,7 +7,7 @@ export const controllerBottom = $.css({
   'justify-content': 'space-between',
   'font-size': '14px',
   color: 'hsla(0, 0%, 100%, .8)',
-  fill: 'hsla(0, 0%, 100%, .9)',
+  fill: 'hsla(0, 0%, 100%, .8)',
   height: '30px',
   padding: isMobile ? 0 : '5px 0px',
   'line-height': '22px',
