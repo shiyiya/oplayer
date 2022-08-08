@@ -9,7 +9,10 @@ const render = (player: Player, el: HTMLElement) => {
     `div.${$.css`
       display: none;
       position: absolute;
-      inset: 0;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       color: #fff;
       font-size: 1.2em;
       background: #000;
