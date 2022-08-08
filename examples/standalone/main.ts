@@ -110,7 +110,7 @@ p.on((e: PlayerEvent) => {
   logs.value = eventName + '\r\n' + logs.value
   logs.style.height = `${logs.scrollHeight}px`
 
-  if (e.type == 'videosourcechange' || (logs.value.match('\r\n')?.length || 0) >= 60) {
+  if (e.type == 'videosourcechange' || logs.value.split('==>').length >= 110) {
     logs.value = ''
     logs.style.height = '200px'
   }
