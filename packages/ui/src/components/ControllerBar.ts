@@ -37,8 +37,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const hideCls = config.miniProgressBar ? mini : hide
 
   const hideCtrl = () => {
-    if (!initListener.isInit() || (!player.isPlaying && !isMobile)) return
-    player.emit('ui/controllerbar:hide')
+    if (!initListener.isInit() || (!player.isPlaying && !isMobile) || hasClass($dom, hideCls)) {
+      return
+    }
     addClass($dom, hideCls)
   }
 
@@ -50,7 +51,6 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
   const showCtrl = () => {
     if (hasClass($dom, hideCls)) {
-      player.emit('ui/controllerbar:show')
       ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
       removeClass($dom, hideCls)
     }

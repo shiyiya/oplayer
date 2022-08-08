@@ -5,6 +5,7 @@ export const root = (theme: SnowConfig['theme']) =>
   $.css({
     '--primary-color': `${theme?.primaryColor}`,
     /* https://stackoverflow.com/questions/7015302/css-hexadecimal-rgba */
+    // TODO: QQ浏览器不支持6位hex值
     '--shadow-color': `${theme?.primaryColor}7F`,
     '--shadow-color-4': `${theme?.primaryColor}66`,
 

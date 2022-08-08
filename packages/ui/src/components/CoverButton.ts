@@ -5,7 +5,7 @@ import playSvg from '../icons/play.svg?raw'
 
 import initListener from '../listeners/init'
 import { icon } from '../style'
-import { addClass, isMobile, removeClass } from '../utils'
+import { addClass, hasClass, isMobile, removeClass } from '../utils'
 
 const styles = $.css({
   display: 'none',
@@ -87,8 +87,14 @@ const render = (player: Player, el: HTMLElement) => {
     }
     siwtcher()
 
-    player.on('ui/controllerbar:show', show)
-    player.on('ui/controllerbar:hide', hide)
+    player.on('ui/controller:toggle', () => {
+      if (hasClass($dom, showCls)) {
+        hide()
+      } else {
+        show()
+      }
+    })
+
     player.on(['play', 'pause'], siwtcher)
   }
 

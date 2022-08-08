@@ -16,7 +16,7 @@
       h4,
       p {
         margin: 0;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
       }
 
       #actions button {
@@ -53,15 +53,22 @@
         width: 100%;
         height: 100%;
       }
+
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        overflow: hidden;
+      }
     </style>
   </head>
   <body>
     <div id="meta"></div>
+
     <div class="asp">
       <div id="player"></div>
     </div>
+    <p>--</p>
 
-    <br />
     <div id="actions"></div>
     <script type="module" src="/main.ts"></script>
   </body>

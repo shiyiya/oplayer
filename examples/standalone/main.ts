@@ -4,6 +4,7 @@ import hls from '@oplayer/hls'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
+import { ref } from 'lit/directives/ref.js'
 
 //@ts-ignore
 import poster from './poster.png'
@@ -25,7 +26,7 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
 
-let logs: string[] = []
+let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
   volume: 0.1,
@@ -75,7 +76,7 @@ const actions = () => html`<p style="display:flex;">
       .value=${live(src)}
     />
 
-    <button @click=${() => p.changeSource({ src })}>Play</button>
+    <button @click=${() => p.changeSource({ src })}>Load</button>
 
     <button
       @click=${() => {
@@ -88,11 +89,11 @@ const actions = () => html`<p style="display:flex;">
         p.changeSource({ src })
       }}
     >
-      Q
+      Queue
     </button>
   </p>
 
-  ${logs.map((log) => html`<li>${log}</li>`)} `
+  <textarea readonly ${ref((f) => (logs = f as any))}></textarea> `
 
 render(actions(), document.getElementById('actions')!)
 
@@ -100,17 +101,21 @@ p.on((e: PlayerEvent) => {
   if (e.type == 'mousemove') return
 
   render(actions(), document.getElementById('actions')!)
-  render(meta(), document.getElementById('meta')!)
 
-  let eventName = e.type
+  let eventName = `==> ${e.type}`
   if ('durationchange' == e.type) {
-    eventName += ` : ${p.duration}`
+    eventName += `: ${p.duration}`
   }
-  logs.unshift(eventName as string)
 
-  if (e.type == 'videosourcechange') {
-    logs = []
+  logs.value = eventName + '\r\n' + logs.value
+  logs.style.height = `${logs.scrollHeight}px`
+
+  if (e.type == 'videosourcechange' || (logs.value.match('\r\n')?.length || 0) >= 60) {
+    logs.value = ''
+    logs.style.height = '200px'
   }
+
+  console.info(e)
 })
 
 render(meta(), document.getElementById('meta')!)
