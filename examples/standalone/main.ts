@@ -46,8 +46,6 @@ const p = Player.make(document.getElementById('player')!, {
     danmuku({
       danmuku: 'https://oplayer.vercel.app/danmuku.xml',
       speed: 5, // 持续时间，单位秒，范围在[1 ~ 10]
-      opacity: 1, // 透明度，范围在[0 ~ 1]
-      fontSize: 25, // 字体大小
       color: '#FFFFFF', // 默认字体颜色
       mode: 0, // 默认模式，0-滚动，1-静止
       margin: [0, 0], // 上下边距
@@ -55,7 +53,7 @@ const p = Player.make(document.getElementById('player')!, {
       useWorker: true, // 是否使用 web worker
       synchronousPlayback: true, // 是否同步到播放速度
       filter: (danmuku: DanmukuItem) => {
-        return danmuku.text.length > 6
+        return danmuku.text.length > 60
       }
     }),
     ui({
@@ -126,21 +124,19 @@ p.on((e: PlayerEvent) => {
   }
 
   logs.value = eventName + '\r\n' + logs.value
-  logs.style.height = `${logs.scrollHeight}px`
+  // logs.style.height = `${logs.scrollHeight}px`
 
   if (e.type == 'videosourcechange') {
     logs.value = ''
-    logs.style.height = '200px'
   }
 
   if (logs.value.split('==>').length >= 66) {
     logs.value =
       '==> ------------clear logs------------- \r\n' +
       logs.value.split('==>').slice(0, 20).join('==>')
-    logs.style.height = '200px'
   }
 
-  // console.info(e)
+  console.info(e)
 })
 
 render(meta(), document.getElementById('meta')!)

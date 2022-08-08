@@ -10,7 +10,7 @@ const danmukuItemCls = $.css`
   pointer-events: none;
   perspective: 500px;
   display: inline-block;
-  will-change: transform;
+  will-change: transform, left;
   visibility: hidden;
   text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
 `
@@ -59,7 +59,6 @@ export default class Danmuku {
     }
   }
 
-  //TODO: 分批次加载 10s 加载一次
   load(danmukus: DanmukuItem[]) {
     this.queue = []
     this.$danmuku.innerHTML = ''
@@ -118,8 +117,6 @@ export default class Danmuku {
 
         const readys = this.getReady()
         const { clientWidth, clientHeight } = this.$player
-
-        console.log(readys.length)
 
         for (let index = 0; index < readys.length; index++) {
           const danmu = readys[index]!
@@ -210,11 +207,13 @@ export default class Danmuku {
     text: string
     styles: Record<string, string | boolean | undefined>
   }): HTMLDivElement {
+    const cache = this.$refs.pop()
+    if (cache) return cache
+
     const $ref = $.create(`div.${danmukuItemCls}`)
     $ref.innerText = text
     Object.keys(styles).forEach((name) => {
-      //@ts-ignore
-      if (typeof styles[name] == 'string') $ref.style[name] = styles[name]
+      if (typeof styles[name] == 'string') $ref.style.setProperty(name, styles[name] as string)
     })
     return $ref as HTMLDivElement
   }
