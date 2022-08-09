@@ -2,6 +2,7 @@ import Player, { PlayerEvent } from '@oplayer/core'
 import danmuku, { DanmukuItem } from '@oplayer/danmuku'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
+import { isMobile } from '@oplayer/ui/src/utils'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
@@ -44,7 +45,8 @@ const p = Player.make(document.getElementById('player')!, {
     hls(),
     danmuku({
       danmuku: 'https://oplayer.vercel.app/danmuku.xml',
-      filter: (d: DanmukuItem) => d.mode > 3 // 只显示普通弹幕
+      fontSize: isMobile ? 16 : 20,
+      filter: (d: DanmukuItem) => d.mode! > 3 // 只显示普通弹幕
     }),
     ui({
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
