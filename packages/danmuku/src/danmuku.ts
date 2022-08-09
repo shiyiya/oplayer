@@ -2,7 +2,7 @@ import { bilibiliDanmuParseFromUrl } from './bilibili-parse'
 import getDanmuTop from './top'
 
 import Player, { $ } from '@oplayer/core'
-import type { DanmukuItem, Option, QueueItem } from './types'
+import type { DanmukuItem, Options, QueueItem } from './types'
 import DanmukuWorker from './danmuku.worker?worker&inline'
 
 const danmukuItemCls = $.css`
@@ -18,6 +18,7 @@ const danmukuItemCls = $.css`
 export default class Danmuku {
   $player: HTMLDivElement
   $danmuku: HTMLDivElement
+  options: Options
 
   isStop: boolean = false
   isHide: boolean = false
@@ -26,13 +27,25 @@ export default class Danmuku {
   $refs: HTMLDivElement[] = []
   worker: Worker
 
-  constructor(public player: Player, public option: Option) {
+  constructor(public player: Player, options: Options) {
     this.$player = player.$root as HTMLDivElement
     this.$danmuku = $.create(
       `div.${$.css`width: 100%; height: 100%; position: absolute; left: 0; top: 0; pointer-events: none;`}`
     )
+    this.options = Object.assign(
+      {
+        speed: 5,
+        color: '#fff',
+        mode: 0,
+        margin: [0, 50],
+        antiOverlap: false,
+        useWorker: true,
+        synchronousPlayback: false
+      },
+      options
+    )
 
-    if (option.useWorker) {
+    if (options.useWorker) {
       this.worker = new DanmukuWorker()
       this.worker.addEventListener('error', (error) => {
         player.emit('notice', 'danmuku-worker:' + error.message)
@@ -51,12 +64,12 @@ export default class Danmuku {
   async fetch() {
     try {
       let danmukus: DanmukuItem[] = []
-      if (typeof this.option.danmuku === 'function') {
-        danmukus = await this.option.danmuku()
-      } else if (typeof this.option.danmuku === 'string') {
-        danmukus = await bilibiliDanmuParseFromUrl(this.option.danmuku)
+      if (typeof this.options.danmuku === 'function') {
+        danmukus = await this.options.danmuku()
+      } else if (typeof this.options.danmuku === 'string') {
+        danmukus = await bilibiliDanmuParseFromUrl(this.options.danmuku)
       } else {
-        danmukus = this.option.danmuku
+        danmukus = this.options.danmuku
       }
       this.player.emit('danmukuloaded', danmukus)
       this.load(danmukus)
@@ -71,11 +84,11 @@ export default class Danmuku {
     this.$danmuku.innerHTML = ''
 
     danmukus.forEach((danmuku) => {
-      if (this.option?.filter && this.option.filter(danmuku)) return
+      if (this.options?.filter && this.options.filter(danmuku)) return
 
       this.queue.push({
-        mode: this.option.mode,
-        color: this.option.color,
+        mode: this.options.mode,
+        color: this.options.color,
         status: 'wait',
         $ref: null,
         restTime: 0,
@@ -129,11 +142,11 @@ export default class Danmuku {
           danmu.$ref = this.createItem({
             text: danmu.text,
             cssText: `left: ${clientWidth}px;
-            ${this.option.opacity ? `opacity: ${this.option.opacity};` : ''}
-            ${this.option.fontSize ? `font-size: ${this.option.fontSize}px;` : ''}
+            ${this.options.opacity ? `opacity: ${this.options.opacity};` : ''}
+            ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
 
             ${danmu.color ? `color: ${danmu.color};` : ''},
-            ${this.option.fontSize ? `font-size: ${this.option.fontSize}px;` : ''}
+            ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
             ${
               danmu.border
                 ? `border: 1px solid ${danmu.color}; background-color: rgb(0 0 0 / 50%);`
@@ -144,9 +157,9 @@ export default class Danmuku {
 
           danmu.lastTime = Date.now()
           danmu.restTime =
-            this.option.synchronousPlayback && this.player.playbackRate
-              ? this.option.speed / this.player.playbackRate
-              : this.option.speed
+            this.options.synchronousPlayback && this.player.playbackRate
+              ? this.options.speed / this.player.playbackRate
+              : this.options.speed
 
           const target = {
             mode: danmu.mode,
@@ -159,9 +172,9 @@ export default class Danmuku {
             clientWidth,
             emits: this.getEmits(),
             clientHeight,
-            antiOverlap: this.option.antiOverlap,
-            marginTop: this.option.margin?.[0] || 0,
-            marginBottom: this.option.margin?.[1] || 50
+            antiOverlap: this.options.antiOverlap,
+            marginTop: this.options.margin?.[0] || 0,
+            marginBottom: this.options.margin?.[1] || 50
           })
 
           if (!this.isStop && top !== -1) {
@@ -258,7 +271,7 @@ export default class Danmuku {
 
   postMessage(message = {} as any): Promise<{ top: number }> {
     return new Promise((resolve) => {
-      if (this.option.useWorker && this.worker && this.worker.postMessage) {
+      if (this.options.useWorker && this.worker && this.worker.postMessage) {
         message.id = Date.now()
         this.worker.onmessage = ({ data }) => {
           if (data.id === message.id) resolve(data)

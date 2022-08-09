@@ -42,7 +42,7 @@ export type DanmukuPosition = {
   antiOverlap: boolean
 }
 
-export type Option = {
+export type Options = {
   danmuku: string | Function | DanmukuItem[]
   speed: number // 持续时间 秒，[1 ~ 10]
   opacity: number // 透明度 [0 ~ 1]
@@ -57,6 +57,5 @@ export type Option = {
   antiOverlap: boolean // 是否防重叠
   useWorker: boolean // 是否使用 web worker
   synchronousPlayback: false // 是否同步到播放速度
-  max: number // 同屏密度
   filter: (danmuku: DanmukuItem) => boolean // 过滤
 }

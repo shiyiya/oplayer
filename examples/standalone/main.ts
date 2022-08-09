@@ -7,7 +7,6 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
-import type { DanmukuItem } from '@oplayer/danmuku'
 //@ts-ignore
 import poster from './poster.png'
 
@@ -43,18 +42,7 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     hls(),
-    danmuku({
-      danmuku: 'https://oplayer.vercel.app/danmuku.xml',
-      speed: 5, // 持续时间，单位秒，范围在[1 ~ 10]
-      mode: 0, // 默认模式，0-滚动，1-静止
-      margin: [0, 0], // 上下边距
-      antiOverlap: true, // 是否防重叠
-      useWorker: true, // 是否使用 web worker
-      synchronousPlayback: true, // 是否同步到播放速度
-      filter: (danmuku: DanmukuItem) => {
-        return danmuku.text.length > 60
-      }
-    }),
+    danmuku({ danmuku: 'https://oplayer.vercel.app/danmuku.xml' }),
     ui({
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
