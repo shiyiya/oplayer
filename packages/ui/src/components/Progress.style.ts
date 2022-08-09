@@ -68,7 +68,7 @@ export const progress = $.css({
 
 export const progressInner = $.css({
   position: 'relative',
-  height: '4px',
+  height: '3px',
   width: '100%',
   'background-color': 'hsla(0, 0%, 100%, 0.2)',
 
@@ -77,7 +77,7 @@ export const progressInner = $.css({
     left: '0',
     top: '0',
     bottom: '0',
-    height: '4px',
+    height: '3px',
     'will-change': 'width',
     transition: 'all 0.2s ease',
     'pointer-events': 'none'

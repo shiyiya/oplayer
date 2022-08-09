@@ -50,7 +50,9 @@ export default function getDanmuTop({
     const item = danmus[index]!
     if (topMap.length) {
       const last = topMap[topMap.length - 1]!
-      if (last[0]!.top !== item.top) {
+      if (last[0]!.top === item.top) {
+        last.push(item)
+      } else {
         topMap.push([item])
       }
     } else {
@@ -66,7 +68,7 @@ export default function getDanmuTop({
             if (clientWidth < danmu.distance) return false
             if (target.speed < danmu.speed) return true
             const overlapTime = danmu.right / (target.speed - danmu.speed)
-            if (danmu.time && overlapTime > danmu.time) return true
+            if (overlapTime > danmu.time!) return true
             return false
           })
         })

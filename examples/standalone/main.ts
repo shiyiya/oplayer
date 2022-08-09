@@ -1,5 +1,5 @@
 import Player, { PlayerEvent } from '@oplayer/core'
-import danmuku from '@oplayer/danmuku'
+import danmuku, { DanmukuItem } from '@oplayer/danmuku'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
 
@@ -30,7 +30,7 @@ const quailitySrcs = [
 let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
-  autoplay: true,
+  autoplay: false,
   muted: true,
   source: {
     src,
@@ -42,7 +42,10 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     hls(),
-    danmuku({ danmuku: 'https://oplayer.vercel.app/danmuku.xml' }),
+    danmuku({
+      danmuku: 'https://oplayer.vercel.app/danmuku.xml',
+      filter: (d: DanmukuItem) => d.mode > 3 // 只显示普通弹幕
+    }),
     ui({
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
