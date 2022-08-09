@@ -46,7 +46,6 @@ const p = Player.make(document.getElementById('player')!, {
     danmuku({
       danmuku: 'https://oplayer.vercel.app/danmuku.xml',
       speed: 5, // 持续时间，单位秒，范围在[1 ~ 10]
-      color: '#FFFFFF', // 默认字体颜色
       mode: 0, // 默认模式，0-滚动，1-静止
       margin: [0, 0], // 上下边距
       antiOverlap: true, // 是否防重叠
@@ -136,7 +135,7 @@ p.on((e: PlayerEvent) => {
       logs.value.split('==>').slice(0, 20).join('==>')
   }
 
-  console.info(e)
+  // console.info(e)
 })
 
 render(meta(), document.getElementById('meta')!)

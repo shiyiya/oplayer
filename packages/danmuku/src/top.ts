@@ -1,26 +1,4 @@
-type Option = {
-  target: {
-    mode: number
-    height: number
-    speed: number
-  }
-  emits: {
-    top: number
-    left: number
-    right: number
-    height: number
-    width: number
-    speed: number
-    distance: number
-    time?: number
-    mode?: number
-  }[]
-  clientWidth: number
-  clientHeight: number
-  marginBottom: number
-  marginTop: number
-  antiOverlap: boolean
-}
+import type { DanmukuPosition } from './types'
 
 export default function getDanmuTop({
   target,
@@ -30,7 +8,7 @@ export default function getDanmuTop({
   marginBottom,
   marginTop,
   antiOverlap
-}: Option): number {
+}: DanmukuPosition): number {
   const danmus = emits
     .filter((item) => item.mode === target.mode && item.top <= clientHeight - marginBottom)
     .sort((prev, next) => prev.top - next.top)
@@ -67,7 +45,7 @@ export default function getDanmuTop({
     }
   }
 
-  const topMap: Option['emits'][] = []
+  const topMap: DanmukuPosition['emits'][] = []
   for (let index = 1; index < danmus.length - 1; index += 1) {
     const item = danmus[index]!
     if (topMap.length) {

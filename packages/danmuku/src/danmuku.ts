@@ -2,17 +2,17 @@ import { bilibiliDanmuParseFromUrl } from './bilibili-parse'
 import getDanmuTop from './top'
 
 import Player, { $ } from '@oplayer/core'
-import { DanmukuItem, Option, QueueItem } from './types'
+import type { DanmukuItem, Option, QueueItem } from './types'
+import DanmukuWorker from './danmuku.worker?worker&inline'
 
 const danmukuItemCls = $.css`
   position: absolute;
   white-space: pre;
   pointer-events: none;
   perspective: 500px;
-  display: inline-block;
   will-change: transform, left;
-  visibility: hidden;
-  text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+  line-height: 1.125;
+  text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;
 `
 
 export default class Danmuku {
@@ -24,13 +24,20 @@ export default class Danmuku {
   timer: number | null = null
   queue: QueueItem[] = []
   $refs: HTMLDivElement[] = []
-  worker: any
+  worker: Worker
 
   constructor(public player: Player, public option: Option) {
     this.$player = player.$root as HTMLDivElement
     this.$danmuku = $.create(
       `div.${$.css`width: 100%; height: 100%; position: absolute; left: 0; top: 0; pointer-events: none;`}`
     )
+
+    if (option.useWorker) {
+      this.worker = new DanmukuWorker()
+      this.worker.addEventListener('error', (error) => {
+        player.emit('notice', 'danmuku-worker:' + error.message)
+      })
+    }
 
     player.on(['play', 'playing'], this.start.bind(this))
     player.on(['pause', 'waiting'], this.stop.bind(this))
@@ -93,7 +100,7 @@ export default class Danmuku {
       switch (danmu.mode) {
         case 0: {
           const translateX = clientWidth + danmu.$ref!.clientWidth
-          danmu.$ref!.style.transform = `translateX(${-translateX}px)`
+          danmu.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
           danmu.$ref!.style.transition = `transform ${danmu.restTime}s linear 0s`
           break
         }
@@ -107,8 +114,7 @@ export default class Danmuku {
     this.timer = window.requestAnimationFrame(async () => {
       if (this.player.isPlaying && !this.isHide) {
         this.mapping('emit', (danmu) => {
-          const emitTime = (Date.now() - danmu.lastTime) / 1000
-          danmu.restTime -= emitTime
+          danmu.restTime -= (Date.now() - danmu.lastTime) / 1000
           danmu.lastTime = Date.now()
           if (danmu.restTime <= 0) {
             this.makeWait(danmu)
@@ -122,21 +128,24 @@ export default class Danmuku {
           const danmu = readys[index]!
           danmu.$ref = this.createItem({
             text: danmu.text,
-            styles: {
-              left: `${clientWidth}px`,
-              opacity: this.option.opacity ? String(this.option.opacity) : false,
-              fontSize: this.option.fontSize ? `${this.option.fontSize}px` : false,
-              color: danmu.color ? danmu.color : false,
-              border: danmu.border ? `1px solid ${danmu.color}` : false,
-              backgroundColor: danmu.border ? 'rgb(0 0 0 / 50%)' : false
-            }
+            cssText: `left: ${clientWidth}px;
+            ${this.option.opacity ? `opacity: ${this.option.opacity};` : ''}
+            ${this.option.fontSize ? `font-size: ${this.option.fontSize}px;` : ''}
+
+            ${danmu.color ? `color: ${danmu.color};` : ''},
+            ${this.option.fontSize ? `font-size: ${this.option.fontSize}px;` : ''}
+            ${
+              danmu.border
+                ? `border: 1px solid ${danmu.color}; background-color: rgb(0 0 0 / 50%);`
+                : ''
+            }`
           })
           this.$danmuku.appendChild(danmu.$ref)
 
           danmu.lastTime = Date.now()
           danmu.restTime =
             this.option.synchronousPlayback && this.player.playbackRate
-              ? this.option.speed / Number(this.player.playbackRate)
+              ? this.option.speed / this.player.playbackRate
               : this.option.speed
 
           const target = {
@@ -151,43 +160,39 @@ export default class Danmuku {
             emits: this.getEmits(),
             clientHeight,
             antiOverlap: this.option.antiOverlap,
-            marginTop: this.option.margin[0],
-            marginBottom: this.option.margin[1]
+            marginTop: this.option.margin?.[0] || 0,
+            marginBottom: this.option.margin?.[1] || 50
           })
 
-          if (danmu.$ref) {
-            if (!this.isStop && top !== -1) {
-              danmu.status = 'emit'
-              danmu.$ref.style.visibility = 'visible'
+          if (!this.isStop && top !== -1) {
+            danmu.status = 'emit'
+            danmu.$ref.style.opacity = '1'
 
-              switch (danmu.mode) {
-                case 0: {
-                  danmu.$ref.style.top = `${top}px`
-                  const translateX = clientWidth + danmu.$ref.clientWidth
-                  danmu.$ref.style.transform = `translateX(${-translateX}px)`
-                  danmu.$ref.style.transition = `transform ${danmu.restTime}s linear 0s`
-                  break
-                }
-                case 1:
-                  danmu.$ref.style.left = '50%'
-                  danmu.$ref.style.top = `${top}px`
-                  danmu.$ref.style.marginLeft = `-${danmu.$ref.clientWidth / 2}px`
-                  break
-                default:
-                  break
+            switch (danmu.mode) {
+              case 0: {
+                danmu.$ref.style.top = `${top}px`
+                const translateX = clientWidth + danmu.$ref.clientWidth
+                danmu.$ref.style.transform = `translate3d(${-translateX}px, 0, 0)`
+                danmu.$ref.style.transition = `transform ${danmu.restTime}s linear 0s`
+                break
               }
-            } else {
-              danmu.status = 'ready'
-              this.$refs.push(danmu.$ref)
-              danmu.$ref = null
+              case 1:
+                danmu.$ref.style.left = '50%'
+                danmu.$ref.style.top = `${top}px`
+                danmu.$ref.style.transform = 'translate3d(-50%, 0, 0)'
+                break
+              default:
+                break
             }
+          } else {
+            danmu.status = 'ready'
+            this.$refs.push(danmu.$ref)
+            danmu.$ref = null
           }
         }
       }
 
-      if (!this.isStop) {
-        this.update()
-      }
+      if (!this.isStop) this.update()
     })
   }
 
@@ -196,25 +201,16 @@ export default class Danmuku {
   }
 
   getLeft($ref: HTMLElement) {
-    const rect = $ref.getBoundingClientRect()
-    return rect.left
+    return $ref.getBoundingClientRect().left
   }
 
-  createItem({
-    text,
-    styles
-  }: {
-    text: string
-    styles: Record<string, string | boolean | undefined>
-  }): HTMLDivElement {
+  createItem({ text, cssText }: { text: string; cssText: string }): HTMLDivElement {
     const cache = this.$refs.pop()
     if (cache) return cache
 
     const $ref = $.create(`div.${danmukuItemCls}`)
     $ref.innerText = text
-    Object.keys(styles).forEach((name) => {
-      if (typeof styles[name] == 'string') $ref.style.setProperty(name, styles[name] as string)
-    })
+    $ref.style.cssText = cssText
     return $ref as HTMLDivElement
   }
 
@@ -264,13 +260,10 @@ export default class Danmuku {
     return new Promise((resolve) => {
       if (this.option.useWorker && this.worker && this.worker.postMessage) {
         message.id = Date.now()
-        this.worker.postMessage(message)
-        this.worker.onmessage = (event: any) => {
-          const { data } = event
-          if (data.id === message.id) {
-            resolve(data)
-          }
+        this.worker.onmessage = ({ data }) => {
+          if (data.id === message.id) resolve(data)
         }
+        this.worker.postMessage(message)
       } else {
         const top = getDanmuTop(message)
         resolve({ top })
@@ -281,9 +274,8 @@ export default class Danmuku {
   makeWait(danmu: QueueItem) {
     danmu.status = 'wait'
     if (danmu.$ref) {
-      danmu.$ref.style.visibility = 'hidden'
-      danmu.$ref.style.marginLeft = '0px'
-      danmu.$ref.style.transform = 'translateX(0px)'
+      danmu.$ref.style.opacity = '0'
+      danmu.$ref.style.transform = 'translate3d(0, 0, 0)'
       danmu.$ref.style.transition = 'transform 0s linear 0s'
       this.$refs.push(danmu.$ref)
       danmu.$ref = null
@@ -297,7 +289,7 @@ export default class Danmuku {
       switch (danmu.mode) {
         case 0: {
           const translateX = clientWidth - (this.getLeft(danmu.$ref!) - this.getLeft(this.$player))
-          danmu.$ref!.style.transform = `translateX(${-translateX}px)`
+          danmu.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
           danmu.$ref!.style.transition = 'transform 0s linear 0s'
           break
         }
@@ -309,6 +301,16 @@ export default class Danmuku {
 
   reset() {
     this.queue.forEach((danmu) => this.makeWait(danmu))
+  }
+
+  emit(danmu: DanmukuItem) {
+    this.queue.push({
+      ...danmu,
+      status: 'wait',
+      $ref: null,
+      restTime: 0,
+      lastTime: 0
+    })
   }
 
   stop() {
