@@ -54,7 +54,7 @@ const render = (player: Player, el: HTMLElement) => {
   $track.addEventListener(DRAG_EVENT_MAP.dragStart, (e: MouseEvent | TouchEvent) => {
     sync(e)
 
-    document.addEventListener(DRAG_EVENT_MAP.dragMove, sync, { passive: true })
+    document.addEventListener(DRAG_EVENT_MAP.dragMove, sync, { passive: false })
     document.addEventListener(
       DRAG_EVENT_MAP.dragEnd,
       () => {
