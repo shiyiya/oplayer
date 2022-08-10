@@ -1,13 +1,13 @@
 import { $ } from '@oplayer/core'
 import type { SnowConfig } from './types'
+import { hexToRgb } from './utils'
 
-export const root = (theme: SnowConfig['theme']) =>
-  $.css({
-    '--primary-color': `${theme?.primaryColor}`,
-    /* https://stackoverflow.com/questions/7015302/css-hexadecimal-rgba */
-    // TODO: QQ浏览器不支持6位hex值
-    '--shadow-color': `${theme?.primaryColor}7F`,
-    '--shadow-color-4': `${theme?.primaryColor}66`,
+export const root = (theme: SnowConfig['theme']) => {
+  const rbg = hexToRgb(theme!.primaryColor)!
+
+  return $.css({
+    '--primary-color': `rgba(${rbg}, 1)`,
+    '--shadow-color-4': `rgba(${rbg}, 0.4)`,
 
     width: '100%',
     height: '100%',
@@ -19,6 +19,7 @@ export const root = (theme: SnowConfig['theme']) =>
       '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
     }
   })
+}
 
 export const webFullScreen = $.css`
     z-index: 9999 !important;

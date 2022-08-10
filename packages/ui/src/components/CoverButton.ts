@@ -38,7 +38,7 @@ const styles = $.css({
   }
 })
 
-const showCls = $.css('display: block;')
+const showCls = $.css('display: block; /* CoverButton */')
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
