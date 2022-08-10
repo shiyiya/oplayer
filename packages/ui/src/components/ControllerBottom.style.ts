@@ -55,17 +55,25 @@ export const expand = $.css(`
     border-radius: 4px;
     box-sizing: border-box;
     transform: translate(0%, -100%);
-    background-color: rgba(21, 21, 21, .9);
     color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
-    visibility: hidden;
-    opacity: 0;
     transition: visibility 0s, opacity 0.1s linear;
 `)
 
 export const dropdown = $.css({
   position: 'relative',
+  'line-height': '100%'
+})
+
+export const dropdownHoverable = $.css({
+  position: 'relative',
   'line-height': '100%',
+
+  [`& .${expand}`]: {
+    visibility: 'hidden',
+    opacity: 0,
+    'background-color': 'rgba(21, 21, 21, .9)'
+  },
 
   [`&:hover .${expand}`]: {
     visibility: 'visible',

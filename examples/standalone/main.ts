@@ -49,6 +49,7 @@ const p = Player.make(document.getElementById('player')!, {
       filter: (d: DanmukuItem) => d.mode! > 3 // 只显示普通弹幕
     }),
     ui({
+      theme: { primaryColor: '#f00' },
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
         {

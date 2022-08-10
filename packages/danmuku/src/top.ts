@@ -1,4 +1,4 @@
-import type { DanmukuPosition } from './types'
+import type { RootRect } from './types'
 
 export default function getDanmuTop({
   target,
@@ -8,7 +8,7 @@ export default function getDanmuTop({
   marginBottom,
   marginTop,
   antiOverlap
-}: DanmukuPosition): number {
+}: RootRect): number {
   const danmus = emits
     .filter((item) => item.mode === target.mode && item.top <= clientHeight - marginBottom)
     .sort((prev, next) => prev.top - next.top)
@@ -45,7 +45,7 @@ export default function getDanmuTop({
     }
   }
 
-  const topMap: DanmukuPosition['emits'][] = []
+  const topMap: RootRect['emits'][] = []
   for (let index = 1; index < danmus.length - 1; index += 1) {
     const item = danmus[index]!
     if (topMap.length) {

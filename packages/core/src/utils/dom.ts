@@ -2,8 +2,8 @@ import hash from './hash'
 import { css as _css } from './css'
 
 export namespace $ {
-  export const create = <T = HTMLElement>(
-    t: string = 'div',
+  export const create = <K extends keyof HTMLElementTagNameMap>(
+    t: K | `${K}.${string}`,
     attrs: Record<string, string | boolean | number | undefined> = {},
     tpl: string = ''
   ) => {
@@ -24,12 +24,7 @@ export namespace $ {
         }
       }
     })
-    return dom as unknown as T
-  }
-
-  export const style = (elm: HTMLElement, name: keyof CSSStyleDeclaration, value: string) => {
-    const style = elm.style
-    style.setProperty(name as string, value)
+    return dom as unknown as HTMLElementTagNameMap[K]
   }
 
   export const render = (elm: HTMLElement | string, container: HTMLElement) => {

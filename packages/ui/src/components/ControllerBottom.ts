@@ -2,6 +2,7 @@ import { $ } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
 import { formatTime, isMobile, screenShot, siblings, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
+import renderSetting from './Setting'
 
 import type { Player, PlayerEvent } from '@oplayer/core'
 import type { SnowConfig, Subtitle } from '../types'
@@ -16,8 +17,16 @@ import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
 import subtitleSvg from '../icons/subtitle.svg?raw'
 import webExpandSvg from '../icons/web-fullscreen.svg?raw'
+import settingsSvg from '../icons/settings.svg?raw'
 
-import { controllerBottom, dropdown, dropitem, expand, time } from './ControllerBottom.style'
+import {
+  controllerBottom,
+  dropdown,
+  dropdownHoverable,
+  dropitem,
+  expand,
+  time
+} from './ControllerBottom.style'
 
 const subtitleListHTML = (subtitle: Subtitle[]) =>
   subtitle
@@ -56,7 +65,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         </div>
 
         <div>
-          <div class=${dropdown}>
+          <div class=${dropdownHoverable}>
             <button class=${icon} type="button">
               ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
             </button>
@@ -80,7 +89,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
          ${
            config.screenshot
              ? `<button
-                  aria-label="screenshot"
+                  aria-label="Screenshot"
                   class="${icon}"
                   type="button"
                 >
@@ -91,9 +100,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           ${
             config.subtitle?.length
-              ? `<div class=${dropdown}>
+              ? `<div class=${dropdownHoverable}>
                   <button
-                    aria-label="subtitle"
+                    aria-label="Subtitle"
                     data-value="${true}"
                     class="${icon}"
                     type="button"
@@ -107,10 +116,17 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
               : ''
           }
 
-          <div class=${dropdown}>
+          <div class=${dropdownHoverable}>
             <button aria-label="Volume" class=${icon} type="button">
               ${volumeSvg}
               ${volumeOffSvg}
+            </button>
+            <div class=${expand}></div>
+          </div>
+
+          <div class=${dropdown}>
+            <button aria-label="Setting" class=${icon} type="button">
+              ${settingsSvg}
             </button>
             <div class=${expand}></div>
           </div>
@@ -129,7 +145,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           ${
             config.fullscreen
-              ? `<div class=${dropdown}>
+              ? `<div class=${dropdownHoverable}>
                   <button
                       aria-label="Fullscreen"
                       class="${icon}"
@@ -167,6 +183,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
+  const $setting = $dom.querySelector('button[aria-label="Setting"]')!
+  renderSetting(player, $setting!.nextElementSibling! as HTMLDivElement)
 
   const switcher = (el: HTMLCollection, key: 0 | 1) => {
     el[key]!.removeAttribute('style')
@@ -238,12 +256,11 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       case 'WebFullscreen':
         player.emit('webfullscreen')
         toggleClass(player.$root, webFullScreen)
-        toggleClass(document.body, webFullScreen)
         break
-      case 'screenshot':
+      case 'Screenshot':
         screenShot(player)
         break
-      case 'subtitle':
+      case 'Subtitle':
         {
           const state = target.getAttribute('data-value')!
 
@@ -259,6 +276,10 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
           }
         }
         break
+      case 'Setting': {
+        player.emit('ui/setting:toggle', e)
+        break
+      }
       default:
         break
     }

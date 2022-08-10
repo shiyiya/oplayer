@@ -1,7 +1,11 @@
 export type DanmukuItem = {
   text: string
   time: number
-  mode?: number
+  /**
+   * 0 scroll
+   * 1 static
+   */
+  mode: number
   fontSize: number
   color?: string
   timestamp: number
@@ -18,23 +22,25 @@ export type QueueItem = DanmukuItem & {
   lastTime: number
 }
 
-export type DanmukuPosition = {
+export type ActiveDanmukuRect = {
+  top: number
+  left: number
+  right: number
+  height: number
+  width: number
+  speed: number
+  distance: number
+  time?: number
+  mode?: number
+}
+
+export type RootRect = {
   target: {
     mode: number
     height: number
     speed: number
   }
-  emits: {
-    top: number
-    left: number
-    right: number
-    height: number
-    width: number
-    speed: number
-    distance: number
-    time?: number
-    mode?: number
-  }[]
+  emits: ActiveDanmukuRect[]
   clientWidth: number
   clientHeight: number
   marginBottom: number
@@ -44,18 +50,20 @@ export type DanmukuPosition = {
 
 export type Options = {
   danmuku: string | Function | DanmukuItem[]
-  speed: number // 持续时间 秒，[1 ~ 10]
-  opacity: number // 透明度 [0 ~ 1]
-  fontSize?: number // 字体大小
-  color: string // 默认字体颜色
-  /**
-   * 0 scroll
-   * 1 static
-   */
-  mode: 0 | 1
-  margin: [number, number] // 上下边距，
-  antiOverlap: boolean // 是否防重叠
-  useWorker: boolean // 是否使用 web worker
-  synchronousPlayback: false // 是否同步到播放速度
-  filter: (danmuku: DanmukuItem) => boolean // 过滤
+  speed?: number // 持续时间 秒，[1 ~ 10]
+  antiOverlap?: boolean // 是否防重叠
+  useWorker?: boolean
+  synchronousPlayback?: false // 是否同步到播放速度
+  opacity?: number
+  fontSize?: number
+  color?: string
+  margin?: [number, number]
+  filter?: (danmuku: DanmukuItem) => boolean
+}
+
+export type _Options = Omit<Required<Options>, 'opacity' | 'fontSize' | 'color' | 'filter'> & {
+  opacity?: number
+  fontSize?: number
+  color?: string
+  filter?: (danmuku: DanmukuItem) => boolean
 }

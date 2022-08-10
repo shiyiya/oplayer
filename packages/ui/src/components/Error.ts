@@ -19,7 +19,8 @@ const render = (player: Player, el: HTMLElement) => {
       z-index: 99;
       justify-content: center;
       align-items: center;
-      `}`
+      `}`,
+    { 'aria-label': 'Errror Overlay' }
   )
 
   player.on(['error', 'plugin:error'], ({ payload }: PlayerEvent) => {

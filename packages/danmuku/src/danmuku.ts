@@ -2,8 +2,8 @@ import { bilibiliDanmuParseFromUrl } from './bilibili-parse'
 import getDanmuTop from './top'
 
 import Player, { $ } from '@oplayer/core'
-import type { DanmukuItem, Options, QueueItem } from './types'
 import DanmukuWorker from './danmuku.worker?worker&inline'
+import type { ActiveDanmukuRect, DanmukuItem, Options, QueueItem, _Options } from './types'
 
 const danmukuItemCls = $.css`
   position: absolute;
@@ -18,7 +18,7 @@ const danmukuItemCls = $.css`
 export default class Danmuku {
   $player: HTMLDivElement
   $danmuku: HTMLDivElement
-  options: Options
+  options: _Options
 
   isStop: boolean = false
   isHide: boolean = false
@@ -37,7 +37,7 @@ export default class Danmuku {
         speed: 5,
         color: '#fff',
         mode: 0,
-        margin: [2, 0],
+        margin: [2, 2],
         antiOverlap: true,
         useWorker: true,
         synchronousPlayback: true
@@ -89,7 +89,6 @@ export default class Danmuku {
         if (this.options?.filter && this.options.filter(danmuku)) return
 
         this.queue.push({
-          mode: this.options.mode,
           color: this.options.color,
           status: 'wait',
           $ref: null,
@@ -105,24 +104,6 @@ export default class Danmuku {
     this.continue()
     this.update()
     this.player.emit('danmuku:start')
-  }
-
-  continue() {
-    const { clientWidth } = this.$player
-    this.mapping('stop', (danmu) => {
-      danmu.status = 'emit'
-      danmu.lastTime = Date.now()
-      switch (danmu.mode) {
-        case 0: {
-          const translateX = clientWidth + danmu.$ref!.clientWidth
-          danmu.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
-          danmu.$ref!.style.transition = `transform ${danmu.restTime}s linear 0s`
-          break
-        }
-        default:
-          break
-      }
-    })
   }
 
   update() {
@@ -211,6 +192,41 @@ export default class Danmuku {
     })
   }
 
+  continue() {
+    const { clientWidth } = this.$player
+    this.mapping('stop', (danmu) => {
+      danmu.status = 'emit'
+      danmu.lastTime = Date.now()
+      switch (danmu.mode) {
+        case 0: {
+          const translateX = clientWidth + danmu.$ref!.clientWidth
+          danmu.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
+          danmu.$ref!.style.transition = `transform ${danmu.restTime}s linear 0s`
+          break
+        }
+        default:
+          break
+      }
+    })
+  }
+
+  suspend() {
+    const { clientWidth } = this.$player
+    this.mapping('emit', (danmu) => {
+      danmu.status = 'stop'
+      switch (danmu.mode) {
+        case 0: {
+          const translateX = clientWidth - (this.getLeft(danmu.$ref!) - this.getLeft(this.$player))
+          danmu.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
+          danmu.$ref!.style.transition = 'transform 0s linear 0s'
+          break
+        }
+        default:
+          break
+      }
+    })
+  }
+
   mapping(status: string, callback: (d: QueueItem) => void) {
     this.queue.forEach((danmu) => danmu.status === status && callback(danmu))
   }
@@ -220,10 +236,11 @@ export default class Danmuku {
   }
 
   createItem({ text, cssText }: { text: string; cssText: string }): HTMLDivElement {
-    const cache = this.$refs.pop()
-    if (cache) return cache
+    const $cache = this.$refs.pop()
+    if ($cache) return $cache
 
-    const $ref = $.create(`div.${danmukuItemCls}`)
+    const $ref = document.createElement('div')
+    $ref.className = danmukuItemCls
     $ref.innerText = text
     $ref.style.cssText = cssText
     return $ref as HTMLDivElement
@@ -242,17 +259,7 @@ export default class Danmuku {
   }
 
   getActiveDanmukusBoundingClientRect() {
-    const result: {
-      top: number
-      left: number
-      height: number
-      width: number
-      right: number
-      speed: number
-      distance: number
-      time: number
-      mode: number
-    }[] = []
+    const result: ActiveDanmukuRect[] = []
     const { clientWidth } = this.$player
     const clientLeft = this.getLeft(this.$player)
 
@@ -274,7 +281,7 @@ export default class Danmuku {
         speed,
         distance,
         time: danmu.restTime,
-        mode: danmu.mode!
+        mode: danmu.mode
       })
     })
 
@@ -305,23 +312,6 @@ export default class Danmuku {
       this.$refs.push(danmu.$ref)
       danmu.$ref = null
     }
-  }
-
-  suspend() {
-    const { clientWidth } = this.$player
-    this.mapping('emit', (danmu) => {
-      danmu.status = 'stop'
-      switch (danmu.mode) {
-        case 0: {
-          const translateX = clientWidth - (this.getLeft(danmu.$ref!) - this.getLeft(this.$player))
-          danmu.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
-          danmu.$ref!.style.transition = 'transform 0s linear 0s'
-          break
-        }
-        default:
-          break
-      }
-    })
   }
 
   reset() {
@@ -362,7 +352,7 @@ export default class Danmuku {
 
   destroy() {
     this.stop()
-    if (this.worker && this.worker.terminate) this.worker.terminate()
+    this.worker?.terminate?.()
     this.player.emit('danmuku:destroy')
   }
 }

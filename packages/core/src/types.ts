@@ -28,9 +28,9 @@ export type PlayerPlugin = {
 
 export type PlayerEventName = typeof EVENTS[number] | typeof EVENTS[number][] | string | string[]
 
-export type PlayerEvent = {
+export type PlayerEvent<T = any> = {
   type: PlayerEventName
-  payload: any
+  payload: T
   _raw?: any
 }
 
