@@ -332,7 +332,7 @@ export default class Danmuku {
     this.isStop = true
     this.suspend()
     window.cancelAnimationFrame(this.timer!)
-    this.player.emit('danmuku')
+    this.player.emit('danmuku:stop')
   }
 
   show() {
@@ -353,6 +353,7 @@ export default class Danmuku {
   destroy() {
     this.stop()
     this.worker?.terminate?.()
+    this.$danmuku.remove()
     this.player.emit('danmuku:destroy')
   }
 }

@@ -62,6 +62,7 @@ const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
   })
 
   player.on('videosourcechange', () => {
+    videosourcechanged = true
     player.emit('subtitleconfigchange')
     // TODO: 更新设置内字幕选项
   })
@@ -93,7 +94,10 @@ const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
     })
   }
 
+  let videosourcechanged = false
+
   function update() {
+    if (videosourcechanged) return
     $dom.innerHTML = ''
 
     const activeCues = player.$video.textTracks[0]?.activeCues?.[0]

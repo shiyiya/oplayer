@@ -7,7 +7,7 @@ export * from './types'
 export default (option: Options): PlayerPlugin => ({
   name: 'oplayer-plugin-danmuku',
   apply: (player: Player) => {
-    const danmuku = new Danmuku(player, option)
+    let danmuku: Danmuku | null = new Danmuku(player, option)
 
     player.on('ui/setting:loaded', function () {
       player.emit('addsetting', {
@@ -16,9 +16,9 @@ export default (option: Options): PlayerPlugin => ({
         default: true,
         onChange: (flag: boolean) => {
           if (flag) {
-            danmuku.show()
+            danmuku!.show()
           } else {
-            danmuku.hide()
+            danmuku!.hide()
           }
         }
         //TODO:
@@ -40,7 +40,8 @@ export default (option: Options): PlayerPlugin => ({
     })
 
     player.on('videosourcechange', function () {
-      danmuku.destroy()
+      danmuku?.destroy()
+      danmuku = null
       // TODO: 更新设置内字幕选项
     })
   }

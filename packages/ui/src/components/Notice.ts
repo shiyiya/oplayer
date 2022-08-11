@@ -30,7 +30,7 @@ const render = (player: Player, el: HTMLElement) => {
     clearTimeout(timer)
     timer = setTimeout(() => {
       removeClass($dom, noticeShowCls)
-    }, 1500)
+    }, 2000)
   }
 
   function toggle(fn: Function) {
