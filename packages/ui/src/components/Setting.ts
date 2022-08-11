@@ -57,25 +57,28 @@ function createItem(options: Setting, key?: string) {
 function createPanel(
   $panels: Panel[],
   options: Setting[],
-  { onChange, isPatch, key }: { onChange?: Function; isPatch?: boolean; key?: string } = {}
+  {
+    onChange,
+    onHide,
+    isPatch,
+    key
+  }: { onHide?: Function; onChange?: Function; isPatch?: boolean; key?: string } = {}
 ) {
   if (!options?.length) return
 
-  const $panel: Panel =
-    isPatch && $panels[0]
-      ? $panels[0]
-      : {
-          $ref: $.create(
-            `div.${onChange ? subPanelCls : panelCls}`,
+  let $panel: Panel
 
-            {
-              'data-key': key || 'root'
-            }
-          ),
-          key: key || 'root'
-        }
-
-  if (!(isPatch && $panels[0])) $panels.push($panel)
+  if (isPatch && $panels[0]) {
+    $panel = $panels[0]
+  } else {
+    $panel = {
+      $ref: $.create(`div.${onChange ? subPanelCls : panelCls}`, {
+        'data-key': key || 'root'
+      }),
+      key: key || 'root'
+    }
+    $panels.push($panel)
+  }
 
   for (let index = 0; index < options.length; index++) {
     const item = options[index]!
@@ -85,6 +88,7 @@ function createPanel(
     $item.addEventListener('click', function () {
       switch (item.type) {
         case 'switcher':
+          // 只有第一个 panel 没有onChange
           if (onChange) {
             this.setAttribute('data-selected', 'true')
             this.children[0]!.setAttribute('data-selected', 'true')
@@ -100,6 +104,7 @@ function createPanel(
             this.children[0]!.setAttribute('data-selected', `${!Boolean(value)}`)
             item.onChange?.(!Boolean(value))
             $panel.$ref.classList.toggle(activeCls)
+            onHide!()
           }
           break
         case 'selector':
@@ -151,12 +156,20 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     }
   ]
 
-  createPanel($panels, defaultSetting.concat(options))
+  const hide = () => {
+    $panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+    player.$root.classList.remove(settingShown)
+  }
+
+  createPanel($panels, defaultSetting.concat(options), { onHide: hide })
   $panels.forEach(($p) => $.render($p.$ref, $dom))
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     const oldLen = $panels.length
-    createPanel($panels, Array.isArray(payload) ? payload : [payload], { isPatch: true })
+    createPanel($panels, Array.isArray(payload) ? payload : [payload], {
+      isPatch: true,
+      onHide: hide
+    })
     const $needRenderpanels = oldLen > 0 ? $panels.slice(oldLen - 1) : $panels
     $needRenderpanels.forEach(($p) => ($.render($p.$ref, $dom), $panels.push($p)))
   })
@@ -174,8 +187,11 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   player.on('ui/setting:toggle', ({ payload }: PlayerEvent) => {
     $tigger = payload.target
-    $panels[0]!.$ref.classList.toggle(activeCls)
-    player.$root.classList.toggle(settingShown)
+    if (player.$root.classList.toggle(settingShown)) {
+      $panels[0]!.$ref.classList.add(activeCls)
+    } else {
+      hide()
+    }
   })
 
   function outClicklistener(e: Event) {
@@ -184,8 +200,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       <HTMLElement>e.target != $dom &&
       !$dom.contains(<HTMLElement>e.target)
     ) {
-      $panels[0]!.$ref.classList.remove(activeCls)
-      player.$root.classList.remove(settingShown)
+      hide()
     }
   }
 
