@@ -9,6 +9,7 @@ import renderError from './components/Error'
 import renderLoding from './components/Loading'
 import renderMask from './components/Mask'
 import renderNotice from './components/Notice'
+import renderSetting from './components/Setting'
 
 import initListener from './listeners/init'
 import { isMobile } from './utils'
@@ -25,6 +26,7 @@ const apply = (player: Player, config: SnowConfig) => {
   renderMask(player, $area)
   const { show, hide } = renderButton(player, $area)
   renderControllerBar(player, $area, config, show, hide)
+  renderSetting(player, $area)
   renderNotice(player, $area)
 
   if (config.subtitle) {

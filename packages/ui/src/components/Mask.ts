@@ -1,7 +1,8 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
-import { isMobile } from '../utils'
+import { settingShown } from '../style'
+import { hasClass, isMobile } from '../utils'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -13,7 +14,7 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   $dom.addEventListener('click', () => {
-    if (!initListener.isInitialized()) return
+    if (!initListener.isInitialized() || hasClass(player.$root, settingShown)) return
     if (isMobile) {
       player.emit('ui/controller:toggle')
     } else {

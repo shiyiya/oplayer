@@ -83,18 +83,14 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
              : ''
          }
 
-          ${
-            config.subtitle?.length
-              ? `<button
-                  aria-label="Subtitle"
-                  data-value="${true}"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${subtitleSvg}
-                </button>`
-              : ''
-          }
+          <button
+            aria-label="Subtitle"
+            data-value="${config.subtitle?.length}"
+            class="${icon}"
+            type="button"
+          >
+            ${subtitleSvg}
+          </button>
 
           <div class=${dropdownHoverable}>
             <button aria-label="Volume" class=${icon} type="button">
@@ -163,8 +159,6 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
-  const $setting = $dom.querySelector('button[aria-label="Setting"]')!
-  renderSetting(player, $setting!.nextElementSibling! as HTMLDivElement)
 
   const switcher = (el: HTMLCollection, key: 0 | 1) => {
     el[key]!.removeAttribute('style')
@@ -232,9 +226,14 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         break
       case 'Subtitle':
         {
-          const state = target.getAttribute('data-value')!
-          target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
-          player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
+          //TODO: 同步更改后的字幕 `subtitleconfigchange`
+          if (config.subtitle?.length) {
+            const state = target.getAttribute('data-value')!
+            target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
+            player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
+          } else {
+            player.emit('notice', { text: 'Subtitles/closed captions unavailable' })
+          }
         }
         break
       case 'Setting': {
