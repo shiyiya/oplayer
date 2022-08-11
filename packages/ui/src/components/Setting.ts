@@ -26,7 +26,6 @@ export type Setting = {
 }
 
 export type Panel = {
-  isRoot: boolean
   $ref: HTMLElement
   key: string
 }
@@ -73,12 +72,10 @@ function createPanel(
               'data-key': key || 'root'
             }
           ),
-          isRoot: !!!onChange,
           key: key || 'root'
         }
-  if (!(isPatch && $panels[0])) $panels.push($panel)
 
-  console.log(!(isPatch && $panels[0]), $panel)
+  if (!(isPatch && $panels[0])) $panels.push($panel)
 
   for (let index = 0; index < options.length; index++) {
     const item = options[index]!
@@ -141,15 +138,14 @@ function createPanel(
 }
 
 export default function (player: Player, $el: HTMLElement, options: Setting[] = []) {
-  const $dom = $.create(`div.${setting}`),
-    $panels: Panel[] = []
+  const $dom = $.create(`div.${setting}`)
+  let $panels: Panel[] = []
   let $tigger: HTMLElement | null = null
 
   const defaultSetting: Setting[] = [
     {
       name: 'Loop',
       type: 'switcher',
-      key: 'subtitle',
       default: player.isLoop,
       onChange: (value: boolean) => player.setLoop(value)
     }
@@ -167,11 +163,12 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
     $panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-    $panels.slice(1).forEach((p, i) => {
+    $panels = $panels.filter((p) => {
       if (p.key === payload) {
         p.$ref.remove()
-        $panels.splice(i, 0)
+        return false
       }
+      return true
     })
   })
 
