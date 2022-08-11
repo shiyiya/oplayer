@@ -181,7 +181,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   !isMobile && player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
   player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
-
+  player.on('webfullscreen', () => toggleClass(player.$root, webFullScreen))
   player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
@@ -218,7 +218,6 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         return player.toggleFullScreen()
       case 'WebFullscreen':
         player.emit('webfullscreen')
-        toggleClass(player.$root, webFullScreen)
         break
       case 'Screenshot':
         screenShot(player)

@@ -25,10 +25,11 @@ export const root = (theme: SnowConfig['theme']) => {
 
 export const webFullScreen = $.css`
     z-index: 9999 !important;
-    width: 100% !important;
-    height: 100% !important;
     position: fixed !important;
-    inset: 0; !important`
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;`
 
 export const icon = $.css({
   background: 'none',
