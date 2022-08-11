@@ -38,5 +38,10 @@ export default (option: Options): PlayerPlugin => ({
         // ]
       })
     })
+
+    player.on('videosourcechange', function () {
+      danmuku.destroy()
+      // TODO: 更新设置内字幕选项
+    })
   }
 })

@@ -1,6 +1,7 @@
-import { $, PlayerEvent } from '@oplayer/core'
 import type { Player } from '@oplayer/core'
+import { $, PlayerEvent } from '@oplayer/core'
 import { SnowConfig, Subtitle } from '../types'
+import type { Setting } from './Setting'
 
 function findDefault(o: any) {
   return o?.find((st: any) => st.default) || o?.[0]
@@ -61,12 +62,13 @@ const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
   })
 
   player.on('videosourcechange', () => {
-    player.emit('subtitleconfigchange', undefined)
+    player.emit('subtitleconfigchange')
+    // TODO: 更新设置内字幕选项
   })
 
   player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
     if (payload?.length) {
-      initSubtitle(findDefault(payload))
+      // TODO: 更新设置内字幕选项
     }
   })
 
@@ -75,7 +77,21 @@ const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
     $track.removeEventListener('cuechange', update)
   })
 
-  initSubtitle(defaultSubtitle)
+  if (subtitle?.length) {
+    player.emit('addsetting', <Setting>{
+      name: 'Subtitle',
+      type: 'selector',
+      onChange({ value }: { value: Subtitle }) {
+        initSubtitle(value)
+      },
+      children: subtitle?.map((s) => ({
+        type: 'switcher',
+        name: s.name,
+        default: s.default || false,
+        value: s
+      }))
+    })
+  }
 
   function update() {
     $dom.innerHTML = ''

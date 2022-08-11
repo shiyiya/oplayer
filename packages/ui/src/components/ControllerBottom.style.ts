@@ -14,7 +14,7 @@ export const controllerBottom = $.css({
   'text-align': 'center',
 
   [`& .${icon}[data-value='false']`]: {
-    opacity: 0.6
+    opacity: 0.5
   },
 
   [`& .${icon}`]: {

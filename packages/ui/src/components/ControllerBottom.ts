@@ -4,8 +4,8 @@ import { formatTime, isMobile, screenShot, siblings, toggleClass } from '../util
 import renderVolumeBar from './VolumeBar'
 import renderSetting from './Setting'
 
-import type { Player, PlayerEvent } from '@oplayer/core'
-import type { SnowConfig, Subtitle } from '../types'
+import type { Player } from '@oplayer/core'
+import type { SnowConfig } from '../types'
 
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
@@ -27,21 +27,6 @@ import {
   expand,
   time
 } from './ControllerBottom.style'
-
-const subtitleListHTML = (subtitle: Subtitle[]) =>
-  subtitle
-    .map(
-      (s, i) => `
-            <span
-              class=${dropitem}
-              aria-label="Subtitle"
-              data-value=${i}
-              data-selected=${s.default ? 'true' : 'false'}
-            >
-              ${s.name || 'default'}
-            </span>`
-    )
-    .join('')
 
 const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
   const $dom = $.create(
@@ -100,19 +85,14 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           ${
             config.subtitle?.length
-              ? `<div class=${dropdownHoverable}>
-                  <button
-                    aria-label="Subtitle"
-                    data-value="${true}"
-                    class="${icon}"
-                    type="button"
-                  >
-                    ${subtitleSvg}
-                  </button>
-                  <div class=${expand}>
-                    ${subtitleListHTML(config.subtitle)}
-                  </div>
-                </div>`
+              ? `<button
+                  aria-label="Subtitle"
+                  data-value="${true}"
+                  class="${icon}"
+                  type="button"
+                >
+                  ${subtitleSvg}
+                </button>`
               : ''
           }
 
@@ -213,19 +193,9 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
 
-  player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
-    const $subtitle = $dom.querySelector<HTMLButtonElement>('button[aria-label="subtitle"]')!
-    if (payload?.length) {
-      $subtitle.parentElement!.style.display = 'block'
-      $subtitle.nextElementSibling!.innerHTML = subtitleListHTML(payload)
-    } else {
-      $subtitle.parentElement!.style.display = 'none'
-    }
-  })
-
   let preVolumn = player.volume
 
-  $dom.addEventListener('click', (e) => {
+  $dom.addEventListener('click', (e: Event) => {
     const target = e.target! as HTMLDivElement
     const label = target.getAttribute('aria-label')
 
@@ -263,16 +233,8 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       case 'Subtitle':
         {
           const state = target.getAttribute('data-value')!
-          if (isNaN(+state)) {
-            target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
-            player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
-          } else {
-            $dom.querySelector('button[aria-label=Subtitle]')!.setAttribute('data-value', 'true')
-            siblings(target, (t) => t.setAttribute('data-selected', 'false'))
-            player.emit('subtitlechange', config.subtitle![+target.getAttribute('data-value')!])
-            target.setAttribute('data-selected', 'true')
-            player.emit('showsubtitle')
-          }
+          target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
+          player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
         }
         break
       case 'Setting': {
