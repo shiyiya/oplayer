@@ -2,6 +2,8 @@ import { $ } from '@oplayer/core'
 import type { SnowConfig } from './types'
 import { hexToRgb } from './utils'
 
+export const settingShown = $.css('/* settingShown */')
+
 export const root = (theme: SnowConfig['theme']) => {
   const rbg = hexToRgb(theme!.primaryColor)!
 

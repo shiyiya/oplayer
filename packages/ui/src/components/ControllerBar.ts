@@ -1,5 +1,6 @@
 import Player, { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
+import { settingShown } from '../style'
 import type { SnowConfig } from '../types'
 import { addClass, debounce, hasClass, isMobile, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
@@ -46,7 +47,8 @@ const render = (
     if (
       !initListener.isInitialized() ||
       (!player.isPlaying && !isMobile) ||
-      hasClass($dom, hideCls)
+      hasClass($dom, hideCls) ||
+      hasClass(player.$root, settingShown)
     ) {
       return
     }
@@ -72,11 +74,11 @@ const render = (
   player.on(['pause', 'videosourcechange'], showCtrl)
 
   if (!isMobile) {
-    player.on('mousemove', () => {
+    player.$root.addEventListener('mousemove', () => {
       showCtrl()
       debounceHideCtrl()
     })
-    player.on('mouseleave', hideCtrl)
+    player.$root.addEventListener('mouseleave', hideCtrl)
   } else {
     player.on('ui/controller:toggle', () => {
       if (hasClass($dom, hideCls)) {

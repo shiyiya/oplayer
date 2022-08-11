@@ -1,4 +1,5 @@
 import Player, { $, PlayerEvent } from '@oplayer/core'
+import { settingShown } from '../style'
 import { siblings } from '../utils'
 import {
   activeCls,
@@ -139,6 +140,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   player.on('ui/setting:toggle', ({ payload }: PlayerEvent) => {
     $tigger = payload.target
     $panels[0]!.classList.toggle(activeCls)
+    player.$root.classList.toggle(settingShown)
   })
 
   function outClicklistener(e: Event) {
