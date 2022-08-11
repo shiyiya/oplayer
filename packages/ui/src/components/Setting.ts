@@ -38,8 +38,8 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     switch (options.type) {
       case 'switcher':
         $item.innerHTML = switcher(options.name)
-        $item.setAttribute('data-value', options.default || false)
-        $item.children[0]!.setAttribute('data-value', options.default || false)
+        $item.setAttribute('data-selected', options.default || false)
+        $item.children[0]!.setAttribute('data-selected', options.default || false)
         break
       default:
         $item.innerHTML = nexter(options.name)
@@ -69,18 +69,18 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
         switch (item.type) {
           case 'switcher':
             if (onChange) {
-              this.setAttribute('data-value', 'true')
-              this.children[0]!.setAttribute('data-value', 'true')
+              this.setAttribute('data-selected', 'true')
+              this.children[0]!.setAttribute('data-selected', 'true')
               siblings(this, (el) => {
-                el.setAttribute('data-value', 'false')
-                el.children[0]!.setAttribute('data-value', 'false')
+                el.setAttribute('data-selected', 'false')
+                el.children[0]!.setAttribute('data-selected', 'false')
               })
               $panel.classList.remove(activeCls)
               onChange!(item, index)
             } else {
-              const value = this.getAttribute('data-value') == 'true'
-              this.setAttribute('data-value', `${!Boolean(value)}`)
-              this.children[0]!.setAttribute('data-value', `${!Boolean(value)}`)
+              const value = this.getAttribute('data-selected') == 'true'
+              this.setAttribute('data-selected', `${!Boolean(value)}`)
+              this.children[0]!.setAttribute('data-selected', `${!Boolean(value)}`)
               item.onChange?.(!Boolean(value))
               $panel.classList.toggle(activeCls)
             }
@@ -136,20 +136,23 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     })
   })
 
-  player.on('ui/setting:toggle', ({ payload }) => {
+  player.on('ui/setting:toggle', ({ payload }: PlayerEvent) => {
     $tigger = payload.target
     $panels[0]!.classList.toggle(activeCls)
   })
 
-  player.on('click', ({ payload }) => {
+  function outClicklistener(e: Event) {
     if (
-      $tigger != payload.target &&
-      <HTMLElement>payload.target != $dom &&
-      !$dom.contains(<HTMLElement>payload.target)
+      $tigger != e.target &&
+      <HTMLElement>e.target != $dom &&
+      !$dom.contains(<HTMLElement>e.target)
     ) {
       $panels[0]!.classList.remove(activeCls)
     }
-  })
+  }
+
+  document.addEventListener('click', outClicklistener)
+  player.on('destroy', () => document.removeEventListener('click', outClicklistener))
 
   player.emit('ui/setting:loaded')
 

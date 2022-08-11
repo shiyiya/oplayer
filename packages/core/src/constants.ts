@@ -26,21 +26,21 @@ export const VIDEO_EVENTS = [
 ] as const
 
 export const PLAYER_EVENTS = [
-  'focus',
-  'keydown',
-  'keyup',
-  'mousedown',
-  'mouseup',
-  'mousemove',
-  'mouseenter',
-  'mouseleave',
-  'touchstart',
-  'touchend',
-  'touchmove',
-  'touchcancel',
+  // 'focus',
+  // 'keydown',
+  // 'keyup',
+  // 'mousedown',
+  // 'mouseup',
+  // 'mousemove',
+  // 'mouseenter',
+  // 'mouseleave',
+  // 'touchstart',
+  // 'touchend',
+  // 'touchmove',
+  // 'touchcancel',
+  // 'click',
+  // 'dblclick'
   'contextmenu',
-  'click',
-  'dblclick',
   'fullscreenchange',
   'fullscreenerror'
 ] as const

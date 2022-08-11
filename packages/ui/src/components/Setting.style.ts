@@ -46,7 +46,7 @@ export const settingItemCls = $.css({
   display: 'flex',
   overflow: 'hidden',
 
-  [`&[data-value='true']`]: {
+  [`&[data-selected='true']`]: {
     'background-color': '#ffffff1a',
     color: '#fff'
   }
@@ -66,7 +66,7 @@ export const switcherCls = $.css({
     'margin-right': '6px'
   },
 
-  [`&[data-value=true] svg`]: {
+  [`&[data-selected=true] svg`]: {
     display: 'block'
   }
 })

@@ -34,7 +34,7 @@ const subtitleListHTML = (subtitle: Subtitle[]) =>
       (s, i) => `
             <span
               class=${dropitem}
-              aria-label="subtitle"
+              aria-label="Subtitle"
               data-value=${i}
               data-selected=${s.default ? 'true' : 'false'}
             >
@@ -263,12 +263,11 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
       case 'Subtitle':
         {
           const state = target.getAttribute('data-value')!
-
           if (isNaN(+state)) {
             target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
             player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
           } else {
-            $dom.querySelector('button[aria-label=subtitle]')!.setAttribute('data-value', 'true')
+            $dom.querySelector('button[aria-label=Subtitle]')!.setAttribute('data-value', 'true')
             siblings(target, (t) => t.setAttribute('data-selected', 'false'))
             player.emit('subtitlechange', config.subtitle![+target.getAttribute('data-value')!])
             target.setAttribute('data-selected', 'true')
