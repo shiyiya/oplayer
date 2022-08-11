@@ -84,7 +84,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
 
           <button
             aria-label="Subtitle"
-            data-value="${config.subtitle?.length}"
+            data-value="${config.subtitle?.length ? 'true' : 'false'}"
             class="${icon}"
             type="button"
           >
