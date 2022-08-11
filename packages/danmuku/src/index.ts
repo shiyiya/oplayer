@@ -9,40 +9,33 @@ export default (option: Options): PlayerPlugin => ({
   apply: (player: Player) => {
     let danmuku: Danmuku | null = new Danmuku(player, option)
 
-    player.on('ui/setting:loaded', function () {
+    const emitSetting = () => {
       player.emit('addsetting', {
         name: 'Danmuku',
         type: 'switcher',
         default: true,
+        key: 'danmuku',
         onChange: (flag: boolean) => {
           if (flag) {
-            danmuku!.show()
+            danmuku?.show()
           } else {
-            danmuku!.hide()
+            danmuku?.hide()
           }
         }
-        //TODO:
-        // children: [
-        //   {
-        //     type: 'toggle',
-        //     name: 'Display'
-        //   },
-        //   {
-        //     type: 'slider',
-        //     name: 'Size'
-        //   },
-        //   {
-        //     type: 'slider',
-        //     name: 'Opacity'
-        //   },
-        // ]
       })
+    }
+
+    player.on('ui/setting:loaded', emitSetting)
+    player.on('danmukusourcechange', ({ payload }) => {
+      player.emit('removesetting', 'danmuku')
+      emitSetting()
+      danmuku = new Danmuku(player, { ...option, danmuku: payload.danmuku })
     })
 
     player.on('videosourcechange', function () {
       danmuku?.destroy()
       danmuku = null
-      // TODO: 更新设置内字幕选项
+      player.emit('removesetting', 'danmuku')
     })
   }
 })

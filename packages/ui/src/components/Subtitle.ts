@@ -7,7 +7,7 @@ function findDefault(o: any) {
   return o?.find((st: any) => st.default) || o?.[0]
 }
 
-const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
+const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) => {
   const defaultSubtitle = findDefault(subtitle)
   if (!defaultSubtitle || !window.TextDecoder) return
 
@@ -62,42 +62,44 @@ const render = (player: Player, el: HTMLElement, { subtitle }: SnowConfig) => {
   })
 
   player.on('videosourcechange', () => {
-    videosourcechanged = true
-    player.emit('subtitleconfigchange')
-    // TODO: 更新设置内字幕选项
+    player.emit('removesetting', 'subtitle')
+    $track.removeEventListener('cuechange', update)
+    if ($track.src) URL.revokeObjectURL($track.src)
+    $track.src = ''
   })
 
   player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
-    if (payload?.length) {
-      // TODO: 更新设置内字幕选项
-    }
+    player.emit('removesetting', 'subtitle')
+    initSetting(payload)
   })
 
   player.on('destroy', () => {
     if ($track.src) URL.revokeObjectURL($track.src)
     $track.removeEventListener('cuechange', update)
+    $track.remove()
   })
 
-  if (subtitle?.length) {
-    player.emit('addsetting', <Setting>{
-      name: 'Subtitle',
-      type: 'selector',
-      onChange({ value }: { value: Subtitle }) {
-        initSubtitle(value)
-      },
-      children: subtitle?.map((s) => ({
-        type: 'switcher',
-        name: s.name,
-        default: s.default || false,
-        value: s
-      }))
-    })
+  initSetting(subtitle)
+  function initSetting(subtitle: Subtitle[]) {
+    if (subtitle.length) {
+      player.emit('addsetting', <Setting>{
+        name: 'Subtitle',
+        type: 'selector',
+        key: 'subtitle',
+        onChange({ value }: { value: Subtitle }) {
+          initSubtitle(value)
+        },
+        children: subtitle?.map((s) => ({
+          type: 'switcher',
+          name: s.name,
+          default: s.default || false,
+          value: s
+        }))
+      })
+    }
   }
 
-  let videosourcechanged = false
-
   function update() {
-    if (videosourcechanged) return
     $dom.innerHTML = ''
 
     const activeCues = player.$video.textTracks[0]?.activeCues?.[0]
