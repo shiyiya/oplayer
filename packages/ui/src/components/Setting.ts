@@ -125,6 +125,14 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   createPanel($panels, options)
   $panels.forEach(($p) => $.render($p, $dom))
 
+  let isShowing = false
+  const show = () => (
+    (isShowing = true),
+    $panels[0]!.classList.add(activeCls),
+    player.$root.classList.toggle(settingShown)
+  )
+  const hide = () => ((isShowing = false), $panels.forEach((p) => p.classList.remove(activeCls)))
+
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     const oldLen = $panels.length
     createPanel($panels, Array.isArray(payload) ? payload : [payload], { isPatch: true })
@@ -134,8 +142,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   player.on('ui/setting:toggle', ({ payload }: PlayerEvent) => {
     $tigger = payload.target
-    $panels[0]!.classList.toggle(activeCls)
-    player.$root.classList.toggle(settingShown)
+    isShowing ? hide() : show()
   })
 
   function outClicklistener(e: Event) {
@@ -144,8 +151,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       <HTMLElement>e.target != $dom &&
       !$dom.contains(<HTMLElement>e.target)
     ) {
-      $panels[0]!.classList.remove(activeCls)
-      player.$root.classList.remove(settingShown)
+      hide()
     }
   }
 
