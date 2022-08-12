@@ -2,7 +2,7 @@
 
 [Oh!](https://oplayer.vercel.app/) Another HTML5 video player.
 
-[Demo](https://oplayer.vercel.app/) ｜ [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html)
+[Demo](https://oplayer.vercel.app/) | [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
@@ -35,14 +35,9 @@ Player.make(document.body, {
       theme: { primaryColor: '#9370db' },
       subtitle: [
         {
-          text: 'EN',
+          text: 'English',
           type: 'vtt',
           default: true,
-          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
-        },
-        {
-          text: 'ZH',
-          type: 'vtt',
           url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
         }
       ]
@@ -51,12 +46,30 @@ Player.make(document.body, {
   .create()
 ```
 
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.umd.js"></script>
+
+<script>
+  OPlayer.make(document.body, {
+    source: {
+      src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      poster: 'https://media.w3.org/2010/05/sintel/poster.png'
+    }
+  })
+    .use([OUI(), OHls()])
+    .create()
+</script>
+```
+
 ## Official plugin
 
-- [@oplayer/react](./packages/react/)
 - [@oplayer/ui](./packages//ui/)
 - [@oplayer/hls](./packages/hls/)
 - [@oplayer/torrent](./packages/torrent/)
+- [@oplayer/danmuku](./packages/danmuku/)
+- [@oplayer/react](./packages/react/)
 
 ## Write a plugin
 
