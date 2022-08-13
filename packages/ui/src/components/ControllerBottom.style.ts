@@ -7,7 +7,7 @@ export const controllerBottom = $.css({
   'justify-content': 'space-between',
   'font-size': '14px',
   color: '#eee',
-  fill: 'rgb(255, 255, 255)',
+  fill: '#fff',
   height: '30px',
   padding: isMobile ? 0 : '5px 0px',
   'line-height': '22px',
@@ -42,7 +42,6 @@ export const controllerBottom = $.css({
 
 export const time = $.css`
   padding: ${isMobile ? 0 : '0px 0.5em'};
-  color: rgba(255, 255, 255, 0.9);
   font-variant-numeric: tabular-nums;
 `
 
@@ -55,7 +54,6 @@ export const expand = $.css(`
     border-radius: 4px;
     box-sizing: border-box;
     transform: translate(0%, -100%);
-    color: rgba(255, 255, 255, 0.8);
     font-size: 12px;
     transition: visibility 0s, opacity 0.1s linear;
 `)
@@ -89,6 +87,7 @@ export const dropitem = $.css({
   'text-align': 'center',
   'border-radius': '4px',
   'margin-bottom': '2px',
+  transition: 'color .2s',
 
   '&:nth-last-child(1)': {
     'margin-bottom': '0px'
@@ -103,6 +102,6 @@ export const dropitem = $.css({
   },
 
   '&[data-selected=true],&:hover': {
-    'background-color': '#ffffff1a'
+    'background-color': 'rgba(255, 255, 255, 0.1)'
   }
 })

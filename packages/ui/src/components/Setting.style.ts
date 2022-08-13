@@ -4,7 +4,6 @@ export const activeCls = $.css('display: block;')
 
 export const setting = $.css({
   'z-index': '99',
-
   height: 'auto',
   'max-height': '300px',
   'max-width': '200px',
@@ -17,7 +16,7 @@ export const setting = $.css({
   bottom: '40px',
   overflow: 'auto',
   'backdrop-filter': 'saturate(180%) blur(20px)',
-  'background-color': '#000000b3 !important',
+  'background-color': 'rgba(0, 0, 0, 0.7)',
 
   // panel
   '& > div': {
@@ -41,7 +40,7 @@ export const subPanelCls = $.css`
 export const settingItemCls = $.css({
   height: '40px',
   cursor: 'pointer',
-  color: '#fffc',
+  color: '#eee',
   'justify-content': 'space-between',
   'align-items': 'center',
   padding: '0 10px',
@@ -50,7 +49,7 @@ export const settingItemCls = $.css({
   overflow: 'hidden',
 
   [`&[data-selected='true']`]: {
-    'background-color': '#ffffff1a',
+    'background-color': 'rgba(255, 255, 255, 0.1)',
     color: '#fff'
   }
 })
