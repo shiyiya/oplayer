@@ -20,22 +20,13 @@ export function bilibiliDanmuParseFromXml(xmlString: string) {
     const p = match.groups?.['p']?.split(',')
     const text = match.groups?.['text']?.trim()
     if (p && p.length >= 8 && text) {
-      text
-        ?.trim()
-        .replaceAll('&quot;', '"')
-        .replaceAll('&apos;', "'")
-        .replaceAll('&lt;', '<')
-        .replaceAll('&gt;', '>')
-        .replaceAll('&amp;', '&')
-
       return initialValue.concat({
         text: text
-          .trim()
-          .replaceAll('&quot;', '"')
-          .replaceAll('&apos;', "'")
-          .replaceAll('&lt;', '<')
-          .replaceAll('&gt;', '>')
-          .replaceAll('&amp;', '&'),
+          .replace(/&quot;/g, '"')
+          .replace(/&apos;/g, "'")
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&amp;/g, '&'),
         time: Number(p[0]),
         mode: getMode(Number(p[1])),
         fontSize: Number(p[2]),

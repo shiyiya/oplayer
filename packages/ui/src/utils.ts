@@ -43,7 +43,7 @@ export const screenShot = (player: Player) => {
   if (resp instanceof Error) {
     player.emit('notice', { text: resp.message })
   } else {
-    download(resp, `${formatTime(player.currentTime).replaceAll(':', '-')}-OPlayer-ScreenShot.png`)
+    download(resp, `${formatTime(player.currentTime).replace(/:/g, '-')}-OPlayer-ScreenShot.png`)
   }
 }
 
