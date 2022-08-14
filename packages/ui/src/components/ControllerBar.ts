@@ -8,7 +8,8 @@ import renderProgress from './Progress'
 
 const mini = $.css({
   bottom: isMobile ? '-36px !important' : '-46px !important',
-  padding: '0 !important'
+  padding: '0 !important',
+  'pointer-events': 'none'
   // 'background-image': 'none !important' // TODO:
 })
 

@@ -9,7 +9,6 @@ export const played = $.css({
 })
 
 export const dot = $.css({
-  transition: 'transform 0.2s ease',
   width: '100%',
   'pointer-events': 'none',
   '&::before': {
@@ -79,7 +78,6 @@ export const progressInner = $.css({
     bottom: '0',
     height: '3px',
     'will-change': 'width',
-    transition: 'all 0.2s ease',
     'pointer-events': 'none'
   }
 })
