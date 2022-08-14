@@ -18,6 +18,6 @@
     "@oplayer/ui": "workspace:*",
     "@oplayer/danmuku": "workspace:*",
     "hls.js": "^1.2.0",
-    "lit": "^2.2.8"
+    "lit": "^2.3.0"
   }
 }
