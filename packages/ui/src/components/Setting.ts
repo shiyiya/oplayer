@@ -3,12 +3,15 @@ import { settingShown } from '../style'
 import { siblings } from '../utils'
 import {
   activeCls,
-  nexter,
+  nextIcon,
+  nextLabelText,
   panelCls,
   setting,
   settingItemCls,
+  settingItemLeft,
+  settingItemRight,
   subPanelCls,
-  switcher
+  yesIcon
 } from './Setting.style'
 
 export type Setting = {
@@ -19,6 +22,7 @@ export type Setting = {
    * swither  当前面板切换 true or false
    */
   type?: 'selector' | 'switcher'
+  icon?: string
   children?: Setting[]
   onChange?: Function
   default?: any
@@ -29,6 +33,28 @@ export type Panel = {
   $ref: HTMLElement
   key: string
 }
+
+export const switcher = (name: string, icon: string = '') => `
+    <div class="${settingItemLeft}">
+      ${icon}
+      <span>${name}</span>
+    </div>
+    <svg class=${yesIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24">
+      <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#fff"></path>
+    </svg>
+`
+export const nexter = (name: string, icon: string = '') => `
+    <div class="${settingItemLeft}">
+      ${icon}
+      <span>${name}</span>
+    </div>
+    <div class=${settingItemRight}>
+      <span role="label" class=${nextLabelText}></span>
+      <svg class=${nextIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+        <path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path>
+      </svg>
+    </div>
+`
 
 function createItem(options: Setting, key?: string) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
@@ -41,12 +67,12 @@ function createItem(options: Setting, key?: string) {
 
   switch (options.type) {
     case 'switcher':
-      $item.innerHTML = switcher(options.name)
+      $item.innerHTML = switcher(options.name, options.icon)
       $item.setAttribute('data-selected', options.default || false)
       $item.children[0]!.setAttribute('data-selected', options.default || false)
       break
     default:
-      $item.innerHTML = nexter(options.name)
+      $item.innerHTML = nexter(options.name, options.icon)
       res['$label'] = $item.querySelector('span[role="label"]')!
       break
   }
@@ -91,17 +117,14 @@ function createPanel(
           // 只有第一个 panel 没有onChange
           if (onChange) {
             this.setAttribute('data-selected', 'true')
-            this.children[0]!.setAttribute('data-selected', 'true')
             siblings(this, (el) => {
               el.setAttribute('data-selected', 'false')
-              el.children[0]!.setAttribute('data-selected', 'false')
             })
             $panel.$ref.classList.remove(activeCls)
             onChange(item, index)
           } else {
             const value = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!Boolean(value)}`)
-            this.children[0]!.setAttribute('data-selected', `${!Boolean(value)}`)
             item.onChange?.(!Boolean(value))
             $panel.$ref.classList.toggle(activeCls)
             onHide!()

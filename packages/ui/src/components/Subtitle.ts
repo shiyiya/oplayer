@@ -1,5 +1,6 @@
 import type { Player } from '@oplayer/core'
 import { $, PlayerEvent } from '@oplayer/core'
+import subtitleSvg from '../icons/subtitles.svg?raw'
 import { SnowConfig, Subtitle } from '../types'
 import type { Setting } from './Setting'
 
@@ -85,16 +86,25 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
       player.emit('addsetting', <Setting>{
         name: 'Subtitle',
         type: 'selector',
+        icon: subtitleSvg,
         key: 'subtitle',
         onChange({ value }: { value: Subtitle }) {
-          initSubtitle(value)
+          if (value) {
+            player.emit('showsubtitle')
+            initSubtitle(value)
+          } else {
+            player.emit('hiddensubtitle')
+          }
         },
-        children: subtitle?.map((s) => ({
-          type: 'switcher',
-          name: s.name,
-          default: s.default || false,
-          value: s
-        }))
+        children: [
+          { type: 'switcher', name: 'None' },
+          ...subtitle?.map((s) => ({
+            type: 'switcher',
+            name: s.name,
+            default: s.default || false,
+            value: s
+          }))
+        ]
       })
     }
   }

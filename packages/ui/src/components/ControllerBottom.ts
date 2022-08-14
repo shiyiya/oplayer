@@ -14,7 +14,6 @@ import playSvg from '../icons/play.svg?raw'
 import screenshotSvg from '../icons/screenshot.svg?raw'
 import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
-import subtitleSvg from '../icons/subtitle.svg?raw'
 import webExpandSvg from '../icons/web-fullscreen.svg?raw'
 import settingsSvg from '../icons/settings.svg?raw'
 
@@ -81,15 +80,6 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
                 </button>`
              : ''
          }
-
-          <button
-            aria-label="Subtitle"
-            data-value="${config.subtitle?.length ? 'true' : 'false'}"
-            class="${icon}"
-            type="button"
-          >
-            ${subtitleSvg}
-          </button>
 
           <div class=${dropdownHoverable}>
             <button aria-label="Volume" class=${icon} type="button">
@@ -221,18 +211,6 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         break
       case 'Screenshot':
         screenShot(player)
-        break
-      case 'Subtitle':
-        {
-          //TODO: 同步更改后的字幕 `subtitleconfigchange`
-          if (config.subtitle?.length) {
-            const state = target.getAttribute('data-value')!
-            target.setAttribute('data-value', state == 'true' ? 'false' : 'true')
-            player.emit(state == 'true' ? 'hiddensubtitle' : 'showsubtitle')
-          } else {
-            player.emit('notice', { text: 'Subtitles/closed captions unavailable' })
-          }
-        }
         break
       case 'Setting': {
         player.emit('ui/setting:toggle', e)

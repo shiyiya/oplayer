@@ -1,6 +1,8 @@
 import type { Player, PlayerPlugin } from '@oplayer/core'
 import Danmuku from './danmuku'
 import type { Options } from './types'
+// @ts-ignore
+import subtitleSvg from './danmuku.svg?raw'
 
 export * from './types'
 
@@ -15,6 +17,7 @@ export default (option: Options): PlayerPlugin => ({
         type: 'switcher',
         default: true,
         key: 'danmuku',
+        icon: subtitleSvg,
         onChange: (flag: boolean) => {
           if (flag) {
             danmuku?.show()
