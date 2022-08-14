@@ -1,6 +1,6 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { DRAG_EVENT_MAP, formatTime, isMobile } from '../utils'
+import { DRAG_EVENT_MAP, formatTime } from '../utils'
 import { buffered, dot, hit, played, progress, progressInner } from './Progress.style'
 
 const render = (player: Player, el: HTMLElement) => {
@@ -8,7 +8,7 @@ const render = (player: Player, el: HTMLElement) => {
     `div.${progress}`,
     {},
     `<div class=${progressInner}>
-      ${!isMobile ? `<div class="${hit}">00:00</div>` : ''}
+      <div class="${hit}">00:00</div>
       <div class="${buffered}" style="width:0%"></div>
       <div class="${played}" style="width:0%"></div>
       <div class="${dot}" style="transform: translateX(0%);"></div>
@@ -18,7 +18,7 @@ const render = (player: Player, el: HTMLElement) => {
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
   const $playedDto = $dom.querySelector<HTMLDivElement>(`.${dot}`)!
-  const $hit = $dom.querySelector<HTMLDivElement>(`.${hit}`)
+  const $hit = $dom.querySelector<HTMLDivElement>(`.${hit}`)!
   let isDargMoving = false
 
   //TODO: utils
@@ -41,31 +41,43 @@ const render = (player: Player, el: HTMLElement) => {
     }
   }
 
+  //TODO: show hit when moving | hover
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
     isDargMoving = true
     sync(e)
-  })
 
-  $dom.addEventListener(
-    DRAG_EVENT_MAP.dragMove,
-    (e) => {
+    function moving(e: MouseEvent | TouchEvent) {
       if (isDargMoving) {
         sync(e)
       } else {
-        if ($hit) {
-          const rate = getSlidingValue(e)
-          $hit.innerText = formatTime(player.duration * rate)
-          $hit.style.left = `${rate * 100}%`
-        }
+        const rate = getSlidingValue(e)
+        $hit.innerText = formatTime(player.duration * rate)
+        $hit.style.left = `${rate * 100}%`
       }
+    }
+
+    document.addEventListener(DRAG_EVENT_MAP.dragMove, moving, { passive: false })
+    document.addEventListener(
+      DRAG_EVENT_MAP.dragEnd,
+      (e) => {
+        isDargMoving = false
+        document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
+        player.seek(getSlidingValue(e) * player.duration)
+      },
+      { once: true }
+    )
+  })
+
+  $dom.addEventListener(
+    'mousemove',
+    (e) => {
+      if (isDargMoving) return
+      const rate = getSlidingValue(e)
+      $hit.innerText = formatTime(player.duration * rate)
+      $hit.style.left = `${rate * 100}%`
     },
     { passive: false }
   )
-
-  $dom.addEventListener(DRAG_EVENT_MAP.dragEnd, (e) => {
-    isDargMoving = false
-    player.seek(getSlidingValue(e) * player.duration)
-  })
 
   player.on(['timeupdate', 'seeking'], () => {
     const { currentTime, duration } = player
