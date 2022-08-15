@@ -1,4 +1,5 @@
 import { $ } from '@oplayer/core'
+import { isMobile } from '../utils'
 
 export const buffered = $.css({
   'background-color': 'hsla(0, 0%, 100%, 0.4)'
@@ -58,11 +59,11 @@ export const progress = $.css({
   cursor: 'pointer',
   width: '100%',
 
-  [`&:hover .${dot}::before, &.${progressDarging} .${dot}::before`]: {
+  [`&.${progressDarging} .${dot}::before ${!isMobile ? `,&:hover .${dot}::before` : ''}`]: {
     transform: 'scale(1)'
   },
 
-  [`&:hover .${hit}, &.${progressDarging} .${hit}`]: {
+  [`&.${progressDarging} .${hit} ${!isMobile ? `,&:hover .${hit}` : ''}`]: {
     opacity: 1
   }
 })
