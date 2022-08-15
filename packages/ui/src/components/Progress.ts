@@ -1,7 +1,15 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import { DRAG_EVENT_MAP, formatTime } from '../utils'
-import { buffered, dot, hit, played, progress, progressInner } from './Progress.style'
+import {
+  buffered,
+  dot,
+  hit,
+  played,
+  progress,
+  progressDarging,
+  progressInner
+} from './Progress.style'
 
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
@@ -44,9 +52,11 @@ const render = (player: Player, el: HTMLElement) => {
   //TODO: show hit when moving | hover
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
     isDargMoving = true
+    $dom.classList.add(progressDarging)
     sync(e)
 
     function moving(e: MouseEvent | TouchEvent) {
+      e.preventDefault()
       if (isDargMoving) {
         sync(e)
       } else {
@@ -61,6 +71,7 @@ const render = (player: Player, el: HTMLElement) => {
       DRAG_EVENT_MAP.dragEnd,
       (e) => {
         isDargMoving = false
+        $dom.classList.remove(progressDarging)
         document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
         player.seek(getSlidingValue(e) * player.duration)
       },
@@ -80,6 +91,7 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   player.on(['timeupdate', 'seeking'], () => {
+    if (isDargMoving) return
     const { currentTime, duration } = player
     const playedWidth = (currentTime / duration) * 100 || 0
     $played.style.width = playedWidth + '%'

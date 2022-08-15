@@ -50,17 +50,19 @@ export const hit = $.css({
   bottom: '10px'
 })
 
+export const progressDarging = $.css('/* progressDarging */')
+
 export const progress = $.css({
   'box-sizing': 'border-box',
   padding: '5px 0',
   cursor: 'pointer',
   width: '100%',
 
-  [`&:hover .${dot}::before`]: {
+  [`&:hover .${dot}::before, &.${progressDarging} .${dot}::before`]: {
     transform: 'scale(1)'
   },
 
-  [`&:hover .${hit}`]: {
+  [`&:hover .${hit}, &.${progressDarging} .${hit}`]: {
     opacity: 1
   }
 })
