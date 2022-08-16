@@ -18,6 +18,7 @@
     "@oplayer/ui": "workspace:*",
     "@oplayer/danmuku": "workspace:*",
     "hls.js": "^1.2.0",
-    "lit": "^2.3.0"
+    "lit": "^2.3.0",
+    "flv.js": "^1.6.2"
   }
 }

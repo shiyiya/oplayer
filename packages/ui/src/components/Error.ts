@@ -35,7 +35,7 @@ const render = (player: Player, el: HTMLElement) => {
       message = (payload.target?.error as Error)?.message
     }
 
-    $dom.innerText = message || 'UNKNOWN_ERROR'
+    $dom.innerText = message || 'UNKNOWN_ERROR ' + payload.target?.error.code
   })
 
   player.on('videosourcechange', () => {

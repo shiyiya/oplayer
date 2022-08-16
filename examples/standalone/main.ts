@@ -1,8 +1,9 @@
-import Player, { PlayerEvent } from '@oplayer/core'
+import Player, { PlayerEvent, PlayerPlugin } from '@oplayer/core'
 import danmuku, { DanmukuItem } from '@oplayer/danmuku'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
 import { isMobile } from '@oplayer/ui/src/utils'
+import flvjs from 'flv.js'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
@@ -28,6 +29,20 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
 
+const flvPlugin: PlayerPlugin = {
+  name: 'oplayer-flv-plugin',
+  load: (_, video, source) => {
+    if (source.format != 'flv' || /\.flv(#|\?|$)/i.test(source.src)) return false
+    const flvPlayer = flvjs.createPlayer({
+      type: 'flv',
+      url: source.src
+    })
+    flvPlayer.attachMediaElement(video)
+    flvPlayer.load()
+    return true
+  }
+}
+
 let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
@@ -44,6 +59,7 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     hls(),
+    flvPlugin,
     danmuku({
       danmuku: 'https://oplayer.vercel.app/danmuku.xml',
       fontSize: isMobile ? 16 : 20,

@@ -59,6 +59,7 @@ importers:
       '@oplayer/hls': workspace:*
       '@oplayer/torrent': workspace:*
       '@oplayer/ui': workspace:*
+      flv.js: ^1.6.2
       hls.js: ^1.2.0
       lit: ^2.3.0
     dependencies:
@@ -67,6 +68,7 @@ importers:
       '@oplayer/hls': link:../../packages/hls
       '@oplayer/torrent': link:../../packages/torrent
       '@oplayer/ui': link:../../packages/ui
+      flv.js: 1.6.2
       hls.js: 1.2.0
       lit: 2.3.0
 
@@ -1555,6 +1557,10 @@ packages:
       is-symbol: 1.0.4
     dev: true
 
+  /es6-promise/4.2.8:
+    resolution: {integrity: sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==}
+    dev: false
+
   /esbuild-android-64/0.14.54:
     resolution: {integrity: sha512-Tz2++Aqqz0rJ7kYBfz+iqyE3QMycD4vk7LBRyWaAVFgFtQ/O8EJOnVmTOiDWYZ/uYzB4kvP+bqejYdVKzE5lAQ==}
     engines: {node: '>=12'}
@@ -1901,6 +1907,13 @@ packages:
     resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
     hasBin: true
     dev: true
+
+  /flv.js/1.6.2:
+    resolution: {integrity: sha512-xre4gUbX1MPtgQRKj2pxJENp/RnaHaxYvy3YToVVCrSmAWUu85b9mug6pTXF6zakUjNP2lFWZ1rkSX7gxhB/2A==}
+    dependencies:
+      es6-promise: 4.2.8
+      webworkify-webpack: 2.1.5
+    dev: false
 
   /freelist/1.0.3:
     resolution: {integrity: sha512-Ji7fEnMdZDGbS5oXElpRJsn9jPvBR8h/037D3bzreNmS8809cISq/2D9//JbA/TaZmkkN8cmecXwmQHmM+NHhg==}
@@ -4142,6 +4155,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /webworkify-webpack/2.1.5:
+    resolution: {integrity: sha512-2akF8FIyUvbiBBdD+RoHpoTbHMQF2HwjcxfDvgztAX5YwbZNyrtfUMgvfgFVsgDhDPVTlkbb5vyasqDHfIDPQw==}
+    dev: false
 
   /which-boxed-primitive/1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
