@@ -2,7 +2,7 @@
 
 [Oh!](https://oplayer.vercel.app/) Another HTML5 video player.
 
-[Demo](https://oplayer.vercel.app/) | [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html)
+[Demo](https://oplayer.vercel.app/) | [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html) | [Join QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
