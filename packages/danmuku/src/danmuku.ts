@@ -340,7 +340,6 @@ export default class Danmuku {
     this.start()
     this.$danmuku.style.display = 'block'
     this.player.emit('danmuku:show')
-    this.player.emit('notice', { text: 'Show danmuku' })
   }
 
   hide() {
@@ -349,7 +348,6 @@ export default class Danmuku {
     this.queue.forEach((item) => this.makeWait(item))
     this.$danmuku.style.display = 'none'
     this.player.emit('danmuku:hide')
-    this.player.emit('notice', { text: 'Hide danmuku' })
   }
 
   destroy() {

@@ -18,10 +18,12 @@ export default (option: Options): PlayerPlugin => ({
         default: true,
         key: 'danmuku',
         icon: subtitleSvg,
-        onChange: (flag: boolean) => {
+        onChange: (flag: boolean, { isInit }: { isInit?: boolean } = {}) => {
           if (flag) {
+            !isInit && player.emit('notice', { text: 'Show danmuku' })
             danmuku?.show()
           } else {
+            !isInit && player.emit('notice', { text: 'Hide danmuku' })
             danmuku?.hide()
           }
         }

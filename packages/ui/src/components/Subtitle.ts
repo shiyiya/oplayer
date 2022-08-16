@@ -1,8 +1,7 @@
 import type { Player } from '@oplayer/core'
 import { $, PlayerEvent } from '@oplayer/core'
 import subtitleSvg from '../icons/subtitles.svg?raw'
-import { SnowConfig, Subtitle } from '../types'
-import type { Setting } from './Setting'
+import type { Setting, SnowConfig, Subtitle } from '../types'
 
 function findDefault(o: any) {
   return o?.find((st: any) => st.default) || o?.[0]
@@ -48,13 +47,11 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
 
   player.on('showsubtitle', () => {
     $track.addEventListener('cuechange', update)
-    player.emit('notice', { text: 'Show subtitle' })
   })
 
   //TODO: typescript: override event name
   //@ts-ignore
   player.on(['hiddensubtitle', 'videosourcechange'], (e: PlayerEvent) => {
-    if (e.type === 'hiddensubtitle') player.emit('notice', { text: 'Hide subtitle' })
     $dom.innerHTML = ''
     $track.removeEventListener('cuechange', update)
   })
@@ -90,12 +87,14 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
         type: 'selector',
         icon: subtitleSvg,
         key: 'subtitle',
-        onChange({ value }: { value: Subtitle }) {
+        onChange({ value }, options) {
           if (value) {
             player.emit('showsubtitle')
+            !options!.isInit && player.emit('notice', { text: 'Show subtitle' })
             initSubtitle(value)
           } else {
             player.emit('hiddensubtitle')
+            !options!.isInit && player.emit('notice', { text: 'Hide subtitle' })
           }
         },
         children: [

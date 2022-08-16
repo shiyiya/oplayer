@@ -6,6 +6,21 @@ export type Subtitle = {
   type?: string
 }
 
+export type Setting = {
+  name: string
+  key?: string // children 可无 （用于移除）
+  /**
+   * selector 切换下个面板单选 1 ｜ 2 ｜ 3
+   * swither  当前面板切换 true or false
+   */
+  type?: 'selector' | 'switcher'
+  icon?: string
+  children?: Setting[]
+  onChange?: (a: any /* Setting | boolean */, b?: { index?: number; isInit?: boolean }) => void
+  default?: any
+  [x: string]: any
+}
+
 export type SnowConfig = {
   theme?: {
     primaryColor: `#${string}`

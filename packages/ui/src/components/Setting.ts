@@ -1,5 +1,6 @@
 import Player, { $, PlayerEvent } from '@oplayer/core'
 import { settingShown } from '../style'
+import type { Setting } from '../types'
 import { siblings } from '../utils'
 import {
   activeCls,
@@ -13,21 +14,6 @@ import {
   subPanelCls,
   yesIcon
 } from './Setting.style'
-
-export type Setting = {
-  name: string
-  key?: string // children 可无 （用于移除）
-  /**
-   * selector 切换下个面板单选 1 ｜ 2 ｜ 3
-   * swither  当前面板切换 true or false
-   */
-  type?: 'selector' | 'switcher'
-  icon?: string
-  children?: Setting[]
-  onChange?: Function
-  default?: any
-  [x: string]: any
-}
 
 export type Panel = {
   $ref: HTMLElement
@@ -111,6 +97,10 @@ function createPanel(
     const { $: $item, $label } = createItem(item, item.key)
     $.render($item, $panel.$ref)
 
+    if (!onChange && item.default && item.type == 'switcher') {
+      item.onChange?.(item.default, { isInit: true })
+    }
+
     $item.addEventListener('click', function () {
       switch (item.type) {
         case 'switcher':
@@ -121,7 +111,7 @@ function createPanel(
               el.setAttribute('data-selected', 'false')
             })
             $panel.$ref.classList.remove(activeCls)
-            onChange(item, index)
+            onChange(item, { index })
           } else {
             const value = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!Boolean(value)}`)
@@ -140,10 +130,11 @@ function createPanel(
 
     if (item.children) {
       if (item.type == 'selector') {
+        //TODO: children.children
         const selected = item.children.findIndex((_) => _.default) || 0
-        if (selected != -1) {
+        if (item.children[selected]) {
           $label.innerText = item.children[selected]!.name!
-          item.onChange?.(item.children[selected], selected)
+          item.onChange?.(item.children[selected], { index: selected, isInit: true })
         }
       }
 
@@ -151,7 +142,7 @@ function createPanel(
         onChange: (option: Setting, index: number) => {
           $label.innerText = option.name
           $panel.$ref.classList.add(activeCls)
-          item.onChange?.(option, index)
+          item.onChange?.(option, { index })
         },
         key: key || item.key || item.name
       })
