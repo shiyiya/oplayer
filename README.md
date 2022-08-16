@@ -72,6 +72,11 @@ Player.make(document.body, {
 - [@oplayer/danmuku](./packages/danmuku/)
 - [@oplayer/react](./packages/react/)
 
+## Who use OPlayer?
+
+- [UPV](https://月色真美.life) : free animes no ad
+- ...
+
 ## Write a plugin
 
 ```ts
@@ -108,15 +113,25 @@ const autoPipPlugin: PlayerPlugin = {
       }
     })
     player.on('destroy', () => {
-      player.emit('removesetting', key)
       intersectionObserver.unobserve(player.$root)
     })
   }
 }
 
-Player.make(..options).use([autoPipPlugin]).create()
+// eg: https://github.com/shiyiya/oplayer/blob/main/packages/hls/src/index.ts
+const flvPlugin = {
+  name: 'oplayer-flv-plugin',
+  load: (player, video, source) => {
+    if (source.format != 'flv') return false
+    const flvPlayer = flvjs.createPlayer({
+      type: 'flv',
+      url: source.src,
+    })
+    flvPlayer.attachMediaElement(video)
+    flvPlayer.load()
+    return true
+  },
+}
+
+Player.make(..options).use([autoPipPlugin, flvPlugin]).create()
 ```
-
-## Who use OPlayer?
-
-- [UPV](https://月色真美.life) : free animes no ad

@@ -14,11 +14,12 @@ const render = (player: Player, el: HTMLElement) => {
       left: 0;
       right: 0;
       color: #fff;
-      font-size: 1.2em;
+      font-size: 1em;
       background: #000;
       z-index: 99;
       justify-content: center;
       align-items: center;
+      padding: 0 10px;
       `}`,
     { 'aria-label': 'Errror Overlay' }
   )
