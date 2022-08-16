@@ -23,6 +23,7 @@ yarn add @oplayer/core @oplayer/ui
 ```ts
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
+import danmuku from '@oplayer/danmuku'
 
 Player.make(document.body, {
   source: {
@@ -31,14 +32,14 @@ Player.make(document.body, {
   }
 })
   .use([
+    danmuku({ danmuku: 'https://oplayer.vercel.app/danmuku.xml' }),
     ui({
       theme: { primaryColor: '#9370db' },
       subtitle: [
         {
           text: 'English',
-          type: 'vtt',
           default: true,
-          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
+          url: 'https://oplayer.vercel.app/hikarunara.vtt'
         }
       ]
     })
@@ -92,8 +93,22 @@ const autoPipPlugin: PlayerPlugin = {
       { threshold: [0.15] }
     )
 
-    intersectionObserver.observe(player.$root)
+    const key = 'Auto pip'
+    player.emit('addsetting', <Setting>{
+      name: key,
+      type: 'switcher',
+      default: true,
+      key,
+      onChange: (value: boolean) => {
+        if(value){
+          intersectionObserver.observe(player.$root)
+        }else{
+          intersectionObserver.unobserve(player.$root)
+        }
+      }
+    })
     player.on('destroy', () => {
+      player.emit('removesetting', key)
       intersectionObserver.unobserve(player.$root)
     })
   }

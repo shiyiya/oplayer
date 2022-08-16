@@ -48,11 +48,13 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
 
   player.on('showsubtitle', () => {
     $track.addEventListener('cuechange', update)
+    player.emit('notice', { text: 'Show subtitle' })
   })
 
   //TODO: typescript: override event name
   //@ts-ignore
-  player.on(['hiddensubtitle', 'videosourcechange'], () => {
+  player.on(['hiddensubtitle', 'videosourcechange'], (e: PlayerEvent) => {
+    if (e.type === 'hiddensubtitle') player.emit('notice', { text: 'Hide subtitle' })
     $dom.innerHTML = ''
     $track.removeEventListener('cuechange', update)
   })

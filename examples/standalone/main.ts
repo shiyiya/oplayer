@@ -53,13 +53,9 @@ const p = Player.make(document.getElementById('player')!, {
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
         {
-          name: 'Default',
-          default: true,
-          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
-        },
-        {
           name: 'Japenese',
-          url: 'https://s-sh-17-dplayercdn.oss.dogecdn.com/hikarunara.vtt'
+          default: true,
+          url: 'https://oplayer.vercel.app/hikarunara.vtt'
         }
       ]
     })
@@ -71,9 +67,8 @@ const meta = () => html`
     <h4>Oh-Player v${Player.version}</h4>
     <p>
       STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a> |
-      <a href="./umd.html" target="_blank">UMD DEMO HERE</a>
+      <a href="./umd.html" target="_blank">UMD DEMO</a>
     </p>
-    <p>Plugin used: ${p.plugins.join('  ')}</p>
   </div>
 `
 

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "vite build && cp ../umd.html ../../docs/ && cp ./danmuku.xml ../../docs/"
+    "build": "vite build && cp ../umd.html ../../docs/ && cp ./danmuku.xml ../../docs/ && cp ./hikarunara.vtt ../../docs/"
   },
   "dependencies": {
     "@oplayer/core": "workspace:*",
