@@ -36,40 +36,40 @@ export enum PlayerEvents {
 
 //TODO: combin enum
 export enum Events {
-  'abort',
-  'canplay',
-  'canplaythrough',
-  'durationchange',
-  'emptied',
-  'ended',
-  'error',
-  'loadeddata',
-  'loadedmetadata',
-  'loadstart',
-  'pause',
-  'play',
-  'playing',
-  'progress',
-  'ratechange',
-  'seeked',
-  'seeking',
-  'stalled',
-  'suspend',
-  'timeupdate',
-  'volumechange',
-  'waiting',
-  'encrypted',
-  'waitingforkey',
+  'abort' = 'abort',
+  'canplay' = 'canplay',
+  'canplaythrough' = 'canplaythrough',
+  'durationchange' = 'durationchange',
+  'emptied' = 'emptied',
+  'ended' = 'ended',
+  'error' = 'error',
+  'loadeddata' = 'loadeddata',
+  'loadedmetadata' = 'loadedmetadata',
+  'loadstart' = 'loadstart',
+  'pause' = 'pause',
+  'play' = 'play',
+  'playing' = 'playing',
+  'progress' = 'progress',
+  'ratechange' = 'ratechange',
+  'seeked' = 'seeked',
+  'seeking' = 'seeking',
+  'stalled' = 'stalled',
+  'suspend' = 'suspend',
+  'timeupdate' = 'timeupdate',
+  'volumechange' = 'volumechange',
+  'waiting' = 'waiting',
+  'encrypted' = 'encrypted',
+  'waitingforkey' = 'waitingforkey',
 
-  // $player
-  'contextmenu',
-  'fullscreenchange',
-  'fullscreenerror',
+  // $playe
+  'contextmenu' = 'contextmenu',
+  'fullscreenchange' = 'fullscreenchange',
+  'fullscreenerror' = 'fullscreenerror',
 
-  'pluginloaded',
-  'pluginerror',
-  'videosourcechange',
-  'destroy'
+  'pluginloaded' = 'pluginloaded',
+  'pluginerror' = 'pluginerror',
+  'videosourcechange' = 'videosourcechange',
+  'destroy' = 'destroy'
 }
 
 export declare interface PlayerListeners {
@@ -81,6 +81,8 @@ export declare interface PlayerListeners {
   [Events.loadeddata]: (event: Events.loadeddata, data: Event) => void
   [Events.loadedmetadata]: (event: Events.loadedmetadata, data: Event) => void
   [Events.loadstart]: (event: Events.loadstart, data: Event) => void
+  [Events.pause]: (event: Events.pause, data: Event) => void
+  [Events.play]: (event: Events.play, data: Event) => void
   [Events.playing]: (event: Events.playing, data: Event) => void
   [Events.progress]: (event: Events.progress, data: Event) => void
   [Events.ratechange]: (event: Events.ratechange, data: Event) => void

@@ -1,6 +1,6 @@
 import Hls from 'hls.js/dist/hls.light.min.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source } from '@oplayer/core'
+import { PlayerPlugin, Source, Events } from '@oplayer/core'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
@@ -38,16 +38,14 @@ const hlsPlugin = ({
 
       hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
       if (!isInitial) {
-        emit('plugin:loaded', { name: PLUGIN_NAME })
+        emit(Events.pluginloaded, { name: PLUGIN_NAME })
         isInitial = true
       }
 
       if (!hlsInstance || !Hls.isSupported()) {
-        emit('plugin:error', {
-          payload: {
-            type: 'hlsNotSupported',
-            message: 'hlsNotSupported'
-          }
+        emit(Events.pluginerror, {
+          type: 'hlsNotSupported',
+          message: 'hlsNotSupported'
         })
         return true
       }
@@ -62,13 +60,13 @@ const hlsPlugin = ({
             event === Hls.Events.ERROR &&
             data.details == 'manifestLoadError' /*ErrorDetails.MANIFEST_LOAD_ERROR*/
           ) {
-            emit('plugin:error', { message: data.type, ...data })
+            emit(Events.pluginerror, { message: data.type, ...data })
           }
-          emit(event, data)
+          emit(event as any, data)
         })
       })
 
-      on('destroy', () => {
+      on(Events.destroy, () => {
         hlsInstance?.destroy()
         hlsInstance = null
       })
