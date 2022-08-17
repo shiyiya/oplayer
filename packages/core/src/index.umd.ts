@@ -1,11 +1,5 @@
-import { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS, OH_EVENTS } from './constants'
+import * as c from './constants'
 import { $ } from './utils/dom'
 import { Player } from './player'
 
-export default Object.assign(Player, {
-  EVENTS,
-  VIDEO_EVENTS,
-  PLAYER_EVENTS,
-  OH_EVENTS,
-  $
-})
+export default Object.assign(Player, c, { $ })

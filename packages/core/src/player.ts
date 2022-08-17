@@ -1,14 +1,7 @@
-import E from './event'
+import EventEmitter from './event'
 import $ from './utils/dom'
-import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
-import type {
-  PlayerOptions,
-  PlayerPlugin,
-  PlayerListener,
-  PlayerEvent,
-  Source,
-  PlayerEventName
-} from './types'
+import { Events, PlayerEvents, PlayerListeners, VideoEvents } from './constants'
+import type { PlayerOptions, PlayerPlugin, Source } from './types'
 
 export class Player {
   constructor(el: HTMLElement, options: PlayerOptions | string) {
@@ -32,7 +25,7 @@ export class Player {
   readonly #options: PlayerOptions
   readonly #container: HTMLElement
 
-  readonly #E = new E()
+  readonly #eventEmitter = new EventEmitter()
   readonly #plugins: Set<PlayerPlugin> = new Set()
 
   $root: HTMLElement
@@ -55,32 +48,30 @@ export class Player {
     return this
   }
 
-  readonly on = (
-    name: PlayerEventName | PlayerListener,
-    listener?: PlayerListener,
+  readonly on = <E extends keyof PlayerListeners>(
+    name: E | PlayerListeners[E],
+    listener?: PlayerListeners[E],
     options = { once: false }
   ) => {
     if (typeof name === 'string') {
       if (options.once) {
-        this.#E.once(name, listener!)
+        this.#eventEmitter.once(<E>name, listener! as any)
       } else {
-        this.#E.on(name, listener!)
+        this.#eventEmitter.on(<E>name, listener! as any)
       }
     } else if (Array.isArray(name)) {
-      this.#E.onAny(name as string[], listener!)
+      this.#eventEmitter.onAny(<E[]>name, listener! as any)
     } else if (typeof name === 'function') {
-      this.#E.on('*', name!)
+      this.#eventEmitter.on('*', name as any)
     }
     return this
   }
 
-  readonly off = (name: PlayerEventName, listener: PlayerListener) => {
-    this.#E.off(name as string, listener)
-  }
+  readonly off = this.#eventEmitter.off
 
-  readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
-    this.#E.emit(name as any, payload)
-  }
+  readonly emit = this.#eventEmitter.emit
+
+  listenerCount = this.#eventEmitter.listenerCount
 
   readonly create = () => {
     this.render()
@@ -91,37 +82,20 @@ export class Player {
   }
 
   initEvent = () => {
-    this.on('error', () => {
+    this.on(Events.error, () => {
       this.hasError = true
     })
-    VIDEO_EVENTS.forEach((event) => {
-      this.$video.addEventListener(
-        event,
-        (e) => {
-          this.#E.emit(event, e)
-        },
-        { passive: true }
-      )
+    Object.keys(VideoEvents).forEach((event) => {
+      this.$video.addEventListener(event, (e) => this.#eventEmitter.emit(event as any, e as any))
     })
-    PLAYER_EVENTS.forEach((event) => {
-      this.$root.addEventListener(
-        event,
-        (e) => {
-          this.#E.emit(event, e)
-        },
-        { passive: true }
-      )
+    Object.keys(PlayerEvents).forEach((event) => {
+      this.$root.addEventListener(event, (e) => this.#eventEmitter.emit(event as any, e as any))
     })
   }
 
   readonly render = () => {
     this.$video = $.create(
-      `video.${$.css(`
-              width: 100%;
-              height: 100%;
-              display: block;
-              position: relative;
-            `)}`,
+      `video.${$.css(`width: 100%;height: 100%;display: block;position: relative;`)}`,
       {
         autoplay: this.#options.autoplay,
         muted: this.#options.muted,
@@ -236,12 +210,12 @@ export class Player {
 
   enterFullscreen() {
     this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
-    this.emit('fullscreenchange')
+    this.emit(Events.fullscreenchange)
   }
 
   exitFullscreen() {
     this.#_exitFullscreen.call(document)
-    this.emit('fullscreenchange')
+    this.emit(Events.fullscreenchange)
   }
 
   get isFullScreen() {
@@ -288,18 +262,18 @@ export class Player {
     this.#isCustomLoader = false
     this.$video.poster = sources.poster || ''
     this.load(sources)
-    this.emit('videosourcechange')
+    this.emit(Events.videosourcechange, sources)
   }
 
   destroy() {
-    this.emit('destroy')
+    this.emit(Events.destroy)
     this.pause()
     this.isFullScreen && this.exitFullscreen()
     this.#plugins.clear()
     this.$video.src = ''
     this.$video.remove()
     this.#container.remove()
-    this.#E.offAll()
+    this.#eventEmitter.offAll()
   }
 
   get container() {

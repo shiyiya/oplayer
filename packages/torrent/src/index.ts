@@ -1,5 +1,5 @@
 import webtorrent from 'webtorrent/webtorrent.min.js'
-import type { PlayerPlugin, Source } from '@oplayer/core'
+import { Events, PlayerPlugin, Source } from '@oplayer/core'
 
 const PLUGIN_NAME = 'oplayer-plugin-torrent'
 
@@ -23,16 +23,14 @@ const torrentPlugin = ({
     if (!matcher(source)) return false
 
     if (!isInitial) {
-      emit('plugin:loaded', { name: PLUGIN_NAME })
+      emit(Events.pluginloaded, { name: PLUGIN_NAME })
       isInitial = true
     }
 
     if (!webtorrent.WEBRTC_SUPPORT) {
-      emit('plugin:error', {
-        payload: {
-          type: 'torrentNotSupported',
-          message: 'torrent is not supported'
-        }
+      emit(Events.pluginerror, {
+        type: 'torrentNotSupported',
+        message: 'torrent is not supported'
       })
       return true
     }
@@ -48,11 +46,11 @@ const torrentPlugin = ({
       })
     })
 
-    on('videosourcechange', () => {
+    on(Events.videosourcechange, () => {
       client.remove(prevSrc)
     })
 
-    on('destroy', () => {
+    on(Events.destroy, () => {
       client.remove(source.src)
       client.destroy()
     })

@@ -1,4 +1,4 @@
-import { EVENTS } from './constants'
+import { PlayerListeners } from './constants'
 import type { Player } from './player'
 
 export type Source = {
@@ -26,14 +26,7 @@ export type PlayerPlugin = {
   load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean
 }
 
-export type DefaultPlayerEvent = typeof EVENTS[number] | typeof EVENTS[number][]
-
-export type PlayerEventName = DefaultPlayerEvent | string | string[]
-
-export type PlayerEvent<T = any> = {
-  type: PlayerEventName
-  payload: T
-  _raw?: any
-}
-
-export type PlayerListener = (enevt: PlayerEvent) => void
+export type PlayerListener = <E extends keyof PlayerListeners>(
+  enevt: E,
+  payload?: PlayerListeners[E]
+) => void
