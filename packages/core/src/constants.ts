@@ -99,7 +99,7 @@ export declare interface PlayerListeners {
   [Events.pluginloaded]: (event: Events.pluginloaded, data: { name: string }) => void
   [Events.pluginerror]: (
     event: Events.pluginerror,
-    data: { type: string; message: string; [k: string]: any }
+    data: { name: string; type: string; message: string; [k: string]: any }
   ) => void
   [Events.videosourcechange]: (event: Events.videosourcechange, data: Source) => void
   [Events.destroy]: (event: Events.destroy) => void

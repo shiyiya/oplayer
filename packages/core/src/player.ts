@@ -48,24 +48,31 @@ export class Player {
     return this
   }
 
-  readonly on = <E extends keyof PlayerListeners>(
-    name: E | PlayerListeners[E],
-    listener?: PlayerListeners[E],
-    options = { once: false }
+  readonly on = <
+    E extends
+      | keyof PlayerListeners
+      | (keyof PlayerListeners)[]
+      | ((name: string, payload: any) => void)
+  >(
+    name: E,
+    listener?: E extends keyof PlayerListeners
+      ? PlayerListeners[E]
+      : E extends (keyof PlayerListeners)[]
+      ? PlayerListeners[E[number]]
+      : never
   ) => {
+    // enum is not string ?
     if (typeof name === 'string') {
-      if (options.once) {
-        this.#eventEmitter.once(<E>name, listener! as any)
-      } else {
-        this.#eventEmitter.on(<E>name, listener! as any)
-      }
+      this.#eventEmitter.on(name, listener as any)
     } else if (Array.isArray(name)) {
-      this.#eventEmitter.onAny(<E[]>name, listener! as any)
+      this.#eventEmitter.onAny(name, listener)
     } else if (typeof name === 'function') {
       this.#eventEmitter.on('*', name as any)
     }
     return this
   }
+
+  readonly once = this.#eventEmitter.once
 
   readonly off = this.#eventEmitter.off
 
