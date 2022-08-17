@@ -52,7 +52,7 @@ export class Player {
     E extends
       | keyof PlayerListeners
       | (keyof PlayerListeners)[]
-      | ((name: string, payload: any) => void)
+      | PlayerListeners[keyof PlayerListeners] // FIX: PlayerListeners[Events]
   >(
     name: E,
     listener?: E extends keyof PlayerListeners
@@ -89,9 +89,7 @@ export class Player {
   }
 
   initEvent = () => {
-    this.on(Events.error, () => {
-      this.hasError = true
-    })
+    this.on(Events.error, () => (this.hasError = true))
     Object.keys(VideoEvents).forEach((event) => {
       this.$video.addEventListener(event, (e) => this.#eventEmitter.emit(event as any, e as any))
     })

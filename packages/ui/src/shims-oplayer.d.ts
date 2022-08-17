@@ -1,4 +1,4 @@
-import * as Player from '@oplayer/core'
+import * as Player from '@oplayer/core/src/constants'
 import type { Setting, Subtitle } from './types'
 
 declare module '@oplayer/core' {
