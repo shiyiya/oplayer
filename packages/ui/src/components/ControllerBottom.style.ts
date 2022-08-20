@@ -6,7 +6,7 @@ export const controllerBottom = $.css({
   display: 'flex',
   'justify-content': 'space-between',
   'font-size': '14px',
-  color: '#eee',
+  color: '#fff',
   fill: '#fff',
   height: '30px',
   padding: isMobile ? 0 : '5px 0px',
@@ -31,12 +31,7 @@ export const controllerBottom = $.css({
   // left & right
   '> div': {
     display: 'flex',
-    'align-items': 'center',
-
-    '> div:hover, > button:hover': {
-      color: '#fff',
-      fill: '#fff'
-    }
+    'align-items': 'center'
   }
 })
 

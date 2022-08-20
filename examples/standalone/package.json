@@ -17,8 +17,8 @@
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "@oplayer/danmuku": "workspace:*",
-    "hls.js": "^1.2.0",
-    "lit": "^2.3.0",
-    "flv.js": "^1.6.2"
+    "flv.js": "^1.6.2",
+    "hls.js": "^1.2.1",
+    "lit": "^2.3.1"
   }
 }
