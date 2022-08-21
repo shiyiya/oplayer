@@ -1,13 +1,14 @@
 import type { Player } from '@oplayer/core'
 import { $, PlayerEvent } from '@oplayer/core'
 import subtitleSvg from '../icons/subtitles.svg?raw'
-import type { Setting, SnowConfig, Subtitle } from '../types'
+import type { Setting, UiConfig, Subtitle } from '../types'
+import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
 function findDefault(o: any) {
   return o?.find((st: any) => st.default) || o?.[0]
 }
 
-const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) => {
+const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) => {
   const defaultSubtitle = findDefault(subtitle)
   if (!defaultSubtitle || !window.TextDecoder) return
 
@@ -43,43 +44,30 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
     player.$video
   )
 
-  $track.addEventListener('cuechange', update)
-
-  player.on('showsubtitle', () => {
-    $track.addEventListener('cuechange', update)
-  })
-
-  //TODO: typescript: override event name
-  //@ts-ignore
-  player.on(['hiddensubtitle', 'videosourcechange'], (e: PlayerEvent) => {
-    $dom.innerHTML = ''
+  const showsubtitle = () => {
     $track.removeEventListener('cuechange', update)
-  })
+  }
 
-  player.on('subtitlechange', ({ payload }: PlayerEvent) => {
+  const hiddensubtitle = () => {
     $dom.innerHTML = ''
-    initSubtitle(payload)
-  })
+    $track.addEventListener('cuechange', update)
+  }
 
-  player.on('videosourcechange', () => {
+  player.on(['videosourcechange', 'destroy'], () => {
+    $dom.innerHTML = ''
     player.emit('removesetting', 'subtitle')
     $track.removeEventListener('cuechange', update)
     if ($track.src) URL.revokeObjectURL($track.src)
     $track.src = ''
   })
 
-  player.on('subtitleconfigchange', ({ payload }: PlayerEvent) => {
+  player.on('subtitlechange', ({ payload }: PlayerEvent) => {
     player.emit('removesetting', 'subtitle')
     initSetting(payload)
   })
 
-  player.on('destroy', () => {
-    if ($track.src) URL.revokeObjectURL($track.src)
-    $track.removeEventListener('cuechange', update)
-    $track.remove()
-  })
-
   initSetting(subtitle)
+
   function initSetting(subtitle: Subtitle[]) {
     if (subtitle.length) {
       player.emit('addsetting', <Setting>{
@@ -88,13 +76,14 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
         icon: subtitleSvg,
         key: 'subtitle',
         onChange({ value }, options) {
+          const isInit = options?.isInit
           if (value) {
-            player.emit('showsubtitle')
-            !options!.isInit && player.emit('notice', { text: 'Show subtitle' })
+            showsubtitle()
             initSubtitle(value)
+            !isInit && player.emit('notice', { text: 'Show subtitle' })
           } else {
-            player.emit('hiddensubtitle')
-            !options!.isInit && player.emit('notice', { text: 'Hide subtitle' })
+            hiddensubtitle()
+            !isInit && player.emit('notice', { text: 'Hide subtitle' })
           }
         },
         children: [
@@ -155,112 +144,3 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
 }
 
 export default render
-
-function fixSrt(srt: string) {
-  return srt.replace(/(\d\d:\d\d:\d\d)[,.](\d+)/g, (_, $1, $2) => {
-    let ms = $2.slice(0, 3)
-    if ($2.length === 1) {
-      ms = $2 + '00'
-    }
-    if ($2.length === 2) {
-      ms = $2 + '0'
-    }
-    return `${$1},${ms}`
-  })
-}
-
-function srtToVtt(srtText: string) {
-  return 'WEBVTT \r\n\r\n'.concat(
-    fixSrt(srtText)
-      .replace(/\{\\([ibu])\}/g, '</$1>')
-      .replace(/\{\\([ibu])1\}/g, '<$1>')
-      .replace(/\{([ibu])\}/g, '<$1>')
-      .replace(/\{\/([ibu])\}/g, '</$1>')
-      .replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, '$1.$2')
-      .replace(/{[\s\S]*?}/g, '')
-      .concat('\r\n\r\n')
-  )
-}
-
-function vttToBlob(vttText: string) {
-  return URL.createObjectURL(
-    new Blob([vttText], {
-      type: 'text/vtt'
-    })
-  )
-}
-
-function assToVtt(ass: string) {
-  const reAss = new RegExp(
-    'Dialogue:\\s\\d,' +
-      '(\\d+:\\d\\d:\\d\\d.\\d\\d),' +
-      '(\\d+:\\d\\d:\\d\\d.\\d\\d),' +
-      '([^,]*),' +
-      '([^,]*),' +
-      '(?:[^,]*,){4}' +
-      '([\\s\\S]*)$',
-    'i'
-  )
-
-  function fixTime(time = '') {
-    return time
-      .split(/[:.]/)
-      .map((item, index, arr) => {
-        if (index === arr.length - 1) {
-          if (item.length === 1) {
-            return `.${item}00`
-          }
-
-          if (item.length === 2) {
-            return `.${item}0`
-          }
-        } else if (item.length === 1) {
-          return (index === 0 ? '0' : ':0') + item
-        }
-
-        return index === 0 ? item : index === arr.length - 1 ? `.${item}` : `:${item}`
-      })
-      .join('')
-  }
-
-  return `WEBVTT\n\n${ass
-    .split(/\r?\n/)
-    .map((line) => {
-      const m = line.match(reAss)
-      if (!m) return null
-      return {
-        start: fixTime(m[1]!.trim()),
-        end: fixTime(m[2]!.trim()),
-        text: m[5]!
-          .replace(/{[\s\S]*?}/g, '')
-          .replace(/(\\N)/g, '\n')
-          .trim()
-          .split(/\r?\n/)
-          .map((item) => item.trim())
-          .join('\n')
-      }
-    })
-    .filter((line) => line)
-    .map((line, index) => {
-      if (line) {
-        return `${index + 1}\n${line.start} --> ${line.end}\n${line.text}`
-      }
-      return ''
-    })
-    .filter((line) => line.trim())
-    .join('\n\n')}`
-}
-
-function escape(str: string) {
-  return str.replace(
-    /[&<>'"]/g,
-    (tag) =>
-      ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-      }[tag] || tag)
-  )
-}

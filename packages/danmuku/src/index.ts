@@ -18,7 +18,7 @@ export default (option: Options): PlayerPlugin => ({
         default: true,
         key: 'danmuku',
         icon: subtitleSvg,
-        onChange: (flag: boolean, { isInit }: { isInit?: boolean } = {}) => {
+        onChange: (flag: boolean, { isInit }: any) => {
           if (flag) {
             !isInit && player.emit('notice', { text: 'Show danmuku' })
             danmuku?.show()
@@ -34,7 +34,7 @@ export default (option: Options): PlayerPlugin => ({
     player.on('danmukusourcechange', ({ payload }) => {
       player.emit('removesetting', 'danmuku')
       emitSetting()
-      danmuku = new Danmuku(player, { ...option, danmuku: payload.danmuku })
+      danmuku = new Danmuku(player, { ...option, ...payload, danmuku: payload.danmuku })
     })
 
     player.on('videosourcechange', function () {

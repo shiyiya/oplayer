@@ -4,7 +4,7 @@ import { formatTime, isMobile, screenShot, siblings, toggleClass } from '../util
 import renderVolumeBar from './VolumeBar'
 
 import type { Player } from '@oplayer/core'
-import type { SnowConfig } from '../types'
+import type { UiConfig } from '../types'
 
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
@@ -26,7 +26,7 @@ import {
   time
 } from './ControllerBottom.style'
 
-const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
+const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(
     `div.${controllerBottom}`,
     {},

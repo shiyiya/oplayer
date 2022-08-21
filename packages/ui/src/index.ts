@@ -1,7 +1,7 @@
 import type Player from '@oplayer/core'
 import { $, PlayerPlugin } from '@oplayer/core'
 import { root } from './style'
-import type { SnowConfig } from './types'
+import type { UiConfig } from './types'
 
 import renderControllerBar from './components/ControllerBar'
 import renderButton from './components/CoverButton'
@@ -14,7 +14,7 @@ import renderSetting from './components/Setting'
 import initListener from './listeners/init'
 import { isMobile } from './utils'
 
-const apply = (player: Player, config: SnowConfig) => {
+const apply = (player: Player, config: UiConfig) => {
   const $dom = $.create(`div.${root(config.theme)}`)
 
   // error
@@ -53,7 +53,7 @@ const apply = (player: Player, config: SnowConfig) => {
   }
 }
 
-const defaultConfig: SnowConfig = {
+const defaultConfig: UiConfig = {
   theme: {
     primaryColor: '#6668ab'
   },
@@ -66,8 +66,8 @@ const defaultConfig: SnowConfig = {
   miniProgressBar: true
 }
 
-const snow = (config?: SnowConfig): PlayerPlugin => ({
-  name: 'oplayer-theme-snow',
+const snow = (config?: UiConfig): PlayerPlugin => ({
+  name: 'oplayer-theme-ui',
   apply: (player) => apply(player, Object.assign(defaultConfig, config))
 })
 

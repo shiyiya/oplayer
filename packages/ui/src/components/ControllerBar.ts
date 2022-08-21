@@ -1,7 +1,7 @@
 import Player, { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
 import { settingShown } from '../style'
-import type { SnowConfig } from '../types'
+import type { UiConfig } from '../types'
 import { addClass, debounce, hasClass, isMobile, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
@@ -33,7 +33,7 @@ let ctrlAutoHideTimer: NodeJS.Timeout | null = null
 const render = (
   player: Player,
   el: HTMLElement,
-  config: SnowConfig,
+  config: UiConfig,
   onShow?: Function,
   onHide?: Function
 ) => {

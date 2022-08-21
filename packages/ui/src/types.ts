@@ -21,7 +21,7 @@ export type Setting = {
   [x: string]: any
 }
 
-export type SnowConfig = {
+export type UiConfig = {
   theme?: {
     primaryColor: `#${string}`
   }
