@@ -45,12 +45,12 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
   )
 
   const showsubtitle = () => {
-    $track.removeEventListener('cuechange', update)
+    $track.addEventListener('cuechange', update)
   }
 
   const hiddensubtitle = () => {
     $dom.innerHTML = ''
-    $track.addEventListener('cuechange', update)
+    $track.removeEventListener('cuechange', update)
   }
 
   player.on(['videosourcechange', 'destroy'], () => {
