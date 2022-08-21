@@ -24,7 +24,7 @@ const render = (player: Player, el: HTMLElement) => {
     { 'aria-label': 'Errror Overlay' }
   )
 
-  player.on(['error', 'plugin:error'], ({ payload }: PlayerEvent) => {
+  player.on(['error', 'pluginerror'], ({ payload }: PlayerEvent) => {
     addClass($dom, showCls)
 
     let message: string = payload.message

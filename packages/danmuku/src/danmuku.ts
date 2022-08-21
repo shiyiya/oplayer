@@ -71,7 +71,7 @@ export default class Danmuku {
       } else {
         danmukus = this.options.danmuku
       }
-      this.player.emit('danmukuloaded', danmukus)
+      this.player.emit('loadeddanmuku', danmukus)
       this.load(danmukus)
     } catch (error) {
       this.player.emit('notice', { text: 'danmuku: ' + (<Error>error).message })

@@ -199,7 +199,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     })
   })
 
-  player.on('ui/setting:toggle', ({ payload }: PlayerEvent) => {
+  player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
     $tigger = payload.target
     if (player.$root.classList.toggle(settingShown)) {
       $panels[0]!.$ref.classList.add(activeCls)
@@ -221,7 +221,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   document.addEventListener('click', outClicklistener)
   player.on('destroy', () => document.removeEventListener('click', outClicklistener))
 
-  player.emit('ui/setting:loaded')
+  player.emit('loadedsetting')
 
   $.render($dom, $el)
 }

@@ -49,7 +49,6 @@ const render = (player: Player, el: HTMLElement) => {
     }
   }
 
-  //TODO: show hit when moving | hover
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
     isDargMoving = true
     $dom.classList.add(progressDarging)

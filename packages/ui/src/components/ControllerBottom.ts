@@ -213,7 +213,7 @@ const render = (player: Player, el: HTMLElement, config: SnowConfig) => {
         screenShot(player)
         break
       case 'Setting': {
-        player.emit('ui/setting:toggle', e)
+        player.emit('settingvisibilitychange', e)
         break
       }
       default:

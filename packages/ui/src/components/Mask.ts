@@ -16,7 +16,7 @@ const render = (player: Player, el: HTMLElement) => {
   $dom.addEventListener('click', () => {
     if (!initListener.isInitialized() || hasClass(player.$root, settingShown)) return
     if (isMobile) {
-      player.emit('ui/controller:toggle')
+      player.emit('controllervisibilitychange')
     } else {
       player.togglePlay()
     }

@@ -131,7 +131,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: SnowConfig) 
       .then((buffer) => {
         const decoder = new TextDecoder(subtitle.encoding)
         const text = decoder.decode(buffer)
-        player.emit('subtitleloaded', subtitle)
+        player.emit('loadedsubtitle', subtitle)
 
         switch (subtitle.type || new URL(subtitle.url).pathname.split('.')[1]) {
           case 'srt':

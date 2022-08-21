@@ -23,12 +23,12 @@ const torrentPlugin = ({
     if (!matcher(source)) return false
 
     if (!isInitial) {
-      emit('plugin:loaded', { name: PLUGIN_NAME })
+      emit('loadedplugin', { name: PLUGIN_NAME })
       isInitial = true
     }
 
     if (!webtorrent.WEBRTC_SUPPORT) {
-      emit('plugin:error', {
+      emit('pluginerror', {
         payload: {
           type: 'torrentNotSupported',
           message: 'torrent is not supported'

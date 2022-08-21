@@ -38,12 +38,12 @@ const hlsPlugin = ({
 
       hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
       if (!isInitial) {
-        emit('plugin:loaded', { name: PLUGIN_NAME })
+        emit('loadedplugin', { name: PLUGIN_NAME })
         isInitial = true
       }
 
       if (!hlsInstance || !Hls.isSupported()) {
-        emit('plugin:error', {
+        emit('pluginerror', {
           payload: {
             type: 'hlsNotSupported',
             message: 'hlsNotSupported'
@@ -62,7 +62,7 @@ const hlsPlugin = ({
             event === Hls.Events.ERROR &&
             data.details == 'manifestLoadError' /*ErrorDetails.MANIFEST_LOAD_ERROR*/
           ) {
-            emit('plugin:error', { message: data.type, ...data })
+            emit('pluginerror', { message: data.type, ...data })
           }
           emit(event, data)
         })

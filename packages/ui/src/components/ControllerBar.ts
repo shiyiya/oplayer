@@ -81,7 +81,7 @@ const render = (
     })
     player.$root.addEventListener('mouseleave', hideCtrl)
   } else {
-    player.on('ui/controller:toggle', () => {
+    player.on('controllervisibilitychange', () => {
       if (hasClass($dom, hideCls)) {
         showCtrl()
       } else {

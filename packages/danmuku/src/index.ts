@@ -30,7 +30,7 @@ export default (option: Options): PlayerPlugin => ({
       })
     }
 
-    player.on('ui/setting:loaded', emitSetting)
+    player.on('loadedsetting', emitSetting)
     player.on('danmukusourcechange', ({ payload }) => {
       player.emit('removesetting', 'danmuku')
       emitSetting()
