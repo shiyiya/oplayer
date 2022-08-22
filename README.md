@@ -26,10 +26,7 @@ import ui from '@oplayer/ui'
 import danmuku from '@oplayer/danmuku'
 
 Player.make(document.body, {
-  source: {
-    src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-    poster: 'https://media.w3.org/2010/05/sintel/poster.png'
-  }
+  source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
 })
   .use([
     danmuku({ danmuku: 'https://oplayer.vercel.app/danmuku.xml' }),
@@ -37,9 +34,9 @@ Player.make(document.body, {
       theme: { primaryColor: '#9370db' },
       subtitle: [
         {
-          text: 'English',
+          text: '君の名は',
           default: true,
-          url: 'https://oplayer.vercel.app/hikarunara.vtt'
+          url: 'https://oplayer.vercel.app/君の名は.srt'
         }
       ]
     })
@@ -53,13 +50,8 @@ Player.make(document.body, {
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.umd.js"></script>
 
 <script>
-  OPlayer.make(document.body, {
-    source: {
-      src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-      poster: 'https://media.w3.org/2010/05/sintel/poster.png'
-    }
-  })
-    .use([OUI(), OHls()])
+  OPlayer.make(document.body, { source: { src: 'https://oplayer.vercel.app/君の名は.mp4' } })
+    .use([OUI(), OHls(), ODanmuku()])
     .create()
 </script>
 ```

@@ -26,6 +26,10 @@ export type UiConfig = {
     primaryColor: `#${string}`
   }
   /**
+   * default: false
+   */
+  autoFocus?: boolean
+  /**
    * default: true
    */
   hotkey?: boolean

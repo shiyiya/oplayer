@@ -105,9 +105,9 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
     const activeCues = player.$video.textTracks[0]?.activeCues?.[0]
     if (activeCues) {
       //@ts-ignore
-      $dom.innerHTML = activeCues?.text
+      $dom.innerHTML = activeCues.text
         ?.split(/\r?\n/)
-        .map((item: string) => `<p>${escape(item)}</p>`)
+        .map((item: string) => `<p>${item}</p>`)
         .join('')
 
       player.emit('subtitleupdate')
@@ -138,7 +138,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
         $track.src = url
       })
       .catch((err) => {
-        player.emit('notice', { text: (<Error>err).message })
+        player.emit('notice', { text: 'Subtitle' + (<Error>err).message })
       })
   }
 }

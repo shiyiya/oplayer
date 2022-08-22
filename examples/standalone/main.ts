@@ -13,11 +13,10 @@ import { ref } from 'lit/directives/ref.js'
 import poster from './poster.png'
 
 const dataSrcs = [
-  'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
+  'https://oplayer.vercel.app/君の名は.mp4',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
-  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
-  'magnet:?xt=urn:btih:16E51415639B7A1F50AB99B4A0E7CE1DABD86712'
+  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8'
 ] as const
 
 const querySrc = new URLSearchParams(window.location.search).get('src')
@@ -46,12 +45,9 @@ const flvPlugin: PlayerPlugin = {
 let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
-  autoplay: false,
+  autoplay: true,
   muted: true,
-  source: {
-    src,
-    poster: poster // 'https://media.w3.org/2010/05/sintel/poster.png'
-  }
+  source: { src }
   // screenshot
   // videoAttr: {
   //   crossorigin: 'anonymous'
@@ -63,16 +59,17 @@ const p = Player.make(document.getElementById('player')!, {
     danmuku({
       danmuku: 'https://oplayer.vercel.app/danmuku.xml',
       fontSize: isMobile ? 16 : 20,
-      filter: (d: DanmukuItem) => d.mode! > 3 // 只显示普通弹幕
+      filter: (d: DanmukuItem) => d.text == '+1s'
     }),
     ui({
+      autoFocus: true,
       theme: { primaryColor: '#f00' },
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
         {
           name: 'Japenese',
           default: true,
-          url: 'https://oplayer.vercel.app/hikarunara.vtt'
+          url: 'https://oplayer.vercel.app/君の名は.srt'
         }
       ]
     })

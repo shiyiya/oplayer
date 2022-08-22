@@ -44,7 +44,7 @@ const apply = (player: Player, config: UiConfig) => {
 
   if (!isMobile) {
     import('./listeners/focus').then((h) => {
-      h.default.startListening(player)
+      h.default.startListening(player, config.autoFocus)
     })
 
     import('./functions/hotkey').then((h) => {

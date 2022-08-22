@@ -57,7 +57,6 @@ importers:
       '@oplayer/core': workspace:*
       '@oplayer/danmuku': workspace:*
       '@oplayer/hls': workspace:*
-      '@oplayer/torrent': workspace:*
       '@oplayer/ui': workspace:*
       flv.js: ^1.6.2
       hls.js: ^1.2.1
@@ -66,7 +65,6 @@ importers:
       '@oplayer/core': link:../../packages/core
       '@oplayer/danmuku': link:../../packages/danmuku
       '@oplayer/hls': link:../../packages/hls
-      '@oplayer/torrent': link:../../packages/torrent
       '@oplayer/ui': link:../../packages/ui
       flv.js: 1.6.2
       hls.js: 1.2.1
