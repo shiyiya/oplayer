@@ -39,14 +39,14 @@ const render = (player: Player, el: HTMLElement) => {
     setter(getSlidingValue(e))
   }
 
-  const setter = (value: number) => {
+  const setter = (value: number, init = false) => {
     $volumeValue.innerText = `${~~(value * 100)}`
     $volumeSlider.style.transform = `scaleY(${value})`
     $thumb.style.bottom = `calc(${~~(value * 100)}% - 6px)`
-    player.setVolume(value)
+    !init && player.setVolume(value)
   }
 
-  setter(player.volume)
+  setter(player.volume, true)
   player.on('volumechange', () => {
     setter(player.isMuted ? 0 : player.volume)
   })

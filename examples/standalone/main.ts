@@ -142,4 +142,6 @@ p.on((e: PlayerEvent) => {
   // console.info(e)
 })
 
+p.$root.addEventListener('click', p.unmute.bind(p), { once: true })
+
 render(meta(), document.getElementById('meta')!)

@@ -117,14 +117,13 @@ export class Player {
   readonly render = () => {
     this.$video = $.create(
       `video.${$.css(`
-              width: 100%;
-              height: 100%;
-              display: block;
-              position: relative;
-            `)}`,
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: relative;
+      `)}`,
       {
         autoplay: this.#options.autoplay,
-        muted: this.#options.muted,
         loop: this.#options.loop,
         playsinline: this.#options.playsinline,
         volume: this.#options.volume,
@@ -145,6 +144,7 @@ export class Player {
           `)}`
     )
 
+    this.$video.muted = !!this.#options.muted
     $.render(this.$video, this.$root)
     $.render(this.$root, this.container)
   }
