@@ -245,7 +245,11 @@ export class Player {
   }
 
   get isFullScreen() {
-    return document.fullscreenElement === this.$root
+    return (
+      (document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement) === this.$root
+    )
   }
 
   toggleFullScreen() {
