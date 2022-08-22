@@ -27,7 +27,6 @@ const initListener = (() => {
           if (
             player.duration !== 1 &&
             player.duration !== Infinity &&
-            player.duration != NaN &&
             player.duration > 1
           ) {
             initEnd()
