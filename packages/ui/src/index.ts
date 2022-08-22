@@ -26,7 +26,7 @@ const apply = (player: Player, config: UiConfig) => {
   renderMask(player, $area)
   const { show, hide } = renderButton(player, $area)
   renderControllerBar(player, $area, config, show, hide)
-  renderSetting(player, $area)
+  renderSetting(player, $area, config.settings)
   renderNotice(player, $area)
 
   if (config.subtitle) {

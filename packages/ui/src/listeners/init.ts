@@ -24,11 +24,7 @@ const initListener = (() => {
       // https://www.cnblogs.com/taoze/p/5783928.html
       if (isMobile) {
         player.on('durationchange', function durationchange() {
-          if (
-            player.duration !== 1 &&
-            player.duration !== Infinity &&
-            player.duration > 1
-          ) {
+          if (player.duration !== Infinity && player.duration > 0) {
             initEnd()
           }
         })

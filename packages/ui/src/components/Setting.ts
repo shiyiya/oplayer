@@ -167,7 +167,8 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       type: 'switcher',
       default: player.isLoop,
       onChange: (value: boolean) => player.setLoop(value)
-    }
+    },
+    ...options
   ]
 
   const hide = () => {
@@ -175,7 +176,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     player.$root.classList.remove(settingShown)
   }
 
-  createPanel($panels, defaultSetting.concat(options), { onHide: hide })
+  createPanel($panels, defaultSetting, { onHide: hide })
   $panels.forEach(($p) => $.render($p.$ref, $dom))
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {

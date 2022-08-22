@@ -29,7 +29,7 @@ Player.make(document.body, {
   source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
 })
   .use([
-    danmuku({ danmuku: 'https://oplayer.vercel.app/danmuku.xml' }),
+    danmuku({ source: 'https://oplayer.vercel.app/danmuku.xml' }),
     ui({
       theme: { primaryColor: '#9370db' },
       subtitle: [

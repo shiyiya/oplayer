@@ -49,7 +49,7 @@ export type RootRect = {
 }
 
 export type Options = {
-  danmuku: string | Function | DanmukuItem[]
+  source: string | Function | DanmukuItem[]
   speed?: number // 持续时间 秒，[1 ~ 10]
   antiOverlap?: boolean // 是否防重叠
   useWorker?: boolean

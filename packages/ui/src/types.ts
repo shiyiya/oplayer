@@ -58,7 +58,17 @@ export type UiConfig = {
    */
   miniProgressBar?: boolean
 
+  subtitle?: Subtitle[]
+
+  settings?: Setting[]
+
+  /*  --- WIP ---  */
+
+  contextmenu?: []
+
   thumbnails?: {}
 
-  subtitle?: Subtitle[]
+  highlight?: []
+
+  airplay?: boolean
 }

@@ -34,7 +34,7 @@ export default (option: Options): PlayerPlugin => ({
     player.on('danmukusourcechange', ({ payload }) => {
       player.emit('removesetting', 'danmuku')
       emitSetting()
-      danmuku = new Danmuku(player, { ...option, ...payload, danmuku: payload.danmuku })
+      danmuku = new Danmuku(player, { ...option, ...payload, source: payload.source })
     })
 
     player.on('videosourcechange', function () {

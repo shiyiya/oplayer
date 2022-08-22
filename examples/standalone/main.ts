@@ -47,6 +47,7 @@ let logs: HTMLTextAreaElement
 const p = Player.make(document.getElementById('player')!, {
   autoplay: true,
   muted: true,
+  volume: 0.5,
   source: { src }
   // screenshot
   // videoAttr: {
@@ -57,7 +58,7 @@ const p = Player.make(document.getElementById('player')!, {
     hls(),
     flvPlugin,
     danmuku({
-      danmuku: 'https://oplayer.vercel.app/danmuku.xml',
+      source: 'https://oplayer.vercel.app/danmuku.xml',
       fontSize: isMobile ? 16 : 20,
       filter: (d: DanmukuItem) => d.text == '+1s'
     }),
@@ -67,7 +68,7 @@ const p = Player.make(document.getElementById('player')!, {
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: [
         {
-          name: 'Japenese',
+          name: 'JP & ZH',
           default: true,
           url: 'https://oplayer.vercel.app/君の名は.srt'
         }

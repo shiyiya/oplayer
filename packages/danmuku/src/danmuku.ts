@@ -64,12 +64,12 @@ export default class Danmuku {
   async fetch() {
     try {
       let danmukus: DanmukuItem[] = []
-      if (typeof this.options.danmuku === 'function') {
-        danmukus = await this.options.danmuku()
-      } else if (typeof this.options.danmuku === 'string') {
-        danmukus = await bilibiliDanmuParseFromUrl(this.options.danmuku)
+      if (typeof this.options.source === 'function') {
+        danmukus = await this.options.source()
+      } else if (typeof this.options.source === 'string') {
+        danmukus = await bilibiliDanmuParseFromUrl(this.options.source)
       } else {
-        danmukus = this.options.danmuku
+        danmukus = this.options.source
       }
       this.player.emit('loadeddanmuku', danmukus)
       this.load(danmukus)
