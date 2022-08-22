@@ -38,7 +38,7 @@ export type UiConfig = {
    */
   speed?: string[]
   /**
-   * default: true
+   * default: false
    */
   screenshot?: boolean
   /**
