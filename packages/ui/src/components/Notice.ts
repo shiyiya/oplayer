@@ -22,7 +22,11 @@ const noticeTextCls = $.css`
 const noticeShowCls = $.css('display:block;')
 
 const render = (player: Player, el: HTMLElement) => {
-  const $dom = $.create(`div.${noticeCls}`, {}, `<div class="${noticeTextCls}"></div>`)
+  const $dom = $.create(
+    `div.${noticeCls}`,
+    { 'aria-label': 'Notice' },
+    `<div class="${noticeTextCls}"></div>`
+  )
 
   const $text: HTMLDivElement = $dom.querySelector(`.${noticeTextCls}`)!
 

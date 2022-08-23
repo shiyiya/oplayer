@@ -23,8 +23,8 @@ const controllerBar = $.css({
   right: '0',
   bottom: '0',
   'z-index': '98',
-  padding: 'bottom 15px',
-  transition: 'all 0.3s ease',
+  padding: '0 15px',
+  transition: 'bottom 0.3s ease',
   'background-image': 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3))'
 })
 
