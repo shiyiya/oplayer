@@ -8,6 +8,7 @@ const noticeCls = $.css`
   display: none;
   top: 10px;
   left: 10px;
+  z-index: 99;
 `
 
 const noticeTextCls = $.css`

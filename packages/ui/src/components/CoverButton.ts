@@ -14,7 +14,7 @@ const styles = $.css({
     position: 'absolute',
     right: '40px',
     bottom: '50px',
-    fill: 'hsla(0, 0%, 100%, .8)',
+    fill: '#fff',
     width: '3.5em'
   },
 

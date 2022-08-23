@@ -1,7 +1,8 @@
 import type { Player } from '@oplayer/core'
 import { $, PlayerEvent } from '@oplayer/core'
 import subtitleSvg from '../icons/subtitles.svg?raw'
-import type { Setting, UiConfig, Subtitle } from '../types'
+import type { Setting, Subtitle, UiConfig } from '../types'
+import { isMobile } from '../utils'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
 function findDefault(o: any) {
@@ -15,22 +16,18 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
   const $dom = $.create(
     `div.${$.css({
       width: '90%',
-      'text-align': 'center',
       color: '#fff',
+      left: '5%',
+      'text-align': 'center',
       'pointer-events': 'none',
       'text-shadow':
         '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
-      'font-size': '20px',
-      position: 'absolute',
-      bottom: '50px',
-      left: '5%',
 
-      ['@media only screen and (max-width: 991px)']: {
-        '&': {
-          'font-size': '1em',
-          bottom: '6px'
-        }
-      }
+      'font-size': isMobile ? '1em' : '20px',
+      position: 'absolute',
+      bottom: isMobile ? '6px' : '50px',
+
+      '& > p': { margin: 0 }
     })}`,
     {}
   )

@@ -3,7 +3,7 @@ import { $ } from '@oplayer/core'
 export const activeCls = $.css('display: block;')
 
 export const setting = $.css({
-  'z-index': '99',
+  'z-index': '98',
   height: 'auto',
   'max-height': '300px',
   'max-width': '200px',
