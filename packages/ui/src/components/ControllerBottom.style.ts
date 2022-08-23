@@ -10,6 +10,7 @@ export const controllerBottom = $.css({
   fill: '#fff',
   height: '30px',
   padding: isMobile ? 0 : '5px 0px',
+  'margin-right': isMobile ? '-9px' : '0px',
   'text-align': 'center',
 
   [`& .${icon}`]: {
