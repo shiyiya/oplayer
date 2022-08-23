@@ -14,7 +14,8 @@ import playSvg from '../icons/play.svg?raw'
 import screenshotSvg from '../icons/screenshot.svg?raw'
 import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
-import webExpandSvg from '../icons/web-fullscreen.svg?raw'
+import webExpandSvg from '../icons/webfullscreen-enter.svg?raw'
+import webCompressSvg from '../icons/webfullscreen-exit.svg?raw'
 import settingsSvg from '../icons/settings.svg?raw'
 
 import {
@@ -129,6 +130,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
                             type="button"
                           >
                           ${webExpandSvg}
+                          ${webCompressSvg}
                           </button>
                         </div>`
                       : ''
@@ -147,6 +149,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
+  const $webfull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
+
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
 
   const switcher = (el: HTMLCollection, key: 0 | 1) => {
@@ -166,12 +170,16 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     switcher($fullscreen.children, player.isFullScreen ? 1 : 0)
   }
 
+  const webfullscreenSwitcher = (isWebfullScreen: boolean) => {
+    switcher($webfull.children, isWebfullScreen ? 1 : 0)
+  }
+
   // TODO: 使用 css 控制，player root 添加状态 class
-  playerSwitcher(), volumeSwitcher(), fullscreenSwitcher()
+  playerSwitcher(), volumeSwitcher(), fullscreenSwitcher(), webfullscreenSwitcher(false)
   !isMobile && player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
   player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
-  player.on('webfullscreen', () => toggleClass(player.$root, webFullScreen))
+  player.on('webfullscreen', () => webfullscreenSwitcher(toggleClass(player.$root, webFullScreen)))
   player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })

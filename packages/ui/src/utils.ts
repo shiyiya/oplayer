@@ -80,8 +80,7 @@ export function removeClass(target: HTMLElement, className: string) {
 }
 
 export function toggleClass(target: HTMLElement, className: string) {
-  target.classList.toggle(className)
-  return target
+  return target.classList.toggle(className)
 }
 
 export function hasClass(target: HTMLElement, className: string) {

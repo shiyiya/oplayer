@@ -10,16 +10,17 @@ export const controllerBottom = $.css({
   fill: '#fff',
   height: '30px',
   padding: isMobile ? 0 : '5px 0px',
-  'line-height': '22px',
   'text-align': 'center',
-
-  [`& .${icon}[data-value='false']`]: {
-    opacity: 0.5
-  },
 
   [`& .${icon}`]: {
     width: '36px',
     height: '22px',
+
+    ['&[aria-label="WebFullscreen"]']: {
+      width: '25px',
+      height: '20px',
+      'margin-top': '2px'
+    },
 
     ['> svg']: {
       width: '100%',
@@ -43,12 +44,12 @@ export const time = $.css`
 export const expand = $.css(`
     position: absolute;
     top: 0;
-    right: 0;
+    right: 50%;
     z-index: 10;
     padding: 4px;
     border-radius: 4px;
     box-sizing: border-box;
-    transform: translate(0%, -100%);
+    transform: translate(50%, -100%);
     font-size: 12px;
     transition: visibility 0s, opacity 0.1s linear;
 `)
@@ -68,9 +69,14 @@ export const dropdownHoverable = $.css({
     'background-color': 'rgba(21, 21, 21, .9)'
   },
 
-  [`&:hover .${expand}`]: {
-    visibility: 'visible',
-    opacity: 1
+  ['&:hover']: {
+    'padding-top': '4px',
+    'margin-top': '-4px',
+
+    [`& .${expand}`]: {
+      visibility: 'visible',
+      opacity: 1
+    }
   }
 })
 
