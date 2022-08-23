@@ -31,7 +31,7 @@
   ],
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0",
-    "hls.js": "^1.2.0"
+    "hls.js": ">=1.0.0"
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",

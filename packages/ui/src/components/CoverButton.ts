@@ -15,25 +15,21 @@ const styles = $.css({
     right: '40px',
     bottom: '50px',
     fill: '#fff',
-    width: '3.5em'
-  },
+    width: '3.5em',
 
-  '& svg': {
-    position: isMobile ? 'absolute' : false,
-    filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
+    '& > svg': {
+      filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
+    }
   },
 
   '@media only screen and (max-width: 991px)': {
     '& > button': {
-      position: 'absolute',
       top: '0',
       bottom: '0',
       left: '0',
       right: '0',
       margin: 'auto',
-      width: '2.8em',
-      display: 'flex',
-      'align-items': 'center'
+      width: '2.8em'
     }
   }
 })
