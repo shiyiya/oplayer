@@ -78,15 +78,7 @@ const autoPipPlugin: PlayerPlugin = {
   name: 'oplayer-plugin-autopip',
   apply: (player: Player) => {
     const intersectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            player.exitPip()
-          } else {
-            player.enterPip()
-          }
-        })
-      },
+      ([$player]) => ($player.isIntersecting ? player.exitPip() : player.enterPip()),
       { threshold: [0.15] }
     )
 

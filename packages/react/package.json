@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/react",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "React wrapper for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
