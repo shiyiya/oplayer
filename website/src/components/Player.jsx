@@ -1,5 +1,4 @@
-//@ts-nocheck
-import Player from '@oplayer/core'
+import { Player } from '../../../packages/core/dist/index.es'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 
 const ReactOPlayer = forwardRef((props, ref) => {

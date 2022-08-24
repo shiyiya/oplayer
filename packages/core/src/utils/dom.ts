@@ -36,15 +36,23 @@ export namespace $ {
     return container.lastElementChild || container.lastChild
   }
 
-  function makeStyleTag() {
+  export const isBrowser = () =>
+    Boolean(
+      typeof globalThis !== 'undefined' &&
+        globalThis.document &&
+        globalThis.document.documentElement
+    )
+
+  export function createSheet(key: string) {
+    if (!isBrowser()) return null
     let tag = document.createElement('style')
-    tag.setAttribute('data-oplayer', '')
+    tag.setAttribute(`data-${key}`, '')
     tag.appendChild(document.createTextNode(''))
     ;(document.head || document.getElementsByTagName('head')[0]).appendChild(tag)
 
     for (let i = 0; i < document.styleSheets.length; i++) {
       if (document.styleSheets[i]!.ownerNode === tag) {
-        return document.styleSheets[i]
+        return document.styleSheets.item(i)
       }
     }
     return null
@@ -63,9 +71,9 @@ export namespace $ {
     }
   })()
 
-  export const css = (() => {
-    const sheet = makeStyleTag()!
-    return (...arg: any[]) => {
+  export const createCss =
+    ({ sheet, ssrData }: { sheet: CSSStyleSheet | null; ssrData: string[] }) =>
+    (...arg: any[]) => {
       const isRaw = Boolean(arg[0] && arg[0].length && arg[0].raw)
 
       let stringify = ''
@@ -86,9 +94,12 @@ export namespace $ {
       }
 
       const cls = createSelector(stringify)
-      for (let i = 0; i < sheet.cssRules.length; i++) {
-        if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == '.' + cls) {
-          return cls
+
+      if (sheet) {
+        for (let i = 0; i < sheet.cssRules.length; i++) {
+          if ((sheet.cssRules[i] as CSSStyleRule)?.selectorText == '.' + cls) {
+            return cls
+          }
         }
       }
 
@@ -97,13 +108,29 @@ export namespace $ {
         styles = _css(arg[0], `.${cls}`)
       }
 
-      styles.forEach((rule) => {
-        sheet?.insertRule(rule, sheet.cssRules.length)
-      })
+      if (sheet) {
+        styles.forEach((rule) => {
+          sheet.insertRule(rule, sheet.cssRules.length)
+        })
+      } else {
+        ssrData = ssrData.concat(styles)
+      }
 
       return cls
     }
-  })()
+
+  export const createStyled = () => {
+    const ssrData: string[] = []
+    const sheet = createSheet('oplayer')
+
+    return {
+      css: createCss({ sheet, ssrData }),
+      getCssValue: () => ssrData
+    }
+  }
+
+  //TODO: support ssr
+  export const { css, getCssValue } = createStyled()
 }
 
 export default $

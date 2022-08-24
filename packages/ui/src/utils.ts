@@ -13,7 +13,7 @@ export function formatTime(duration: number): string {
 }
 
 export const isMobile = /Android|webOS|iPhone|Pad|Pod|BlackBerry|Windows Phone/i.test(
-  navigator.userAgent
+  globalThis?.navigator?.userAgent
 )
 
 export function download(url: string, name: string) {

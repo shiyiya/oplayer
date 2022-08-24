@@ -7,14 +7,9 @@ import PrimaryButton from '../PrimaryButton'
 import styles from './styles.module.css'
 
 const HeaderView = () => {
-  const { windowHeight } = useWindowSize()
-
   return (
     <div className={styles.Wrapper}>
-      <div
-        className={styles.Container}
-        style={{ height: windowHeight > 800 ? windowHeight / 2 : undefined }}
-      >
+      <div className={styles.Container}>
         <div className={styles.ContainerLeft}>
           <div className={styles.HeaderTitle}>Oh! Player</div>
           <div className={styles.DescriptionText}>

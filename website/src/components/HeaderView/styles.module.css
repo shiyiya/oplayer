@@ -6,6 +6,7 @@
   margin: 0 auto;
   max-width: var(--ifm-container-width);
   transition: padding 100ms cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  height: 45vh;
 }
 
 .Wrapper {
@@ -18,6 +19,9 @@
   .Wrapper {
     margin-top: -1em;
     margin-bottom: 0;
+  }
+  .Container {
+    height: auto;
   }
 }
 
