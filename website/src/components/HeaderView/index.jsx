@@ -1,10 +1,10 @@
-import React from 'react'
-import useBaseUrl from '@docusaurus/useBaseUrl'
 import Translate from '@docusaurus/Translate'
-import PrimaryButton from '../../../components/PrimaryButton'
-import GithubButton from '../../../components/GithubButton'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import React from 'react'
+import { useWindowSize } from '../../hooks/useWindowSize'
+import GithubButton from '../GithubButton'
+import PrimaryButton from '../PrimaryButton'
 import styles from './styles.module.css'
-import { useWindowSize } from '../../../hooks/useWindowSize'
 
 const HeaderView = () => {
   const { windowHeight } = useWindowSize()

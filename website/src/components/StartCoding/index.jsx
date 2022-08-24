@@ -1,8 +1,8 @@
 import Translate from '@docusaurus/Translate'
 import useBaseUrl from '@docusaurus/useBaseUrl'
 import React from 'react'
-import CodeBlock from '../../../components/CodeBlock'
-import PrimaryButton from '../../../components/PrimaryButton'
+import CodeBlock from '../CodeBlock'
+import PrimaryButton from '../PrimaryButton'
 import styles from './styles.module.css'
 
 const code = `import Player from '@oplayer/core'
