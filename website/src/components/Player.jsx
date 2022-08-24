@@ -70,7 +70,7 @@ const ReactOPlayer = forwardRef((props, ref) => {
       style={{
         width: '100%',
         paddingTop: `${aspectRatio * 100}%`,
-        backgroundColor: '#f4f4f4',
+        backgroundColor: 'var(--ifm-color-background-2)',
         position: 'relative'
       }}
     >
