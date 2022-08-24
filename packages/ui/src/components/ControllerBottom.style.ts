@@ -8,8 +8,8 @@ export const controllerBottom = $.css({
   'font-size': '14px',
   color: '#fff',
   fill: '#fff',
-  height: '30px',
-  padding: isMobile ? 0 : '5px 0px',
+  height: '35px',
+  padding: isMobile ? 0 : '0px 0px 5px 0px',
   'margin-right': isMobile ? '-9px' : '0px',
   'text-align': 'center',
 
