@@ -42,6 +42,10 @@ jobs:
         run: |
           pnpm build:cache
           pnpm build:doc
+          pnpm i yarn -g
+          cd website
+          yarn
+          yarn build
 
       - name: run test
         run: |
@@ -60,5 +64,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GIT_HUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./website/build
           publish_branch: gh-pages
