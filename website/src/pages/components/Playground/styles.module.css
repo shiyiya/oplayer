@@ -45,6 +45,12 @@
   background-color: var(--ifm-color-background-2);
 }
 
+.VideoContainer > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .Mini {
   position: fixed;
   right: 50px;

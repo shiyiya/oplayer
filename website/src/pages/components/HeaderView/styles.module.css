@@ -16,6 +16,7 @@
 
 @media (max-height: 800px) and (max-width: 768px) {
   .Wrapper {
+    margin-top: -1em;
     margin-bottom: 0;
   }
 }

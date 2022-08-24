@@ -34,7 +34,7 @@ Player.make(document.body, {
       theme: { primaryColor: '#9370db' },
       subtitle: [
         {
-          text: '君の名は',
+          name: '君の名は',
           default: true,
           url: 'https://oplayer.vercel.app/君の名は.srt'
         }
@@ -42,18 +42,6 @@ Player.make(document.body, {
     })
   ])
   .create()
-```
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.umd.js"></script>
-
-<script>
-  OPlayer.make(document.body, { source: { src: 'https://oplayer.vercel.app/君の名は.mp4' } })
-    .use([OUI(), OHls(), ODanmuku()])
-    .create()
-</script>
 ```
 
 ## Official plugin
@@ -68,57 +56,6 @@ Player.make(document.body, {
 
 - [UPV](https://月色真美.life) : free animes no ad
 - ...
-
-## Write a plugin
-
-```ts
-import { Player, PlayerPlugin } from '@oplayer/core'
-
-const autoPipPlugin: PlayerPlugin = {
-  name: 'oplayer-plugin-autopip',
-  apply: (player: Player) => {
-    const intersectionObserver = new IntersectionObserver(
-      ([$player]) => ($player.isIntersecting ? player.exitPip() : player.enterPip()),
-      { threshold: [0.15] }
-    )
-
-    const key = 'Auto pip'
-    player.emit('addsetting', <Setting>{
-      name: key,
-      type: 'switcher',
-      default: true,
-      key,
-      onChange: (value: boolean) => {
-        if(value){
-          intersectionObserver.observe(player.$root)
-        }else{
-          intersectionObserver.unobserve(player.$root)
-        }
-      }
-    })
-    player.on('destroy', () => {
-      intersectionObserver.unobserve(player.$root)
-    })
-  }
-}
-
-// eg: https://github.com/shiyiya/oplayer/blob/main/packages/hls/src/index.ts
-const flvPlugin = {
-  name: 'oplayer-flv-plugin',
-  load: (player, video, source) => {
-    if (source.format != 'flv') return false
-    const flvPlayer = flvjs.createPlayer({
-      type: 'flv',
-      url: source.src,
-    })
-    flvPlayer.attachMediaElement(video)
-    flvPlayer.load()
-    return true
-  },
-}
-
-Player.make(..options).use([autoPipPlugin, flvPlugin]).create()
-```
 
 ## Thanks
 

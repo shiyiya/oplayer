@@ -135,13 +135,13 @@ export class Player {
 
     this.$root = $.create(
       `div.${$.css(`
-            position: relative;
-            user-select: none;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-          `)}`
+        position: relative;
+        user-select: none;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
+      `)}`
     )
 
     this.$video.muted = !!this.#options.muted
