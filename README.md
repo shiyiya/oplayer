@@ -23,13 +23,13 @@ yarn add @oplayer/core @oplayer/ui
 ```ts
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
-import danmuku from '@oplayer/danmuku'
+import danmaku from '@oplayer/danmaku'
 
 Player.make(document.body, {
   source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
 })
   .use([
-    danmuku({ source: 'https://oplayer.vercel.app/danmuku.xml' }),
+    danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
     ui({
       theme: { primaryColor: '#9370db' },
       subtitle: [
@@ -49,7 +49,7 @@ Player.make(document.body, {
 - [@oplayer/ui](./packages//ui/)
 - [@oplayer/hls](./packages/hls/)
 - [@oplayer/torrent](./packages/torrent/)
-- [@oplayer/danmuku](./packages/danmuku/)
+- [@oplayer/danmaku](./packages/danmaku/)
 - [@oplayer/react](./packages/react/)
 
 ## Who use OPlayer?

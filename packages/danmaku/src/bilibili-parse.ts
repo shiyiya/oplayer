@@ -1,4 +1,4 @@
-import { DanmukuItem } from './types'
+import { DanmakuItem } from './types'
 
 export function getMode(key: number) {
   switch (key) {
@@ -14,9 +14,9 @@ export function getMode(key: number) {
   }
 }
 
-export function bilibiliDanmuParseFromXml(xmlString: string) {
+export function bilibiliDanmaParseFromXml(xmlString: string) {
   const matches = xmlString.matchAll(/<d (?:.*? )??p="(?<p>.+?)"(?: .*?)?>(?<text>.+?)<\/d>/gs)
-  return Array.from(matches).reduce<DanmukuItem[]>((initialValue, match) => {
+  return Array.from(matches).reduce<DanmakuItem[]>((initialValue, match) => {
     const p = match.groups?.['p']?.split(',')
     const text = match.groups?.['text']?.trim()
     if (p && p.length >= 8 && text) {
@@ -41,8 +41,8 @@ export function bilibiliDanmuParseFromXml(xmlString: string) {
   }, [])
 }
 
-export function bilibiliDanmuParseFromUrl(url: string) {
+export function bilibiliDanmaParseFromUrl(url: string) {
   return fetch(url)
     .then((res) => res.text())
-    .then((xmlString) => bilibiliDanmuParseFromXml(xmlString))
+    .then((xmlString) => bilibiliDanmaParseFromXml(xmlString))
 }

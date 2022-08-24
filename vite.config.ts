@@ -11,7 +11,7 @@ export const globals = {
   'hls.js/dist/hls.light.min.js': 'Hls',
   '@oplayer/torrent': 'OTorrent',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
-  '@oplayer/danmuku': 'ODanmuku',
+  '@oplayer/danmaku': 'ODanmaku',
   react: 'React'
 }
 

@@ -1,5 +1,5 @@
 import Player, { PlayerEvent, PlayerPlugin } from '@oplayer/core'
-import danmuku, { DanmukuItem } from '@oplayer/danmuku'
+import danmaku, { DanmakuItem } from '@oplayer/danmaku'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
 import { isMobile } from '@oplayer/ui/src/utils'
@@ -57,10 +57,10 @@ const p = Player.make(document.getElementById('player')!, {
   .use([
     hls(),
     flvPlugin,
-    danmuku({
-      source: 'https://oplayer.vercel.app/danmuku.xml',
+    danmaku({
+      source: 'https://oplayer.vercel.app/danmaku.xml',
       fontSize: isMobile ? 16 : 20,
-      filter: (d: DanmukuItem) => d.text == '+1s'
+      filter: (d: DanmakuItem) => d.text == '+1s'
     }),
     ui({
       autoFocus: true,

@@ -7,13 +7,13 @@ import styles from './styles.module.css'
 
 const code = `import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
-import danmuku from '@oplayer/danmuku'
+import danmaku from '@oplayer/danmaku'
 
 Player.make(document.body, {
   source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
 })
   .use([
-    danmuku({ source: 'https://oplayer.vercel.app/danmuku.xml' }),
+    danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
     ui({
       theme: { primaryColor: '#9370db' },
       subtitle: [
@@ -40,7 +40,7 @@ const StartCoding = () => {
           </div>
           <CodeBlock
             language="bash"
-            code={`pnpm i @oplayer/core @oplayer/ui  @oplayer/danmuku\r\n#or \r\nyarn add @oplayer/core @oplayer/ui @oplayer/danmuku`}
+            code={`pnpm i @oplayer/core @oplayer/ui  @oplayer/danmaku\r\n#or \r\nyarn add @oplayer/core @oplayer/ui @oplayer/danmaku`}
           />
         </div>
         <div>

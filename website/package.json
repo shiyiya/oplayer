@@ -19,7 +19,7 @@
     "@docusaurus/core": "2.0.1",
     "@docusaurus/preset-classic": "2.0.1",
     "@oplayer/core": "latest",
-    "@oplayer/danmuku": "latest",
+    "@oplayer/danmaku": "latest",
     "@oplayer/hls": "latest",
     "@oplayer/react": "latest",
     "@oplayer/ui": "latest",

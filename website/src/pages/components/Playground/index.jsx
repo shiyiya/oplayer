@@ -9,14 +9,14 @@ const Playground = () => {
     if (ExecutionEnvironment.canUseDOM) {
       const Player = require('@oplayer/core').default
       const ui = require('@oplayer/ui').default
-      const danmuku = require('@oplayer/danmuku').default
+      const danmaku = require('@oplayer/danmaku').default
 
       setTimeout(() => {
         Player.make(document.querySelector('#oplayer'), {
           source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
         })
           .use([
-            danmuku({ source: 'https://oplayer.vercel.app/danmuku.xml' }),
+            danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
             ui({
               theme: { primaryColor: '#9370db' },
               subtitle: [
@@ -44,7 +44,7 @@ const Playground = () => {
               //TODO: SSR
               // const ReactPlayer = (await import('../../../components/Player')).default
               // const ui = (await import('@oplayer/ui')).default
-              // const danmuku = (await import('@oplayer/danmuku')).default
+              // const danmaku = (await import('@oplayer/danmaku')).default
 
               const plugins = [
                 // ui({
@@ -57,7 +57,7 @@ const Playground = () => {
                 //     }
                 //   ]
                 // }),
-                // danmuku({ source: 'https://oplayer.vercel.app/danmuku.xml' })
+                // danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' })
               ]
               return (
                 <ReactPlayer

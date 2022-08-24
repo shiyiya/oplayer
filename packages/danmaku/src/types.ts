@@ -1,4 +1,4 @@
-export type DanmukuItem = {
+export type DanmakuItem = {
   text: string
   time: number
   /**
@@ -15,14 +15,14 @@ export type DanmukuItem = {
   border?: string
 }
 
-export type QueueItem = DanmukuItem & {
+export type QueueItem = DanmakuItem & {
   status: 'wait' | 'emit' | 'ready' | 'stop'
   $ref: HTMLDivElement | null
   restTime: number
   lastTime: number
 }
 
-export type ActiveDanmukuRect = {
+export type ActiveDanmakuRect = {
   top: number
   left: number
   right: number
@@ -40,7 +40,7 @@ export type RootRect = {
     height: number
     speed: number
   }
-  emits: ActiveDanmukuRect[]
+  emits: ActiveDanmakuRect[]
   clientWidth: number
   clientHeight: number
   marginBottom: number
@@ -49,7 +49,7 @@ export type RootRect = {
 }
 
 export type Options = {
-  source: string | Function | DanmukuItem[]
+  source: string | Function | DanmakuItem[]
   speed?: number // 持续时间 秒，[1 ~ 10]
   antiOverlap?: boolean // 是否防重叠
   useWorker?: boolean
@@ -58,12 +58,12 @@ export type Options = {
   fontSize?: number
   color?: string
   margin?: [number, number]
-  filter?: (danmuku: DanmukuItem) => boolean
+  filter?: (danmaku: DanmakuItem) => boolean
 }
 
 export type _Options = Omit<Required<Options>, 'opacity' | 'fontSize' | 'color' | 'filter'> & {
   opacity?: number
   fontSize?: number
   color?: string
-  filter?: (danmuku: DanmukuItem) => boolean
+  filter?: (danmaku: DanmakuItem) => boolean
 }

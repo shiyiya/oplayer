@@ -1728,9 +1728,9 @@
   resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.0.17.tgz#331c06ac0ca696fbe75f12e2a33dac046b7e421d"
   integrity sha512-E6J1WwRVrNWO7OWMLGpkPYJKBxdILO2PTz5LShBdcjALidqRqNPSY4FwGwgyMzFWkMsoLockH24B2jXx2Qgg6A==
 
-"@oplayer/danmuku@latest":
+"@oplayer/danmaku@latest":
   version "1.0.17"
-  resolved "https://registry.yarnpkg.com/@oplayer/danmuku/-/danmuku-1.0.17.tgz#13e57008b981678b060128013193edab46112ce7"
+  resolved "https://registry.yarnpkg.com/@oplayer/danmaku/-/danmaku-1.0.17.tgz#13e57008b981678b060128013193edab46112ce7"
   integrity sha512-4BEh4YD3temj9erKaRYP1LQzcRu54dh3UKPlPef724IDt82p3k6xqLJp8cP47cqA0A/HuIthzQgZrX37thiRXg==
 
 "@oplayer/hls@latest":
