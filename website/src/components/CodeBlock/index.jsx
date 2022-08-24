@@ -1,4 +1,3 @@
-import BrowserOnly from '@docusaurus/BrowserOnly'
 // import { useColorMode } from '@docusaurus/theme-common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import dracula from 'prism-react-renderer/themes/dracula'

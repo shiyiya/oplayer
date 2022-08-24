@@ -41,6 +41,8 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
+  padding-top: 56.25%;
+  background-color: var(--ifm-color-background-2);
 }
 
 .Mini {
