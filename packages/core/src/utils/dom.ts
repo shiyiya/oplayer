@@ -17,7 +17,7 @@ export namespace $ {
     Object.keys(attrs).forEach((key) => {
       const attr = attrs[key]
       if ((tag === 'video' || tag === 'audio') && typeof attr === 'boolean') {
-        dom.setAttribute(key, attr ? '' : 'false')
+        attr && dom.setAttribute(key, '')
       } else {
         if (typeof attr !== 'undefined') {
           dom.setAttribute(key, `${attr}`)
