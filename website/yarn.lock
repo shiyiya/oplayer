@@ -1725,28 +1725,28 @@
 
 "@oplayer/core@latest":
   version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.0.18.tgz#331c06ac0ca696fbe75f12e2a33dac046b7e421d"
-  integrity sha512-E6J1WwRVrNWO7OWMLGpkPYJKBxdILO2PTz5LShBdcjALidqRqNPSY4FwGwgyMzFWkMsoLockH24B2jXx2Qgg6A==
+  resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.0.18.tgz#13fa8d2de27d6563682cc6760047a04177f2b682"
+  integrity sha512-lurbOBDQKcUiNEob3WGabTBmZ/CsQargkKCEYnsI8NkxMoNvBMS0q8GGKtILSkWTy28WnAnygsb3SrrWJVuZYw==
 
 "@oplayer/danmaku@latest":
   version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/danmaku/-/danmaku-1.0.18.tgz#13e57008b981678b060128013193edab46112ce7"
-  integrity sha512-4BEh4YD3temj9erKaRYP1LQzcRu54dh3UKPlPef724IDt82p3k6xqLJp8cP47cqA0A/HuIthzQgZrX37thiRXg==
+  resolved "https://registry.yarnpkg.com/@oplayer/danmaku/-/danmaku-1.0.18.tgz#622485d6ad7d89191f66ee295d1288f6c978fb5e"
+  integrity sha512-PH6Htk6BzveyOrtsvAYslOcLwV59anJxkNCRDXRVsPv1BwccYylgDIx7rqVYnvD7CqG01tVHV4JDXlMMBuwMAw==
 
 "@oplayer/hls@latest":
   version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/hls/-/hls-1.0.18.tgz#5a5030001ed1c994ae0451704f77b0250aae4cbb"
-  integrity sha512-YT1P3a/6rXl9kFkpysEVwBkYLF4BwbMl0bYxH3Q+ZB+LbFQrD0Oq77rtMP6ThvNtZ+WEEtWlGOn8HqBQPynI0A==
+  resolved "https://registry.yarnpkg.com/@oplayer/hls/-/hls-1.0.18.tgz#f8ae9b5ef53c267d14f2bfe224c468513b958138"
+  integrity sha512-2HYBS/zKlJWa3ajCuP9aFDbddMT4OSYoDoNwDIw6q51lyIp8dP28QJf/OJV7CZLk9Q6e1s2S847I3j/qR6XRHA==
 
 "@oplayer/react@latest":
   version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/react/-/react-1.0.18.tgz#1f6a5c660266ed89a2fe0a281d73ea9284d7b8f3"
-  integrity sha512-hSKGvPR4TDqBRYmr/KzIw3xgBOOAPgQoiOhUWDOXVnfVPN88E3ePHBNVuSh9Jz5ZYWaWqvvMXa53A7gZDpQ8lQ==
+  resolved "https://registry.yarnpkg.com/@oplayer/react/-/react-1.0.18.tgz#74af0d4409f99989f2263c0e8b8e7b09f3b6b241"
+  integrity sha512-s2B675LeoXdcpuH/RUZHuxpGJi8SNOrAqqlKZEQ77zjGFCmKYb56baZeFwfGe+ziDs2Cea/YoksmId7P0AKYvg==
 
 "@oplayer/ui@latest":
   version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/ui/-/ui-1.0.18.tgz#5520f22a2667ecf8f4e5ec17db1ee5c63a5da33e"
-  integrity sha512-sFESdaJpyD27/R9IOqwEhUhku/IPBcew8KVYTtB5DyVRpfLJfGGLwdEfE0utoCFYMAzHqkB3O4YYLlxIZYUfMA==
+  resolved "https://registry.yarnpkg.com/@oplayer/ui/-/ui-1.0.18.tgz#e5628f8953f9ef29b288fe1d276ff06d0ac77130"
+  integrity sha512-BSuicVZtdXBbe6eKSeYnNJapZJ/woT6T0fzlGOgnWfryZodg3Nd+xMYytoQPRqupkf2I0YTv1t9K/bDN2FiljQ==
 
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"
@@ -2022,9 +2022,9 @@
   integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
 
 "@types/node@*":
-  version "18.7.11"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.11.tgz#486e72cfccde88da24e1f23ff1b7d8bfb64e6250"
-  integrity sha512-KZhFpSLlmK/sdocfSAjqPETTMd0ug6HIMIAwkwUpU79olnZdQtMxpQP+G1wDzCH7na+FltSIhbaZuKdwZ8RDrw==
+  version "18.7.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.13.tgz#23e6c5168333480d454243378b69e861ab5c011a"
+  integrity sha512-46yIhxSe5xEaJZXWdIBP7GU4HDTG8/eo0qd9atdiL+lFpA03y8KS+lkTN834TWJj5767GbWv4n/P6efyTFt1Dw==
 
 "@types/node@^17.0.5":
   version "17.0.45"
@@ -3511,9 +3511,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.202:
-  version "1.4.227"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.227.tgz#28e46e2a701fed3188db3ca7bf0a3a475e484046"
-  integrity sha512-I9VVajA3oswIJOUFg2PSBqrHLF5Y+ahIfjOV9+v6uYyBqFZutmPxA6fxocDUUmgwYevRWFu1VjLyVG3w45qa/g==
+  version "1.4.228"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.228.tgz#3baff13cf54198c2045f9bdd8b64db93aafd7f33"
+  integrity sha512-XfDHCvou7CsDMlFwb0WZ1tWmW48e7Sn7VBRyPfZsZZila9esRsJl1trO+OqDNV97GggFSt0ISbWslKXfQkG//g==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6998,9 +6998,9 @@ terser-webpack-plugin@^5.1.3, terser-webpack-plugin@^5.3.3:
     terser "^5.14.1"
 
 terser@^5.10.0, terser@^5.14.1:
-  version "5.14.2"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.14.2.tgz#9ac9f22b06994d736174f4091aa368db896f1c10"
-  integrity sha512-oL0rGeM/WFQCUd0y2QrWxYnq7tfSuKBiqTjRPWrRgB46WD/kiwHwF8T23z78H6Q6kGCuuHcPB+KULHRdxvVGQA==
+  version "5.15.0"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.15.0.tgz#e16967894eeba6e1091509ec83f0c60e179f2425"
+  integrity sha512-L1BJiXVmheAQQy+as0oF3Pwtlo4s3Wi1X2zNZ2NxOB4wx9bdS9Vk67XQENLFdLYGCK/Z2di53mTj/hBafR+dTA==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"
