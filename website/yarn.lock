@@ -1728,10 +1728,10 @@
   resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.0.18.tgz#13fa8d2de27d6563682cc6760047a04177f2b682"
   integrity sha512-lurbOBDQKcUiNEob3WGabTBmZ/CsQargkKCEYnsI8NkxMoNvBMS0q8GGKtILSkWTy28WnAnygsb3SrrWJVuZYw==
 
-"@oplayer/danmaku@latest":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/danmaku/-/danmaku-1.0.18.tgz#622485d6ad7d89191f66ee295d1288f6c978fb5e"
-  integrity sha512-PH6Htk6BzveyOrtsvAYslOcLwV59anJxkNCRDXRVsPv1BwccYylgDIx7rqVYnvD7CqG01tVHV4JDXlMMBuwMAw==
+"@oplayer/danmaku@>=1.0.19":
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/@oplayer/danmaku/-/danmaku-1.0.19.tgz#e42fa48650f586e5e4fcab26ab97f97e39afb524"
+  integrity sha512-kaFuuACodAzXBQjbEoAUtjU84Ip5f++RfXZdXrzcnBiNwvLCBPlMen/4Ojo+3Q1WTVlHTNSnpVgpFPfon5zq6w==
 
 "@oplayer/hls@latest":
   version "1.0.18"
