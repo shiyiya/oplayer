@@ -182,11 +182,9 @@ export class Player {
   play = () => {
     if (!this.$video.src) throw Error('The element has no supported sources.')
 
-    if (this.#isCustomLoader || this.canPlay) {
-      this.#playPromise = this.$video
-        .play()
-        .catch((reason) => this.emit('notice', { text: (<Error>reason).message }))
-    }
+    this.#playPromise = this.$video
+      .play()
+      .catch((reason) => this.emit('notice', { text: (<Error>reason).message }))
   }
 
   pause() {
@@ -240,8 +238,8 @@ export class Player {
   }
 
   enterFullscreen() {
-    if (isIOS) {
-      ;(this.$root as any).webkitEnterFullscreen()
+    if (isIOS()) {
+      ;(this.$video as any).webkitEnterFullscreen()
     } else {
       this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
     }
@@ -258,7 +256,8 @@ export class Player {
       document.fullscreenEnabled ||
       (document as any).webkitFullscreenEnabled ||
       (document as any).mozFullScreenEnabled ||
-      (document as any).msFullscreenEnabled
+      (document as any).msFullscreenEnabled ||
+      (isIOS() && (this.$video as any).webkitEnterFullscreen)
     )
   }
 
