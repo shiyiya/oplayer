@@ -183,12 +183,22 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     switcher($webfull.children, isWebfullScreen ? 1 : 0)
   }
 
-  // TODO: 使用 css 控制，player root 添加状态 class
-  playerSwitcher(), volumeSwitcher(), fullscreenSwitcher(), webfullscreenSwitcher(false)
+  playerSwitcher(), volumeSwitcher()
+
+  if (player.isFullscreenEnabled && config.fullscreen) {
+    fullscreenSwitcher()
+    player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
+  }
+
+  if (config.fullscreenWeb) {
+    webfullscreenSwitcher(false)
+    player.on('webfullscreen', () =>
+      webfullscreenSwitcher(toggleClass(player.$root, webFullScreen))
+    )
+  }
+
   !isMobile && player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
-  player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
-  player.on('webfullscreen', () => webfullscreenSwitcher(toggleClass(player.$root, webFullScreen)))
   player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
