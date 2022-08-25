@@ -26,6 +26,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
       'font-size': isMobile ? '1em' : '20px',
       position: 'absolute',
       bottom: isMobile ? '6px' : '50px',
+      'line-height': '1.2',
 
       '& > p': { margin: 0 }
     })}`,
