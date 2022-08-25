@@ -2,41 +2,6 @@ import { $ } from '@oplayer/core'
 import { icon } from '../style'
 import { isMobile } from '../utils'
 
-export const controllerBottom = $.css({
-  display: 'flex',
-  'justify-content': 'space-between',
-  'font-size': '14px',
-  color: '#fff',
-  fill: '#fff',
-  height: '35px',
-  padding: isMobile ? 0 : '0px 0px 5px 0px',
-  'margin-right': isMobile ? '-9px' : '0px',
-  'text-align': 'center',
-
-  [`& .${icon}`]: {
-    width: '36px',
-    height: '22px',
-
-    ['&[aria-label="WebFullscreen"]']: {
-      width: '25px',
-      height: '20px',
-      'margin-top': '2px'
-    },
-
-    ['> svg']: {
-      width: '100%',
-      height: '100%',
-      'pointer-events': 'none'
-    }
-  },
-
-  // left & right
-  '> div': {
-    display: 'flex',
-    'align-items': 'center'
-  }
-})
-
 export const time = $.css`
   padding: ${isMobile ? 0 : '0px 0.5em'};
   font-variant-numeric: tabular-nums;
@@ -105,5 +70,40 @@ export const dropitem = $.css({
 
   '&[data-selected=true],&:hover': {
     'background-color': 'rgba(255, 255, 255, 0.1)'
+  }
+})
+
+export const controllerBottom = $.css({
+  display: 'flex',
+  'justify-content': 'space-between',
+  'font-size': '14px',
+  color: '#fff',
+  fill: '#fff',
+  height: '35px',
+  padding: isMobile ? 0 : '0px 0px 5px 0px',
+  'margin-right': isMobile ? '-9px' : '0px',
+  'text-align': 'center',
+
+  [`& .${expand} .${icon}[aria-label="WebFullscreen"]`]: {
+    width: '25px',
+    height: '20px',
+    'margin-top': '2px'
+  },
+
+  [`& .${icon}`]: {
+    width: '36px',
+    height: '22px',
+
+    ['> svg']: {
+      width: '100%',
+      height: '100%',
+      'pointer-events': 'none'
+    }
+  },
+
+  // left & right
+  '> div': {
+    display: 'flex',
+    'align-items': 'center'
   }
 })
