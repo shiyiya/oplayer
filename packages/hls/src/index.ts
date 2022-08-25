@@ -33,14 +33,10 @@ const hlsPlugin = ({
 
   return {
     name: PLUGIN_NAME,
-    load: ({ on, emit }, video, source) => {
+    load: ({ on, emit, offAny }, video, source) => {
       if (!matcher(video, source)) return false
 
       hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
-      if (!isInitial) {
-        emit('loadedplugin', { name: PLUGIN_NAME })
-        isInitial = true
-      }
 
       if (!hlsInstance || !Hls.isSupported()) {
         emit('pluginerror', {
@@ -50,6 +46,12 @@ const hlsPlugin = ({
           }
         })
         return true
+      }
+
+      if (!isInitial) {
+        emit('loadedplugin', { name: PLUGIN_NAME })
+        isInitial = true
+        offAny('canplay') //onReady is handled by hls.js
       }
 
       hlsInstance?.attachMedia(video)

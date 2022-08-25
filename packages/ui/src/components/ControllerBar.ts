@@ -14,7 +14,7 @@ const mini = $.css({
 })
 
 const hide = $.css({
-  transform: 'translateY(calc(100%))'
+  transform: 'translateY(100%)'
 })
 
 const controllerBar = $.css({

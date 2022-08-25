@@ -30,6 +30,10 @@ export default class E {
     }
   }
 
+  offAny(name: string) {
+    this.events[name] = []
+  }
+
   offAll() {
     this.events = Object.create(null)
   }

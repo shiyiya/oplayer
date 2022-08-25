@@ -22,7 +22,9 @@ export const VIDEO_EVENTS = [
   'volumechange',
   'waiting',
   'encrypted',
-  'waitingforkey'
+  'waitingforkey',
+  'enterpictureinpicture',
+  'leavepictureinpicture'
 ] as const
 
 export const PLAYER_EVENTS = [

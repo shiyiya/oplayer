@@ -79,6 +79,10 @@ export class Player {
     this.#E.off(name as string, listener)
   }
 
+  readonly offAny = (name: PlayerEventName) => {
+    this.#E.offAny(name as string)
+  }
+
   readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
     this.#E.emit(name as any, payload)
   }
@@ -127,6 +131,8 @@ export class Player {
         autoplay: this.#options.autoplay,
         loop: this.#options.loop,
         playsinline: this.#options.playsinline,
+        'webkit-playsinline': this.#options.playsinline,
+        'x5-playsinline': this.#options.playsinline,
         volume: this.#options.volume,
         preload: this.#options.preload,
         poster: this.#options.source.poster,
@@ -176,12 +182,10 @@ export class Player {
   play = () => {
     if (!this.$video.src) throw Error('The element has no supported sources.')
 
-    if (this.#isCustomLoader) {
-      this.#playPromise = this.$video.play()
-    } else {
-      if (this.canPlay) {
-        this.#playPromise = this.$video.play()
-      }
+    if (this.#isCustomLoader || this.canPlay) {
+      this.#playPromise = this.$video
+        .play()
+        .catch((reason) => this.emit('notice', { text: (<Error>reason).message }))
     }
   }
 
