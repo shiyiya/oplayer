@@ -110,7 +110,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
           }
 
           ${
-            config.fullscreen
+            config.fullscreen && player.isFullscreenEnabled
               ? `<div class=${dropdownHoverable}>
                   <button
                       aria-label="Fullscreen"
@@ -136,6 +136,15 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
                       : ''
                   }
                 </div>`
+              : config.fullscreenWeb
+              ? `<button
+                  aria-label="WebFullscreen"
+                  class="${icon}"
+                  type="button"
+                >
+                  ${webExpandSvg}
+                  ${webCompressSvg}
+                </button>`
               : ''
           }
         </div>`

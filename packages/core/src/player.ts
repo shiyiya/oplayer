@@ -1,14 +1,15 @@
-import E from './event'
-import $ from './utils/dom'
 import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import E from './event'
 import type {
+  PlayerEvent,
+  PlayerEventName,
+  PlayerListener,
   PlayerOptions,
   PlayerPlugin,
-  PlayerListener,
-  PlayerEvent,
-  Source,
-  PlayerEventName
+  Source
 } from './types'
+import { isIOS } from './utils'
+import $ from './utils/dom'
 
 export class Player {
   constructor(el: HTMLElement, options: PlayerOptions | string) {
@@ -235,7 +236,11 @@ export class Player {
   }
 
   enterFullscreen() {
-    this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+    if (isIOS) {
+      ;(this.$root as any).webkitEnterFullscreen()
+    } else {
+      this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+    }
     this.emit('fullscreenchange')
   }
 
@@ -244,11 +249,21 @@ export class Player {
     this.emit('fullscreenchange')
   }
 
+  get isFullscreenEnabled() {
+    return (
+      document.fullscreenEnabled ||
+      (document as any).webkitFullscreenEnabled ||
+      (document as any).mozFullScreenEnabled ||
+      (document as any).msFullscreenEnabled
+    )
+  }
+
   get isFullScreen() {
     return (
-      (document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement) === this.$root
+      document.fullscreenElement ||
+      (document as any).webkitFullscreenElement ||
+      (document as any).mozFullScreenElement ||
+      (document as any).msFullscreenElement === this.$root
     )
   }
 
