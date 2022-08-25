@@ -1,14 +1,15 @@
-import E from './event'
-import $ from './utils/dom'
 import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import E from './event'
 import type {
+  PlayerEvent,
+  PlayerEventName,
+  PlayerListener,
   PlayerOptions,
   PlayerPlugin,
-  PlayerListener,
-  PlayerEvent,
-  Source,
-  PlayerEventName
+  Source
 } from './types'
+import { isIOS } from './utils'
+import $ from './utils/dom'
 
 export class Player {
   constructor(el: HTMLElement, options: PlayerOptions | string) {
@@ -78,6 +79,10 @@ export class Player {
     this.#E.off(name as string, listener)
   }
 
+  readonly offAny = (name: PlayerEventName) => {
+    this.#E.offAny(name as string)
+  }
+
   readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
     this.#E.emit(name as any, payload)
   }
@@ -126,6 +131,8 @@ export class Player {
         autoplay: this.#options.autoplay,
         loop: this.#options.loop,
         playsinline: this.#options.playsinline,
+        'webkit-playsinline': this.#options.playsinline,
+        'x5-playsinline': this.#options.playsinline,
         volume: this.#options.volume,
         preload: this.#options.preload,
         poster: this.#options.source.poster,
@@ -175,12 +182,10 @@ export class Player {
   play = () => {
     if (!this.$video.src) throw Error('The element has no supported sources.')
 
-    if (this.#isCustomLoader) {
-      this.#playPromise = this.$video.play()
-    } else {
-      if (this.canPlay) {
-        this.#playPromise = this.$video.play()
-      }
+    if (this.#isCustomLoader || this.canPlay) {
+      this.#playPromise = this.$video
+        .play()
+        .catch((reason) => this.emit('notice', { text: (<Error>reason).message }))
     }
   }
 
@@ -235,7 +240,11 @@ export class Player {
   }
 
   enterFullscreen() {
-    this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+    if (isIOS) {
+      ;(this.$root as any).webkitEnterFullscreen()
+    } else {
+      this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+    }
     this.emit('fullscreenchange')
   }
 
@@ -244,11 +253,21 @@ export class Player {
     this.emit('fullscreenchange')
   }
 
+  get isFullscreenEnabled() {
+    return (
+      document.fullscreenEnabled ||
+      (document as any).webkitFullscreenEnabled ||
+      (document as any).mozFullScreenEnabled ||
+      (document as any).msFullscreenEnabled
+    )
+  }
+
   get isFullScreen() {
     return (
-      (document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement) === this.$root
+      document.fullscreenElement ||
+      (document as any).webkitFullscreenElement ||
+      (document as any).mozFullScreenElement ||
+      (document as any).msFullscreenElement === this.$root
     )
   }
 
