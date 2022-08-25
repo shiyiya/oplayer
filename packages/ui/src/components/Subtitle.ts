@@ -1,5 +1,5 @@
 import type { Player } from '@oplayer/core'
-import { $, PlayerEvent } from '@oplayer/core'
+import { $, PlayerEvent, isIOS } from '@oplayer/core'
 import subtitleSvg from '../icons/subtitles.svg?raw'
 import type { Setting, Subtitle, UiConfig } from '../types'
 import { isMobile } from '../utils'
@@ -15,7 +15,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
 
   const $dom = $.create(
     `div.${$.css({
-      width: '90%',
+      width: '95%',
       color: '#fff',
       left: '5%',
       'text-align': 'center',
@@ -36,18 +36,26 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
   const $track = <HTMLTrackElement>$.render(
     $.create('track', {
       default: true,
-      kind: 'metadata'
+      kind: isIOS() ? 'captions' : 'metadata'
     }),
     player.$video
   )
 
   const showsubtitle = () => {
-    $track.addEventListener('cuechange', update)
+    if (isIOS()) {
+      player.$video.textTracks[0]!.mode = 'showing'
+    } else {
+      $track.addEventListener('cuechange', update)
+    }
   }
 
   const hiddensubtitle = () => {
-    $dom.innerHTML = ''
-    $track.removeEventListener('cuechange', update)
+    if (isIOS()) {
+      player.$video.textTracks[0]!.mode = 'hidden'
+    } else {
+      $dom.innerHTML = ''
+      $track.removeEventListener('cuechange', update)
+    }
   }
 
   player.on(['videosourcechange', 'destroy'], () => {

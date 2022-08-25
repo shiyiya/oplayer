@@ -57,6 +57,7 @@ const Playground = () => {
         <ReactPlayer
           plugins={plugins}
           source={{ src: 'https://oplayer.vercel.app/君の名は.mp4' }}
+          onEvent={console.log}
         />
       </div>
     </div>
