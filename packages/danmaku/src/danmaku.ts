@@ -52,11 +52,6 @@ export default class Danmaku {
       })
     }
 
-    player.on(['play', 'playing'], this.start.bind(this))
-    player.on(['pause', 'waiting'], this.stop.bind(this))
-    player.on(['fullscreen', 'webfullscreen', 'seeking'], this.reset.bind(this))
-    player.on('destroy', this.destroy.bind(this))
-
     this.fetch()
     $.render(this.$danmaku, this.$player)
   }
