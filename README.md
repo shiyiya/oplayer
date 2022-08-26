@@ -1,23 +1,26 @@
 # OPlayer
 
-[Oh!](https://oplayer.vercel.app/) Another HTML5 video player.
+Oh! Another HTML5 video player.
 
-[Demo](https://oplayer.vercel.app/) | [Basic Example](./examples/standalone/main.ts) | [React Example](./examples/react/src/main.tsx) | [Script Tag Example](./examples/umd.html) | [Join QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
+Website: https://oplayer.vercel.app/
+
+Examples: [./examples](./examples) | [Join QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
 ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/ui?style=flat-square&label=ui)
 ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/react?style=flat-square&label=react)
-[![](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
+![npm dw](https://img.shields.io/npm/dw/@oplayer/core?style=flat-square)
+[![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](https://paypal.me/ShiYiYa)
 
-![](./oplayer.png)
+![oplayer](./oplayer.png)
 
 ## Usage
 
 ```bash
-pnpm i @oplayer/core @oplayer/ui
+pnpm i @oplayer/core @oplayer/ui @oplayer/danmaku
 # or
-yarn add @oplayer/core @oplayer/ui
+yarn add @oplayer/core @oplayer/ui @oplayer/danmaku
 ```
 
 ```ts
