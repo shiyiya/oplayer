@@ -13,8 +13,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start": "",
-    "build": ""
+    "start": "echo empty script",
+    "build": "echo empty script"
   },
   "files": [
     "src"

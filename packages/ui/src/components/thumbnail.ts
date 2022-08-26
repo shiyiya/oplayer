@@ -1,22 +1,6 @@
 import { $ } from '@oplayer/core'
 import { Thumbnails } from '../types'
 
-export interface ThumbnailOptions {
-  startSecond?: number
-  gapSecond?: number
-  row?: number
-  col?: number
-  width?: number
-  height?: number
-  images?: string[]
-}
-
-export interface ThumbImg {
-  url: string
-  x: number
-  y: number
-}
-
 const noop = () => {}
 
 export default function (container: HTMLElement, options?: Thumbnails) {
