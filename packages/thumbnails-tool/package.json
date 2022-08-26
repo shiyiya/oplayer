@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "commander": "^9.4.0",
-    "ffmpeg": "^0.0.4",
     "ora": "^6.1.2",
     "fluent-ffmpeg": "^2.1.2",
     "cli-spinner": "^0.2.10",

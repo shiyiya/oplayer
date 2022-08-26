@@ -33,7 +33,7 @@ program
     startSpinner('Screenshots generating', 1)
     ffmpeg(file)
       .screenshots({
-        count: 22,
+        count: +count,
         folder: tmp,
         filename: 'screenshot%00i.png',
         size: '160x?'
@@ -57,7 +57,7 @@ program
 
             Jimp.read(tmp + '/sprite.png', function (err, lenna) {
               if (err) throw err
-              lenna.quality(parseInt(quality)).write(output)
+              lenna.quality(+quality).write(output)
               rm(tmp, function () {
                 spinner.stop(true)
                 console.log('[3/3] Compressing complete!')
