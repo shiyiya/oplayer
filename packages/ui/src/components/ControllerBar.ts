@@ -39,7 +39,7 @@ const render = (
   onHide?: Function
 ) => {
   const $dom = $.create(`div.${controllerBar}`)
-  renderProgress(player, $dom)
+  renderProgress(player, $dom, config)
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
 

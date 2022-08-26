@@ -27,14 +27,14 @@ export namespace $ {
     return dom as unknown as HTMLElementTagNameMap[K]
   }
 
-  export const render = (elm: HTMLElement | string, container: HTMLElement) => {
-    if (elm instanceof Element) {
-      container.appendChild(elm)
-    } else {
-      container.insertAdjacentHTML('beforeend', String(elm))
-    }
-    return container.lastElementChild || container.lastChild
+  export const render = (elm: Element, container: HTMLElement) => {
+    return container.appendChild(elm)
   }
+
+  // export const renderHTML = (elm: string, container: HTMLElement) => {
+  //   container.insertAdjacentHTML('beforeend', String(elm))
+  //   return container.lastElementChild || container.lastChild
+  // }
 
   export const isBrowser = () =>
     Boolean(

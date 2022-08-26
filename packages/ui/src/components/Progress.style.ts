@@ -54,6 +54,7 @@ export const hit = $.css({
 export const progressDarging = $.css('/* progressDarging */')
 
 export const progress = $.css({
+  position: 'relative',
   'box-sizing': 'border-box',
   padding: '5px 0',
   cursor: 'pointer',

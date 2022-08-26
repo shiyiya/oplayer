@@ -45,7 +45,6 @@ const flvPlugin: PlayerPlugin = {
 let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
-  autoplay: true,
   muted: true,
   volume: 0.5,
   source: { src }
@@ -72,7 +71,8 @@ const p = Player.make(document.getElementById('player')!, {
           default: true,
           url: 'https://oplayer.vercel.app/君の名は.srt'
         }
-      ]
+      ],
+      thumbnails: { url: 'https://i.loli.net/2019/06/06/5cf8c5d9cec8510758.jpg', number: 101 }
     })
   ])
   .create()
@@ -142,6 +142,6 @@ p.on((e: PlayerEvent) => {
   // console.info(e)
 })
 
-p.$root.addEventListener('click', p.unmute.bind(p), { once: true })
+// p.$root.addEventListener('click', p.unmute.bind(p), { once: true })
 
 render(meta(), document.getElementById('meta')!)
