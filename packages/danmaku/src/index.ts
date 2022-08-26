@@ -38,7 +38,7 @@ export default (option: Options): PlayerPlugin => ({
     player.on(['pause', 'waiting'], danmaku.stop.bind(danmaku))
     player.on(['webfullscreen', 'seeking'], danmaku.reset.bind(danmaku))
     player.on('destroy', danmaku.destroy)
-    player.on('fullscreen', () => {
+    player.on('fullscreenchange', () => {
       if (isIOS()) {
         if (player.isFullScreen) {
           danmaku.hide()
