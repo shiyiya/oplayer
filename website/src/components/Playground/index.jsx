@@ -16,7 +16,8 @@ const plugins = [
         default: true,
         url: 'https://oplayer.vercel.app/君の名は.srt'
       }
-    ]
+    ],
+    thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 101 }
   })
 ]
 

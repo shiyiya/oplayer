@@ -72,7 +72,7 @@ const p = Player.make(document.getElementById('player')!, {
           url: 'https://oplayer.vercel.app/君の名は.srt'
         }
       ],
-      thumbnails: { url: 'https://i.loli.net/2019/06/06/5cf8c5d9cec8510758.jpg', number: 101 }
+      thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 101 }
     })
   ])
   .create()
