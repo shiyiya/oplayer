@@ -83,7 +83,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   $dom.addEventListener(
     'mousemove',
-    (e: Event) => {
+    (e) => {
       if (isDargMoving) return
       const rate = getSlidingValue(e)
       $hit.innerText = formatTime(player.duration * rate)
