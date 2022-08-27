@@ -1,11 +1,20 @@
-import { bilibiliDanmaParseFromUrl } from './bilibili-parse'
+import { danmakuParseFromUrl } from './danmaku-parse'
 import getDanmaTop from './top'
 
 import Player, { $ } from '@oplayer/core'
 import DanmakuWorker from './danmaku.worker?worker&inline'
 import type { ActiveDanmakuRect, DanmakuItem, Options, QueueItem, _Options } from './types'
 
-const danmakuItemCls = $.css`
+const danmakuWrap = $.css(`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+`)
+
+const danmakuItemCls = $.css(`
   position: absolute;
   white-space: pre;
   pointer-events: none;
@@ -13,12 +22,18 @@ const danmakuItemCls = $.css`
   will-change: transform, top;
   line-height: 1.125;
   text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;
-`
+`)
+
+/**
+ * emit：正在滚动
+ * ready：准备滚动
+ * wait：等待重用
+ * stop：暂停
+ */
 
 export default class Danmaku {
   $player: HTMLDivElement
   $danmaku: HTMLDivElement
-  options: _Options
 
   isStop: boolean = false
   isHide: boolean = false
@@ -27,25 +42,21 @@ export default class Danmaku {
   $refs: HTMLDivElement[] = []
   worker: Worker
 
+  options: _Options
+
   constructor(private player: Player, options: Options) {
     this.$player = player.$root as HTMLDivElement
-    this.$danmaku = $.create(
-      `div.${$.css`width: 100%; height: 100%; position: absolute; left: 0; top: 0; pointer-events: none;`}`
-    )
-    $.render(this.$danmaku, this.$player)
+    this.$danmaku = $.render($.create(`div.${danmakuWrap}`), this.$player) as HTMLDivElement
 
-    this.options = Object.assign(
-      {
-        speed: 5,
-        color: '#fff',
-        mode: 0,
-        margin: [2, 2],
-        antiOverlap: true,
-        useWorker: true,
-        synchronousPlayback: true
-      },
-      options
-    )
+    this.options = {
+      speed: 5,
+      color: '#fff',
+      margin: [2, 2],
+      antiOverlap: true,
+      useWorker: true,
+      synchronousPlayback: true,
+      ...options
+    }
 
     if (options.useWorker) {
       this.worker = new DanmakuWorker()
@@ -63,7 +74,7 @@ export default class Danmaku {
       if (typeof this.options.source === 'function') {
         danmakus = await this.options.source()
       } else if (typeof this.options.source === 'string') {
-        danmakus = await bilibiliDanmaParseFromUrl(this.options.source)
+        danmakus = await danmakuParseFromUrl(this.options.source)
       } else {
         danmakus = this.options.source
       }
