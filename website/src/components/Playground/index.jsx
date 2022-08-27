@@ -9,7 +9,7 @@ import styles from './styles.module.css'
 const plugins = [
   danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
   ui({
-    theme: { primaryColor: '#9370db' },
+    theme: { primaryColor: '#6668ab' },
     subtitle: [
       {
         name: '君の名は',
@@ -17,7 +17,7 @@ const plugins = [
         url: 'https://oplayer.vercel.app/君の名は.srt'
       }
     ],
-    thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 101 }
+    thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 }
   })
 ]
 

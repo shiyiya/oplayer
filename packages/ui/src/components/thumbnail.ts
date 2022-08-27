@@ -23,7 +23,14 @@ export default function (container: HTMLElement, options?: Thumbnails) {
   $.render($dom, container)
 
   let isImgLoaded = false
-  const chunk = options.number / 100
+  const chunk = 100 / options.number
+  let minRate = 0,
+    maxRate = 0
+
+  setTimeout(() => {
+    minRate = 80 / container.clientWidth
+    maxRate = container.clientWidth - 80 / container.clientWidth
+  })
 
   return {
     update: (rate: number) => {
@@ -32,13 +39,9 @@ export default function (container: HTMLElement, options?: Thumbnails) {
         $dom.style.backgroundImage = `url(${options.url})`
       }
 
-      const maxleft = container.clientWidth - 80,
-        maxRate = maxleft / container.clientWidth,
-        minRate = 80 / container.clientWidth
-
       $dom.style.display = 'block'
       $dom.style.left = (rate < minRate ? minRate : rate > maxRate ? maxRate : rate) * 100 + '%'
-      const index = ~~((rate * 100) / chunk) * chunk
+      const index = ~~((rate * 100) / chunk) * options.number * chunk
       $dom.style.backgroundPositionX = `${index}%`
     },
     hide: () => {
