@@ -1,0 +1,31 @@
+{
+  "name": "@oplayer/thumbnails-tool",
+  "version": "0.0.1",
+  "description": "Thumbnail tool for oplayer",
+  "main": "src/index.js",
+  "author": "",
+  "bin": {
+    "oplayer-thumbnails": "src/index.js"
+  },
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer-tool"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "echo empty script",
+    "build": "echo empty script"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "commander": "^9.4.0",
+    "ora": "^6.1.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "cli-spinner": "^0.2.10",
+    "jimp": "^0.16.1",
+    "node-sprite-generator": "^0.10.2",
+    "rimraf": "^3.0.2"
+  }
+}

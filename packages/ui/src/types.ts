@@ -21,6 +21,13 @@ export type Setting = {
   [x: string]: any
 }
 
+export type Thumbnails = {
+  url: string
+  number: number
+  width?: number
+  height?: number
+}
+
 export type UiConfig = {
   theme?: {
     primaryColor: `#${string}`
@@ -62,13 +69,16 @@ export type UiConfig = {
 
   settings?: Setting[]
 
+  thumbnails?: Thumbnails
+
   /*  --- WIP ---  */
 
   contextmenu?: []
 
-  thumbnails?: {}
-
-  highlight?: []
+  highlight?: {
+    text: string
+    time: number
+  }[]
 
   airplay?: boolean
 }

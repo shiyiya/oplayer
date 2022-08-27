@@ -1,5 +1,6 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
+import { UiConfig } from '../types'
 import { DRAG_EVENT_MAP, formatTime } from '../utils'
 import {
   buffered,
@@ -10,8 +11,9 @@ import {
   progressDarging,
   progressInner
 } from './Progress.style'
+import renderThumbnail from './thumbnail'
 
-const render = (player: Player, el: HTMLElement) => {
+const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(
     `div.${progress}`,
     {},
@@ -22,6 +24,7 @@ const render = (player: Player, el: HTMLElement) => {
       <div class="${dot}" style="transform: translateX(0%);"></div>
   </div>`
   )
+  const { update: thumbnailUpdater, hide: thumbnailhide } = renderThumbnail($dom, config.thumbnails)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
@@ -85,9 +88,11 @@ const render = (player: Player, el: HTMLElement) => {
       const rate = getSlidingValue(e)
       $hit.innerText = formatTime(player.duration * rate)
       $hit.style.left = `${rate * 100}%`
+      thumbnailUpdater(rate)
     },
     { passive: false }
   )
+  $dom.addEventListener('mouseout', thumbnailhide)
 
   player.on(['timeupdate', 'seeking'], () => {
     if (isDargMoving) return

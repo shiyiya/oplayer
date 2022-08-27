@@ -9,9 +9,6 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
-//@ts-ignore
-import poster from './poster.png'
-
 const dataSrcs = [
   'https://oplayer.vercel.app/君の名は.mp4',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
@@ -45,7 +42,6 @@ const flvPlugin: PlayerPlugin = {
 let logs: HTMLTextAreaElement
 
 const p = Player.make(document.getElementById('player')!, {
-  autoplay: true,
   muted: true,
   volume: 0.5,
   source: { src }
@@ -72,7 +68,8 @@ const p = Player.make(document.getElementById('player')!, {
           default: true,
           url: 'https://oplayer.vercel.app/君の名は.srt'
         }
-      ]
+      ],
+      thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 }
     })
   ])
   .create()
@@ -142,6 +139,6 @@ p.on((e: PlayerEvent) => {
   // console.info(e)
 })
 
-p.$root.addEventListener('click', p.unmute.bind(p), { once: true })
+// p.$root.addEventListener('click', p.unmute.bind(p), { once: true })
 
 render(meta(), document.getElementById('meta')!)

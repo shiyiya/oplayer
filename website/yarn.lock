@@ -1723,31 +1723,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oplayer/core@latest":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/core/-/core-1.0.18.tgz#13fa8d2de27d6563682cc6760047a04177f2b682"
-  integrity sha512-lurbOBDQKcUiNEob3WGabTBmZ/CsQargkKCEYnsI8NkxMoNvBMS0q8GGKtILSkWTy28WnAnygsb3SrrWJVuZYw==
-
-"@oplayer/danmaku@>=1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@oplayer/danmaku/-/danmaku-1.0.19.tgz#e42fa48650f586e5e4fcab26ab97f97e39afb524"
-  integrity sha512-kaFuuACodAzXBQjbEoAUtjU84Ip5f++RfXZdXrzcnBiNwvLCBPlMen/4Ojo+3Q1WTVlHTNSnpVgpFPfon5zq6w==
-
-"@oplayer/hls@latest":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/hls/-/hls-1.0.18.tgz#f8ae9b5ef53c267d14f2bfe224c468513b958138"
-  integrity sha512-2HYBS/zKlJWa3ajCuP9aFDbddMT4OSYoDoNwDIw6q51lyIp8dP28QJf/OJV7CZLk9Q6e1s2S847I3j/qR6XRHA==
-
-"@oplayer/react@latest":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/react/-/react-1.0.18.tgz#74af0d4409f99989f2263c0e8b8e7b09f3b6b241"
-  integrity sha512-s2B675LeoXdcpuH/RUZHuxpGJi8SNOrAqqlKZEQ77zjGFCmKYb56baZeFwfGe+ziDs2Cea/YoksmId7P0AKYvg==
-
-"@oplayer/ui@latest":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@oplayer/ui/-/ui-1.0.18.tgz#e5628f8953f9ef29b288fe1d276ff06d0ac77130"
-  integrity sha512-BSuicVZtdXBbe6eKSeYnNJapZJ/woT6T0fzlGOgnWfryZodg3Nd+xMYytoQPRqupkf2I0YTv1t9K/bDN2FiljQ==
-
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"

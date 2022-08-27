@@ -24,28 +24,12 @@ export const VIDEO_EVENTS = [
   'encrypted',
   'waitingforkey',
   'enterpictureinpicture',
-  'leavepictureinpicture'
+  'leavepictureinpicture',
+  'webkitbeginfullscreen',
+  'webkitendfullscreen'
 ] as const
 
-export const PLAYER_EVENTS = [
-  // 'focus',
-  // 'keydown',
-  // 'keyup',
-  // 'mousedown',
-  // 'mouseup',
-  // 'mousemove',
-  // 'mouseenter',
-  // 'mouseleave',
-  // 'touchstart',
-  // 'touchend',
-  // 'touchmove',
-  // 'touchcancel',
-  // 'click',
-  // 'dblclick'
-  'contextmenu',
-  'fullscreenchange',
-  'fullscreenerror'
-] as const
+export const PLAYER_EVENTS = ['contextmenu', 'fullscreenchange', 'fullscreenerror'] as const
 
 export const OH_EVENTS = ['loadedplugin', 'pluginerror', 'videosourcechange', 'destroy'] as const
 

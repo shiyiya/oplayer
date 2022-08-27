@@ -103,7 +103,11 @@ export class Player {
       this.$video.addEventListener(
         event,
         (e) => {
-          this.#E.emit(event, e)
+          if (event == 'webkitbeginfullscreen' || event == 'webkitendfullscreen') {
+            this.emit('fullscreenchange', e)
+          } else {
+            this.#E.emit(event, e)
+          }
         },
         { passive: true }
       )
@@ -182,9 +186,10 @@ export class Player {
   play = () => {
     if (!this.$video.src) throw Error('The element has no supported sources.')
 
-    this.#playPromise = this.$video
+    return (this.#playPromise = this.$video
       .play()
-      .catch((reason) => this.emit('notice', { text: (<Error>reason).message }))
+      .then((_) => _)
+      .catch((reason) => this.emit('notice', { text: (<Error>reason).message })))
   }
 
   pause() {
@@ -243,12 +248,10 @@ export class Player {
     } else {
       this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
     }
-    this.emit('fullscreenchange')
   }
 
   exitFullscreen() {
     this.#_exitFullscreen.call(document)
-    this.emit('fullscreenchange')
   }
 
   get isFullscreenEnabled() {
@@ -257,7 +260,7 @@ export class Player {
       (document as any).webkitFullscreenEnabled ||
       (document as any).mozFullScreenEnabled ||
       (document as any).msFullscreenEnabled ||
-      (isIOS() && (this.$video as any).webkitEnterFullscreen)
+      Boolean(isIOS() && (this.$video as any).webkitEnterFullscreen)
     )
   }
 
@@ -266,7 +269,8 @@ export class Player {
       document.fullscreenElement ||
       (document as any).webkitFullscreenElement ||
       (document as any).mozFullScreenElement ||
-      (document as any).msFullscreenElement === this.$root
+      (document as any).msFullscreenElement === this.$root ||
+      Boolean(isIOS() && (this.$video as any).webkitDisplayingFullscreen)
     )
   }
 
