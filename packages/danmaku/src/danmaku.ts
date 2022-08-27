@@ -27,11 +27,13 @@ export default class Danmaku {
   $refs: HTMLDivElement[] = []
   worker: Worker
 
-  constructor(public player: Player, options: Options) {
+  constructor(private player: Player, options: Options) {
     this.$player = player.$root as HTMLDivElement
     this.$danmaku = $.create(
       `div.${$.css`width: 100%; height: 100%; position: absolute; left: 0; top: 0; pointer-events: none;`}`
     )
+    $.render(this.$danmaku, this.$player)
+
     this.options = Object.assign(
       {
         speed: 5,
@@ -53,7 +55,6 @@ export default class Danmaku {
     }
 
     this.fetch()
-    $.render(this.$danmaku, this.$player)
   }
 
   async fetch() {
@@ -78,20 +79,18 @@ export default class Danmaku {
     this.queue = []
     this.$danmaku.innerHTML = ''
 
-    danmakus
-      .sort((a, b) => a.time - b.time)
-      .forEach((danmaku) => {
-        if (this.options?.filter && this.options.filter(danmaku)) return
+    danmakus.forEach((danmaku) => {
+      if (this.options?.filter && this.options.filter(danmaku)) return
 
-        this.queue.push({
-          color: this.options.color,
-          status: 'wait',
-          $ref: null,
-          restTime: 0,
-          lastTime: 0,
-          ...danmaku
-        })
+      this.queue.push({
+        color: this.options.color,
+        status: 'wait',
+        $ref: null,
+        restTime: 0,
+        lastTime: 0,
+        ...danmaku
       })
+    })
   }
 
   start() {
@@ -146,7 +145,7 @@ export default class Danmaku {
             speed: (clientWidth + danmaku.$ref.clientWidth) / danmaku.restTime
           }
 
-          await this.postMessage({
+          const { top } = await this.postMessage({
             target,
             emits: rect,
             clientWidth,
@@ -154,32 +153,32 @@ export default class Danmaku {
             antiOverlap: this.options.antiOverlap,
             marginTop: this.options.margin?.[0] || 0,
             marginBottom: this.options.margin?.[1] || 50
-          }).then(({ top }) => {
-            if (!this.isStop && top != -1) {
-              danmaku.status = 'emit'
-              danmaku.$ref!.style.opacity = '1'
-              danmaku.$ref!.style.top = `${top}px`
-
-              switch (danmaku.mode) {
-                case 0: {
-                  const translateX = clientWidth + danmaku.$ref!.clientWidth
-                  danmaku.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
-                  danmaku.$ref!.style.transition = `transform ${danmaku.restTime}s linear 0s`
-                  break
-                }
-                case 1:
-                  danmaku.$ref!.style.left = '50%'
-                  danmaku.$ref!.style.transform = 'translate3d(-50%, 0, 0)'
-                  break
-                default:
-                  break
-              }
-            } else {
-              danmaku.status = 'ready'
-              this.$refs.push(danmaku.$ref!)
-              danmaku.$ref = null
-            }
           })
+
+          if (!this.isStop && top != -1) {
+            danmaku.status = 'emit'
+            danmaku.$ref!.style.opacity = '1'
+            danmaku.$ref!.style.top = `${top}px`
+
+            switch (danmaku.mode) {
+              case 0: {
+                const translateX = clientWidth + danmaku.$ref!.clientWidth
+                danmaku.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
+                danmaku.$ref!.style.transition = `transform ${danmaku.restTime}s linear 0s`
+                break
+              }
+              case 1:
+                danmaku.$ref!.style.left = '50%'
+                danmaku.$ref!.style.transform = 'translate3d(-50%, 0, 0)'
+                break
+              default:
+                break
+            }
+          } else {
+            danmaku.status = 'ready'
+            this.$refs.push(danmaku.$ref!)
+            danmaku.$ref = null
+          }
         }
 
         if (!this.isStop) this.update()
