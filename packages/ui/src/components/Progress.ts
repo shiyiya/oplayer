@@ -12,6 +12,7 @@ import {
   progressInner
 } from './Progress.style'
 import renderThumbnail from './thumbnail'
+import renderHighlight, { highlightCls } from './highlight'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(
@@ -25,6 +26,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   </div>`
   )
   const { update: thumbnailUpdater, hide: thumbnailhide } = renderThumbnail($dom, config.thumbnails)
+  renderHighlight(player, $dom, config.highlight)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
@@ -46,10 +48,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     const rate = getSlidingValue(e) * 100
     $played.style.width = rate + '%'
     $playedDto.style.transform = `translateX(${rate}%)`
-    if ($hit) {
-      $hit.innerText = formatTime(player.duration * (rate / 100))
-      $hit.style.left = `${rate}%`
-    }
+    $hit.innerText = formatTime(player.duration * (rate / 100))
+    $hit.style.left = `${rate}%`
   }
 
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
@@ -85,6 +85,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     'mousemove',
     (e) => {
       if (isDargMoving) return
+
+      if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
+        $hit.style.display = 'none'
+      } else {
+        $hit.style.display = 'block'
+      }
+
       const rate = getSlidingValue(e)
       $hit.innerText = formatTime(player.duration * rate)
       $hit.style.left = `${rate * 100}%`

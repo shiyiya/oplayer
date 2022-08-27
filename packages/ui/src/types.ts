@@ -28,6 +28,11 @@ export type Thumbnails = {
   height?: number
 }
 
+export type Highlight = {
+  text: string
+  time: number
+}
+
 export type UiConfig = {
   theme?: {
     primaryColor: `#${string}`
@@ -71,14 +76,11 @@ export type UiConfig = {
 
   thumbnails?: Thumbnails
 
+  highlight?: Highlight[]
+
   /*  --- WIP ---  */
 
   contextmenu?: []
-
-  highlight?: {
-    text: string
-    time: number
-  }[]
 
   airplay?: boolean
 }
