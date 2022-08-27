@@ -29,7 +29,7 @@ export default function (container: HTMLElement, options?: Thumbnails) {
 
   setTimeout(() => {
     minRate = 80 / container.clientWidth
-    maxRate = container.clientWidth - 80 / container.clientWidth
+    maxRate = (container.clientWidth - 80) / container.clientWidth
   })
 
   return {
