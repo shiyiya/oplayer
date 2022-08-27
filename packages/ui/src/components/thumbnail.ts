@@ -42,7 +42,7 @@ export default function (container: HTMLElement, options?: Thumbnails) {
       $dom.style.display = 'block'
       $dom.style.left = (rate < minRate ? minRate : rate > maxRate ? maxRate : rate) * 100 + '%'
       const index = ~~((rate * 100) / chunk) * options.number * chunk
-      $dom.style.backgroundPositionX = `${index}%`
+      $dom.style.backgroundPositionX = `${-index}%`
     },
     hide: () => {
       $dom.style.display = 'none'
