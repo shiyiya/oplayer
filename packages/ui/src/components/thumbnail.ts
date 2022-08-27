@@ -1,5 +1,5 @@
 import { $ } from '@oplayer/core'
-import { Thumbnails } from '../types'
+import type { Thumbnails } from '../types'
 
 const noop = () => {}
 

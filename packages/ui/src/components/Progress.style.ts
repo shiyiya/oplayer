@@ -1,5 +1,6 @@
 import { $ } from '@oplayer/core'
 import { isMobile } from '../utils'
+import { highlightCls } from './highlight'
 
 export const buffered = $.css({
   'background-color': 'hsla(0, 0%, 100%, 0.4)'
@@ -36,14 +37,13 @@ export const hit = $.css({
   position: 'absolute',
   left: '0',
   'border-radius': '4px',
-  padding: '5px 7px',
+  padding: '5px 8px',
   'background-color': 'rgba(0, 0, 0, 0.62)',
   color: '#fff',
   'font-size': '12px',
-  'text-align': 'center',
   transition: 'opacity 0.1s ease-in-out',
-  'word-wrap': 'normal',
-  'word-break': 'normal',
+  'word-wrap': 'nowrap',
+  'word-break': 'nowrap',
   'z-index': '2',
   'pointer-events': 'none',
   transform: 'translateX(-50%)',
@@ -66,6 +66,12 @@ export const progress = $.css({
 
   [`&.${progressDarging} .${hit} ${!isMobile ? `,&:hover .${hit}` : ''}`]: {
     opacity: 1
+  },
+
+  [`&:hover .${highlightCls}`]: {
+    transform: 'translate(-4px, -2px)',
+    height: '6px',
+    width: '8px'
   }
 })
 
