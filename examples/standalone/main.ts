@@ -56,7 +56,7 @@ const p = Player.make(document.getElementById('player')!, {
     danmaku({
       source: 'https://oplayer.vercel.app/danmaku.xml',
       fontSize: isMobile ? 16 : 20,
-      filter: (d: DanmakuItem) => d.mode != 0
+      filter: (d: DanmakuItem) => d.text == '+1s'
     }),
     ui({
       autoFocus: true,

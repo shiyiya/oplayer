@@ -25,11 +25,6 @@ const danmakuItemCls = $.css(`
   text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;
 `)
 
-const danmakuCenter = $.css(`
-  left: 50%;
-  transform: translateX(-50%);
-`)
-
 /**
  * emit：正在滚动
  * ready：准备滚动
@@ -132,9 +127,8 @@ export default class Danmaku {
 
         for (let index = 0; index < readys.length; index++) {
           const danmaku = readys[index]!
-          danmaku.$ref = this.createItem({
-            text: danmaku.text,
-            cssText: `left: ${clientWidth}px;
+          danmaku.$ref = this.createItem(
+            `
             ${this.options.opacity ? `opacity: ${this.options.opacity};` : ''}
             ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
 
@@ -144,7 +138,9 @@ export default class Danmaku {
                 ? `border: 1px solid ${danmaku.color}; background-color: rgb(0 0 0 / 50%);`
                 : ''
             }`
-          })
+          )
+          danmaku.$ref.style.left = `${clientWidth}px`
+          danmaku.$ref.innerText = danmaku.text
           this.$danmaku.appendChild(danmaku.$ref)
 
           danmaku.lastTime = Date.now()
@@ -183,7 +179,8 @@ export default class Danmaku {
                 break
               }
               case 1:
-                danmaku.$ref.classList.add(`.${danmakuCenter}`)
+                danmaku.$ref!.style.left = '50%'
+                danmaku.$ref!.style.transform = 'translate3d(-50%, 0, 0)'
                 break
               default:
                 break
@@ -244,13 +241,12 @@ export default class Danmaku {
     return $ref.getBoundingClientRect().left
   }
 
-  createItem({ text, cssText }: { text: string; cssText: string }): HTMLDivElement {
+  createItem(cssText: string): HTMLDivElement {
     const $cache = this.$refs.pop()
     if ($cache) return $cache
 
     const $ref = document.createElement('div')
     $ref.className = danmakuItemCls
-    $ref.innerText = text
     $ref.style.cssText = cssText
     return $ref as HTMLDivElement
   }
@@ -318,7 +314,6 @@ export default class Danmaku {
       danmaku.$ref.style.opacity = '0'
       danmaku.$ref.style.transform = 'translate3d(0, 0, 0)'
       danmaku.$ref.style.transition = 'transform 0s linear 0s'
-      danmaku.$ref.style.left = `${this.$player.clientWidth}px`
       this.$refs.push(danmaku.$ref)
       danmaku.$ref = null
     }
