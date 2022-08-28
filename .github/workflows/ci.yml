@@ -41,7 +41,6 @@ jobs:
       - name: build packs
         run: |
           pnpm build:cache
-          pnpm build:doc
 
       - name: run test
         run: |
@@ -56,16 +55,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: build websites
-        run: |
-          pnpm i yarn -g
-          cd website
-          yarn
-          yarn build
+      # - name: build websites
+      #   run: |
+      #     pnpm i yarn -g
+      #     cd website
+      #     yarn
+      #     yarn build
 
-      - name: deploy to github pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GIT_HUB_TOKEN }}
-          publish_dir: ./website/build
-          publish_branch: gh-pages
+      # - name: deploy to github pages
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GIT_HUB_TOKEN }}
+      #     publish_dir: ./website/build
+      #     publish_branch: gh-pages
