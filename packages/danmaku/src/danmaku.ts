@@ -1,11 +1,21 @@
-import { bilibiliDanmaParseFromUrl } from './bilibili-parse'
+import { danmakuParseFromUrl } from './danmaku-parse'
 import getDanmaTop from './top'
 
 import Player, { $ } from '@oplayer/core'
 import DanmakuWorker from './danmaku.worker?worker&inline'
 import type { ActiveDanmakuRect, DanmakuItem, Options, QueueItem, _Options } from './types'
 
-const danmakuItemCls = $.css`
+const danmakuWrap = $.css(`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
+`)
+
+const danmakuItemCls = $.css(`
   position: absolute;
   white-space: pre;
   pointer-events: none;
@@ -13,12 +23,22 @@ const danmakuItemCls = $.css`
   will-change: transform, top;
   line-height: 1.125;
   text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;
-`
+`)
 
+const danmakuCenter = $.css(`
+  left: 50%;
+  transform: translateX(-50%);
+`)
+
+/**
+ * emit：正在滚动
+ * ready：准备滚动
+ * wait：等待重用
+ * stop：暂停
+ */
 export default class Danmaku {
   $player: HTMLDivElement
   $danmaku: HTMLDivElement
-  options: _Options
 
   isStop: boolean = false
   isHide: boolean = false
@@ -27,23 +47,21 @@ export default class Danmaku {
   $refs: HTMLDivElement[] = []
   worker: Worker
 
-  constructor(public player: Player, options: Options) {
+  options: _Options
+
+  constructor(private player: Player, options: Options) {
     this.$player = player.$root as HTMLDivElement
-    this.$danmaku = $.create(
-      `div.${$.css`width: 100%; height: 100%; position: absolute; left: 0; top: 0; pointer-events: none;`}`
-    )
-    this.options = Object.assign(
-      {
-        speed: 5,
-        color: '#fff',
-        mode: 0,
-        margin: [2, 2],
-        antiOverlap: true,
-        useWorker: true,
-        synchronousPlayback: true
-      },
-      options
-    )
+    this.$danmaku = $.render($.create(`div.${danmakuWrap}`), this.$player) as HTMLDivElement
+
+    this.options = {
+      speed: 5,
+      color: '#fff',
+      margin: [2, 2],
+      antiOverlap: true,
+      useWorker: true,
+      synchronousPlayback: true,
+      ...options
+    }
 
     if (options.useWorker) {
       this.worker = new DanmakuWorker()
@@ -53,7 +71,6 @@ export default class Danmaku {
     }
 
     this.fetch()
-    $.render(this.$danmaku, this.$player)
   }
 
   async fetch() {
@@ -62,7 +79,7 @@ export default class Danmaku {
       if (typeof this.options.source === 'function') {
         danmakus = await this.options.source()
       } else if (typeof this.options.source === 'string') {
-        danmakus = await bilibiliDanmaParseFromUrl(this.options.source)
+        danmakus = await danmakuParseFromUrl(this.options.source)
       } else {
         danmakus = this.options.source
       }
@@ -78,20 +95,18 @@ export default class Danmaku {
     this.queue = []
     this.$danmaku.innerHTML = ''
 
-    danmakus
-      .sort((a, b) => a.time - b.time)
-      .forEach((danmaku) => {
-        if (this.options?.filter && this.options.filter(danmaku)) return
+    danmakus.forEach((danmaku) => {
+      if (this.options?.filter && this.options.filter(danmaku)) return
 
-        this.queue.push({
-          color: this.options.color,
-          status: 'wait',
-          $ref: null,
-          restTime: 0,
-          lastTime: 0,
-          ...danmaku
-        })
+      this.queue.push({
+        color: this.options.color,
+        status: 'wait',
+        $ref: null,
+        restTime: 0,
+        lastTime: 0,
+        ...danmaku
       })
+    })
   }
 
   start() {
@@ -124,7 +139,6 @@ export default class Danmaku {
             ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
 
             ${danmaku.color ? `color: ${danmaku.color};` : ''},
-            ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
             ${
               danmaku.border
                 ? `border: 1px solid ${danmaku.color}; background-color: rgb(0 0 0 / 50%);`
@@ -146,40 +160,39 @@ export default class Danmaku {
             speed: (clientWidth + danmaku.$ref.clientWidth) / danmaku.restTime
           }
 
-          await this.postMessage({
+          const { top } = await this.postMessage({
             target,
             emits: rect,
             clientWidth,
             clientHeight,
             antiOverlap: this.options.antiOverlap,
-            marginTop: this.options.margin?.[0] || 0,
-            marginBottom: this.options.margin?.[1] || 50
-          }).then(({ top }) => {
-            if (!this.isStop && top != -1) {
-              danmaku.status = 'emit'
-              danmaku.$ref!.style.opacity = '1'
-              danmaku.$ref!.style.top = `${top}px`
-
-              switch (danmaku.mode) {
-                case 0: {
-                  const translateX = clientWidth + danmaku.$ref!.clientWidth
-                  danmaku.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
-                  danmaku.$ref!.style.transition = `transform ${danmaku.restTime}s linear 0s`
-                  break
-                }
-                case 1:
-                  danmaku.$ref!.style.left = '50%'
-                  danmaku.$ref!.style.transform = 'translate3d(-50%, 0, 0)'
-                  break
-                default:
-                  break
-              }
-            } else {
-              danmaku.status = 'ready'
-              this.$refs.push(danmaku.$ref!)
-              danmaku.$ref = null
-            }
+            marginTop: this.options.margin[0],
+            marginBottom: this.options.margin[1]
           })
+
+          if (!this.isStop && top != -1) {
+            danmaku.status = 'emit'
+            danmaku.$ref.style.opacity = '1'
+            danmaku.$ref.style.top = `${top}px`
+
+            switch (danmaku.mode) {
+              case 0: {
+                const translateX = clientWidth + danmaku.$ref.clientWidth
+                danmaku.$ref.style.transform = `translate3d(${-translateX}px, 0, 0)`
+                danmaku.$ref.style.transition = `transform ${danmaku.restTime}s linear 0s`
+                break
+              }
+              case 1:
+                danmaku.$ref.classList.add(`.${danmakuCenter}`)
+                break
+              default:
+                break
+            }
+          } else {
+            danmaku.status = 'ready'
+            this.$refs.push(danmaku.$ref)
+            danmaku.$ref = null
+          }
         }
 
         if (!this.isStop) this.update()
@@ -305,6 +318,7 @@ export default class Danmaku {
       danmaku.$ref.style.opacity = '0'
       danmaku.$ref.style.transform = 'translate3d(0, 0, 0)'
       danmaku.$ref.style.transition = 'transform 0s linear 0s'
+      danmaku.$ref.style.left = `${this.$player.clientWidth}px`
       this.$refs.push(danmaku.$ref)
       danmaku.$ref = null
     }

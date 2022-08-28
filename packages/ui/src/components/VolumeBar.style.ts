@@ -30,7 +30,7 @@ export const sliderWrap = $.css(`
 `)
 
 export const slider = $.css(`
-  background: #e7e7e7;
+  background: var(--shadow-background-color);
   height: 100%;
   width: 2px;
   border-radius: 2px;

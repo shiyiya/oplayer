@@ -32,7 +32,7 @@ export const dropdownHoverable = $.css({
   [`& .${expand}`]: {
     visibility: 'hidden',
     opacity: 0,
-    'background-color': 'rgba(21, 21, 21, .9)'
+    'background-color': 'var(--shadow-background-color)'
   },
 
   ['&:hover']: {

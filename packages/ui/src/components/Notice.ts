@@ -13,7 +13,7 @@ const noticeCls = $.css`
 
 const noticeTextCls = $.css`
   color: #fff;
-  background-color: rgba(21, 21, 21, .9);
+  background-color: var(--shadow-background-color);
   border-radius: 2px;
   padding: 5px 10px;
   font-size: 14px;

@@ -53,7 +53,7 @@ export type Options = {
   speed?: number // 持续时间 秒，[1 ~ 10]
   antiOverlap?: boolean // 是否防重叠
   useWorker?: boolean
-  synchronousPlayback?: false // 是否同步到播放速度
+  synchronousPlayback?: boolean // 是否同步到播放速度
   opacity?: number
   fontSize?: number
   color?: string

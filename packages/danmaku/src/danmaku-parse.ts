@@ -14,7 +14,7 @@ export function getMode(key: number) {
   }
 }
 
-export function bilibiliDanmaParseFromXml(xmlString: string) {
+export function danmakuParseFromXml(xmlString: string) {
   const matches = xmlString.matchAll(/<d (?:.*? )??p="(?<p>.+?)"(?: .*?)?>(?<text>.+?)<\/d>/gs)
   return Array.from(matches).reduce<DanmakuItem[]>((initialValue, match) => {
     const p = match.groups?.['p']?.split(',')
@@ -41,8 +41,8 @@ export function bilibiliDanmaParseFromXml(xmlString: string) {
   }, [])
 }
 
-export function bilibiliDanmaParseFromUrl(url: string) {
+export function danmakuParseFromUrl(url: string) {
   return fetch(url)
     .then((res) => res.text())
-    .then((xmlString) => bilibiliDanmaParseFromXml(xmlString))
+    .then((xmlString) => danmakuParseFromXml(xmlString))
 }
