@@ -4,7 +4,7 @@ import type { Player } from './player'
 export type Source = {
   src: string
   poster?: string
-  format?: string
+  format?: 'auto' | string
 }
 
 export type PlayerOptions = {
