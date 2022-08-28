@@ -9,14 +9,13 @@ export const setting = $.css({
   'max-width': '200px',
   'border-radius': '3px',
   'font-size': '14px',
-  transition: 'all .2s',
   display: 'block',
   position: 'absolute',
   right: '10px',
   bottom: '40px',
   overflow: 'auto',
   'backdrop-filter': 'saturate(180%) blur(20px)',
-  'background-color': 'rgba(0, 0, 0, 0.7)',
+  'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
 
   // panel

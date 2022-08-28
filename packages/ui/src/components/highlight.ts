@@ -10,7 +10,7 @@ export const highlightTextCls = $.css(`
   position: absolute;
   left: 50%;
   padding: 5px 8px;
-  background-color: rgba(0, 0, 0, 0.62);
+  background-color: var(--shadow-background-color);
   color: #fff;
   border-radius: 4px;
   font-size: 12px;
@@ -23,7 +23,7 @@ export const highlightCls = $.css({
   top: '5px',
   width: '6px',
   height: '3px',
-  'border-radius': '4px',
+  'border-radius': '2px',
   'background-color': '#fff',
   transform: 'translateX(-3px)',
   transition: 'all 0.2s',

@@ -11,6 +11,9 @@ export const root = (theme: UiConfig['theme']) => {
     '--primary-color': `rgba(${rbg}, 1)`,
     '--shadow-color-4': `rgba(${rbg}, 0.4)`,
 
+    //TODO: more
+    '--shadow-background-color': 'rgba(28 ,28 ,28 ,.9)',
+
     width: '100%',
     height: '100%',
     position: 'absolute',
