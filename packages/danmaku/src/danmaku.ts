@@ -12,6 +12,7 @@ const danmakuWrap = $.css(`
   left: 0;
   top: 0;
   pointer-events: none;
+  font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
 `)
 
 const danmakuItemCls = $.css(`
@@ -24,13 +25,17 @@ const danmakuItemCls = $.css(`
   text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;
 `)
 
+const danmakuCenter = $.css(`
+  left: 50%;
+  transform: translateX(-50%);
+`)
+
 /**
  * emit：正在滚动
  * ready：准备滚动
  * wait：等待重用
  * stop：暂停
  */
-
 export default class Danmaku {
   $player: HTMLDivElement
   $danmaku: HTMLDivElement
@@ -134,7 +139,6 @@ export default class Danmaku {
             ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
 
             ${danmaku.color ? `color: ${danmaku.color};` : ''},
-            ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
             ${
               danmaku.border
                 ? `border: 1px solid ${danmaku.color}; background-color: rgb(0 0 0 / 50%);`
@@ -162,32 +166,31 @@ export default class Danmaku {
             clientWidth,
             clientHeight,
             antiOverlap: this.options.antiOverlap,
-            marginTop: this.options.margin?.[0] || 0,
-            marginBottom: this.options.margin?.[1] || 50
+            marginTop: this.options.margin[0],
+            marginBottom: this.options.margin[1]
           })
 
           if (!this.isStop && top != -1) {
             danmaku.status = 'emit'
-            danmaku.$ref!.style.opacity = '1'
-            danmaku.$ref!.style.top = `${top}px`
+            danmaku.$ref.style.opacity = '1'
+            danmaku.$ref.style.top = `${top}px`
 
             switch (danmaku.mode) {
               case 0: {
-                const translateX = clientWidth + danmaku.$ref!.clientWidth
-                danmaku.$ref!.style.transform = `translate3d(${-translateX}px, 0, 0)`
-                danmaku.$ref!.style.transition = `transform ${danmaku.restTime}s linear 0s`
+                const translateX = clientWidth + danmaku.$ref.clientWidth
+                danmaku.$ref.style.transform = `translate3d(${-translateX}px, 0, 0)`
+                danmaku.$ref.style.transition = `transform ${danmaku.restTime}s linear 0s`
                 break
               }
               case 1:
-                danmaku.$ref!.style.left = '50%'
-                danmaku.$ref!.style.transform = 'translate3d(-50%, 0, 0)'
+                danmaku.$ref.classList.add(`.${danmakuCenter}`)
                 break
               default:
                 break
             }
           } else {
             danmaku.status = 'ready'
-            this.$refs.push(danmaku.$ref!)
+            this.$refs.push(danmaku.$ref)
             danmaku.$ref = null
           }
         }
@@ -315,6 +318,7 @@ export default class Danmaku {
       danmaku.$ref.style.opacity = '0'
       danmaku.$ref.style.transform = 'translate3d(0, 0, 0)'
       danmaku.$ref.style.transition = 'transform 0s linear 0s'
+      danmaku.$ref.style.left = `${this.$player.clientWidth}px`
       this.$refs.push(danmaku.$ref)
       danmaku.$ref = null
     }
