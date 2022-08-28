@@ -13,9 +13,9 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
   !(
     Boolean(video.canPlayType('application/x-mpegURL')) ||
     Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
-  ) && typeof source.format == 'string'
-    ? source.format === 'm3u8' // 指定类型则不做后续判断
-    : /m3u8(#|\?|$)/i.test(source.src)
+  ) &&
+  ((typeof source.format === 'string' && source.format === 'm3u8') ||
+    /m3u8(#|\?|$)/i.test(source.src))
 
 const hlsPlugin = ({
   hlsConfig = {},
