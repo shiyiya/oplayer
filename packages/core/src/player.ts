@@ -160,12 +160,12 @@ export class Player {
     $.render(this.$root, this.container)
   }
 
-  load = (source: Source) => {
-    this.#plugins.forEach((plugin) => {
+  load = async (source: Source) => {
+    for await (const plugin of this.#plugins) {
       if (plugin.load && !this.#isCustomLoader) {
-        this.#isCustomLoader = plugin.load(this, this.$video, source)
+        this.#isCustomLoader = await plugin.load(this, this.$video, source)
       }
-    })
+    }
     if (!this.#isCustomLoader) {
       this.$video.src = source.src
     }
@@ -308,12 +308,12 @@ export class Player {
     }
   }
 
-  changeSource(sources: Source) {
+  async changeSource(sources: Source) {
     this.#playPromise = undefined
     this.hasError = false
     this.#isCustomLoader = false
     this.$video.poster = sources.poster || ''
-    this.load(sources)
+    await this.load(sources)
     this.emit('videosourcechange')
   }
 

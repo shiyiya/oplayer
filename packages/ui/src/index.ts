@@ -2,6 +2,7 @@ import type Player from '@oplayer/core'
 import { $, PlayerPlugin } from '@oplayer/core'
 import { root } from './style'
 import type { UiConfig } from './types'
+import { isMobile } from './utils'
 
 import renderControllerBar from './components/ControllerBar'
 import renderCoverButton from './components/CoverButton'
@@ -10,39 +11,33 @@ import renderLoding from './components/Loading'
 import renderMask from './components/Mask'
 import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
+import renderSubtitle from './components/Subtitle'
 
+import hotkey from './functions/hotkey'
+import focusListener from './listeners/focus'
 import initListener from './listeners/init'
-import { isMobile } from './utils'
 
 const apply = (player: Player, config: UiConfig) => {
   const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
   const $root = $.create(`div.${root(config.theme)}`)
 
-  // error
   renderError(player, $frag)
-
-  // area
+  renderNotice(player, $frag)
   renderLoding(player, $frag)
   renderMask(player, $frag)
+
   const { show, hide } = renderCoverButton(player, $frag)
   renderControllerBar(player, $frag, config, show, hide)
+
   renderSetting(player, $frag, config.settings)
-  renderNotice(player, $frag)
 
   if (config.subtitle) {
-    import('./components/Subtitle').then((h) => {
-      h.default(player, $frag, config)
-    })
+    renderSubtitle(player, $frag, config)
   }
 
   if (!isMobile) {
-    import('./listeners/focus').then((h) => {
-      h.default.startListening(player, config.autoFocus)
-    })
-
-    import('./functions/hotkey').then((h) => {
-      h.default(player)
-    })
+    focusListener.startListening(player, config.autoFocus)
+    hotkey(player)
   }
 
   initListener.startListening(player)

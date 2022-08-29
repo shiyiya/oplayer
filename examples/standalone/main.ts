@@ -1,19 +1,26 @@
-import Player, { PlayerEvent, PlayerPlugin } from '@oplayer/core'
+//@ts-nocheck
+import Player, { PlayerEvent } from '@oplayer/core'
 import danmaku, { DanmakuItem } from '@oplayer/danmaku'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
 import { isMobile } from '@oplayer/ui/src/utils'
-import flvjs from 'flv.js'
+
+import MP4 from '../../website/static/君の名は.mp4'
+import SRT from '../../website/static/君の名は.srt'
+import DANMAKU from '../../website/static/danmaku.xml'
+import THUMB from '../../website/static/thumbnails.jpg'
+
+console.log(MP4, SRT)
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
 const dataSrcs = [
-  'https://oplayer.vercel.app/君の名は.mp4',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
-  'https://media.w3.org/2010/05/sintel/trailer.mp4',
-  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8'
+  MP4,
+  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
+  'https://media.w3.org/2010/05/sintel/trailer.mp4'
 ] as const
 
 const querySrc = new URLSearchParams(window.location.search).get('src')
@@ -24,20 +31,6 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
-
-const flvPlugin: PlayerPlugin = {
-  name: 'oplayer-flv-plugin',
-  load: (_, video, source) => {
-    if (source.format != 'flv' || /\.flv(#|\?|$)/i.test(source.src)) return false
-    const flvPlayer = flvjs.createPlayer({
-      type: 'flv',
-      url: source.src
-    })
-    flvPlayer.attachMediaElement(video)
-    flvPlayer.load()
-    return true
-  }
-}
 
 let logs: HTMLTextAreaElement
 
@@ -52,9 +45,8 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     hls(),
-    flvPlugin,
     danmaku({
-      source: 'https://oplayer.vercel.app/danmaku.xml',
+      source: DANMAKU,
       fontSize: isMobile ? 16 : 20,
       filter: (d: DanmakuItem) => d.text == '+1s'
     }),
@@ -66,7 +58,27 @@ const p = Player.make(document.getElementById('player')!, {
         {
           name: 'JP & ZH',
           default: true,
-          url: 'https://oplayer.vercel.app/君の名は.srt'
+          url: SRT,
+          type: 'unknow'
+        }
+      ],
+      thumbnails: { url: THUMB, number: 100 },
+      highlight: [
+        {
+          time: 12,
+          text: '谁でもいいはずなのに'
+        },
+        {
+          time: 34,
+          text: '夏の想い出がまわる'
+        },
+        {
+          time: 58,
+          text: 'こんなとこにあるはずもないのに'
+        },
+        {
+          time: 88,
+          text: '－－终わり－－'
         }
       ],
       thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },

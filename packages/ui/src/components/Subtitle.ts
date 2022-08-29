@@ -29,8 +29,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
       'line-height': '1.2',
 
       '& > p': { margin: 0 }
-    })}`,
-    {}
+    })}`
   )
   $.render($dom, el)
 

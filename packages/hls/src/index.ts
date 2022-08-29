@@ -1,7 +1,9 @@
-import Hls from 'hls.js/dist/hls.light.min.js'
+// import Hls from 'hls.js/dist/hls.light.min.js'
+import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
 import type { PlayerPlugin, Source } from '@oplayer/core'
 
+let importedHls: any
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 type hlsPluginOptions = {
@@ -25,22 +27,21 @@ const hlsPlugin = ({
   let isInitial = false
   let hlsInstance: Hls
 
-  const getHls = (options?: Partial<HlsConfig>): Hls => {
-    if (hlsInstance) {
-      hlsInstance.destroy()
-    }
-    hlsInstance = new Hls(options)
-    return hlsInstance
+  const getHls = async (options?: Partial<HlsConfig>) => {
+    if (hlsInstance) hlsInstance.destroy()
+    if (!importedHls) importedHls = await import('hls.js/dist/hls.light.min.js')
+
+    hlsInstance = new importedHls.default(options)
+    return { HLS: importedHls.default }
   }
 
   return {
     name: PLUGIN_NAME,
-    load: ({ on, emit }, video, source) => {
+    load: async ({ on, emit }, video, source) => {
       if (!matcher(video, source)) return false
 
-      hlsInstance = getHls({ autoStartLoad: false, ...hlsConfig })
-
-      if (!Hls.isSupported()) {
+      const { HLS } = await getHls({ autoStartLoad: false, ...hlsConfig })
+      if (!HLS.isSupported()) {
         emit('pluginerror', {
           payload: {
             type: 'hlsNotSupported',
@@ -68,9 +69,9 @@ const hlsPlugin = ({
       //   }
       // )
 
-      Object.values(Hls.Events).forEach((e) => {
+      Object.values(HLS.Events).forEach((e) => {
         hlsInstance.on(e as any, (event: string, data: ErrorData) => {
-          if (event === Hls.Events.ERROR && data.details == Hls.ErrorDetails.MANIFEST_LOAD_ERROR) {
+          if (event === HLS.Events.ERROR && data.details == HLS.ErrorDetails.MANIFEST_LOAD_ERROR) {
             emit('pluginerror', { message: data.type, ...data })
           }
           emit(event, data)
