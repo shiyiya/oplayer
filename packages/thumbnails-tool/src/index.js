@@ -28,7 +28,7 @@ program
   .option('-o, --output <path>', 'thumbnails path, default: ./thumbnails.jpg', './thumbnails.jpg')
   .option('-q, --quality <n>', 'thumbnails quality, default: 60', '60')
   .option('-c, --count <n>', 'thumbnails count, default: 100', '100')
-  .description('🎉  Generate thumbnails for DPlayer')
+  .description('🎉  Generate video thumbnails')
   .action(function (file, { output, quality, count }) {
     startSpinner('Screenshots generating', 1)
     ffmpeg(file)
