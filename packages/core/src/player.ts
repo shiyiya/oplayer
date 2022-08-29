@@ -1,4 +1,4 @@
-import { PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
+import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import E from './event'
 import type {
   PlayerEvent,
@@ -21,7 +21,6 @@ export class Player {
         loop: false,
         volume: 1,
         preload: 'auto',
-        poster: '',
         playbackRate: 1,
         playsinline: true,
         videoAttr: {}
@@ -38,9 +37,10 @@ export class Player {
 
   $root: HTMLElement
   $video: HTMLVideoElement
-  #isCustomLoader: boolean
+  listeners: Record<typeof EVENTS[number], Function> = Object.create(null)
 
   hasError: boolean = false
+  #isCustomLoader: boolean
 
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   #playPromise: Promise<void> | undefined
@@ -96,30 +96,35 @@ export class Player {
   }
 
   initEvent = () => {
-    this.on('error', () => {
+    const errorHandler = (payload: ErrorEvent) => {
       this.hasError = true
+      this.emit('error', payload)
+    }
+    this.listeners['error'] = errorHandler
+    this.on('error', (e) => this.listeners['error'](e))
+
+    const eventHandler = (eventName: string, payload: Event) => this.#E.emit(eventName, payload)
+    VIDEO_EVENTS.filter((it) => it !== 'error').forEach((eventName) => {
+      if (eventName === 'webkitbeginfullscreen' || eventName === 'webkitendfullscreen') {
+        const _eventName = 'fullscreenchange'
+        this.listeners[_eventName] = (_eventName: string, payload: Event) =>
+          this.emit(_eventName, payload)
+        this.$video.addEventListener(eventName, (e) => this.listeners[_eventName](eventName, e), {
+          passive: true
+        })
+      } else {
+        this.listeners[eventName] = eventHandler
+        this.$video.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
+          passive: true
+        })
+      }
     })
-    VIDEO_EVENTS.forEach((event) => {
-      this.$video.addEventListener(
-        event,
-        (e) => {
-          if (event == 'webkitbeginfullscreen' || event == 'webkitendfullscreen') {
-            this.emit('fullscreenchange', e)
-          } else {
-            this.#E.emit(event, e)
-          }
-        },
-        { passive: true }
-      )
-    })
-    PLAYER_EVENTS.forEach((event) => {
-      this.$root.addEventListener(
-        event,
-        (e) => {
-          this.#E.emit(event, e)
-        },
-        { passive: true }
-      )
+
+    PLAYER_EVENTS.forEach((eventName) => {
+      this.listeners[eventName] = eventHandler
+      this.$root.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
+        passive: true
+      })
     })
   }
 
@@ -164,6 +169,7 @@ export class Player {
     for await (const plugin of this.#plugins) {
       if (plugin.load && !this.#isCustomLoader) {
         this.#isCustomLoader = await plugin.load(this, this.$video, source)
+        if (this.#isCustomLoader) break
       }
     }
     if (!this.#isCustomLoader) {

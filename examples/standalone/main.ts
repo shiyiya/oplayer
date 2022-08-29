@@ -10,8 +10,6 @@ import SRT from '../../website/static/君の名は.srt'
 import DANMAKU from '../../website/static/danmaku.xml'
 import THUMB from '../../website/static/thumbnails.jpg'
 
-console.log(MP4, SRT)
-
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
@@ -172,3 +170,5 @@ p.on((e: PlayerEvent) => {
 // p.$root.addEventListener('click', p.unmute.bind(p), { once: true })
 
 render(meta(), document.getElementById('meta')!)
+
+window.p = p

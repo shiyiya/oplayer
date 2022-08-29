@@ -1,5 +1,6 @@
-import { $ } from '@oplayer/core'
 import type { Player, PlayerEvent } from '@oplayer/core'
+import { $ } from '@oplayer/core'
+import initListener from '../listeners/init'
 import { addClass, formatTime, removeClass } from '../utils'
 
 const noticeCls = $.css`
@@ -38,8 +39,12 @@ const render = (player: Player, el: HTMLElement) => {
     }, 2000)
   }
 
-  function toggle(fn: Function) {
-    return (...arg: any[]) => (fn(...arg), addClass($dom, noticeShowCls), delayhide())
+  function toggle(fn: Function, force: boolean = false) {
+    return (...arg: any[]) => {
+      if (initListener.isInitialized() || force) {
+        fn(...arg), addClass($dom, noticeShowCls), delayhide()
+      }
+    }
   }
 
   player.on(
@@ -60,7 +65,7 @@ const render = (player: Player, el: HTMLElement) => {
     'notice',
     toggle((e: PlayerEvent) => {
       $text.innerText = e.payload.text
-    })
+    }, true)
   )
 
   $.render($dom, el)

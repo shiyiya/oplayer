@@ -33,7 +33,6 @@ export type PlayerEventName = DefaultPlayerEvent | string | string[]
 export type PlayerEvent<T = any> = {
   type: PlayerEventName
   payload: T
-  _raw?: any
 }
 
 export type PlayerListener = (enevt: PlayerEvent) => void
