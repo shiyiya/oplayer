@@ -127,19 +127,18 @@ export default class Danmaku {
 
         for (let index = 0; index < readys.length; index++) {
           const danmaku = readys[index]!
-          danmaku.$ref = this.createItem(
-            `
-            ${this.options.opacity ? `opacity: ${this.options.opacity};` : ''}
-            ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
+          danmaku.$ref = this.createItem()
+          danmaku.$ref.style.cssText = `
+          left: ${clientWidth}px;
+          ${this.options.opacity ? `opacity: ${this.options.opacity};` : ''}
+          ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
 
-            ${danmaku.color ? `color: ${danmaku.color};` : ''},
-            ${
-              danmaku.border
-                ? `border: 1px solid ${danmaku.color}; background-color: rgb(0 0 0 / 50%);`
-                : ''
-            }`
-          )
-          danmaku.$ref.style.left = `${clientWidth}px`
+          ${danmaku.color ? `color: ${danmaku.color};` : ''},
+          ${
+            danmaku.border
+              ? `border: 1px solid ${danmaku.color}; background-color: rgb(0 0 0 / 50%);`
+              : ''
+          }`
           danmaku.$ref.innerText = danmaku.text
           this.$danmaku.appendChild(danmaku.$ref)
 
@@ -241,13 +240,12 @@ export default class Danmaku {
     return $ref.getBoundingClientRect().left
   }
 
-  createItem(cssText: string): HTMLDivElement {
+  createItem(): HTMLDivElement {
     const $cache = this.$refs.pop()
     if ($cache) return $cache
 
     const $ref = document.createElement('div')
     $ref.className = danmakuItemCls
-    $ref.style.cssText = cssText
     return $ref as HTMLDivElement
   }
 
