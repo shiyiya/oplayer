@@ -24,9 +24,7 @@ export const VIDEO_EVENTS = [
   'encrypted',
   'waitingforkey',
   'enterpictureinpicture',
-  'leavepictureinpicture',
-  'webkitbeginfullscreen',
-  'webkitendfullscreen'
+  'leavepictureinpicture'
 ] as const
 
 export const PLAYER_EVENTS = ['contextmenu', 'fullscreenchange', 'fullscreenerror'] as const

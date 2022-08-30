@@ -103,24 +103,32 @@ export class Player {
     this.listeners['error'] = errorHandler
     this.on('error', (e) => this.listeners['error'](e))
 
-    const eventHandler = (eventName: string, payload: Event) => this.#E.emit(eventName, payload)
-    VIDEO_EVENTS.filter((it) => it !== 'error').forEach((eventName) => {
-      if (eventName === 'webkitbeginfullscreen' || eventName === 'webkitendfullscreen') {
-        const _eventName = 'fullscreenchange'
-        this.listeners[_eventName] = (_eventName: string, payload: Event) =>
-          this.emit(_eventName, payload)
-        this.$video.addEventListener(eventName, (e) => this.listeners[_eventName](eventName, e), {
-          passive: true
-        })
-      } else {
-        this.listeners[eventName] = eventHandler
-        this.$video.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
-          passive: true
-        })
-      }
+    const fullscreenchangeHandler = (payload: ErrorEvent) => this.emit('fullscreenchange', payload)
+    ;(
+      [
+        [this.$video, 'webkitbeginfullscreen', 'webkitendfullscreen'], //only iphone
+        [this.$root, 'fullscreenchange', 'webkitfullscreenchange'] // others
+      ] as const
+    ).forEach((it) => {
+      const [target, ...eventNames] = it
+      // listener all.
+      // `webkitfullscreenchange in Document` is false
+      // TODO: check
+      ;(eventNames as typeof EVENTS[number][]).forEach((eventName) => {
+        this.listeners[eventName] = fullscreenchangeHandler
+        target.addEventListener(eventName, (e) => this.listeners[eventName](e))
+      })
     })
 
-    PLAYER_EVENTS.forEach((eventName) => {
+    const eventHandler = (eventName: string, payload: Event) => this.#E.emit(eventName, payload)
+    VIDEO_EVENTS.filter((it) => it !== 'error').forEach((eventName) => {
+      this.listeners[eventName] = eventHandler
+      this.$video.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
+        passive: true
+      })
+    })
+
+    PLAYER_EVENTS.filter((it) => it !== 'fullscreenchange').forEach((eventName) => {
       this.listeners[eventName] = eventHandler
       this.$root.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
         passive: true
@@ -271,12 +279,12 @@ export class Player {
   }
 
   get isFullScreen() {
-    return (
-      document.fullscreenElement ||
-      (document as any).webkitFullscreenElement ||
-      (document as any).mozFullScreenElement ||
-      (document as any).msFullscreenElement === this.$root ||
-      Boolean(isIOS() && (this.$video as any).webkitDisplayingFullscreen)
+    return Boolean(
+      (document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement) === this.$root ||
+        (isIOS() && (this.$video as any).webkitDisplayingFullscreen)
     )
   }
 
