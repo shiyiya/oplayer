@@ -79,7 +79,6 @@ const p = Player.make(document.getElementById('player')!, {
           text: '－－终わり－－'
         }
       ],
-      thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
       highlight: [
         {
           time: 12,
