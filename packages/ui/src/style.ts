@@ -46,3 +46,9 @@ export const icon = $.css({
   'text-align': 'inherit',
   width: '100%'
 })
+
+// export const loading = $.css('/* loading */')
+
+// export const playing = $.css('/* playing */')
+
+// export const paused = $.css('/* playing */')

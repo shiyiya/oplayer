@@ -15,6 +15,25 @@ Examples: [./examples](./examples) | [Join QQGroup](https://jq.qq.com/?_wv=1027&
 
 ![oplayer](./oplayer.png)
 
+## Feature
+
+- Streaming formats
+  - HLS
+  - MPEG DASH
+  - WebTorrent
+  - FLV
+  - Any other custom streaming formats
+- Media formats
+  - MP4 H.264
+  - WebM
+  - Ogg Theora Vorbis
+- Features
+  - Danmaku
+  - Screenshot
+  - Hotkeys
+  - Thumbnails
+  - Subtitle
+
 ## Usage
 
 ```bash

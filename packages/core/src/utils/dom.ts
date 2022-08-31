@@ -1,5 +1,5 @@
 import hash from './hash'
-import { css as _css } from './css'
+import { css as _css, DeepCssObject } from './css'
 
 export namespace $ {
   export const create = <K extends keyof HTMLElementTagNameMap>(
@@ -73,7 +73,7 @@ export namespace $ {
 
   export const createCss =
     ({ sheet, ssrData }: { sheet: CSSStyleSheet | null; ssrData: string[] }) =>
-    (...arg: any[]) => {
+    (...arg: [DeepCssObject] | [string] | any[]) => {
       const isRaw = Boolean(arg[0] && arg[0].length && arg[0].raw)
 
       let stringify = ''

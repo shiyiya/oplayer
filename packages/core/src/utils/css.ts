@@ -64,6 +64,10 @@ function isKeyframes(key: string) {
   return key.indexOf('@keyframes') === 0
 }
 
+function isGlobal(key: string) {
+  return key.indexOf('@global') === 0
+}
+
 function build(
   selector: string,
   { rules, mediaQuery }: { rules: Record<string, any>; mediaQuery: string | undefined }
@@ -83,6 +87,14 @@ function build(
         css,
         build(selector, {
           mediaQuery: joinMediaQueries(mediaQuery, key),
+          rules: rules[key]
+        })
+      )
+    } else if (isGlobal(key)) {
+      mergeDeep(
+        css,
+        build(key.substring(8), {
+          mediaQuery,
           rules: rules[key]
         })
       )
@@ -148,6 +160,44 @@ function styleString(style: Record<string, any>): string[] {
   return str
 }
 
-export function css(css: Record<string, any>, selector: string) {
-  return styleString(build(selector, { rules: css, mediaQuery: undefined }))
+export function css(css: CssKey, selector: string) {
+  return styleString(build(selector, { rules: css as any, mediaQuery: undefined }))
 }
+
+export type CssKey = Tras<Extract<keyof CSSStyleDeclaration, string>>
+export type cssValue = string | number | boolean
+export type CssObject = Record<CssKey, cssValue>
+
+export type DeepCssObject = Record<CssKey, CssObject | cssValue>
+
+export type Tras<T extends string, Rusult extends string = ''> = T extends `${infer L}${infer R}`
+  ? L extends
+      | 'Q'
+      | 'W'
+      | 'E'
+      | 'R'
+      | 'T'
+      | 'Y'
+      | 'U'
+      | 'I'
+      | 'O'
+      | 'P'
+      | 'A'
+      | 'S'
+      | 'D'
+      | 'F'
+      | 'G'
+      | 'H'
+      | 'J'
+      | 'K'
+      | 'L'
+      | 'Z'
+      | 'X'
+      | 'C'
+      | 'V'
+      | 'B'
+      | 'N'
+      | 'M'
+    ? Tras<R, `${Rusult}-${Lowercase<L>}`>
+    : Tras<R, `${Rusult}${L}`>
+  : `${Rusult}${T}`
