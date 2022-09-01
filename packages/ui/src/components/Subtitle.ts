@@ -76,7 +76,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
   function initSetting(subtitle: Subtitle[]) {
     if (subtitle.length) {
       player.emit('addsetting', <Setting>{
-        name: 'Subtitle',
+        name: player.locales.get('Subtitle'),
         type: 'selector',
         icon: subtitleSvg,
         key: 'subtitle',
@@ -92,7 +92,7 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
           }
         },
         children: [
-          { type: 'switcher', name: 'None' },
+          { type: 'switcher', name: player.locales.get('OFF') },
           ...subtitle?.map((s) => ({
             type: 'switcher',
             name: s.name,

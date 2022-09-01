@@ -1,6 +1,5 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import initListener from '../listeners/init'
 import { addClass, debounce, formatTime, removeClass } from '../utils'
 
 const noticeCls = $.css`
@@ -34,12 +33,8 @@ const render = (player: Player, el: HTMLElement) => {
   const $text: HTMLDivElement = $dom.querySelector(`.${noticeTextCls}`)!
   const { callee: delayHide } = debounce(() => removeClass($dom, noticeShowCls), NOTICE_HIDE_DELAY)
 
-  function toggle(fn: Function, force: boolean = false) {
-    return (...arg: any[]) => {
-      if (initListener.isInitialized() || force) {
-        fn(...arg), addClass($dom, noticeShowCls), delayHide()
-      }
-    }
+  function toggle(fn: Function) {
+    return (...arg: any[]) => (fn(...arg), addClass($dom, noticeShowCls), delayHide())
   }
 
   player.on(
@@ -52,7 +47,7 @@ const render = (player: Player, el: HTMLElement) => {
   player.on(
     'volumechange',
     toggle(() => {
-      $text.innerText = `Vol: ${~~(player.volume * 100)}%`
+      $text.innerText = player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`)
     })
   )
 
@@ -60,7 +55,7 @@ const render = (player: Player, el: HTMLElement) => {
     'notice',
     toggle((e: PlayerEvent) => {
       $text.innerText = e.payload.text
-    }, true)
+    })
   )
 
   $.render($dom, el)

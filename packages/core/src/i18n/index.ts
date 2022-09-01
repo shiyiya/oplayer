@@ -18,10 +18,16 @@ export default class I18n {
   constructor(defaultLang: Lang) {
     this.lang = defaultLang === 'auto' ? (navigator.language as Lang) : defaultLang
     if (!this.languages[this.lang]) {
-      navigator.languages.forEach((lang) => {
+      navigator.languages.some((lang) => {
         if (this.languages[lang as Lang]) {
           this.lang = lang as Lang
+          return true
         }
+        if (lang.includes('-') && this.languages[lang.split('-')[0] as Lang]) {
+          this.lang = lang as Lang
+          return true
+        }
+        return false
       })
     }
     if (!this.languages[this.lang]) this.lang = 'zh-CN'
@@ -34,8 +40,8 @@ export default class I18n {
     return result.replace(/%s/gi, () => arg[i++] || '')
   }
 
-  update(languages: Record<Lang, any>): void {
-    this.languages = mergeDeep(this.languages, languages)
+  update(languages: Partial<Record<Lang, any>>): void {
+    this.languages = mergeDeep(this.languages, languages) as any
   }
 }
 

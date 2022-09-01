@@ -14,18 +14,16 @@ export default (option: Options): PlayerPlugin => ({
 
     const emitSetting = () => {
       player.emit('addsetting', {
-        name: 'Danmaku',
+        name: player.locales.get('Danmaku'),
         type: 'switcher',
         default: true,
         key: 'danmaku',
         icon: subtitleSvg,
-        onChange: (flag: boolean, { isInit }: any = {}) => {
+        onChange: (flag: boolean) => {
           if (flag) {
-            !isInit && player.emit('notice', { text: 'Show danmaku' })
             danmaku?.show()
             isDanmakuShowing = true
           } else {
-            !isInit && player.emit('notice', { text: 'Hide danmaku' })
             danmaku?.hide()
             isDanmakuShowing = false
           }

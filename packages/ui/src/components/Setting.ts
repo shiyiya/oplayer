@@ -163,7 +163,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   const defaultSetting: Setting[] = [
     {
-      name: 'Loop',
+      name: player.locales.get('Loop'),
       type: 'switcher',
       default: player.isLoop,
       onChange: (value: boolean) => player.setLoop(value)
