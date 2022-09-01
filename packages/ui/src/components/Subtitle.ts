@@ -80,15 +80,12 @@ const render = (player: Player, el: HTMLElement, { subtitle = [] }: UiConfig) =>
         type: 'selector',
         icon: subtitleSvg,
         key: 'subtitle',
-        onChange({ value }, options) {
-          const isInit = options?.isInit
+        onChange({ value }) {
           if (value) {
             showsubtitle()
             initSubtitle(value)
-            !isInit && player.emit('notice', { text: 'Show subtitle' })
           } else {
             hiddensubtitle()
-            !isInit && player.emit('notice', { text: 'Hide subtitle' })
           }
         },
         children: [
