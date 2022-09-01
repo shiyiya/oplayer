@@ -5,9 +5,8 @@ import CN from './zh-CN.json'
 export default class I18n {
   public lang: Lang
 
-  private languages: Record<Lang, Record<string, string>> = {
+  private languages: Partial<Record<Lang, any>> = {
     zh: CN,
-    auto: undefined as unknown as Record<string, string>,
     'zh-CN': CN,
     en: Object.keys(CN).reduce<Record<string, string>>(
       (prevoius, current) => ((prevoius[current] = current), prevoius),
@@ -23,10 +22,15 @@ export default class I18n {
           this.lang = lang as Lang
           return true
         }
-        if (lang.includes('-') && this.languages[lang.split('-')[0] as Lang]) {
-          this.lang = lang as Lang
-          return true
+
+        if (lang.indexOf('-') !== -1) {
+          const short: Lang = lang.split('-')[0]! as Lang
+          if (short && this.languages[short]) {
+            this.lang = short
+            return true
+          }
         }
+
         return false
       })
     }
