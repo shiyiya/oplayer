@@ -1,7 +1,7 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import initListener from '../listeners/init'
-import { addClass, formatTime, removeClass } from '../utils'
+import { addClass, debounce, formatTime, removeClass } from '../utils'
 
 const noticeCls = $.css`
   pointer-events: none;
@@ -20,6 +20,8 @@ const noticeTextCls = $.css`
   font-size: 14px;
 `
 
+const NOTICE_HIDE_DELAY = 2000
+
 const noticeShowCls = $.css('display:block;')
 
 const render = (player: Player, el: HTMLElement) => {
@@ -30,19 +32,12 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   const $text: HTMLDivElement = $dom.querySelector(`.${noticeTextCls}`)!
-
-  let timer: NodeJS.Timeout
-  function delayhide() {
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      removeClass($dom, noticeShowCls)
-    }, 2000)
-  }
+  const { callee: delayHide } = debounce(() => removeClass($dom, noticeShowCls), NOTICE_HIDE_DELAY)
 
   function toggle(fn: Function, force: boolean = false) {
     return (...arg: any[]) => {
       if (initListener.isInitialized() || force) {
-        fn(...arg), addClass($dom, noticeShowCls), delayhide()
+        fn(...arg), addClass($dom, noticeShowCls), delayHide()
       }
     }
   }

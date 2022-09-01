@@ -56,12 +56,14 @@ export const screenShot = (player: Player) => {
 
 export const debounce = (fn: () => void, ms: number = 1500) => {
   let time: NodeJS.Timeout | null = null
-  return () => {
-    time && clearTimeout(time)
+  const clear = () => time && clearTimeout(time)
+  const callee = () => {
+    clear()
     time = setTimeout(() => {
       fn()
     }, ms)
   }
+  return { callee, clear }
 }
 
 export const siblings = (el: HTMLElement, cb?: (el: HTMLElement) => void) => {

@@ -28,8 +28,7 @@ const controllerBar = $.css({
   'background-image': 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3))'
 })
 
-let CTRL_HIDE_DELAY = 1500
-let ctrlAutoHideTimer: NodeJS.Timeout | null = null
+const CTRL_HIDE_DELAY = 1500
 
 const render = (
   player: Player,
@@ -58,21 +57,17 @@ const render = (
     onHide?.()
   }
 
-  const debounceHideCtrl = debounce(hideCtrl, CTRL_HIDE_DELAY)
-  const autoHideCtrl = () => {
-    ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
-    ctrlAutoHideTimer = setTimeout(hideCtrl, CTRL_HIDE_DELAY)
-  }
+  const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
 
   const showCtrl = () => {
     if (hasClass($dom, hideCls)) {
-      ctrlAutoHideTimer && clearTimeout(ctrlAutoHideTimer)
+      cancelHideCtrl()
       removeClass($dom, hideCls)
       onShow?.()
     }
   }
 
-  player.on('play', autoHideCtrl)
+  player.on('play', debounceHideCtrl)
   player.on(['pause', 'videosourcechange'], showCtrl)
 
   if (!isMobile) {
