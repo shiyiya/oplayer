@@ -176,7 +176,12 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   const fullscreenSwitcher = () => {
-    switcher($fullscreen.children, player.isFullScreen ? 1 : 0)
+    switcher(
+      $fullscreen.children,
+      player.isFullScreen
+        ? (($webfull.style.display = 'none'), 1)
+        : ($webfull.removeAttribute('style'), 0)
+    )
   }
 
   const webfullscreenSwitcher = (isWebfullScreen: boolean) => {

@@ -160,11 +160,16 @@ function styleString(style: Record<string, any>): string[] {
   return str
 }
 
-export function css(css: CssKey, selector: string) {
-  return styleString(build(selector, { rules: css as any, mediaQuery: undefined }))
+export function css(css: DeepCssObject, selector: string) {
+  return styleString(build(selector, { rules: css, mediaQuery: undefined }))
 }
 
-export type CssKey = Tras<Extract<keyof CSSStyleDeclaration, string>>
+export type CssKey =
+  | Tras<Extract<keyof CSSStyleDeclaration, string>>
+  | `@media ${string}`
+  | `@keyframes ${string}`
+  | `@global${string}`
+
 export type cssValue = string | number | boolean
 export type CssObject = Record<CssKey, cssValue>
 
