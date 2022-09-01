@@ -58,6 +58,13 @@ export const nextLabelText = $.css(`
   font-size: 12px
 `)
 
+// `switcherText` >
+export const switcherText = $.css(`
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin-right: 4px;
+`)
+
 export const settingItemCls = $.css({
   height: '35px',
   cursor: 'pointer',
@@ -79,6 +86,10 @@ export const settingItemCls = $.css({
 
     [`& .${yesIcon}`]: {
       display: 'block'
+    },
+
+    [`& .${switcherText}`]: {
+      display: 'none'
     }
   }
 })

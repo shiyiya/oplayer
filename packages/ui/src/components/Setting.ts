@@ -1,4 +1,5 @@
 import Player, { $, PlayerEvent } from '@oplayer/core'
+import loopSvg from '../icons/loop.svg?raw'
 import { settingShown } from '../style'
 import type { Setting } from '../types'
 import { siblings } from '../utils'
@@ -12,6 +13,7 @@ import {
   settingItemLeft,
   settingItemRight,
   subPanelCls,
+  switcherText,
   yesIcon
 } from './Setting.style'
 
@@ -20,15 +22,17 @@ export type Panel = {
   key: string
 }
 
-export const switcher = (name: string, icon: string = '') => `
-    <div class="${settingItemLeft}">
+export const switcher = (name: string, icon: string = '', closedtext?: string) =>
+  `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
     </div>
     <svg class=${yesIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24">
       <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#fff"></path>
     </svg>
+    ${closedtext ? `<span role="label" class=${switcherText}>${closedtext}</span>` : ''}
 `
+
 export const nexter = (name: string, icon: string = '') => `
     <div class="${settingItemLeft}">
       ${icon}
@@ -42,7 +46,10 @@ export const nexter = (name: string, icon: string = '') => `
     </div>
 `
 
-function createItem(options: Setting, key?: string) {
+function createItem(
+  options: Setting,
+  { key, closedtext, isAllSwitch }: { key?: string; isAllSwitch: boolean; closedtext: string }
+) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key
   })
@@ -53,7 +60,7 @@ function createItem(options: Setting, key?: string) {
 
   switch (options.type) {
     case 'switcher':
-      $item.innerHTML = switcher(options.name, options.icon)
+      $item.innerHTML = switcher(options.name, options.icon, isAllSwitch ? undefined : closedtext)
       $item.setAttribute('data-selected', options.default || false)
       $item.children[0]!.setAttribute('data-selected', options.default || false)
       break
@@ -67,6 +74,7 @@ function createItem(options: Setting, key?: string) {
 }
 
 function createPanel(
+  player: Player,
   $panels: Panel[],
   options: Setting[],
   {
@@ -92,33 +100,45 @@ function createPanel(
     $panels.push($panel)
   }
 
+  // 只有第一个 panel 没有onChange
+  const isRoot = !Boolean(onChange)
+  // 整个面板全部是 switcher
+  const isAllSwitch = !isRoot && options.every((it) => it.type === 'switcher')
+
   for (let index = 0; index < options.length; index++) {
     const item = options[index]!
-    const { $: $item, $label } = createItem(item, item.key)
+
+    const { $: $item, $label } = createItem(item, {
+      key: item.key,
+      isAllSwitch,
+      closedtext: player.locales.get('OFF')
+    })
     $.render($item, $panel.$ref)
 
-    if (!onChange && item.default && item.type == 'switcher') {
-      item.onChange?.(item.default, { isInit: true })
-    }
-
     $item.addEventListener('click', function () {
+      console.log(isAllSwitch, isRoot)
+
       switch (item.type) {
         case 'switcher':
-          // 只有第一个 panel 没有onChange
-          if (onChange) {
+          if (isAllSwitch) {
             this.setAttribute('data-selected', 'true')
             siblings(this, (el) => {
               el.setAttribute('data-selected', 'false')
             })
             $panel.$ref.classList.remove(activeCls)
-            onChange(item, { index })
+            onChange!(item, { index })
           } else {
             const value = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!Boolean(value)}`)
-            item.onChange?.(!Boolean(value))
-            $panel.$ref.classList.toggle(activeCls)
-            onHide!()
+            item.onChange?.(!Boolean(value), { isInit: false })
+
+            if (isRoot) {
+              onHide!()
+            } else {
+              $panel.$ref.classList.remove(activeCls)
+            }
           }
+
           break
         case 'selector':
           $panel.$ref.classList.toggle(activeCls)
@@ -127,6 +147,10 @@ function createPanel(
           break
       }
     })
+
+    if (isRoot && item.default && item.type == 'switcher') {
+      item.onChange!(item.default, { isInit: true })
+    }
 
     if (item.children) {
       if (item.type == 'selector') {
@@ -138,7 +162,7 @@ function createPanel(
         }
       }
 
-      const $nextPanel = createPanel($panels, item.children, {
+      const $nextPanel = createPanel(player, $panels, item.children, {
         onChange: (option: Setting, index: number) => {
           $label.innerText = option.name
           $panel.$ref.classList.add(activeCls)
@@ -165,6 +189,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     {
       name: player.locales.get('Loop'),
       type: 'switcher',
+      icon: loopSvg,
       default: player.isLoop,
       onChange: (value: boolean) => player.setLoop(value)
     },
@@ -176,12 +201,12 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     player.$root.classList.remove(settingShown)
   }
 
-  createPanel($panels, defaultSetting, { onHide: hide })
+  createPanel(player, $panels, defaultSetting, { onHide: hide })
   $panels.forEach(($p) => $.render($p.$ref, $dom))
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     const oldLen = $panels.length
-    createPanel($panels, Array.isArray(payload) ? payload : [payload], {
+    createPanel(player, $panels, Array.isArray(payload) ? payload : [payload], {
       isPatch: true,
       onHide: hide
     })
