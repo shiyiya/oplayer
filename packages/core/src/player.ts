@@ -1,5 +1,6 @@
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import E from './event'
+import I18n from './i18n'
 import type {
   PlayerEvent,
   PlayerEventName,
@@ -12,27 +13,11 @@ import { isIOS } from './utils'
 import $ from './utils/dom'
 
 export class Player {
-  constructor(el: HTMLElement, options: PlayerOptions | string) {
-    this.#container = el
-    this.#options = Object.assign(
-      {
-        autoplay: false,
-        muted: false,
-        loop: false,
-        volume: 1,
-        preload: 'auto',
-        playbackRate: 1,
-        playsinline: true,
-        videoAttr: {}
-      },
-      typeof options === 'string' ? { source: { src: options } } : options
-    )
-  }
-
-  readonly #options: PlayerOptions
   readonly #container: HTMLElement
+  readonly #options: Required<PlayerOptions>
 
   readonly #E = new E()
+  public locales: I18n
   readonly #plugins: Set<PlayerPlugin> = new Set()
 
   $root: HTMLElement
@@ -44,6 +29,26 @@ export class Player {
 
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   #playPromise: Promise<void> | undefined
+
+  constructor(el: HTMLElement, options: PlayerOptions | string) {
+    this.#container = el
+    this.#options = Object.assign(
+      {
+        autoplay: false,
+        muted: false,
+        loop: false,
+        volume: 1,
+        preload: 'auto',
+        playbackRate: 1,
+        playsinline: true,
+        videoAttr: {},
+        lang: 'auto'
+      },
+      typeof options === 'string' ? { source: { src: options } } : options
+    )
+
+    this.locales = new I18n(this.#options.lang)
+  }
 
   static make(el: HTMLElement, options: PlayerOptions | string): Player {
     return new Player(el, options)
@@ -350,6 +355,7 @@ export class Player {
     return this.$video.readyState
   }
 
+  // Not working in IOS
   get isLoading() {
     /**
      * @HAVE_FUTURE_DATA canplay: fired when video ready to play but buffering not complete

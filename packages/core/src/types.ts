@@ -7,6 +7,8 @@ export type Source = {
   format?: 'auto' | string
 }
 
+export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
+
 export type PlayerOptions = {
   autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
   muted?: boolean
@@ -17,6 +19,7 @@ export type PlayerOptions = {
   playsinline?: boolean
   source: Source
   videoAttr?: Record<string, boolean | string>
+  lang?: Lang
 }
 
 export type PlayerPlugin = {
