@@ -205,26 +205,22 @@ export class Player {
 
   play = () => {
     if (!this.$video.src) throw Error('The element has no supported sources.')
-
-    return (this.#playPromise = this.$video
-      .play()
-      .then((_) => _)
-      .catch((reason) => this.emit('notice', { text: (<Error>reason).message })))
+    return (this.#playPromise = this.$video.play())
   }
 
   pause() {
     if (this.#playPromise?.then) {
-      this.#playPromise.then(() => this.$video.pause())
+      return this.#playPromise.then(() => this.$video.pause())
     } else {
-      this.$video.pause()
+      return this.$video.pause()
     }
   }
 
   togglePlay() {
     if (this.isPlaying) {
-      this.pause()
+      return this.pause()
     } else {
-      this.play()
+      return this.play()
     }
   }
 
@@ -243,6 +239,7 @@ export class Player {
       this.mute()
     }
   }
+
   setVolume(volume: number) {
     this.$video.volume = volume > 1 ? 1 : volume < 0 ? 0 : volume
     if (this.$video.volume > 0 && this.isMuted) {
@@ -264,14 +261,14 @@ export class Player {
 
   enterFullscreen() {
     if (isIOS()) {
-      ;(this.$video as any).webkitEnterFullscreen()
+      return (this.$video as any).webkitEnterFullscreen()
     } else {
-      this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+      return this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
     }
   }
 
   exitFullscreen() {
-    this.#_exitFullscreen.call(document)
+    return this.#_exitFullscreen.call(document)
   }
 
   get isFullscreenEnabled() {
@@ -296,9 +293,9 @@ export class Player {
 
   toggleFullScreen() {
     if (this.isFullScreen) {
-      this.exitFullscreen()
+      return this.exitFullscreen()
     } else {
-      this.enterFullscreen()
+      return this.enterFullscreen()
     }
   }
 
@@ -307,13 +304,14 @@ export class Player {
   }
 
   enterPip() {
-    this.$video.requestPictureInPicture()
+    return this.$video.requestPictureInPicture()
   }
 
   exitPip() {
     if (this.isInPip) {
-      document.exitPictureInPicture()
+      return document.exitPictureInPicture()
     }
+    return false
   }
 
   get isInPip() {
@@ -322,11 +320,9 @@ export class Player {
 
   togglePip() {
     if (this.isInPip) {
-      document.exitPictureInPicture()
+      return document.exitPictureInPicture()
     } else {
-      this.$video.requestPictureInPicture().catch((_) => {
-        console.warn((<Error>_).message) //TODO: waring
-      })
+      return this.$video.requestPictureInPicture()
     }
   }
 
