@@ -46,11 +46,12 @@ export const hit = $.css({
   'z-index': '2',
   'pointer-events': 'none',
   transform: 'translateX(-50%)',
-  opacity: '0',
+  display: 'none',
+  'white-space': 'pre',
   bottom: '10px'
 })
 
-export const progressDarging = $.css('/* progressDarging */')
+export const progressDragging = $.css('/* progressDragging */')
 
 export const progress = $.css({
   position: 'relative',
@@ -59,12 +60,12 @@ export const progress = $.css({
   cursor: 'pointer',
   width: '100%',
 
-  [`&.${progressDarging} .${dot}::before ${!isMobile ? `,&:hover .${dot}::before` : ''}`]: {
+  [`&.${progressDragging} .${dot}::before ${!isMobile ? `,&:hover .${dot}::before` : ''}`]: {
     transform: 'scale(1)'
   },
 
-  [`&.${progressDarging} .${hit} ${!isMobile ? `,&:hover .${hit}` : ''}`]: {
-    opacity: 1
+  [`&.${progressDragging} .${hit} ${!isMobile ? `,&:hover .${hit}` : ''}`]: {
+    display: 'block'
   },
 
   [`&:hover .${highlightCls}`]: {

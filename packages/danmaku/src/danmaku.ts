@@ -8,6 +8,7 @@ import type { ActiveDanmakuRect, DanmakuItem, Options, QueueItem, _Options } fro
 const danmakuWrap = (opacity?: number) =>
   $.css(`
   opacity: ${opacity || 1};
+  font-color: #fff;
   width: 100%;
   height: 100%;
   position: absolute;

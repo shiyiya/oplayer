@@ -7,7 +7,7 @@ import ReactPlayer from '../Player'
 import styles from './styles.module.css'
 
 const plugins = [
-  danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml', fontSize: isMobile ? 0.6 : 1 }),
+  danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml', fontSize: isMobile ? 0.6 : 0.8 }),
   ui({
     theme: { primaryColor: '#6668ab' },
     subtitle: [

@@ -8,7 +8,7 @@ import {
   hit,
   played,
   progress,
-  progressDarging,
+  progressDragging,
   progressInner
 } from './Progress.style'
 import renderThumbnail from './thumbnail'
@@ -25,7 +25,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       <div class="${dot}" style="transform: translateX(0%);"></div>
   </div>`
   )
-  const { update: thumbnailUpdater, hide: thumbnailhide } = renderThumbnail($dom, config.thumbnails)
+  const { update: thumbnailUpdater, hide: thumbnailHider } = renderThumbnail(
+    $dom,
+    config.thumbnails
+  )
   renderHighlight(player, $dom, config.highlight)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
@@ -54,7 +57,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
     isDargMoving = true
-    $dom.classList.add(progressDarging)
+    $dom.classList.add(progressDragging)
     sync(e)
 
     function moving(e: MouseEvent | TouchEvent) {
@@ -73,7 +76,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       DRAG_EVENT_MAP.dragEnd,
       (e) => {
         isDargMoving = false
-        setTimeout(() => $dom.classList.remove(progressDarging), 300)
+        setTimeout(() => $dom.classList.remove(progressDragging), 300)
         document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
         player.seek(getSlidingValue(e) * player.duration)
       },
@@ -89,7 +92,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
         $hit.style.display = 'none'
       } else {
-        $hit.style.display = 'block'
+        $hit.removeAttribute('style')
       }
 
       const rate = getSlidingValue(e)
@@ -99,7 +102,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     },
     { passive: false }
   )
-  $dom.addEventListener('mouseout', thumbnailhide)
+  $dom.addEventListener('mouseout', thumbnailHider)
 
   player.on(['timeupdate', 'seeking'], () => {
     if (isDargMoving) return

@@ -11,7 +11,7 @@ import './range.scss'
 import './index.scss'
 
 import { version } from '../../../../packages/core/package.json'
-import ReactPlayer from '../../components/Player'
+import ReactPlayer from '../../../../packages/react/dist/index.es'
 
 export function Duration({ className, seconds }) {
   return (
@@ -207,7 +207,7 @@ class App extends Component {
       player.on('progress', ({ payload }) => {
         this.handleProgress(payload)
       })
-      player.on('durationchange', this.durationchange)
+      player.on('durationchange', this.handleDuration)
       player.on('ratechange', this.handleOnPlaybackRateChange)
     }
 
@@ -250,7 +250,6 @@ class App extends Component {
           <div className="player-wrapper">
             <ReactPlayer
               ref={this.ref}
-              className="react-player"
               source={{ src: url }}
               playing={playing}
               playbackRate={playbackRate}

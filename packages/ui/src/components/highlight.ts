@@ -3,8 +3,7 @@ import initListener from '../listeners/init'
 import type { Highlight } from '../types'
 
 export const highlightTextCls = $.css(`
-  opacity: 0;
-  transition: opacity 0.1s ease-in-out;
+  display: none;
   z-index: 2;
   bottom: 10px;
   position: absolute;
@@ -27,8 +26,9 @@ export const highlightCls = $.css({
   'background-color': '#fff',
   transform: 'translateX(-3px)',
   transition: 'all 0.2s',
+
   [`&:hover > .${highlightTextCls}`]: {
-    opacity: 1
+    display: 'block'
   }
 })
 

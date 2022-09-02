@@ -45,7 +45,7 @@ const p = Player.make(document.getElementById('player')!, {
     hls(),
     danmaku({
       source: DANMAKU,
-      fontSize: isMobile ? 0.6 : 1,
+      fontSize: isMobile ? 0.6 : 0.8,
       opacity: 0.8,
       filter: (d: DanmakuItem) => d.text == '+1s'
     }),
