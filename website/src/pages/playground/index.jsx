@@ -199,9 +199,8 @@ class App extends Component {
   }
 
   ref = (player) => {
-    this.player = player
-
-    if (player) {
+    if (!this.player && player) {
+      this.player = player
       player.on('play', this.handlePlay)
       player.on('ended', this.handleEnded)
       player.on('error', (e) => console.log(e))
