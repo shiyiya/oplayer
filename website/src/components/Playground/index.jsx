@@ -1,3 +1,4 @@
+import React from 'react'
 import Translate from '@docusaurus/Translate'
 import danmaku from '../../../../packages/danmaku/dist/index.es'
 import ui from '../../../../packages/ui/dist/index.es'
