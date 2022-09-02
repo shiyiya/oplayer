@@ -1,11 +1,13 @@
 import { danmakuParseFromUrl } from './danmaku-parse'
-import getDanmaTop from './top'
+import getDanmakuTop from './top'
 
 import Player, { $ } from '@oplayer/core'
 import DanmakuWorker from './danmaku.worker?worker&inline'
 import type { ActiveDanmakuRect, DanmakuItem, Options, QueueItem, _Options } from './types'
 
-const danmakuWrap = $.css(`
+const danmakuWrap = (opacity?: number) =>
+  $.css(`
+  opacity: ${opacity || 1};
   width: 100%;
   height: 100%;
   position: absolute;
@@ -46,15 +48,15 @@ export default class Danmaku {
 
   constructor(private player: Player, options: Options) {
     this.$player = player.$root as HTMLDivElement
-    this.$danmaku = $.render($.create(`div.${danmakuWrap}`), this.$player) as HTMLDivElement
+    this.$danmaku = $.render($.create(`div.${danmakuWrap(options.opacity)}`), this.$player)
 
     this.options = {
       speed: 5,
-      color: '#fff',
       margin: [2, 2],
       antiOverlap: true,
       useWorker: true,
       synchronousPlayback: true,
+      fontSize: 1,
       ...options
     }
 
@@ -94,7 +96,6 @@ export default class Danmaku {
       if (this.options?.filter && this.options.filter(danmaku)) return
 
       this.queue.push({
-        color: this.options.color,
         status: 'wait',
         $ref: null,
         restTime: 0,
@@ -122,17 +123,19 @@ export default class Danmaku {
           }
         })
 
-        const readys = this.getReady()
+        const danmakus = this.getReady()
         const { clientWidth, clientHeight } = this.$player
 
-        for (let index = 0; index < readys.length; index++) {
-          const danmaku = readys[index]!
+        for (let index = 0; index < danmakus.length; index++) {
+          const danmaku = danmakus[index]!
           danmaku.$ref = this.createItem()
           danmaku.$ref.style.cssText = `
           left: ${clientWidth}px;
-          ${this.options.opacity ? `opacity: ${this.options.opacity};` : ''}
-          ${this.options.fontSize ? `font-size: ${this.options.fontSize}px;` : ''}
-
+          ${
+            danmaku.fontSize
+              ? `font-size: ${danmaku.fontSize * this.options.fontSize}px;`
+              : 'inherit'
+          }
           ${danmaku.color ? `color: ${danmaku.color};` : ''},
           ${
             danmaku.border
@@ -300,7 +303,7 @@ export default class Danmaku {
         }
         this.worker.postMessage(message)
       } else {
-        const top = getDanmaTop(message)
+        const top = getDanmakuTop(message)
         resolve({ top })
       }
     })
@@ -315,6 +318,14 @@ export default class Danmaku {
       this.$refs.push(danmaku.$ref)
       danmaku.$ref = null
     }
+  }
+
+  setSize(size: number) {
+    this.options.fontSize = size
+  }
+
+  setOpacity(opacity: number) {
+    this.$danmaku.style.opacity = `${opacity}`
   }
 
   reset() {

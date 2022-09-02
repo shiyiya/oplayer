@@ -45,7 +45,8 @@ const p = Player.make(document.getElementById('player')!, {
     hls(),
     danmaku({
       source: DANMAKU,
-      fontSize: isMobile ? 16 : 20,
+      fontSize: isMobile ? 0.8 : 1,
+      opacity: 0.8,
       filter: (d: DanmakuItem) => d.text == '+1s'
     }),
     ui({
@@ -57,7 +58,7 @@ const p = Player.make(document.getElementById('player')!, {
           name: 'JP & ZH',
           default: true,
           url: SRT,
-          type: 'unknow'
+          type: 'unknown'
         }
       ],
       thumbnails: { url: THUMB, number: 100 },

@@ -14,7 +14,7 @@ import type { RootRect } from './types'
  *
  *
  */
-export default function getDanmaTop({
+export default function getDanmakuTop({
   target,
   emits,
   clientWidth,
@@ -23,13 +23,13 @@ export default function getDanmaTop({
   marginTop,
   antiOverlap
 }: RootRect): number {
-  const danmas = emits
+  const danmakus = emits
     .filter((item) => item.mode === target.mode && item.top <= clientHeight - marginBottom)
     .sort((prev, next) => prev.top - next.top)
 
-  if (danmas.length === 0) return marginTop
+  if (danmakus.length === 0) return marginTop
 
-  danmas.unshift({
+  danmakus.unshift({
     top: 0,
     left: 0,
     right: 0,
@@ -39,7 +39,7 @@ export default function getDanmaTop({
     distance: clientWidth
   })
 
-  danmas.push({
+  danmakus.push({
     top: clientHeight - marginBottom,
     left: 0,
     right: 0,
@@ -49,9 +49,9 @@ export default function getDanmaTop({
     distance: clientWidth
   })
 
-  for (let index = 1; index < danmas.length; index += 1) {
-    const item = danmas[index]!
-    const prev = danmas[index - 1]!
+  for (let index = 1; index < danmakus.length; index += 1) {
+    const item = danmakus[index]!
+    const prev = danmakus[index - 1]!
     const prevBottom = prev.top + prev.height
     const diff = item.top - prevBottom
     if (diff >= target.height) {
@@ -60,8 +60,8 @@ export default function getDanmaTop({
   }
 
   const topMap: RootRect['emits'][] = []
-  for (let index = 1; index < danmas.length - 1; index += 1) {
-    const item = danmas[index]!
+  for (let index = 1; index < danmakus.length - 1; index += 1) {
+    const item = danmakus[index]!
     if (topMap.length) {
       const last = topMap[topMap.length - 1]!
       if (last[0]!.top === item.top) {
@@ -79,11 +79,11 @@ export default function getDanmaTop({
       case 0: {
         const result = topMap.findIndex((list) => {
           for (let i = 0; i < list.length; i++) {
-            const danma = list[i]!
-            if (clientWidth < danma.distance) return false
-            if (target.speed < danma.speed) continue
-            const overlapTime = danma.right / (target.speed - danma.speed)
-            if (overlapTime > danma.time!) continue
+            const danmaku = list[i]!
+            if (clientWidth < danmaku.distance) return false
+            if (target.speed < danmaku.speed) continue
+            const overlapTime = danmaku.right / (target.speed - danmaku.speed)
+            if (overlapTime > danmaku.time!) continue
             return false
           }
           return true

@@ -13,7 +13,7 @@ importers:
       nx: latest
       prettier: ^2.7.1
       rimraf: ^3.0.2
-      rollup: ^2.78.1
+      rollup: ^2.79.0
       terser: ^5.15.0
       tslib: ^2.4.0
       typescript: ^4.8.2
@@ -25,10 +25,10 @@ importers:
       concurrently: 7.3.0
       cross-env: 7.0.3
       lint-staged: 13.0.3
-      nx: 14.5.10
+      nx: 14.6.3
       prettier: 2.7.1
       rimraf: 3.0.2
-      rollup: 2.78.1
+      rollup: 2.79.0
       terser: 5.15.0
       tslib: 2.4.0
       typescript: 4.8.2
@@ -1061,20 +1061,20 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@nrwl/cli/14.5.10:
-    resolution: {integrity: sha512-GpnnKGO3+HwlMmZSStbq1MOyoDJg2I0HN4nBqM3ltaQkfxGZv3erwRMOAT+8mba2MWbJJ2QQgASAYvTscNYjOQ==}
+  /@nrwl/cli/14.6.3:
+    resolution: {integrity: sha512-S+o59oswVCfzD/Txh94Vz+HoOl2ynJkuBiyuXjTved1PEpIM68SmFv6Wx8p8vYBbHLv2sL71pb0uqjFJJFovJw==}
     dependencies:
-      nx: 14.5.10
+      nx: 14.6.3
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
     dev: true
 
-  /@nrwl/tao/14.5.10:
-    resolution: {integrity: sha512-eWORRba0HlTNmOQFUxHqki0Z5yiRIq1Hl0taprmZpz2lgDXuzPIjGfAi5/ETy5+G5gkEyxFnCq7+SiMilPokwA==}
+  /@nrwl/tao/14.6.3:
+    resolution: {integrity: sha512-iVLLcluU5WDSHCxB5so/eSeIY4JK+Cp8Yjh21MLZBkYSw/NIryk9lbHyXQPl37+JY94FRO1G87kvgk4AFly1pw==}
     hasBin: true
     dependencies:
-      nx: 14.5.10
+      nx: 14.6.3
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -3710,8 +3710,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nx/14.5.10:
-    resolution: {integrity: sha512-dqiV+zY32k98mfKFTgiQyYd9HYZmB1zoJj6gYniEuqzs6CKp8ZSpeRDaVQRxR6wEMvW9MSTA9kBg8sJ78W/NZg==}
+  /nx/14.6.3:
+    resolution: {integrity: sha512-jdIFsyZDr1CyUzNifwNJ5dNrRRgSHy2gE1zIxcxVQuLUzDHLwOs/oHAGisyXKJsTaxVRr4Yd2lWGudeU8ZEhyg==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -3723,8 +3723,8 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 14.5.10
-      '@nrwl/tao': 14.5.10
+      '@nrwl/cli': 14.6.3
+      '@nrwl/tao': 14.6.3
       '@parcel/watcher': 2.0.4
       chalk: 4.1.0
       chokidar: 3.5.3
@@ -4326,8 +4326,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rollup/2.78.1:
-    resolution: {integrity: sha512-VeeCgtGi4P+o9hIg+xz4qQpRl6R401LWEXBmxYKOV4zlF82lyhgh2hTZnheFUbANE8l2A41F458iwj2vEYaXJg==}
+  /rollup/2.79.0:
+    resolution: {integrity: sha512-x4KsrCgwQ7ZJPcFA/SUu6QVcYlO7uRLfLAy0DSA4NS2eG8japdbpM50ToH7z4iObodRYOJ0soneF0iaQRJ6zhA==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:

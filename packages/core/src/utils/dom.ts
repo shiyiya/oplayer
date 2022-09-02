@@ -6,7 +6,7 @@ export namespace $ {
     t: K | `${K}.${string}`,
     attrs: Record<string, string | boolean | number | undefined> = {},
     tpl: string = ''
-  ) => {
+  ): HTMLElementTagNameMap[K] => {
     const isIdSelector = t.indexOf('#') !== -1
     const isClassSelector = t.indexOf('.') !== -1
     const [tag, selector] = isIdSelector ? t.split('#') : isClassSelector ? t.split('.') : [t]
@@ -24,10 +24,10 @@ export namespace $ {
         }
       }
     })
-    return dom as unknown as HTMLElementTagNameMap[K]
+    return dom as HTMLElementTagNameMap[K]
   }
 
-  export const render = (elm: Element, container: HTMLElement) => {
+  export const render = <T extends Element>(elm: T, container: HTMLElement): T => {
     return container.appendChild(elm)
   }
 

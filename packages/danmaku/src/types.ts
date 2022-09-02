@@ -56,14 +56,11 @@ export type Options = {
   synchronousPlayback?: boolean // 是否同步到播放速度
   opacity?: number
   fontSize?: number
-  color?: string
   margin?: [number, number]
   filter?: (danmaku: DanmakuItem) => boolean
 }
 
-export type _Options = Omit<Required<Options>, 'opacity' | 'fontSize' | 'color' | 'filter'> & {
+export type _Options = Omit<Required<Options>, 'opacity' | 'filter'> & {
   opacity?: number
-  fontSize?: number
-  color?: string
   filter?: (danmaku: DanmakuItem) => boolean
 }
