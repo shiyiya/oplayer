@@ -1,5 +1,19 @@
 import type { RootRect } from './types'
 
+//TODO: 全屏/弹幕少 优先行占满或做多几条
+/**
+ * @目前全屏或弹幕少展示这样
+ *  --
+ *    ----
+ *        --
+ *          ----
+ *
+ * @期望
+ *  -- -- -- --
+ *  --  --
+ *
+ *
+ */
 export default function getDanmaTop({
   target,
   emits,
@@ -63,17 +77,18 @@ export default function getDanmaTop({
   if (antiOverlap) {
     switch (target.mode) {
       case 0: {
-        const result = topMap.find((list) => {
-          return list.every((danma) => {
+        const result = topMap.findIndex((list) => {
+          for (let i = 0; i < list.length; i++) {
+            const danma = list[i]!
             if (clientWidth < danma.distance) return false
-            if (target.speed < danma.speed) return true
+            if (target.speed < danma.speed) continue
             const overlapTime = danma.right / (target.speed - danma.speed)
-            if (overlapTime > danma.time!) return true
+            if (overlapTime > danma.time!) continue
             return false
-          })
+          }
+          return true
         })
-
-        return result && result[0] ? result[0].top : -1
+        return result !== -1 && topMap[result]?.[0] ? topMap[result]![0]!.top : -1
       }
       case 1:
         return -1
