@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment'
 import Translate from '@docusaurus/Translate'
 import danmaku from '../../../../packages/danmaku/dist/index.es'
 import ui from '../../../../packages/ui/dist/index.es'
+import { isMobile } from '../../../../packages/ui/src/utils'
 import ReactPlayer from '../../components/Player'
 import styles from './styles.module.css'
 
 const plugins = [
-  danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
+  danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml', fontSize: isMobile ? 0.6 : 1 }),
   ui({
     theme: { primaryColor: '#6668ab' },
     subtitle: [
