@@ -41,8 +41,9 @@ export class Player {
         preload: 'auto',
         playbackRate: 1,
         playsinline: true,
-        videoAttr: {},
-        lang: 'auto'
+        lang: 'auto',
+        source: {},
+        videoAttr: {}
       },
       typeof options === 'string' ? { source: { src: options } } : options
     )
@@ -323,7 +324,9 @@ export class Player {
     if (this.isInPip) {
       document.exitPictureInPicture()
     } else {
-      this.$video.requestPictureInPicture()
+      this.$video.requestPictureInPicture().catch((_) => {
+        console.warn((<Error>_).message) //TODO: waring
+      })
     }
   }
 

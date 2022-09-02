@@ -3,7 +3,7 @@ import Translate from '@docusaurus/Translate'
 import danmaku from '../../../../packages/danmaku/dist/index.es'
 import ui from '../../../../packages/ui/dist/index.es'
 import { isMobile } from '../../../../packages/ui/src/utils'
-import ReactPlayer from '../../components/Player'
+import ReactPlayer from '../Player'
 import styles from './styles.module.css'
 
 const plugins = [
@@ -39,7 +39,7 @@ const plugins = [
   })
 ]
 
-const Playground = () => {
+const Preview = () => {
   // useEffect(() => {
   //   if (ExecutionEnvironment.canUseDOM) {
   //     const Player = require('@oplayer/core').default
@@ -83,4 +83,4 @@ const Playground = () => {
   )
 }
 
-export default Playground
+export default Preview

@@ -40,12 +40,12 @@ export default (option: Options): PlayerPlugin => ({
       setTimeout(() => {
         if (isIOS()) {
           if (player.isFullScreen) {
-            danmaku.hide()
+            danmaku?.hide()
           } else {
-            if (isDanmakuShowing) danmaku.show()
+            if (isDanmakuShowing) danmaku?.show()
           }
         } else {
-          danmaku.reset()
+          danmaku?.reset()
         }
       })
     })

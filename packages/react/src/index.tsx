@@ -32,6 +32,7 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
   }, [])
 
   useEffect(() => {
+    if (isInitialMount.current) return
     if (playing) {
       player.current?.play()
     } else {

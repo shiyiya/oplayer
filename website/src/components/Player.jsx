@@ -23,6 +23,7 @@ const ReactOPlayer = forwardRef((props, ref) => {
   }, [])
 
   useEffect(() => {
+    if (isInitialMount.current) return
     if (playing) {
       player.current?.play()
     } else {
@@ -70,7 +71,6 @@ const ReactOPlayer = forwardRef((props, ref) => {
       style={{
         width: '100%',
         paddingTop: `${aspectRatio * 100}%`,
-        backgroundColor: 'var(--ifm-color-background-2)',
         position: 'relative'
       }}
     >
