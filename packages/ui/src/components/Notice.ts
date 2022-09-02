@@ -44,9 +44,17 @@ const render = (player: Player, el: HTMLElement) => {
     })
   )
 
+  let muted = player.isMuted
   player.on(
     'volumechange',
     toggle(() => {
+      if (muted != player.isMuted) {
+        muted = player.isMuted
+        if (muted) {
+          $text.innerText = player.locales.get('Mute')
+          return
+        }
+      }
       $text.innerText = player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`)
     })
   )

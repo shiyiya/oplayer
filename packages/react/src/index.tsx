@@ -34,9 +34,9 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
   useEffect(() => {
     if (isInitialMount.current) return
     if (playing) {
-      player.current?.play()
+      if (player.current && !player.current.isPlaying) player.current?.play()
     } else {
-      player.current?.pause()
+      if (player.current?.isPlaying) player.current?.pause()
     }
   }, [playing])
 
