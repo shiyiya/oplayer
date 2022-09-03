@@ -107,7 +107,7 @@ export class Player {
       this.emit('error', payload)
     }
     this.listeners['error'] = errorHandler
-    this.on('error', (e) => this.listeners['error'](e))
+    this.$video.addEventListener('error', (e) => this.listeners['error'](e))
 
     const fullscreenchangeHandler = (payload: ErrorEvent) => this.emit('fullscreenchange', payload)
     ;(
