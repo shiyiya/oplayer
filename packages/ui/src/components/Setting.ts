@@ -116,8 +116,6 @@ function createPanel(
     $.render($item, $panel.$ref)
 
     $item.addEventListener('click', function () {
-      console.log(isAllSwitch, isRoot)
-
       switch (item.type) {
         case 'switcher':
           if (isAllSwitch) {
