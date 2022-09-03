@@ -3,15 +3,16 @@ import { $ } from '@oplayer/core'
 import { addClass, debounce, formatTime, removeClass } from '../utils'
 
 const noticeCls = $.css`
-  pointer-events: none;
   position: absolute;
   display: none;
   top: 10px;
   left: 10px;
+  right: 10px;
   z-index: 99;
 `
 
 const noticeTextCls = $.css`
+  user-select: all;
   color: #fff;
   background-color: var(--shadow-background-color);
   border-radius: 2px;
@@ -36,6 +37,19 @@ const render = (player: Player, el: HTMLElement) => {
   function toggle(fn: Function) {
     return (...arg: any[]) => (fn(...arg), addClass($dom, noticeShowCls), delayHide())
   }
+
+  ;['play', 'pause', 'enterFullscreen', 'exitFullscreen', 'enterPip', 'exitPip'].forEach((key) => {
+    const fn = player[key].bind(player)
+    Object.defineProperty(player, key, {
+      get:
+        () =>
+        (...arg: any[]) =>
+          (<Promise<any>>fn(...arg)).catch?.((error) => {
+            toggle(() => ($text.innerText = (<Error>error).message))()
+            return error
+          })
+    })
+  })
 
   player.on(
     'seeking',

@@ -320,9 +320,9 @@ export class Player {
 
   togglePip() {
     if (this.isInPip) {
-      return document.exitPictureInPicture()
+      return this.exitPip()
     } else {
-      return this.$video.requestPictureInPicture()
+      return this.enterPip()
     }
   }
 
