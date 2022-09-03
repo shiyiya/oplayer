@@ -1,11 +1,11 @@
 import type Player from '@oplayer/core'
-import { $ } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import pauseSvg from '../icons/pause.svg?raw'
 import playSvg from '../icons/play.svg?raw'
 
 import initListener from '../listeners/init'
 import { icon } from '../style'
-import { addClass, isMobile, removeClass } from '../utils'
+import { addClass, removeClass } from '../utils'
 
 const styles = $.css({
   display: 'none',

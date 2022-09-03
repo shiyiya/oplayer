@@ -1,8 +1,7 @@
 import type { Player } from '@oplayer/core'
-import { $, PlayerEvent, isIOS } from '@oplayer/core'
+import { $, PlayerEvent, isIOS, isMobile } from '@oplayer/core'
 import subtitleSvg from '../icons/subtitles.svg?raw'
 import type { Setting, Subtitle, UiConfig } from '../types'
-import { isMobile } from '../utils'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
 function findDefault(o: any) {

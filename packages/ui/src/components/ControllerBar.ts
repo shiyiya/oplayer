@@ -1,8 +1,8 @@
-import Player, { $ } from '@oplayer/core'
+import Player, { $, isMobile } from '@oplayer/core'
 import initListener from '../listeners/init'
 import { settingShown } from '../style'
 import type { UiConfig } from '../types'
-import { addClass, debounce, hasClass, isMobile, removeClass } from '../utils'
+import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 

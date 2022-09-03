@@ -1,9 +1,8 @@
 //@ts-nocheck
-import Player, { PlayerEvent } from '@oplayer/core'
+import Player, { PlayerEvent, isMobile } from '@oplayer/core'
 import danmaku, { DanmakuItem } from '@oplayer/danmaku'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
-import { isMobile } from '@oplayer/ui/src/utils'
 
 import MP4 from '../../website/static/君の名は.mp4'
 import SRT from '../../website/static/君の名は.srt'

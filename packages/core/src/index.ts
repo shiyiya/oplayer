@@ -1,5 +1,5 @@
 export { $ } from './utils/dom'
-export { isIOS } from './utils/index'
+export * from './utils/platform'
 
 export { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS, OH_EVENTS } from './constants'
 

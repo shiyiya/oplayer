@@ -1,6 +1,5 @@
-import { $ } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import { icon } from '../style'
-import { isMobile } from '../utils'
 
 export const time = $.css`
   padding: ${isMobile ? 0 : '0px 0.5em'};

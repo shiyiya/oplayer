@@ -1,5 +1,5 @@
 import type Player from '@oplayer/core'
-import { isMobile } from '../utils'
+import { isMobile } from '@oplayer/core'
 
 const initListener = (() => {
   let isInitialized = false

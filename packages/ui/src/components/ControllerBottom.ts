@@ -1,6 +1,6 @@
-import { $ } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
-import { formatTime, isMobile, screenShot, siblings, toggleClass } from '../utils'
+import { formatTime, screenShot, siblings, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
 import type { Player } from '@oplayer/core'

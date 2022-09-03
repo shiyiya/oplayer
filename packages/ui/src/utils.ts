@@ -1,4 +1,5 @@
 import type Player from '@oplayer/core'
+import { isMobile } from '@oplayer/core'
 
 export function padZero(time: number): string {
   return time < 10 ? `0${time}` : `${time}`
@@ -11,17 +12,6 @@ export function formatTime(duration: number): string {
   const s = Math.floor((duration % 3600) % 60)
   return `${h > 0 ? `${padZero(h)}:` : ''}${padZero(m)}:${padZero(s)}`
 }
-
-// https://stackoverflow.com/questions/56934826/distinguish-between-ipad-and-mac-on-ipad-with-ipados
-export const isIpad =
-  /Macintosh/i.test(globalThis.navigator?.userAgent) &&
-  Boolean(globalThis.navigator?.maxTouchPoints) &&
-  globalThis.navigator?.maxTouchPoints > 2
-
-export const isMobile =
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(
-    globalThis.navigator?.userAgent
-  ) || isIpad
 
 export function download(url: string, name: string) {
   const $a = document.createElement('a')

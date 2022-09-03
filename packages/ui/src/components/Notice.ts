@@ -12,6 +12,7 @@ const noticeCls = $.css`
 `
 
 const noticeTextCls = $.css`
+  width: fit-content;
   user-select: all;
   color: #fff;
   background-color: var(--shadow-background-color);
@@ -38,18 +39,20 @@ const render = (player: Player, el: HTMLElement) => {
     return (...arg: any[]) => (fn(...arg), addClass($dom, noticeShowCls), delayHide())
   }
 
-  ;['play', 'pause', 'enterFullscreen', 'exitFullscreen', 'enterPip', 'exitPip'].forEach((key) => {
-    const fn = player[key].bind(player)
-    Object.defineProperty(player, key, {
-      get:
-        () =>
-        (...arg: any[]) =>
-          (<Promise<any>>fn(...arg)).catch?.((error) => {
-            toggle(() => ($text.innerText = (<Error>error).message))()
-            return error
-          })
-    })
-  })
+  ;(['play', 'pause', 'enterFullscreen', 'exitFullscreen', 'enterPip', 'exitPip'] as const).forEach(
+    (key) => {
+      const fn: any = player[key].bind(player)
+      Object.defineProperty(player, key, {
+        get:
+          () =>
+          (...arg: any[]) =>
+            (<Promise<any>>fn(...arg)).catch?.((error) => {
+              toggle(() => ($text.innerText = (<Error>error).message))()
+              return error
+            })
+      })
+    }
+  )
 
   player.on(
     'seeking',

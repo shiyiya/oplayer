@@ -1,8 +1,7 @@
 import type Player from '@oplayer/core'
-import { $, PlayerPlugin } from '@oplayer/core'
+import { $, PlayerPlugin, isMobile } from '@oplayer/core'
 import { root } from './style'
 import type { UiConfig } from './types'
-import { isMobile } from './utils'
 
 import renderControllerBar from './components/ControllerBar'
 import renderCoverButton from './components/CoverButton'

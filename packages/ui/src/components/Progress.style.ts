@@ -1,5 +1,4 @@
-import { $ } from '@oplayer/core'
-import { isMobile } from '../utils'
+import { $, isMobile } from '@oplayer/core'
 import { highlightCls } from './highlight'
 
 export const buffered = $.css({

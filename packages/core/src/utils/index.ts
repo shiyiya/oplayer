@@ -19,5 +19,3 @@ export function mergeDeep<T>(target: T, ...sources: T[]): T {
 
   return mergeDeep(target, ...sources)
 }
-
-export const isIOS = () => /(iPad|iPhone|iPod)/gi.test(globalThis?.navigator?.userAgent)

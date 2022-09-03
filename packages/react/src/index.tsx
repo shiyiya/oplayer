@@ -98,7 +98,7 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
   )
 })
 
-export function usePrevious<T>(value: T): T | undefined {
+function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T>()
 
   useEffect(() => {
@@ -107,5 +107,7 @@ export function usePrevious<T>(value: T): T | undefined {
 
   return ref.current
 }
+
+export * from '@oplayer/core'
 
 export default ReactOPlayer

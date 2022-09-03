@@ -9,7 +9,7 @@ import type {
   PlayerPlugin,
   Source
 } from './types'
-import { isIOS } from './utils'
+import { isIOS } from './utils/platform'
 import $ from './utils/dom'
 
 export class Player {

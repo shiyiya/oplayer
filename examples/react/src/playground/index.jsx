@@ -3,15 +3,13 @@ import danmaku from '../../../../packages/danmaku/dist/index.es'
 import ui from '../../../../packages/ui/dist/index.es'
 import hls from '../../../../packages/hls/dist/index.es'
 
-import { isMobile } from '../../../../packages/ui/src/utils'
-
 import './reset.css'
 import './defaults.scss'
 import './range.scss'
 import './index.scss'
 
 import { version } from '../../../../packages/core/package.json'
-import ReactPlayer from '../../../../packages/react/dist/index.es'
+import ReactPlayer, { isMobile } from '../../../../packages/react/dist/index.es'
 
 export function Duration({ className, seconds }) {
   return (
