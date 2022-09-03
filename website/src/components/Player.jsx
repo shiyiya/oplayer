@@ -98,4 +98,6 @@ export function usePrevious(value) {
   return ref.current
 }
 
+export * from '../../../packages/core/dist/index.es'
+
 export default ReactOPlayer
