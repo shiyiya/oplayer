@@ -17,7 +17,7 @@ export type Setting = {
   key?: string // children 可无 （用于移除）
   /**
    * selector 切换下个面板单选 1 ｜ 2 ｜ 3
-   * swither  当前面板切换 true or false
+   * switcher  当前面板切换 true or false
    */
   type?: 'selector' | 'switcher'
   icon?: string
@@ -28,7 +28,7 @@ export type Setting = {
 }
 
 export type Thumbnails = {
-  url: string
+  src: string
   number: number
   width?: number
   height?: number

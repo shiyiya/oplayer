@@ -36,7 +36,7 @@ export default function (container: HTMLElement, options?: Thumbnails) {
     update: (rate: number) => {
       if (!isImgLoaded) {
         isImgLoaded = true
-        $dom.style.backgroundImage = `url(${options.url})`
+        $dom.style.backgroundImage = `url(${options.src})`
       }
 
       $dom.style.display = 'block'

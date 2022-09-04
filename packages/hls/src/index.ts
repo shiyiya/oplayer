@@ -53,9 +53,6 @@ const hlsPlugin = ({
       }
 
       if (!isInitial) {
-      }
-
-      if (!isInitial) {
         isInitial = true
         isActive = true
         emit('loadedplugin', { name: PLUGIN_NAME })
