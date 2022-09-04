@@ -156,12 +156,15 @@ export class Player {
         playsinline: this.#options.playsinline,
         'webkit-playsinline': this.#options.playsinline,
         'x5-playsinline': this.#options.playsinline,
-        volume: this.#options.volume,
         preload: this.#options.preload,
         poster: this.#options.source.poster,
         ...this.#options.videoAttr
       }
     )
+
+    // not working `setAttribute`
+    this.$video.muted = !!this.#options.muted
+    this.$video.volume = this.#options.volume
 
     this.$root = $.create(
       `div.${$.css(`
@@ -174,7 +177,6 @@ export class Player {
       `)}`
     )
 
-    this.$video.muted = !!this.#options.muted
     $.render(this.$video, this.$root)
     $.render(this.$root, this.container)
   }
