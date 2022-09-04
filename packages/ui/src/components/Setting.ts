@@ -153,7 +153,7 @@ function createPanel(
     if (item.children) {
       if (item.type == 'selector') {
         //TODO: children.children
-        const selected = item.children.findIndex((_) => _.default) || 0
+        const selected = item.children.findIndex((_) => _.default)
         if (item.children[selected]) {
           $label.innerText = item.children[selected]!.name!
           item.onChange?.(item.children[selected], { index: selected, isInit: true })

@@ -29,18 +29,22 @@ class Subtitle {
 
     if (!this.currentSubtitle && enabled) {
       this.currentSubtitle = source[0]!
+      if (this.options.source[0]) {
+        this.options.source[0].default = true
+      }
     }
 
     if (this.currentSubtitle && enabled === undefined) {
       this.options.enabled = true
     }
 
+    // Create the dom before the fragment is inserted into the dom
+    this.createDom()
     this.loadSetting()
   }
 
   init() {
     this.isInitial = true
-    this.createDom()
     this.initEvents()
     this.loadSubtitle()
     this.show()
@@ -156,7 +160,7 @@ class Subtitle {
   }
 
   loadSetting() {
-    const { source } = this.options
+    const { source, enabled } = this.options
 
     if (source.length) {
       this.player.emit('addsetting', <Setting>{
@@ -166,21 +170,23 @@ class Subtitle {
         key: 'subtitle',
         onChange: ({ value }) => {
           if (value) {
+            this.currentSubtitle = value
             if (this.isInitial) {
+              this.loadSubtitle()
               this.show()
             } else {
               this.init()
             }
           } else {
-            this.hide()
+            if (this.isInitial) this.hide()
           }
         },
         children: [
-          { type: 'switcher', name: this.player.locales.get('OFF') },
+          { type: 'switcher', name: this.player.locales.get('OFF'), default: !enabled },
           ...source?.map((s) => ({
             type: 'switcher',
             name: s.name,
-            default: s.default || false,
+            default: enabled ? s.default : false,
             value: s
           }))
         ]
@@ -190,5 +196,5 @@ class Subtitle {
 }
 
 function findDefault(o: SubtitleSource[]) {
-  return o.find((st) => st.default) || o[0]
+  return o.find((st) => st.default)
 }
