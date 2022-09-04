@@ -46,7 +46,7 @@ const render = (player: Player, el: HTMLElement) => {
         get:
           () =>
           (...arg: any[]) =>
-            (<Promise<any>>fn(...arg)).catch?.((error) => {
+            (<Promise<any>>fn(...arg))?.catch?.((error) => {
               toggle(() => ($text.innerText = (<Error>error).message))()
               return error
             })
