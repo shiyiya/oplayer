@@ -10,16 +10,19 @@ export default function (player: Player, el: HTMLElement, options: SubtitleConfi
 
 class Subtitle {
   isInitial = false
-
   $track: HTMLTrackElement
   $dom: HTMLDivElement
-  currentSubtitle: SubtitleSource
+  currentSubtitle?: SubtitleSource
 
-  constructor(public player: Player, public el: HTMLElement, public options: SubtitleConfig) {
+  options: SubtitleConfig
+
+  constructor(public player: Player, public el: HTMLElement, options?: SubtitleConfig) {
     if (!window.TextDecoder) {
       player.emit('notice', { text: player.locales.get('TextDecoder not supported') })
       return
     }
+
+    this.options = options || { source: [] }
 
     const { source, enabled } = this.options
     this.currentSubtitle = findDefault(source)
@@ -123,7 +126,7 @@ class Subtitle {
 
   loadSubtitle() {
     const { currentSubtitle, player, $track } = this
-    const { src, encoding, type } = currentSubtitle
+    const { src, encoding, type } = currentSubtitle! // 如果没有则不会调用
 
     fetch(src)
       .then((response) => response.arrayBuffer())
@@ -186,6 +189,6 @@ class Subtitle {
   }
 }
 
-function findDefault(o: any) {
-  return o?.find((st: any) => st.default) || o?.[0]
+function findDefault(o: SubtitleSource[]) {
+  return o.find((st) => st.default) || o[0]
 }

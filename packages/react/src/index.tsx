@@ -73,7 +73,7 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
     return () => player.current?.destroy()
   }, [])
 
-  useImperativeHandle(ref, () => player.current)
+  useImperativeHandle(ref, () => player.current, [])
 
   return (
     <div

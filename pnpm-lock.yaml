@@ -25,7 +25,7 @@ importers:
       concurrently: 7.3.0
       cross-env: 7.0.3
       lint-staged: 13.0.3
-      nx: 14.6.3
+      nx: 14.6.4
       prettier: 2.7.1
       rimraf: 3.0.2
       rollup: 2.79.0
@@ -43,6 +43,7 @@ importers:
       '@types/react': ^18.0.17
       react: ^18.2.0
       react-dom: ^18.2.0
+      sass: ^1.54.8
     dependencies:
       '@oplayer/core': link:../../packages/core
       '@oplayer/hls': link:../../packages/hls
@@ -51,6 +52,8 @@ importers:
       '@types/react': 18.0.17
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      sass: 1.54.8
 
   examples/standalone:
     specifiers:
@@ -1061,20 +1064,20 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@nrwl/cli/14.6.3:
-    resolution: {integrity: sha512-S+o59oswVCfzD/Txh94Vz+HoOl2ynJkuBiyuXjTved1PEpIM68SmFv6Wx8p8vYBbHLv2sL71pb0uqjFJJFovJw==}
+  /@nrwl/cli/14.6.4:
+    resolution: {integrity: sha512-VkS2L3O2MOCgqYg6Fubv7FfJ4D39iKGSKYhTom6ZJLPEcQrPXTvrD1hIzMJ4Cehal5P6DYw7ZEjcJgiTATcSYA==}
     dependencies:
-      nx: 14.6.3
+      nx: 14.6.4
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
     dev: true
 
-  /@nrwl/tao/14.6.3:
-    resolution: {integrity: sha512-iVLLcluU5WDSHCxB5so/eSeIY4JK+Cp8Yjh21MLZBkYSw/NIryk9lbHyXQPl37+JY94FRO1G87kvgk4AFly1pw==}
+  /@nrwl/tao/14.6.4:
+    resolution: {integrity: sha512-xSfcXeU8AyEbmTGiGPCwej2eK+36gU9o6smUQxcK00Yii6vb5I87n8U77jTF5tJ85TkDW0I1VoHm0Nd8f1d9Cw==}
     hasBin: true
     dependencies:
-      nx: 14.6.3
+      nx: 14.6.4
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -2831,6 +2834,10 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
+  /immutable/4.1.0:
+    resolution: {integrity: sha512-oNkuqVTA8jqG1Q6c+UglTOD1xhC1BtjKI7XkCXRkZHrN5m18/XsnUp8Q89GkQO/z+0WjonSvl0FLhDYftp46nQ==}
+    dev: true
+
   /indent-string/4.0.0:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
     engines: {node: '>=8'}
@@ -3710,8 +3717,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nx/14.6.3:
-    resolution: {integrity: sha512-jdIFsyZDr1CyUzNifwNJ5dNrRRgSHy2gE1zIxcxVQuLUzDHLwOs/oHAGisyXKJsTaxVRr4Yd2lWGudeU8ZEhyg==}
+  /nx/14.6.4:
+    resolution: {integrity: sha512-AbUH3xQVL6faSXSMB7kPFcRtnz+FNUt4xR0UtfBBCqNSItq5kMOlHK10G7aN+VWtw8ScNy7qkWIeQ6VezvUW8A==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -3723,8 +3730,8 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 14.6.3
-      '@nrwl/tao': 14.6.3
+      '@nrwl/cli': 14.6.4
+      '@nrwl/tao': 14.6.4
       '@parcel/watcher': 2.0.4
       chalk: 4.1.0
       chokidar: 3.5.3
@@ -4369,6 +4376,16 @@ packages:
 
   /safer-buffer/2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+
+  /sass/1.54.8:
+    resolution: {integrity: sha512-ib4JhLRRgbg6QVy6bsv5uJxnJMTS2soVcCp9Y88Extyy13A8vV0G1fAwujOzmNkFQbR3LvedudAMbtuNRPbQww==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.1.0
+      source-map-js: 1.0.2
+    dev: true
 
   /sax/1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}

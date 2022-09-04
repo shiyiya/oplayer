@@ -39,13 +39,15 @@ const plugins = [
   danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml', fontSize: isMobile ? 0.6 : 1 }),
   ui({
     theme: { primaryColor: '#6668ab' },
-    subtitle: [
-      {
-        name: '君の名は',
-        default: true,
-        src: 'https://oplayer.vercel.app/君の名は.srt'
-      }
-    ],
+    subtitle: {
+      source: [
+        {
+          name: '君の名は',
+          default: true,
+          src: 'https://oplayer.vercel.app/君の名は.srt'
+        }
+      ]
+    },
     thumbnails: { src: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
     highlight: [
       {

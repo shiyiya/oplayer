@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import ReactPlayer from '@oplayer/react'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
+import Playground from './playground/index'
 
 //@ts-ignore
 import { createRoot } from 'react-dom/client'
@@ -19,6 +20,10 @@ const App = () => {
   const [alive, setAlive] = useState(true)
   const [index, update] = useState(-1)
   const player = useRef<Player | null>(null)
+
+  if (document.location.pathname == '/react') {
+    return <Playground />
+  }
 
   return (
     <div style={{ width: '980px', margin: '0 auto' }}>
