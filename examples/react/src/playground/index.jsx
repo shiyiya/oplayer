@@ -43,10 +43,10 @@ const plugins = [
       {
         name: '君の名は',
         default: true,
-        url: 'https://oplayer.vercel.app/君の名は.srt'
+        src: 'https://oplayer.vercel.app/君の名は.srt'
       }
     ],
-    thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
+    thumbnails: { src: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
     highlight: [
       {
         time: 12,

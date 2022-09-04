@@ -61,7 +61,7 @@ const p = Player.make(document.getElementById('player')!, {
           }
         ]
       },
-      thumbnails: { url: THUMB, number: 100 },
+      thumbnails: { src: THUMB, number: 100 },
       highlight: [
         {
           time: 12,

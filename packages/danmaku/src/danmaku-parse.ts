@@ -41,8 +41,8 @@ export function danmakuParseFromXml(xmlString: string) {
   }, [])
 }
 
-export function danmakuParseFromUrl(url: string) {
-  return fetch(url)
+export function danmakuParseFromUrl(src: string) {
+  return fetch(src)
     .then((res) => res.text())
     .then((xmlString) => danmakuParseFromXml(xmlString))
 }
