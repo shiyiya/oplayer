@@ -48,19 +48,24 @@ import ui from '@oplayer/ui'
 import danmaku from '@oplayer/danmaku'
 
 Player.make(document.body, {
-  source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
+  source: {
+    src: 'https://oplayer.vercel.app/君の名は.mp4',
+    poster: 'https://oplayer.vercel.app/poster.png'
+  }
 })
   .use([
     danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
     ui({
       theme: { primaryColor: '#f00' },
-      subtitle: [
-        {
-          name: '君の名は',
-          default: true,
-          url: 'https://oplayer.vercel.app/君の名は.srt'
-        }
-      ],
+      subtitle: {
+        source: [
+          {
+            name: 'Default',
+            default: true,
+            url: 'https://oplayer.vercel.app/君の名は.srt'
+          }
+        ]
+      },
       thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
       highlight: [
         {

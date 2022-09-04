@@ -8,14 +8,15 @@ import MP4 from '../../website/static/君の名は.mp4'
 import SRT from '../../website/static/君の名は.srt'
 import DANMAKU from '../../website/static/danmaku.xml'
 import THUMB from '../../website/static/thumbnails.jpg'
+import POSTER from '../../website/static/poster.png'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
 const dataSrcs = [
-  'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   MP4,
+  'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4'
 ] as const
@@ -34,7 +35,7 @@ let logs: HTMLTextAreaElement
 const p = Player.make(document.getElementById('player')!, {
   muted: true,
   volume: 0.5,
-  source: { src }
+  source: { src, poster: POSTER }
   // screenshot
   // videoAttr: {
   //   crossorigin: 'anonymous'
@@ -52,14 +53,15 @@ const p = Player.make(document.getElementById('player')!, {
       autoFocus: true,
       theme: { primaryColor: '#f00' },
       speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
-      subtitle: [
-        {
-          name: 'JP & ZH',
-          default: true,
-          url: SRT,
-          type: 'unknown'
-        }
-      ],
+      subtitle: {
+        source: [
+          {
+            name: 'Default',
+            default: true,
+            src: 'https://oplayer.vercel.app/君の名は.srt'
+          }
+        ]
+      },
       thumbnails: { url: THUMB, number: 100 },
       highlight: [
         {

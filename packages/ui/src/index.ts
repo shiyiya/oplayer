@@ -6,7 +6,7 @@ import type { UiConfig } from './types'
 import renderControllerBar from './components/ControllerBar'
 import renderCoverButton from './components/CoverButton'
 import renderError from './components/Error'
-import renderLoding from './components/Loading'
+import renderLoading from './components/Loading'
 import renderMask from './components/Mask'
 import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
@@ -22,7 +22,7 @@ const apply = (player: Player, config: UiConfig) => {
 
   renderError(player, $frag)
   renderNotice(player, $frag)
-  renderLoding(player, $frag)
+  renderLoading(player, $frag)
   renderMask(player, $frag)
 
   const { show, hide } = renderCoverButton(player, $frag)
@@ -31,7 +31,7 @@ const apply = (player: Player, config: UiConfig) => {
   renderSetting(player, $frag, config.settings)
 
   if (config.subtitle) {
-    renderSubtitle(player, $frag, config)
+    renderSubtitle(player, $frag, config.subtitle)
   }
 
   if (!isMobile) {

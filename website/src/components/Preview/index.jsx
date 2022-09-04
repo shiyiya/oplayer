@@ -9,13 +9,15 @@ const plugins = [
   danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml', fontSize: isMobile ? 0.6 : 0.8 }),
   ui({
     theme: { primaryColor: '#6668ab' },
-    subtitle: [
-      {
-        name: '君の名は',
-        default: true,
-        url: 'https://oplayer.vercel.app/君の名は.srt'
-      }
-    ],
+    subtitle: {
+      source: [
+        {
+          name: 'Default',
+          default: true,
+          url: 'https://oplayer.vercel.app/君の名は.srt'
+        }
+      ]
+    },
     thumbnails: { url: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
     highlight: [
       {
@@ -74,7 +76,10 @@ const Preview = () => {
       <div>
         <ReactPlayer
           plugins={plugins}
-          source={{ src: 'https://oplayer.vercel.app/君の名は.mp4' }}
+          source={{
+            src: 'https://oplayer.vercel.app/君の名は.mp4',
+            poster: 'https://oplayer.vercel.app/poster.png'
+          }}
           onEvent={console.log}
         />
       </div>

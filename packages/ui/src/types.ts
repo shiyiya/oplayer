@@ -1,9 +1,15 @@
-export type Subtitle = {
+export type SubtitleSource = {
   default?: boolean
   name?: string
-  url: string
+  src: string
   encoding?: string
   type?: string
+}
+
+export type Subtitle = {
+  source: SubtitleSource[]
+  fontSize?: number
+  enabled?: boolean
 }
 
 export type Setting = {
@@ -70,7 +76,7 @@ export type UiConfig = {
    */
   miniProgressBar?: boolean
 
-  subtitle?: Subtitle[]
+  subtitle?: Subtitle
 
   settings?: Setting[]
 
