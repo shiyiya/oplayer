@@ -28,9 +28,9 @@ class Subtitle {
     this.currentSubtitle = findDefault(source)
 
     if (!this.currentSubtitle && enabled) {
-      this.currentSubtitle = source[0]!
-      if (this.options.source[0]) {
-        this.options.source[0].default = true
+      if (source[0]) {
+        this.currentSubtitle = source[0]
+        this.options.source[0]!.default = true
       }
     }
 
@@ -41,11 +41,10 @@ class Subtitle {
     // Create the dom before the fragment is inserted into the dom
     this.createDom()
     this.loadSetting()
+    this.initEvents()
   }
 
-  init() {
-    this.isInitial = true
-    this.initEvents()
+  load() {
     this.loadSubtitle()
     this.show()
   }
@@ -86,7 +85,7 @@ class Subtitle {
     const { player, $dom, $track } = this
     player.on('destroy', () => {
       $dom.innerHTML = ''
-      player.emit('removesetting', 'subtitle')
+      player.emit('removesetting', SETTING_KEY)
       $track.removeEventListener('cuechange', this.update)
       if ($track.src) URL.revokeObjectURL($track.src)
       $track.src = ''
@@ -167,18 +166,13 @@ class Subtitle {
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
         icon: subtitleSvg,
-        key: 'subtitle',
+        key: SETTING_KEY,
         onChange: ({ value }) => {
           if (value) {
             this.currentSubtitle = value
-            if (this.isInitial) {
-              this.loadSubtitle()
-              this.show()
-            } else {
-              this.init()
-            }
+            this.load()
           } else {
-            if (this.isInitial) this.hide()
+            this.hide()
           }
         },
         children: [
@@ -194,6 +188,8 @@ class Subtitle {
     }
   }
 }
+
+const SETTING_KEY = 'Subtitle'
 
 function findDefault(o: SubtitleSource[]) {
   return o.find((st) => st.default)
