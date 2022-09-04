@@ -158,7 +158,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
-  const $webfull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
+  const $webFull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
 
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
 
@@ -175,17 +175,21 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     switcher($volume.children, player.isMuted || player.volume == 0 ? 1 : 0)
   }
 
-  const fullscreenSwitcher = () => {
-    switcher(
-      $fullscreen.children,
-      player.isFullScreen
-        ? (($webfull.style.display = 'none'), 1)
-        : ($webfull.removeAttribute('style'), 0)
-    )
+  const toggleWebFullIcon = () => {
+    if (!$webFull) return
+    if (player.isFullScreen) {
+      $webFull.style.display = 'none'
+    } else {
+      $webFull.removeAttribute('style')
+    }
   }
 
-  const webfullscreenSwitcher = (isWebfullScreen: boolean) => {
-    switcher($webfull.children, isWebfullScreen ? 1 : 0)
+  const fullscreenSwitcher = () => {
+    switcher($fullscreen.children, (toggleWebFullIcon(), player.isFullScreen ? 1 : 0))
+  }
+
+  const webFullscreenSwitcher = (isWebFullScreen: boolean) => {
+    switcher($webFull.children, isWebFullScreen ? 1 : 0)
   }
 
   playerSwitcher(), volumeSwitcher()
@@ -196,9 +200,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   if (config.fullscreenWeb) {
-    webfullscreenSwitcher(false)
+    webFullscreenSwitcher(false)
     player.on('webfullscreen', () =>
-      webfullscreenSwitcher(toggleClass(player.$root, webFullScreen))
+      webFullscreenSwitcher(toggleClass(player.$root, webFullScreen))
     )
   }
 
@@ -208,7 +212,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
 
-  let preVolumn = player.volume
+  let preVolume = player.volume
 
   $dom.addEventListener('click', (e: Event) => {
     const target = e.target! as HTMLDivElement
@@ -228,9 +232,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       case 'Volume':
         if (player.isMuted) {
           player.unmute()
-          player.setVolume(preVolumn)
+          player.setVolume(preVolume)
         } else {
-          preVolumn = player.volume
+          preVolume = player.volume
           player.mute()
         }
         break
