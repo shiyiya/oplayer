@@ -52,7 +52,6 @@ const p = Player.make(document.getElementById('player')!, {
     ui({
       autoFocus: true,
       theme: { primaryColor: '#f00' },
-      speed: ['0.5', '1.0', '2.0', '10.0'].reverse(),
       subtitle: {
         source: [
           {

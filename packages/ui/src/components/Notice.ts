@@ -45,11 +45,17 @@ const render = (player: Player, el: HTMLElement) => {
       Object.defineProperty(player, key, {
         get:
           () =>
-          (...arg: any[]) =>
-            (<Promise<any>>fn(...arg))?.catch?.((error) => {
-              toggle(() => ($text.innerText = (<Error>error).message))()
-              return error
-            })
+          (...arg: any[]) => {
+            const returnValue = fn(...arg)
+            if ((<Promise<any>>returnValue)?.catch) {
+              return (<Promise<any>>returnValue).catch((error) => {
+                toggle(() => ($text.innerText = (<Error>error).message))()
+                return error
+              })
+            } else {
+              return returnValue
+            }
+          }
       })
     }
   )

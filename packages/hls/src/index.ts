@@ -1,7 +1,7 @@
 // import Hls from 'hls.js/dist/hls.light.min.js'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source } from '@oplayer/core'
+import type { PlayerPlugin, Source, PlayerEvent } from '@oplayer/core'
 
 let importedHls: any
 const PLUGIN_NAME = 'oplayer-plugin-hls'
@@ -26,13 +26,14 @@ const hlsPlugin = ({
 }: hlsPluginOptions = {}): PlayerPlugin => {
   let isInitial = false
   let hlsInstance: Hls
+  let isActive = false
 
   const getHls = async (options?: Partial<HlsConfig>) => {
     if (hlsInstance) hlsInstance.destroy()
     if (!importedHls) importedHls = await import('hls.js/dist/hls.light.min.js')
 
     hlsInstance = new importedHls.default(options)
-    return { HLS: importedHls.default }
+    return importedHls.default
   }
 
   return {
@@ -40,7 +41,7 @@ const hlsPlugin = ({
     load: async ({ on, emit }, video, source) => {
       if (!matcher(video, source)) return false
 
-      const { HLS } = await getHls({ autoStartLoad: false, ...hlsConfig })
+      const HLS = await getHls({ autoStartLoad: false, ...hlsConfig })
       if (!HLS.isSupported()) {
         emit('pluginerror', {
           payload: {
@@ -52,8 +53,22 @@ const hlsPlugin = ({
       }
 
       if (!isInitial) {
-        emit('loadedplugin', { name: PLUGIN_NAME })
+      }
+
+      if (!isInitial) {
         isInitial = true
+        isActive = true
+        emit('loadedplugin', { name: PLUGIN_NAME })
+        on('videosourcechange', ({ payload }: PlayerEvent) => {
+          if (isInitial) {
+            if (matcher(video, payload)) {
+              isActive = true
+            } else {
+              if (isActive) hlsInstance.destroy()
+              isActive = false
+            }
+          }
+        })
       }
 
       hlsInstance.attachMedia(video)

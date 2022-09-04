@@ -326,13 +326,13 @@ export class Player {
     }
   }
 
-  async changeSource(sources: Source) {
+  async changeSource(source: Source) {
     this.#playPromise = undefined
     this.hasError = false
     this.#isCustomLoader = false
-    this.$video.poster = sources.poster || ''
-    await this.load(sources)
-    this.emit('videosourcechange')
+    this.$video.poster = source.poster || ''
+    await this.load(source)
+    this.emit('videosourcechange', source)
   }
 
   destroy() {
