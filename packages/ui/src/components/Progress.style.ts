@@ -13,7 +13,7 @@ export const dot = $.css({
   width: '100%',
   'pointer-events': 'none',
   '&::before': {
-    'margin-left': '-6px',
+    'margin-left': '-0.35em',
     transition: 'transform 0.3s ease',
     transform: 'scale(0)',
     content: "''",
@@ -22,8 +22,8 @@ export const dot = $.css({
     left: '0',
     top: '0',
     bottom: '0',
-    height: '0.8em',
-    width: '0.8em',
+    height: '0.7em',
+    width: '0.7em',
     'background-color': '#fff',
     'margin-top': '-4.5px',
     'z-index': '1',
@@ -79,14 +79,15 @@ export const progressInner = $.css({
   height: '3px',
   width: '100%',
   'background-color': 'hsla(0, 0%, 100%, 0.2)',
+  'border-radius': '4px',
 
   [`& .${buffered},& .${played}`]: {
     position: 'absolute',
     left: '0',
     top: '0',
     bottom: '0',
-    height: '3px',
     'will-change': 'width',
-    'pointer-events': 'none'
+    'pointer-events': 'none',
+    'border-radius': '4px'
   }
 })
