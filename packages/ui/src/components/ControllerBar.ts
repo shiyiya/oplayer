@@ -6,17 +6,6 @@ import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
 import renderProgress from './Progress'
 
-const mini = $.css({
-  transform: 'translateY(calc(100% - 7px))',
-  padding: '0 !important',
-  'pointer-events': 'none'
-  // 'background-image': 'none !important' // TODO:
-})
-
-const hide = $.css({
-  transform: 'translateY(100%)'
-})
-
 const controllerBar = $.css({
   position: 'absolute',
   left: '0',
@@ -27,6 +16,8 @@ const controllerBar = $.css({
   transition: 'transform 0.3s ease, padding 0.3s ease',
   'background-image': 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3))'
 })
+
+const controllerHidden = $.css('/* controllerHidden */')
 
 const CTRL_HIDE_DELAY = 1500
 
@@ -42,27 +33,40 @@ const render = (
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
 
-  const hideCls = config.miniProgressBar ? mini : hide
+  $.css({
+    [`@global .${controllerHidden}`]: {
+      cursor: 'none',
+      [`& .${controllerBar}`]: config.miniProgressBar
+        ? {
+            transform: 'translateY(calc(100% - 7px))',
+            padding: '0 !important',
+            'pointer-events': 'none'
+          }
+        : {
+            transform: 'translateY(100%)'
+          }
+    }
+  })
 
   const hideCtrl = () => {
     if (
       !initListener.isInitialized() ||
       (!player.isPlaying && !isMobile) ||
-      hasClass($dom, hideCls) ||
+      hasClass(player.$root, controllerHidden) ||
       hasClass(player.$root, settingShown)
     ) {
       return
     }
-    addClass($dom, hideCls)
+    addClass(player.$root, controllerHidden)
     onHide?.()
   }
 
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
 
   const showCtrl = () => {
-    if (hasClass($dom, hideCls)) {
+    if (hasClass(player.$root, controllerHidden)) {
       cancelHideCtrl()
-      removeClass($dom, hideCls)
+      removeClass(player.$root, controllerHidden)
       onShow?.()
     }
   }
@@ -78,7 +82,7 @@ const render = (
     player.$root.addEventListener('mouseleave', hideCtrl)
   } else {
     player.on('controllervisibilitychange', () => {
-      if (hasClass($dom, hideCls)) {
+      if (hasClass(player.$root, controllerHidden)) {
         showCtrl()
       } else {
         hideCtrl()

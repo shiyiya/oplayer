@@ -51,7 +51,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         <div>
           <div class=${dropdownHoverable}>
             <button class=${icon} type="button">
-              ${player.playbackRate == 1 ? 'SPD' : `${player.playbackRate}x`}
+              ${player.playbackRate == 1 ? player.locales.get('SPD') : `${player.playbackRate}x`}
             </button>
             <div class=${expand}>
               ${config.speed
