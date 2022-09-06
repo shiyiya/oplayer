@@ -83,8 +83,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       <div class="${dropdown} ${dropdownMethod}">
-        <button aria-label="Volume" class=${icon} type="button">
-          <label for="volume">
+        <button class=${icon} type="button">
+          <label for="volume" aria-label="Volume">
             ${volumeSvg}
             ${volumeOffSvg}
           </label>
@@ -215,6 +215,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         break
       }
       case 'Volume':
+        if (isMobile) return
         if (player.isMuted) {
           player.unmute()
           player.setVolume(preVolume)
