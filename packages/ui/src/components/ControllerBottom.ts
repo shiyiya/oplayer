@@ -186,9 +186,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   player.on('ratechange', () => {
     const rate = player.playbackRate
     $speedText.innerText = rate + 'x'
-    const index = config.speed?.findIndex((sp) => +sp == rate)
+    const index = config.speed?.findIndex((sp) => +sp == rate) ?? -1
     if (index != -1) {
-      const target = $dom.querySelectorAll('span[aria-label="Speed"]')[index]
+      const target = $dom.querySelectorAll<HTMLSpanElement>('span[aria-label="Speed"]')[index]!
       target.setAttribute('data-selected', 'true')
       siblings(target, (t) => t.setAttribute('data-selected', 'false'))
     }
