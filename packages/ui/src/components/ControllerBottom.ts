@@ -28,10 +28,6 @@ import {
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  //TODO: 点击其他地方取消下拉 还是需要 JS ?
-  // const dropdownMethod = isMobile ? dropdownClickable : dropdownHoverable
-  const dropdownMethod = dropdownHoverable
-
   const $dom = $.create(
     `div.${controllerBottom}`,
     {},
@@ -50,13 +46,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
     <!-- right -->
     <div>
-      <div class="${dropdown} ${dropdownMethod}">
-        <button class=${icon} type="button">
-          <label for="speed">
-            ${player.playbackRate == 1 ? player.locales.get('SPD') : `${player.playbackRate}x`}
-          </label>
+      <div class="${dropdown} ${dropdownHoverable}">
+        <button class=${icon} type="button" aria-label="Speed">
+          ${player.playbackRate == 1 ? player.locales.get('SPD') : `${player.playbackRate}x`}
         </button>
-        <input type="checkbox" id="speed" hidden />
         <div class=${expand}>
           ${config.speed
             ?.map(
@@ -77,19 +70,16 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       ${
         config.screenshot
           ? `<button aria-label="Screenshot" class="${icon}" type="button">
-            ${screenshotSvg}
-          </button>`
+              ${screenshotSvg}
+            </button>`
           : ''
       }
 
-      <div class="${dropdown} ${dropdownMethod}">
-        <button aria-label="Volume" class=${icon} type="button">
-          <label for="volume" aria-label="Volume">
+      <div class="${dropdown} ${dropdownHoverable}">
+        <button class=${icon} type="button" aria-label="Volume">
             ${volumeSvg}
             ${volumeOffSvg}
-          </label>
         </button>
-        <input type="checkbox" id="volume" hidden />
         <div class=${expand}></div>
       </div>
 
@@ -134,17 +124,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     </div>`
   )
 
-  renderVolumeBar(
-    player,
-    $dom.querySelector('button[aria-label="Volume"]')!.nextElementSibling!
-      .nextElementSibling! as HTMLDivElement
-  )
+  const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
+  renderVolumeBar(player, $volume.nextElementSibling! as HTMLDivElement)
 
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
-  const $volume = $dom.querySelector<HTMLButtonElement>('label[for="volume"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
   const $webFull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
-
+  const $speedText = $dom.querySelector<HTMLButtonElement>('button[aria-label="Speed"]')!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
 
   const switcher = (el: HTMLCollection, key: 0 | 1) => {
@@ -197,6 +183,17 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
 
+  player.on('ratechange', () => {
+    const rate = player.playbackRate
+    $speedText.innerText = rate + 'x'
+    const index = config.speed?.findIndex((sp) => +sp == rate)
+    if (index != -1) {
+      const target = $dom.querySelectorAll('span[aria-label="Speed"]')[index]
+      target.setAttribute('data-selected', 'true')
+      siblings(target, (t) => t.setAttribute('data-selected', 'false'))
+    }
+  })
+
   let preVolume = player.volume
 
   $dom.addEventListener('click', (e: Event) => {
@@ -207,11 +204,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       case 'Play':
         return player.togglePlay()
       case 'Speed': {
-        const speed = target.getAttribute('data-value')!
-        target.setAttribute('data-selected', 'true')
-        siblings(target, (t) => t.setAttribute('data-selected', 'false'))
-        target.parentElement!.previousElementSibling!.textContent = speed + 'x'
-        player.setPlaybackRate(+speed)
+        player.setPlaybackRate(+target.getAttribute('data-value')!)
         break
       }
       case 'Volume':

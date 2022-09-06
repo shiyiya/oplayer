@@ -42,12 +42,12 @@ export const dropdownHoverable = $.css({
   }
 })
 
-export const dropdownClickable = $.css({
-  [`& input[type=checkbox]:checked ~ div`]: {
-    visibility: 'visible',
-    opacity: 1
-  }
-})
+// export const dropdownClickable = $.css({
+//   [`& input[type=checkbox]:checked ~ div`]: {
+//     visibility: 'visible',
+//     opacity: 1
+//   }
+// })
 
 export const dropItem = $.css({
   display: 'block',
