@@ -25,10 +25,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       <div class="${dot}" style="transform: translateX(0%);"></div>
   </div>`
   )
-  const { update: thumbnailUpdater, hide: thumbnailHider } = renderThumbnail(
-    $dom,
-    config.thumbnails
-  )
+  const { init: initThumbnail, update: thumbnailUpdater } = renderThumbnail($dom, config.thumbnails)
+
   renderHighlight(player, $dom, config.highlight)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
@@ -37,7 +35,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $hit = $dom.querySelector<HTMLDivElement>(`.${hit}`)!
   let isDargMoving = false
 
-  //TODO: utils
   const getSlidingValue = (event: MouseEvent | TouchEvent) => {
     const rect = $dom.getBoundingClientRect()
     const value =
@@ -48,22 +45,26 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   const sync = (e: MouseEvent | TouchEvent) => {
-    const rate = getSlidingValue(e) * 100
-    $played.style.width = rate + '%'
-    $playedDto.style.transform = `translateX(${rate}%)`
-    $hit.innerText = formatTime(player.duration * (rate / 100))
-    $hit.style.left = `${rate}%`
+    const rate = getSlidingValue(e)
+    const percentage = rate * 100
+    $played.style.width = percentage + '%'
+    $playedDto.style.transform = `translateX(${percentage}%)`
+    $hit.innerText = formatTime(player.duration * rate)
+    $hit.style.left = `${percentage}%`
+    return rate
   }
 
+  // dragging
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
     isDargMoving = true
     $dom.classList.add(progressDragging)
-    sync(e)
+    initThumbnail()
+    thumbnailUpdater(sync(e))
 
     function moving(e: MouseEvent | TouchEvent) {
       e.preventDefault()
       if (isDargMoving) {
-        sync(e)
+        thumbnailUpdater(sync(e))
       } else {
         const rate = getSlidingValue(e)
         $hit.innerText = formatTime(player.duration * rate)
@@ -84,11 +85,17 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   })
 
+  // moving
+  $dom.addEventListener('mouseenter', () => {
+    if (isDargMoving) return
+    $dom.classList.add(progressDragging)
+    initThumbnail()
+  })
+
   $dom.addEventListener(
     'mousemove',
     (e) => {
       if (isDargMoving) return
-
       if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
         $hit.style.display = 'none'
       } else {
@@ -102,7 +109,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     },
     { passive: false }
   )
-  $dom.addEventListener('mouseout', thumbnailHider)
+
+  $dom.addEventListener('mouseleave', () => {
+    if (!isDargMoving) $dom.classList.remove(progressDragging)
+  })
 
   player.on(['timeupdate', 'seeking'], () => {
     if (isDargMoving) return

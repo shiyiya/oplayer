@@ -1,5 +1,6 @@
 import { $, isMobile } from '@oplayer/core'
 import { highlightCls } from './highlight'
+import { thumbnailCls } from './thumbnail'
 
 export const buffered = $.css({
   'background-color': 'hsla(0, 0%, 100%, 0.4)'
@@ -63,7 +64,7 @@ export const progress = $.css({
     transform: 'scale(1)'
   },
 
-  [`&.${progressDragging} .${hit} ${!isMobile ? `,&:hover .${hit}` : ''}`]: {
+  [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}`]: {
     display: 'block'
   },
 

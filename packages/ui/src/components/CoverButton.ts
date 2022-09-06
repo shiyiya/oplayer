@@ -72,7 +72,7 @@ const render = (player: Player, el: HTMLElement) => {
     const $play = <HTMLButtonElement>$button.children[0]!
     const $pause = <HTMLButtonElement>$button.children[1]!
 
-    function siwtcher() {
+    function switcher() {
       if (player.isPlaying) {
         $play.style.display = 'none'
         $pause.style.display = 'block'
@@ -81,9 +81,9 @@ const render = (player: Player, el: HTMLElement) => {
         $pause.style.display = 'none'
       }
     }
-    siwtcher()
+    switcher()
 
-    player.on(['play', 'pause', 'videosourcechange'], siwtcher)
+    player.on(['play', 'pause', 'videosourcechange'], switcher)
   }
 
   $.render($dom, el)
