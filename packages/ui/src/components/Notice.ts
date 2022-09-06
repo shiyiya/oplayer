@@ -11,15 +11,17 @@ const noticeCls = $.css`
   z-index: 99;
 `
 
-const noticeTextCls = $.css`
-  width: fit-content;
+const noticeTextCls = $.css(`
+  -moz-user-select: all;
+  -webkit-user-select: all;
+  -ms-user-select: all;
   user-select: all;
   color: #fff;
   background-color: var(--shadow-background-color);
   border-radius: 2px;
   padding: 5px 10px;
   font-size: 14px;
-`
+`)
 
 const NOTICE_HIDE_DELAY = 2000
 
@@ -29,7 +31,7 @@ const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(
     `div.${noticeCls}`,
     { 'aria-label': 'Notice' },
-    `<div class="${noticeTextCls}"></div>`
+    `<span class="${noticeTextCls}"></span>`
   )
 
   const $text: HTMLDivElement = $dom.querySelector(`.${noticeTextCls}`)!

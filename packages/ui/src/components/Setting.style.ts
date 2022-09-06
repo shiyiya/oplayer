@@ -14,6 +14,7 @@ export const setting = $.css({
   right: '10px',
   bottom: '40px',
   overflow: 'auto',
+  '-webkit-backdrop-filter': 'saturate(180%) blur(20px)',
   'backdrop-filter': 'saturate(180%) blur(20px)',
   'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
@@ -29,13 +30,13 @@ export const setting = $.css({
   }
 })
 
-export const panelCls = $.css`
+export const panelCls = $.css(`
   width: 200px;
-`
+`)
 
-export const subPanelCls = $.css`
+export const subPanelCls = $.css(`
   width: 150px;
-`
+`)
 
 // √
 export const yesIcon = $.css(`

@@ -77,7 +77,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       DRAG_EVENT_MAP.dragEnd,
       (e) => {
         isDargMoving = false
-        setTimeout(() => $dom.classList.remove(progressDragging), 300)
+        $dom.classList.remove(progressDragging)
         document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
         player.seek(getSlidingValue(e) * player.duration)
       },

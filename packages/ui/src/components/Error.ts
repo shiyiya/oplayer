@@ -4,26 +4,28 @@ import { addClass, removeClass } from '../utils'
 
 const showCls = $.css('display: flex !important;')
 
+const errorCls = $.css(`
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #fff;
+  font-size: 1em;
+  background: #000;
+  z-index: 99;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+`)
+
 const render = (player: Player, el: HTMLElement) => {
-  const $dom = $.create(
-    `div.${$.css`
-      display: none;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      color: #fff;
-      font-size: 1em;
-      background: #000;
-      z-index: 99;
-      justify-content: center;
-      align-items: center;
-      padding: 0 10px;
-      user-select: text;
-      `}`,
-    { 'aria-label': 'Error Overlay' }
-  )
+  const $dom = $.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' })
 
   player.on(['error', 'pluginerror'], ({ payload }: PlayerEvent) => {
     addClass($dom, showCls)

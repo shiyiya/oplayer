@@ -169,6 +169,9 @@ export class Player {
     this.$root = $.create(
       `div.${$.css(`
         position: relative;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
         user-select: none;
         width: 100%;
         height: 100%;
