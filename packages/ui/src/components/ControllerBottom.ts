@@ -22,141 +22,126 @@ import {
   controllerBottom,
   dropdown,
   dropdownHoverable,
-  dropitem,
+  dropItem,
   expand,
   time
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
+  //TODO: 点击其他地方取消下拉 还是需要 JS ?
+  // const dropdownMethod = isMobile ? dropdownClickable : dropdownHoverable
+  const dropdownMethod = dropdownHoverable
+
   const $dom = $.create(
     `div.${controllerBottom}`,
     {},
     `<div>
-          ${
-            !isMobile
-              ? `<button
-                  aria-label="Play"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${playSvg}
-                  ${pauseSvg}
-                </button>`
-              : ''
-          }
+      ${
+        !isMobile
+          ? `<button aria-label="Play" class="${icon}" type="button">
+              ${playSvg}
+              ${pauseSvg}
+            </button>`
+          : ''
+      }
 
-          <span class=${time}>00:00 / --:--</span>
+      <span class=${time}>00:00 / --:--</span>
+    </div>
+
+    <!-- right -->
+    <div>
+      <div class="${dropdown} ${dropdownMethod}">
+        <button class=${icon} type="button">
+          <label for="speed">
+            ${player.playbackRate == 1 ? player.locales.get('SPD') : `${player.playbackRate}x`}
+          </label>
+        </button>
+        <input type="checkbox" id="speed" hidden />
+        <div class=${expand}>
+          ${config.speed
+            ?.map(
+              (sp) =>
+                `<span
+                  class=${dropItem}
+                  aria-label="Speed"
+                  data-value=${sp}
+                  data-selected=${String(+sp == player.playbackRate)}
+                >
+                  ${sp}<small>x</small>
+                </span>`
+            )
+            .join('')}
         </div>
+      </div>
 
-        <div>
-          <div class=${dropdownHoverable}>
-            <button class=${icon} type="button">
-              ${player.playbackRate == 1 ? player.locales.get('SPD') : `${player.playbackRate}x`}
-            </button>
-            <div class=${expand}>
-              ${config.speed
-                ?.map(
-                  (sp) =>
-                    `<span
-                      class=${dropitem}
-                      aria-label="Speed"
-                      data-value=${sp}
-                      data-selected=${String(+sp == player.playbackRate)}
-                    >
-                      ${sp}<small>x</small>
-                    </span>`
-                )
-                .join('')}
-            </div>
-          </div>
+      ${
+        config.screenshot
+          ? `<button aria-label="Screenshot" class="${icon}" type="button">
+            ${screenshotSvg}
+          </button>`
+          : ''
+      }
 
-         ${
-           config.screenshot
-             ? `<button
-                  aria-label="Screenshot"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${screenshotSvg}
-                </button>`
-             : ''
-         }
+      <div class="${dropdown} ${dropdownMethod}">
+        <button aria-label="Volume" class=${icon} type="button">
+          <label for="volume">
+            ${volumeSvg}
+            ${volumeOffSvg}
+          </label>
+        </button>
+        <input type="checkbox" id="volume" hidden />
+        <div class=${expand}></div>
+      </div>
 
-          <div class=${dropdownHoverable}>
-            <button aria-label="Volume" class=${icon} type="button">
-              ${volumeSvg}
-              ${volumeOffSvg}
-            </button>
-            <div class=${expand}></div>
-          </div>
+      <button aria-label="Setting" class=${icon} type="button">
+        ${settingsSvg}
+      </button>
 
-          <div class=${dropdown}>
-            <button aria-label="Setting" class=${icon} type="button">
-              ${settingsSvg}
-            </button>
-            <div class=${expand}></div>
-          </div>
+      ${
+        config.pictureInPicture && player.isPipEnabled
+          ? `<button aria-label="Picture in Picture" class="${icon}" type="button">
+              ${pipSvg}
+            </button>`
+          : ''
+      }
 
-          ${
-            config.pictureInPicture && player.isPipEnabled
-              ? `<button
-                  aria-label="Picture in Picture"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${pipSvg}
-                </button>`
-              : ''
-          }
+      ${
+        config.fullscreen && player.isFullscreenEnabled
+          ? `<div class="${dropdown} ${dropdownHoverable}">
+              <button aria-label="Fullscreen" class="${icon}" type="button">
+                ${expandSvg}
+                ${compressSvg}
+              </button>
 
-          ${
-            config.fullscreen && player.isFullscreenEnabled
-              ? `<div class=${dropdownHoverable}>
-                  <button
-                      aria-label="Fullscreen"
-                      class="${icon}"
-                      type="button"
-                  >
-                    ${expandSvg}
-                    ${compressSvg}
-                  </button>
-
-                  ${
-                    config.fullscreenWeb
-                      ? `<div class=${expand}>
-                          <button
-                            aria-label="WebFullscreen"
-                            class="${icon}"
-                            type="button"
-                          >
-                          ${webExpandSvg}
-                          ${webCompressSvg}
-                          </button>
-                        </div>`
-                      : ''
-                  }
-                </div>`
-              : config.fullscreenWeb
-              ? `<button
-                  aria-label="WebFullscreen"
-                  class="${icon}"
-                  type="button"
-                >
-                  ${webExpandSvg}
-                  ${webCompressSvg}
-                </button>`
-              : ''
-          }
-        </div>`
+              ${
+                config.fullscreenWeb
+                  ? `<div class=${expand}>
+                      <button aria-label="WebFullscreen" class="${icon}" type="button"  >
+                        ${webExpandSvg}
+                        ${webCompressSvg}
+                      </button>
+                    </div>`
+                  : ''
+              }
+            </div>`
+          : config.fullscreenWeb
+          ? `<button aria-label="WebFullscreen" class="${icon}" type="button">
+              ${webExpandSvg}
+              ${webCompressSvg}
+            </button>`
+          : ''
+      }
+    </div>`
   )
 
   renderVolumeBar(
     player,
-    $dom.querySelector('button[aria-label="Volume"]')!.nextElementSibling! as HTMLDivElement
+    $dom.querySelector('button[aria-label="Volume"]')!.nextElementSibling!
+      .nextElementSibling! as HTMLDivElement
   )
 
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
-  const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
+  const $volume = $dom.querySelector<HTMLButtonElement>('label[for="volume"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
   const $webFull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
 

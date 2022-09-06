@@ -21,19 +21,16 @@ export const expand = $.css(`
 
 export const dropdown = $.css({
   position: 'relative',
-  'line-height': '100%'
-})
-
-export const dropdownHoverable = $.css({
-  position: 'relative',
   'line-height': '100%',
 
   [`& .${expand}`]: {
     visibility: 'hidden',
     opacity: 0,
     'background-color': 'var(--shadow-background-color)'
-  },
+  }
+})
 
+export const dropdownHoverable = $.css({
   ['&:hover']: {
     'padding-top': '4px',
     'margin-top': '-4px',
@@ -45,7 +42,14 @@ export const dropdownHoverable = $.css({
   }
 })
 
-export const dropitem = $.css({
+export const dropdownClickable = $.css({
+  [`& input[type=checkbox]:checked ~ div`]: {
+    visibility: 'visible',
+    opacity: 1
+  }
+})
+
+export const dropItem = $.css({
   display: 'block',
   padding: '6px 15px',
   cursor: 'pointer',
@@ -93,7 +97,7 @@ export const controllerBottom = $.css({
     width: '36px',
     height: '22px',
 
-    ['> svg']: {
+    ['& svg']: {
       width: '100%',
       height: '100%',
       'pointer-events': 'none'
