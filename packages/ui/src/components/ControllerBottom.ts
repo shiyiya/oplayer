@@ -83,7 +83,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       <div class="${dropdown} ${dropdownMethod}">
-        <button class=${icon} type="button">
+        <button aria-label="Volume" class=${icon} type="button">
           <label for="volume" aria-label="Volume">
             ${volumeSvg}
             ${volumeOffSvg}
