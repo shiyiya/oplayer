@@ -37,14 +37,12 @@ const generateSetting = (
       } as const
     })
 
-    if (options.findIndex((setting) => setting.default) == -1) {
-      options.unshift({
-        name: player.locales.get('Auto'),
-        type: 'switcher',
-        default: true,
-        value: -1
-      })
-    }
+    options.unshift({
+      name: player.locales.get('Auto'),
+      type: 'switcher',
+      default: hlsInstance.autoLevelEnabled || options.findIndex((option) => option.default) == -1,
+      value: -1
+    })
 
     player.emit('removesetting', PLUGIN_NAME)
     player.emit('addsetting', {
@@ -54,7 +52,7 @@ const generateSetting = (
       onChange: (level: typeof options[number]) => {
         hlsInstance.currentLevel = level.value
       },
-      children: options
+      children: options.length == 2 ? [options[0]] : options
     })
   })
 }
