@@ -25,7 +25,7 @@ const generateSetting = (
   hlsInstance: Hls,
   HLS: typeof import('hls.js/dist/hls.light.min.js')
 ) => {
-  hlsInstance.on(HLS.Events.MANIFEST_PARSED, function () {
+  hlsInstance.once(HLS.Events.MANIFEST_PARSED, function () {
     hlsInstance.levels.sort((a, b) => b.height - a.height)
 
     const options = hlsInstance.levels
@@ -53,7 +53,6 @@ const generateSetting = (
       name: player.locales.get('Quantity'),
       type: 'selector',
       key: PLUGIN_NAME,
-      default: player.locales.get('Auto'),
       onChange: (level: typeof options[number]) => {
         hlsInstance.currentLevel = level.value
       },

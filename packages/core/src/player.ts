@@ -38,7 +38,7 @@ export class Player {
         muted: false,
         loop: false,
         volume: 1,
-        preload: 'auto',
+        preload: 'metadata',
         playbackRate: 1,
         playsinline: true,
         lang: 'auto',
