@@ -139,7 +139,10 @@ const hlsPlugin = ({
             isActive = true
             generateSetting(player, hlsInstance, HLS)
           } else {
-            if (isActive) hlsInstance.destroy()
+            if (isActive) {
+              hlsInstance.destroy()
+              player.emit('removesetting', PLUGIN_NAME)
+            }
             isActive = false
           }
         }
