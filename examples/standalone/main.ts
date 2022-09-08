@@ -53,11 +53,13 @@ const p = Player.make(document.getElementById('player')!, {
       autoFocus: true,
       theme: { primaryColor: '#f00' },
       subtitle: {
+        fontSize: isMobile ? 16 : 20,
         source: [
           {
             name: 'Default',
+            type: 'raw',
             default: true,
-            src: 'https://oplayer.vercel.app/君の名は.srt'
+            src: SRT
           }
         ]
       },

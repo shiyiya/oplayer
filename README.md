@@ -4,7 +4,7 @@ Oh! Another HTML5 video player.
 
 Website: https://oplayer.vercel.app/
 
-Examples: [./examples](./examples) | [Join QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
+Examples: [./examples](./examples) | [Join QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [Contributing](./CONTRIBUTING.md)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)

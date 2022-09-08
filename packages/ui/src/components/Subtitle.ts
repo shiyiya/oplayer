@@ -40,8 +40,8 @@ class Subtitle {
 
     // Create the dom before the fragment is inserted into the dom
     this.createDom()
-    this.loadSetting()
     this.initEvents()
+    this.loadSetting()
   }
 
   load() {
@@ -90,6 +90,12 @@ class Subtitle {
       if ($track.src) URL.revokeObjectURL($track.src)
       $track.src = ''
     })
+    player.on('subtitlechange', ({ payload }) => {
+      this.hide()
+      player.emit('removesetting', SETTING_KEY)
+      this.options.source = payload
+      this.loadSetting()
+    })
   }
 
   update = (_: Event) => {
@@ -136,9 +142,11 @@ class Subtitle {
       .then((buffer) => {
         const decoder = new TextDecoder(encoding)
         const text = decoder.decode(buffer)
-        player.emit('loadedsubtitle', currentSubtitle)
 
-        switch (type || new URL(src).pathname.split('.')[1]) {
+        let _type = type
+        if (type == undefined || type == 'auto') _type = new URL(src).pathname.split('.')[1]
+
+        switch (_type) {
           case 'srt':
             return vttToBlob(srtToVtt(text))
           case 'ass':
