@@ -20,7 +20,7 @@ const torrentPlugin = ({
 
   return {
     name: PLUGIN_NAME,
-    load: ({ on, $video }, source, options) => {
+    load: ({ $video }, source, options) => {
       const isMatch = matcher(source)
 
       if (options.loader || !isMatch) {
