@@ -28,16 +28,14 @@ const generateSetting = (
   hlsInstance.once(HLS.Events.MANIFEST_PARSED, function () {
     hlsInstance.levels.sort((a, b) => b.height - a.height)
 
-    const options = hlsInstance.levels
-      .map((level, i) => {
-        return {
-          name: level.name ? `${level.name}P` : '',
-          type: 'switcher',
-          default: hlsInstance.currentLevel == i,
-          value: i
-        } as const
-      })
-      .filter((it) => it.name)
+    const options = hlsInstance.levels.map((level, i) => {
+      return {
+        name: `${level.name || level.height}P` as string,
+        type: 'switcher',
+        default: hlsInstance.currentLevel == i,
+        value: i
+      } as const
+    })
 
     if (options.findIndex((setting) => setting.default) == -1) {
       options.unshift({
