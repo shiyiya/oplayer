@@ -26,7 +26,7 @@ export type PlayerPlugin = {
   name: string
   version?: string
   apply?: (player: Player) => void
-  load?: (player: Player, video: HTMLVideoElement, src: Source) => boolean | Promise<boolean>
+  load?: (player: Player, src: Source, options: { loader: boolean }) => boolean | Promise<boolean>
 }
 
 export type DefaultPlayerEvent = typeof EVENTS[number] | typeof EVENTS[number][]

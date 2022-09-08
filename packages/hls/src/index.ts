@@ -1,9 +1,9 @@
 // import Hls from 'hls.js/dist/hls.light.min.js'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source, PlayerEvent, Player } from '@oplayer/core'
+import type { PlayerPlugin, Source, Player } from '@oplayer/core'
 
-let importedHls: any
+let importedHls: typeof import('hls.js/dist/hls.light.min.js')
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 type hlsPluginOptions = {
@@ -61,46 +61,35 @@ const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher
 }: hlsPluginOptions = {}): PlayerPlugin => {
-  let isInitial = false
   let hlsInstance: Hls
-  let isActive = false
-  let HLS: typeof import('hls.js/dist/hls.light.min.js')
 
-  const getHls = async (options?: Partial<HlsConfig>) => {
+  const getHls = async () => {
     if (hlsInstance) hlsInstance.destroy()
-    if (!importedHls) importedHls = await import('hls.js/dist/hls.light.min.js')
 
-    hlsInstance = new importedHls.default(options)
-    HLS = importedHls.default
+    importedHls ??= (await import('hls.js/dist/hls.light.min.js')).default
+    hlsInstance = new importedHls(hlsConfig)
   }
 
   return {
     name: PLUGIN_NAME,
-    load: async (player, video, source) => {
-      if (!matcher(video, source)) return false
-      const { on, emit } = player
+    load: async (player, source, options) => {
+      const isMatch = matcher(player.$video, source)
 
-      await getHls({ autoStartLoad: false, ...hlsConfig })
-      if (!HLS.isSupported()) {
-        emit('pluginerror', {
-          payload: {
-            type: 'hlsNotSupported',
-            message: 'hlsNotSupported'
-          }
-        })
-        return true
+      if (options.loader || !isMatch) {
+        hlsInstance?.destroy()
+        player.emit('removesetting', PLUGIN_NAME)
       }
 
-      if (!isInitial) {
-        isInitial = true
-        isActive = true
-        emit('loadedplugin', { name: PLUGIN_NAME })
-        generateSetting(player, hlsInstance, HLS)
-      }
+      if (!isMatch) return false
 
-      hlsInstance.attachMedia(video)
+      await getHls()
+
+      if (!importedHls.isSupported()) return false
+
       hlsInstance.loadSource(source.src)
+      hlsInstance.attachMedia(player.$video)
       hlsInstance.startLoad()
+      generateSetting(player, hlsInstance, importedHls)
 
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js
@@ -111,36 +100,24 @@ const hlsPlugin = ({
       //   }
       // )
 
-      Object.values(HLS.Events).forEach((e) => {
+      Object.values(importedHls.Events).forEach((e) => {
         hlsInstance.on(e as any, (event: string, data: ErrorData) => {
-          if (event === HLS.Events.ERROR && data.details == HLS.ErrorDetails.MANIFEST_LOAD_ERROR) {
-            emit('pluginerror', { message: data.type, ...data })
+          if (
+            event === importedHls.Events.ERROR &&
+            data.details == importedHls.ErrorDetails.MANIFEST_LOAD_ERROR
+          ) {
+            player.emit('pluginerror', { message: data.type, ...data })
           }
-          emit(event, data)
+          player.emit(event, data)
         })
-      })
-
-      on('destroy', () => {
-        hlsInstance.destroy()
-        hlsInstance = null as any
       })
 
       return true
     },
-    apply: (player: Player) => {
-      player.on('videosourcechange', ({ payload }: PlayerEvent) => {
-        if (isInitial) {
-          if (matcher(player.$video, payload)) {
-            isActive = true
-            generateSetting(player, hlsInstance, HLS)
-          } else {
-            if (isActive) {
-              hlsInstance.destroy()
-              player.emit('removesetting', PLUGIN_NAME)
-            }
-            isActive = false
-          }
-        }
+    apply: (player) => {
+      player.on('destroy', () => {
+        hlsInstance.destroy()
+        hlsInstance = null as any
       })
     }
   }

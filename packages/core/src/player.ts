@@ -187,8 +187,9 @@ export class Player {
   load = async (source: Source) => {
     for await (const plugin of this.#plugins) {
       if (plugin.load && !this.#isCustomLoader) {
-        this.#isCustomLoader = await plugin.load(this, this.$video, source)
-        if (this.#isCustomLoader) break
+        if ((await plugin.load(this, source, { loader: this.#isCustomLoader })) === true) {
+          this.#isCustomLoader = true
+        }
       }
     }
     if (!this.#isCustomLoader) {

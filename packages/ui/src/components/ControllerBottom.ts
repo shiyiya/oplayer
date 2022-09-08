@@ -177,10 +177,14 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   }
 
-  !isMobile && player.on(['play', 'pause', 'videosourcechange'], playerSwitcher)
+  !isMobile && player.on(['play', 'pause'], playerSwitcher)
   player.on('volumechange', volumeSwitcher)
-  player.on(['durationchange', 'timeupdate', 'videosourcechange'], () => {
+  player.on(['durationchange', 'timeupdate'], () => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
+  })
+  player.on('videosourcechange', () => {
+    $time.innerText = '00:00 / --:--'
+    playerSwitcher()
   })
 
   player.on('ratechange', () => {
