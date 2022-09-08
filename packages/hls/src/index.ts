@@ -1,7 +1,7 @@
 // import Hls from 'hls.js/dist/hls.light.min.js'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source, PlayerEvent } from '@oplayer/core'
+import type { PlayerPlugin, Source, PlayerEvent, Player } from '@oplayer/core'
 
 let importedHls: any
 const PLUGIN_NAME = 'oplayer-plugin-hls'
@@ -20,6 +20,48 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
       /m3u8(#|\?|$)/i.test(source.src)))
 
+const generateSetting = (
+  player: Player,
+  hlsInstance: Hls,
+  HLS: typeof import('hls.js/dist/hls.light.min.js')
+) => {
+  hlsInstance.on(HLS.Events.MANIFEST_PARSED, function () {
+    hlsInstance.levels.sort((a, b) => b.height - a.height)
+
+    const options = hlsInstance.levels
+      .map((level, i) => {
+        return {
+          name: level.name ? `${level.name}P` : '',
+          type: 'switcher',
+          default: hlsInstance.currentLevel == i,
+          value: i
+        } as const
+      })
+      .filter((it) => it.name)
+
+    if (options.findIndex((setting) => setting.default) == -1) {
+      options.unshift({
+        name: player.locales.get('Auto'),
+        type: 'switcher',
+        default: true,
+        value: -1
+      })
+    }
+
+    player.emit('removesetting', PLUGIN_NAME)
+    player.emit('addsetting', {
+      name: player.locales.get('Quantity'),
+      type: 'selector',
+      key: PLUGIN_NAME,
+      default: player.locales.get('Auto'),
+      onChange: (level: typeof options[number]) => {
+        hlsInstance.currentLevel = level.value
+      },
+      children: options
+    })
+  })
+}
+
 const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher
@@ -27,21 +69,23 @@ const hlsPlugin = ({
   let isInitial = false
   let hlsInstance: Hls
   let isActive = false
+  let HLS: typeof import('hls.js/dist/hls.light.min.js')
 
   const getHls = async (options?: Partial<HlsConfig>) => {
     if (hlsInstance) hlsInstance.destroy()
     if (!importedHls) importedHls = await import('hls.js/dist/hls.light.min.js')
 
     hlsInstance = new importedHls.default(options)
-    return importedHls.default
+    HLS = importedHls.default
   }
 
   return {
     name: PLUGIN_NAME,
-    load: async ({ on, emit }, video, source) => {
+    load: async (player, video, source) => {
       if (!matcher(video, source)) return false
+      const { on, emit } = player
 
-      const HLS = await getHls({ autoStartLoad: false, ...hlsConfig })
+      await getHls({ autoStartLoad: false, ...hlsConfig })
       if (!HLS.isSupported()) {
         emit('pluginerror', {
           payload: {
@@ -56,16 +100,7 @@ const hlsPlugin = ({
         isInitial = true
         isActive = true
         emit('loadedplugin', { name: PLUGIN_NAME })
-        on('videosourcechange', ({ payload }: PlayerEvent) => {
-          if (isInitial) {
-            if (matcher(video, payload)) {
-              isActive = true
-            } else {
-              if (isActive) hlsInstance.destroy()
-              isActive = false
-            }
-          }
-        })
+        generateSetting(player, hlsInstance, HLS)
       }
 
       hlsInstance.attachMedia(video)
@@ -97,8 +132,18 @@ const hlsPlugin = ({
 
       return true
     },
-    apply: () => {
-      // restore video onready listener
+    apply: (player: Player) => {
+      player.on('videosourcechange', ({ payload }: PlayerEvent) => {
+        if (isInitial) {
+          if (matcher(player.$video, payload)) {
+            isActive = true
+            generateSetting(player, hlsInstance, HLS)
+          } else {
+            if (isActive) hlsInstance.destroy()
+            isActive = false
+          }
+        }
+      })
     }
   }
 }
