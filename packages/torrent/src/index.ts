@@ -1,10 +1,8 @@
 import webtorrent from 'webtorrent/webtorrent.min.js'
 import type { PlayerPlugin, Source } from '@oplayer/core'
 
+let client: any
 const PLUGIN_NAME = 'oplayer-plugin-torrent'
-
-let isInitial = false
-let prevSrc = ''
 
 type torrentPluginOptions = {
   config?: Record<string, any>
@@ -17,48 +15,41 @@ const defaultMatcher: torrentPluginOptions['matcher'] = (source) =>
 const torrentPlugin = ({
   config = {},
   matcher = defaultMatcher
-}: torrentPluginOptions = {}): PlayerPlugin => ({
-  name: PLUGIN_NAME,
-  load: ({ on, emit }, video, source) => {
-    if (!matcher(source)) return false
+}: torrentPluginOptions = {}): PlayerPlugin => {
+  let prePreload: HTMLMediaElement['preload']
 
-    if (!isInitial) {
-      emit('loadedplugin', { name: PLUGIN_NAME })
-      isInitial = true
-    }
+  return {
+    name: PLUGIN_NAME,
+    load: ({ on, $video }, source, options) => {
+      const isMatch = matcher(source)
 
-    if (!webtorrent.WEBRTC_SUPPORT) {
-      emit('pluginerror', {
-        payload: {
-          type: 'torrentNotSupported',
-          message: 'torrent is not supported'
-        }
+      if (options.loader || !isMatch) {
+        client.remove(source.src)
+        $video.preload = prePreload
+      }
+
+      if (!isMatch) return false
+
+      if (!webtorrent.WEBRTC_SUPPORT) return false
+
+      if (!client) {
+        prePreload = $video.preload
+        client = new webtorrent(config)
+      }
+
+      $video.preload = 'metadata'
+      client.add(source.src, (torrent: any) => {
+        const file = torrent.files.find((file: any) => file.name.endsWith('.mp4'))
+        file.renderTo($video, { autoplay: $video.autoplay, controls: false })
       })
+
       return true
-    }
-
-    prevSrc = source.src
-    video.preload = 'metadata'
-    const client = new webtorrent(config)
-    client.add(source.src, (torrent: any) => {
-      const file = torrent.files.find((file: any) => file.name.endsWith('.mp4'))
-      file.renderTo(video, {
-        autoplay: video.autoplay,
-        controls: false
+    },
+    apply: ({ on }) => {
+      on('destroy', () => {
+        client.destroy()
       })
-    })
-
-    on('videosourcechange', () => {
-      client.remove(prevSrc)
-    })
-
-    on('destroy', () => {
-      client.remove(source.src)
-      client.destroy()
-    })
-
-    return true
+    }
   }
-})
-
+}
 export default torrentPlugin
