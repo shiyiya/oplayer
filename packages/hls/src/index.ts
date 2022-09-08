@@ -30,7 +30,7 @@ const generateSetting = (
 
     const options = hlsInstance.levels.map((level, i) => {
       return {
-        name: `${level.name || level.height}P` as string,
+        name: `${level.name || level.height}p` as string,
         type: 'switcher',
         default: hlsInstance.currentLevel == i,
         value: i
