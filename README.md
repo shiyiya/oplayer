@@ -2,7 +2,7 @@
 
 Oh! Another HTML5 video player.
 
-Website: https://oplayer.vercel.app/
+Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 
 Examples: [./examples](./examples) | [Contributing](./CONTRIBUTING.md)
 
