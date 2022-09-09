@@ -78,9 +78,9 @@ const hlsPlugin = ({
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
         player.emit('removesetting', PLUGIN_NAME)
-      }
 
-      if (!isMatch) return false
+        return false
+      }
 
       await getHls()
 

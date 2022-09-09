@@ -24,11 +24,11 @@ const torrentPlugin = ({
       const isMatch = matcher(source)
 
       if (options.loader || !isMatch) {
-        client.remove(source.src)
+        client?.remove(source.src)
         $video.preload = prePreload
-      }
 
-      if (!isMatch) return false
+        return false
+      }
 
       if (!webtorrent.WEBRTC_SUPPORT) return false
 
