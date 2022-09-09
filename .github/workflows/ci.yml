@@ -60,7 +60,7 @@ jobs:
           pnpm i yarn -g
           cd website
           yarn
-          yarn build
+          yarn build:ghp
 
       - name: deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
