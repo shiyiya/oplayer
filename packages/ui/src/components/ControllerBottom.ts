@@ -208,7 +208,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       case 'Play':
         return player.togglePlay()
       case 'Speed': {
-        player.setPlaybackRate(+target.getAttribute('data-value')!)
+        if (target.hasAttribute('data-value'))
+          player.setPlaybackRate(+target.getAttribute('data-value')!)
         break
       }
       case 'Volume':
