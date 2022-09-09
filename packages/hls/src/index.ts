@@ -1,7 +1,7 @@
 // import Hls from 'hls.js/dist/hls.light.min.js'
+import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
-import type { PlayerPlugin, Source, Player } from '@oplayer/core'
 
 let importedHls: typeof import('hls.js/dist/hls.light.min.js')
 const PLUGIN_NAME = 'oplayer-plugin-hls'
@@ -9,6 +9,23 @@ const PLUGIN_NAME = 'oplayer-plugin-hls'
 type hlsPluginOptions = {
   hlsConfig?: Partial<HlsConfig>
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
+  options?: {
+    /**
+     * @default: true
+     */
+    light?: boolean
+    /**
+     * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
+     * default: false
+     */
+    hlsQualityControl?: boolean
+    /**
+     *  control how the stream quality is switched. default: smooth
+     *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
+     *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
+     */
+    hlsQualitySwitch?: 'immediate' | 'smooth'
+  }
 }
 
 const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
@@ -23,12 +40,15 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
 const generateSetting = (
   player: Player,
   hlsInstance: Hls,
-  HLS: typeof import('hls.js/dist/hls.light.min.js')
+  HLS: typeof import('hls.js/dist/hls.light.min.js'),
+  options: Required<hlsPluginOptions['options']> = {} as any
 ) => {
+  if (!options.hlsQualityControl) return
+
   hlsInstance.once(HLS.Events.MANIFEST_PARSED, function () {
     hlsInstance.levels.sort((a, b) => b.height - a.height)
 
-    const options = hlsInstance.levels.map((level, i) => {
+    const settingOptions = hlsInstance.levels.map((level, i) => {
       return {
         name: `${level.name || level.height}p` as string,
         type: 'switcher',
@@ -37,10 +57,11 @@ const generateSetting = (
       } as const
     })
 
-    options.unshift({
+    settingOptions.unshift({
       name: player.locales.get('Auto'),
       type: 'switcher',
-      default: hlsInstance.autoLevelEnabled || options.findIndex((option) => option.default) == -1,
+      default:
+        hlsInstance.autoLevelEnabled || settingOptions.findIndex((option) => option.default) == -1,
       value: -1
     })
 
@@ -49,24 +70,46 @@ const generateSetting = (
       name: player.locales.get('Quantity'),
       type: 'selector',
       key: PLUGIN_NAME,
-      onChange: (level: typeof options[number]) => {
-        hlsInstance.currentLevel = level.value
+      onChange: (level: typeof settingOptions[number]) => {
+        if (!player.isPlaying) {
+          hlsInstance.startLevel = level.value
+          return
+        }
+
+        if (options.hlsQualitySwitch == 'immediate') {
+          hlsInstance.currentLevel = level.value
+        } else if (options.hlsQualitySwitch == 'smooth') {
+          hlsInstance.nextLevel = level.value
+        }
       },
-      children: options.length == 2 ? [options[0]] : options
+      children: settingOptions.length == 2 ? [settingOptions[0]] : settingOptions
     })
   })
 }
 
-const hlsPlugin = ({
-  hlsConfig = {},
-  matcher = defaultMatcher
-}: hlsPluginOptions = {}): PlayerPlugin => {
+const hlsPlugin = (
+  {
+    hlsConfig = {},
+    matcher = defaultMatcher,
+    options: _pluginOptions
+  }: hlsPluginOptions = {} as hlsPluginOptions
+): PlayerPlugin => {
   let hlsInstance: Hls
+
+  const pluginOptions: Required<hlsPluginOptions['options']> = {
+    light: true,
+    hlsQualityControl: false,
+    hlsQualitySwitch: 'smooth',
+    ..._pluginOptions
+  }
+  if (pluginOptions.hlsQualityControl) pluginOptions.light = false
 
   const getHls = async () => {
     if (hlsInstance) hlsInstance.destroy()
 
-    importedHls ??= (await import('hls.js/dist/hls.light.min.js')).default
+    importedHls ??= (
+      await import(pluginOptions.light ? 'hls.js/dist/hls.light.min.js' : 'hls.js/dist/hls.min.js')
+    ).default
     hlsInstance = new importedHls(hlsConfig)
   }
 
@@ -89,7 +132,7 @@ const hlsPlugin = ({
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
       hlsInstance.startLoad()
-      generateSetting(player, hlsInstance, importedHls)
+      generateSetting(player, hlsInstance, importedHls, pluginOptions)
 
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js
