@@ -47,7 +47,7 @@ const torrentPlugin = ({
     },
     apply: ({ on }) => {
       on('destroy', () => {
-        client.destroy()
+        client?.destroy()
       })
     }
   }
