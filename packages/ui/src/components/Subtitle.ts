@@ -120,7 +120,10 @@ class Subtitle {
 
   load() {
     this.loadSubtitle()
-    this.show()
+      .then(() => this.show())
+      .catch((e) => {
+        this.player.emit('notice', { text: (<Error>e).message })
+      })
   }
 
   update = (_: Event) => {
@@ -156,7 +159,7 @@ class Subtitle {
     const { currentSubtitle, player, $track, $iosTrack } = this
     const { src, encoding, type } = currentSubtitle!
 
-    fetch(src)
+    return fetch(src)
       .then((response) => response.arrayBuffer())
       .then((buffer) => {
         const decoder = new TextDecoder(encoding)
