@@ -1,6 +1,6 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { addClass, debounce, formatTime, removeClass } from '../utils'
+import { addClass, debounce, removeClass } from '../utils'
 
 const noticeCls = $.css`
   position: absolute;
@@ -60,28 +60,6 @@ const render = (player: Player, el: HTMLElement) => {
           }
       })
     }
-  )
-
-  player.on(
-    'seeking',
-    toggle(() => {
-      $text.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
-    })
-  )
-
-  let muted = player.isMuted
-  player.on(
-    'volumechange',
-    toggle(() => {
-      if (muted != player.isMuted) {
-        muted = player.isMuted
-        if (muted) {
-          $text.innerText = player.locales.get('Mute')
-          return
-        }
-      }
-      $text.innerText = player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`)
-    })
   )
 
   player.on(
