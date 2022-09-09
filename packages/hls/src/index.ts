@@ -160,7 +160,7 @@ const hlsPlugin = (
     },
     apply: (player) => {
       player.on('destroy', () => {
-        hlsInstance.destroy()
+        hlsInstance?.destroy()
         hlsInstance = null as any
       })
     }
