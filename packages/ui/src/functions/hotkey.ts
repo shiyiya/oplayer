@@ -3,19 +3,23 @@ import focusListener from '../listeners/focus'
 import { webFullScreen } from '../style'
 import { screenShot } from '../utils'
 
-const VOLUME_SETUP = 0.1
+const VOLUME_SETUP = 10 //10% 0.1 有精度问题
 const SEEK_SETUP = 5
 
 const HOTKEY_FN: Record<string, (player: Player) => void> = {
-  ArrowUp: (player: Player) => (
-    player.emit('volumechange'), player.setVolume(player.volume + VOLUME_SETUP)
-  ),
-  ArrowDown: (player: Player) => (
-    player.emit('volumechange'), player.setVolume(player.volume - VOLUME_SETUP)
-  ),
+  ArrowUp: (player: Player) => {
+    const nextVolume = player.volume * 100 + VOLUME_SETUP
+    player.setVolume(nextVolume / 100)
+    player.emit('notice', { text: player.locales.get('Volume: %s', `${player.volume * 100}%`) })
+  },
+  ArrowDown: (player: Player) => {
+    const nextVolume = player.volume * 100 - VOLUME_SETUP
+    player.setVolume(nextVolume / 100)
+    player.emit('notice', { text: player.locales.get('Volume: %s', `${player.volume * 100}%`) })
+  },
 
-  ArrowLeft: (player: Player) => player.seek(player.currentTime - SEEK_SETUP),
-  ArrowRight: (player: Player) => player.seek(player.currentTime + SEEK_SETUP),
+  ArrowLeft: (player: Player) => player.emit('notice', { text: `-${SEEK_SETUP}s` }),
+  ArrowRight: (player: Player) => player.emit('notice', { text: `+${SEEK_SETUP}s` }),
 
   ' ': (player: Player) => player.togglePlay(),
 
