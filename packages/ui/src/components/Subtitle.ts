@@ -9,12 +9,14 @@ export default function (player: Player, el: HTMLElement, options: SubtitleConfi
 }
 
 class Subtitle {
-  isInitial = false
-  $track: HTMLTrackElement
-  $dom: HTMLDivElement
-  currentSubtitle?: SubtitleSource
-
   options: SubtitleConfig
+
+  $track: HTMLTrackElement
+  $iosTrack: HTMLTrackElement
+  $dom: HTMLDivElement
+
+  isShow = false
+  currentSubtitle?: SubtitleSource
 
   constructor(public player: Player, public el: HTMLElement, options?: SubtitleConfig) {
     if (!window.TextDecoder) {
@@ -39,18 +41,13 @@ class Subtitle {
     }
 
     // Create the dom before the fragment is inserted into the dom
-    this.createDom()
+    this.createContainer()
     this.initEvents()
     this.loadSetting()
   }
 
-  load() {
-    this.loadSubtitle()
-    this.show()
-  }
-
-  createDom() {
-    const { player, el, options } = this
+  createContainer() {
+    const { el, options } = this
 
     this.$dom = $.create(
       `div.${$.css({
@@ -70,32 +67,60 @@ class Subtitle {
         '& > p': { margin: 0 }
       })}`
     )
-    $.render(this.$dom, el)
 
+    $.render(this.$dom, el)
+  }
+
+  createTrack() {
     this.$track = <HTMLTrackElement>$.render(
       $.create('track', {
         default: true,
-        kind: isIOS() ? 'captions' : 'metadata'
+        kind: 'metadata'
       }),
-      player.$video
+      this.player.$video
     )
+
+    if (isIOS()) {
+      this.$iosTrack = <HTMLTrackElement>$.render(
+        $.create('track', {
+          default: false,
+          kind: 'captions'
+        }),
+        this.player.$video
+      )
+
+      this.player.on('fullscreenchange', () => {
+        if (this.player.isFullScreen) {
+          if (this.isShow) this.player.$video.textTracks[1]!.mode = 'showing'
+        } else {
+          this.player.$video.textTracks[1]!.mode = 'hidden'
+        }
+      })
+    }
   }
 
   initEvents() {
-    const { player, $dom, $track } = this
+    const { player, $dom, $track, $iosTrack } = this
     player.on('destroy', () => {
       $dom.innerHTML = ''
       player.emit('removesetting', SETTING_KEY)
-      $track.removeEventListener('cuechange', this.update)
+
+      $track?.removeEventListener('cuechange', this.update)
       if ($track.src) URL.revokeObjectURL($track.src)
-      $track.src = ''
+      if ($iosTrack.src) URL.revokeObjectURL($iosTrack.src)
     })
+
     player.on('subtitlechange', ({ payload }) => {
-      this.hide()
+      if (this.isShow) this.hide()
       player.emit('removesetting', SETTING_KEY)
       this.options.source = payload
       this.loadSetting()
     })
+  }
+
+  load() {
+    this.loadSubtitle()
+    this.show()
   }
 
   update = (_: Event) => {
@@ -113,29 +138,23 @@ class Subtitle {
   }
 
   show() {
-    const { player, $track } = this
+    const { $track } = this
+    this.isShow = true
 
-    if (isIOS()) {
-      player.$video.textTracks[0]!.mode = 'showing'
-    } else {
-      $track.addEventListener('cuechange', this.update)
-    }
+    $track.addEventListener('cuechange', this.update)
   }
 
   hide() {
-    const { player, $track, $dom } = this
+    const { $track, $dom } = this
 
-    if (isIOS()) {
-      player.$video.textTracks[0]!.mode = 'hidden'
-    } else {
-      $dom.innerHTML = ''
-      $track.removeEventListener('cuechange', this.update)
-    }
+    this.isShow = false
+    $dom.innerHTML = ''
+    $track.removeEventListener('cuechange', this.update)
   }
 
   loadSubtitle() {
-    const { currentSubtitle, player, $track } = this
-    const { src, encoding, type } = currentSubtitle! // 如果没有则不会调用
+    const { currentSubtitle, player, $track, $iosTrack } = this
+    const { src, encoding, type } = currentSubtitle!
 
     fetch(src)
       .then((response) => response.arrayBuffer())
@@ -160,6 +179,11 @@ class Subtitle {
       .then((url) => {
         if ($track.src) URL.revokeObjectURL($track.src)
         $track.src = url
+
+        if ($iosTrack) {
+          if ($iosTrack.src) URL.revokeObjectURL($iosTrack.src)
+          $iosTrack.src = url
+        }
       })
       .catch((err) => {
         player.emit('notice', { text: 'Subtitle' + (<Error>err).message })
@@ -176,6 +200,8 @@ class Subtitle {
         icon: subtitleSvg,
         key: SETTING_KEY,
         onChange: ({ value }) => {
+          if (!this.$track && value) this.createTrack()
+
           if (value) {
             this.currentSubtitle = value
             this.load()
