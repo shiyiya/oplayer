@@ -49,8 +49,9 @@ const generateSetting = (
     hlsInstance.levels.sort((a, b) => b.height - a.height)
 
     const settingOptions = hlsInstance.levels.map((level, i) => {
+      const name = level.name || level.height
       return {
-        name: `${level.name || level.height}p` as string,
+        name: `${name}${typeof name == 'number' && isFinite(name) ? 'p' : ''}` as string,
         type: 'switcher',
         default: hlsInstance.currentLevel == i,
         value: i
