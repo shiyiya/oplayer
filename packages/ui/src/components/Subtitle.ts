@@ -128,15 +128,24 @@ class Subtitle {
 
   update = (_: Event) => {
     const { $dom, player } = this
+    const activeCues = player.$video.textTracks[0]?.activeCues
 
-    $dom.innerHTML = ''
-    const activeCues = player.$video.textTracks[0]?.activeCues?.[0]
     if (activeCues) {
-      //@ts-ignore
-      $dom.innerHTML = activeCues.text
-        ?.split(/\r?\n/)
-        .map((item: string) => `<p>${item}</p>`)
-        .join('')
+      let html = ''
+      for (let i = 0; i < activeCues.length; i++) {
+        const activeCue = activeCues[i]
+
+        if (activeCue) {
+          //@ts-ignore
+          html += activeCue.text
+            ?.split(/\r?\n/)
+            .map((item: string) => `<p>${item}</p>`)
+            .join('')
+        }
+
+        $dom.innerHTML = ''
+        $dom.innerHTML = html
+      }
     }
   }
 
