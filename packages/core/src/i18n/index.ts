@@ -9,7 +9,7 @@ export default class I18n {
     zh: CN,
     'zh-CN': CN,
     en: Object.keys(CN).reduce<Record<string, string>>(
-      (prevoius, current) => ((prevoius[current] = current), prevoius),
+      (previous, current) => ((previous[current] = current), previous),
       {}
     )
   }

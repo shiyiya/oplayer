@@ -136,7 +136,6 @@ const hlsPlugin = (
 
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
-      hlsInstance.startLoad()
       generateSetting(player, hlsInstance, importedHls, pluginOptions)
 
       //TODO: remove video onReady Listener

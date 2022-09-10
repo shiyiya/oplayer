@@ -18,8 +18,14 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
     player.emit('notice', { text: player.locales.get('Volume: %s', `${player.volume * 100}%`) })
   },
 
-  ArrowLeft: (player: Player) => player.emit('notice', { text: `-${SEEK_SETUP}s` }),
-  ArrowRight: (player: Player) => player.emit('notice', { text: `+${SEEK_SETUP}s` }),
+  ArrowLeft: (player: Player) => {
+    player.seek(player.currentTime - SEEK_SETUP)
+    player.emit('notice', { text: `-${SEEK_SETUP}s` })
+  },
+  ArrowRight: (player: Player) => {
+    player.seek(player.currentTime + SEEK_SETUP)
+    player.emit('notice', { text: `+${SEEK_SETUP}s` })
+  },
 
   ' ': (player: Player) => player.togglePlay(),
 
