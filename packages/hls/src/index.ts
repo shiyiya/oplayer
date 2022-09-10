@@ -29,7 +29,7 @@ type hlsPluginOptions = {
      */
     hlsQualitySwitch?: 'immediate' | 'smooth'
 
-    preferredQuality?: 'low' | 'medium' | 'high'
+    preferredQuality?: 'low' | 'medium' | 'high' | 'auto'
   }
 }
 
@@ -117,6 +117,7 @@ const hlsPlugin = (
     light: true,
     hlsQualityControl: false,
     hlsQualitySwitch: 'smooth',
+    preferredQuality: 'auto',
     ..._pluginOptions
   }
   if (pluginOptions.hlsQualityControl) pluginOptions.light = false
