@@ -203,14 +203,19 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   $panels.forEach(($p) => $.render($p.$ref, $dom))
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
-    const oldLen = $panels.length
     createPanel(player, $panels, Array.isArray(payload) ? payload : [payload], {
       isPatch: true,
       onHide: hide
     })
-    const $needRenderPanels = oldLen > 0 ? $panels.slice(oldLen - 1) : $panels
-    $needRenderPanels.forEach(($p) => ($.render($p.$ref, $dom), $panels.push($p)))
+    $panels.slice(($panels.length || 1) - 1).forEach(($p) => $.render($p.$ref, $dom))
   })
+
+  player.on(
+    'selectsetting',
+    ({ payload }: PlayerEvent<{ key: string; value: boolean | number }>) => {
+      //TODO:
+    }
+  )
 
   player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
     $panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
