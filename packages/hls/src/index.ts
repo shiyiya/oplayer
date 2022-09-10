@@ -48,7 +48,7 @@ const generateSetting = (
 ) => {
   if (!options.hlsQualityControl) return
 
-  hlsInstance.once(HLS.Events.MANIFEST_PARSED, function () {
+  const settingUpdater = () => {
     hlsInstance.levels.sort((a, b) => b.height - a.height)
 
     const settingOptions = hlsInstance.levels.map((level, i) => {
@@ -56,7 +56,7 @@ const generateSetting = (
       return {
         name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
         type: 'switcher',
-        default: hlsInstance.currentLevel == i,
+        default: hlsInstance.startLevel == i,
         value: i
       } as const
     })
@@ -64,8 +64,7 @@ const generateSetting = (
     settingOptions.unshift({
       name: player.locales.get('Auto'),
       type: 'switcher',
-      default:
-        hlsInstance.autoLevelEnabled || settingOptions.findIndex((option) => option.default) == -1,
+      default: settingOptions.findIndex((option) => option.default) == -1,
       value: -1
     })
 
@@ -76,11 +75,9 @@ const generateSetting = (
       key: PLUGIN_NAME,
       icon: qualitySvg,
       onChange: (level: typeof settingOptions[number], { isInit }: any) => {
-        if (!player.isPlaying && isInit) {
-          hlsInstance.startLevel = level.value
-          return
-        }
+        if (isInit) return
 
+        //TODO: fallback while switch err
         if (options.hlsQualitySwitch == 'immediate') {
           hlsInstance.currentLevel = level.value
         } else if (options.hlsQualitySwitch == 'smooth') {
@@ -89,7 +86,9 @@ const generateSetting = (
       },
       children: settingOptions.length == 2 ? [settingOptions[0]] : settingOptions
     })
-  })
+  }
+
+  hlsInstance.once(HLS.Events.MANIFEST_PARSED, settingUpdater)
 }
 
 const hlsPlugin = (
