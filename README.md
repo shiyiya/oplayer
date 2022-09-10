@@ -96,7 +96,7 @@ Player.make(document.body, {
 
 - [@oplayer/ui](./packages//ui/)
 - [@oplayer/hls](./packages/hls/)
-- [@oplayer/hls](./packages/dash/)
+- [@oplayer/dash](./packages/dash/)
 - [@oplayer/torrent](./packages/torrent/)
 - [@oplayer/danmaku](./packages/danmaku/)
 - [@oplayer/react](./packages/react/)
