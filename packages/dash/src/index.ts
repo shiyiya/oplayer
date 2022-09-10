@@ -1,6 +1,9 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type { MediaPlayerClass, MediaSettings } from 'dashjs'
 
+//@ts-ignore
+import qualitySvg from '../../hls/src/quality.svg?raw'
+
 let importedDash: typeof import('dashjs')
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
@@ -26,15 +29,14 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
     ]
 
     if (dashInstance.getBitrateInfoListFor('video').length > 1) {
-      dashInstance.getBitrateInfoListFor('video').map((bitrate) => {
+      dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
         const name = Math.floor(bitrate.bitrate / 1000)
-        return {
-          //  (${bitrate.width}x${bitrate.height})
+        settingOptions.push({
           name: isNaN(bitrate.qualityIndex) ? 'Auto Switch' : (`${name} kbps` as string),
           type: 'switcher',
           default: false, // 默认都是 auto ?
           value: bitrate.qualityIndex
-        }
+        })
       })
     }
 
@@ -43,7 +45,7 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
-      // icon: qualitySvg,
+      icon: qualitySvg,
       onChange: ({ value }: typeof settingOptions[number], { isInit }: any) => {
         if (!isInit) dashInstance.setQualityFor('video', value)
       },
