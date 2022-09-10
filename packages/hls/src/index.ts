@@ -28,8 +28,6 @@ type hlsPluginOptions = {
      *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
      */
     hlsQualitySwitch?: 'immediate' | 'smooth'
-
-    preferredQuality?: 'low' | 'medium' | 'high' | 'auto'
   }
 }
 
@@ -50,34 +48,28 @@ const generateSetting = (
   if (!options.hlsQualityControl) return
 
   const settingUpdater = () => {
-    hlsInstance.levels.sort((a, b) => b.height - a.height) // high -> low
-    let defaultLevel: number | undefined
+    // default low -> high ?
+    // hlsInstance.levels.sort((a, b) => b.height - a.height) // high -> low
 
-    if (options.preferredQuality && hlsInstance.levels.length > 1)
-      if (options.preferredQuality == 'low') {
-        defaultLevel = hlsInstance.levels.length - 1
-      } else if (options.preferredQuality == 'medium') {
-        defaultLevel = ~~(hlsInstance.levels.length / 2)
-      } else if (options.preferredQuality == 'high') {
-        defaultLevel = 0
-      }
-
-    const settingOptions = hlsInstance.levels.map((level, i) => {
-      const name = level.name || level.height
-      return {
-        name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
+    const settingOptions = [
+      {
+        name: player.locales.get('Auto'),
         type: 'switcher',
-        default: defaultLevel == i || hlsInstance.currentLevel == i,
-        value: i
-      } as const
-    })
+        default: true,
+        value: -1
+      }
+    ]
 
-    settingOptions.unshift({
-      name: player.locales.get('Auto'),
-      type: 'switcher',
-      default: settingOptions.findIndex((option) => option.default) == -1,
-      value: -1
-    })
+    if (hlsInstance.levels.length > 1)
+      hlsInstance.levels.forEach((level, i) => {
+        const name = level.name || level.height
+        return settingOptions.push({
+          name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
+          type: 'switcher',
+          default: false,
+          value: i
+        })
+      })
 
     player.emit('removesetting', PLUGIN_NAME)
     player.emit('addsetting', {
@@ -86,7 +78,7 @@ const generateSetting = (
       key: PLUGIN_NAME,
       icon: qualitySvg,
       onChange: (level: typeof settingOptions[number], { isInit }: any) => {
-        if (isInit && defaultLevel == undefined) return
+        if (isInit) return
 
         //TODO: fallback while switch err
         if (options.hlsQualitySwitch == 'immediate') {
@@ -95,7 +87,7 @@ const generateSetting = (
           hlsInstance.nextLevel = level.value
         }
       },
-      children: settingOptions.length == 2 ? [settingOptions[0]] : settingOptions
+      children: settingOptions
     })
   }
 
@@ -113,7 +105,6 @@ const hlsPlugin = ({
     light: true,
     hlsQualityControl: false,
     hlsQualitySwitch: 'smooth',
-    preferredQuality: 'auto',
     ..._pluginOptions
   }
   if (pluginOptions.hlsQualityControl) pluginOptions.light = false
