@@ -24,6 +24,13 @@ const errorCls = $.css(`
   user-select: text;
 `)
 
+const VIDEO_ERROR_MAP = {
+  1: 'MEDIA_ERR_ABORTED',
+  2: 'MEDIA_ERR_NETWORK',
+  3: 'MEDIA_ERR_DECODE',
+  4: 'MEDIA_ERR_SRC_NOT_SUPPORTED'
+}
+
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' })
 
@@ -35,7 +42,14 @@ const render = (player: Player, el: HTMLElement) => {
       message = payload.message
     } else if (payload instanceof Event) {
       // @ts-ignore
-      message = (payload.target?.error as Error)?.message
+      message = (payload.currentTarget?.error as Error)?.message
+
+      //@ts-ignore
+      if (!message && payload.target?.error?.code) {
+        message =
+          //@ts-ignore
+          VIDEO_ERROR_MAP[payload.currentTarget?.error?.code as keyof typeof VIDEO_ERROR_MAP]
+      }
     }
 
     $dom.innerText = message || 'UNKNOWN_ERROR ' + (payload.target?.error?.code || '')

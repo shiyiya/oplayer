@@ -1,8 +1,9 @@
 //@ts-nocheck
 import Player, { PlayerEvent, isMobile } from '@oplayer/core'
 import danmaku, { DanmakuItem } from '@oplayer/danmaku'
-import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
+import hls from '@oplayer/hls'
+import dash from '@oplayer/dash'
 
 import MP4 from '../../website/static/君の名は.mp4'
 import SRT from '../../website/static/君の名は.srt'
@@ -15,6 +16,7 @@ import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
 const dataSrcs = [
+  'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   MP4,
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
@@ -43,6 +45,7 @@ const p = Player.make(document.getElementById('player')!, {
   // }
 })
   .use([
+    dash(),
     hls({
       hlsConfig: {},
       options: {
@@ -156,7 +159,7 @@ p.on((e: PlayerEvent) => {
       logs.value.split('==>').slice(0, 20).join('==>')
   }
 
-  // console.info(e)
+  console.info(e)
 })
 
 // p.$root.addEventListener('click', p.unmute.bind(p), { once: true })

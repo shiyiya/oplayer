@@ -103,13 +103,11 @@ const generateSetting = (
   hlsInstance.once(HLS.Events.MANIFEST_PARSED, settingUpdater)
 }
 
-const hlsPlugin = (
-  {
-    hlsConfig = {},
-    matcher = defaultMatcher,
-    options: _pluginOptions
-  }: hlsPluginOptions = {} as hlsPluginOptions
-): PlayerPlugin => {
+const hlsPlugin = ({
+  hlsConfig = {},
+  matcher = defaultMatcher,
+  options: _pluginOptions
+}: hlsPluginOptions = {}): PlayerPlugin => {
   let hlsInstance: Hls
 
   const pluginOptions: Required<hlsPluginOptions['options']> = {
