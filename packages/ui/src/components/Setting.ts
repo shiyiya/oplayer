@@ -249,7 +249,6 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   document.addEventListener('click', outClickListener)
   player.on('destroy', () => document.removeEventListener('click', outClickListener))
 
-  player.emit('loadedsetting')
-
   $.render($dom, $el)
+  setTimeout(() => player.emit('loadedsetting'))
 }

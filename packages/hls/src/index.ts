@@ -60,7 +60,7 @@ const generateSetting = (
       } else if (options.preferredQuality == 'medium') {
         defaultLevel = ~~(hlsInstance.levels.length / 2)
       } else if (options.preferredQuality == 'high') {
-        defaultLevel = hlsInstance.levels.length - 1
+        defaultLevel = 0
       }
 
     const settingOptions = hlsInstance.levels.map((level, i) => {
@@ -87,7 +87,7 @@ const generateSetting = (
       key: PLUGIN_NAME,
       icon: qualitySvg,
       onChange: (level: typeof settingOptions[number], { isInit }: any) => {
-        if (isInit) return
+        if (isInit && defaultLevel == undefined) return
 
         //TODO: fallback while switch err
         if (options.hlsQualitySwitch == 'immediate') {
