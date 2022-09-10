@@ -44,9 +44,7 @@ const p = Player.make(document.getElementById('player')!, {
 })
   .use([
     hls({
-      hlsConfig: {
-        startLevel: 0 // max quality
-      },
+      hlsConfig: {},
       options: {
         hlsQualityControl: true,
         hlsQualitySwitch: 'immediate'

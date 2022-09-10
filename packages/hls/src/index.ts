@@ -56,7 +56,7 @@ const generateSetting = (
       return {
         name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
         type: 'switcher',
-        default: hlsInstance.startLevel == i,
+        default: hlsInstance.currentLevel == i,
         value: i
       } as const
     })
@@ -64,7 +64,8 @@ const generateSetting = (
     settingOptions.unshift({
       name: player.locales.get('Auto'),
       type: 'switcher',
-      default: settingOptions.findIndex((option) => option.default) == -1,
+      default:
+        hlsInstance.autoLevelEnabled || settingOptions.findIndex((option) => option.default) == -1,
       value: -1
     })
 
