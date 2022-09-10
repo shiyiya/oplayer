@@ -6,7 +6,7 @@ export const setting = $.css({
   'z-index': '98',
   height: 'auto',
   'max-height': '300px',
-  'max-width': '200px',
+  'max-width': '250px',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
@@ -31,7 +31,7 @@ export const setting = $.css({
 })
 
 export const panelCls = $.css(`
-  width: 200px;
+  min-width: 240px;
 `)
 
 export const subPanelCls = $.css(`

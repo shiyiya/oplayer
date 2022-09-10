@@ -42,7 +42,7 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
   's+s': screenShot
 }
 
-export default function hotKey(player: Player) {
+export default function registerHotKey(player: Player) {
   let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {

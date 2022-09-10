@@ -1,6 +1,6 @@
 import { $, isMobile } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
-import { formatTime, screenShot, siblings, toggleClass } from '../utils'
+import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
 import type { Player } from '@oplayer/core'
@@ -22,7 +22,6 @@ import {
   controllerBottom,
   dropdown,
   dropdownHoverable,
-  dropItem,
   expand,
   time
 } from './ControllerBottom.style'
@@ -46,27 +45,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
     <!-- right -->
     <div>
-      <div class="${dropdown} ${dropdownHoverable}">
-        <button class=${icon} type="button" aria-label="Speed">
-          ${player.playbackRate == 1 ? player.locales.get('SPD') : `${player.playbackRate}x`}
-        </button>
-        <div class=${expand}>
-          ${config.speed
-            ?.map(
-              (sp) =>
-                `<span
-                  class=${dropItem}
-                  aria-label="Speed"
-                  data-value=${sp}
-                  data-selected=${String(+sp == player.playbackRate)}
-                >
-                  ${sp}<small>x</small>
-                </span>`
-            )
-            .join('')}
-        </div>
-      </div>
-
       ${
         config.screenshot
           ? `<button aria-label="Screenshot" class="${icon}" type="button">
@@ -130,7 +108,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
   const $webFull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
-  const $speedText = $dom.querySelector<HTMLButtonElement>('button[aria-label="Speed"]')!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
 
   const switcher = (el: HTMLCollection, key: 0 | 1) => {
@@ -187,17 +164,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     playerSwitcher()
   })
 
-  player.on('ratechange', () => {
-    const rate = player.playbackRate
-    $speedText.innerText = rate + 'x'
-    const index = config.speed?.findIndex((sp) => +sp == rate) ?? -1
-    if (index != -1) {
-      const target = $dom.querySelectorAll<HTMLSpanElement>('span[aria-label="Speed"]')[index]!
-      target.setAttribute('data-selected', 'true')
-      siblings(target, (t) => t.setAttribute('data-selected', 'false'))
-    }
-  })
-
   let preVolume = player.volume
 
   $dom.addEventListener('click', (e: Event) => {
@@ -207,11 +173,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     switch (label) {
       case 'Play':
         return player.togglePlay()
-      case 'Speed': {
-        if (target.hasAttribute('data-value'))
-          player.setPlaybackRate(+target.getAttribute('data-value')!)
-        break
-      }
       case 'Volume':
         if (isMobile) return
         if (player.isMuted) {

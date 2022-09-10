@@ -12,7 +12,9 @@ import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle from './components/Subtitle'
 
-import hotkey from './functions/hotkey'
+import registerSpeedSetting from './functions/speed'
+import registerHotKey from './functions/hotkey'
+
 import focusListener from './listeners/focus'
 import initListener from './listeners/init'
 
@@ -30,13 +32,15 @@ const apply = (player: Player, config: UiConfig) => {
 
   renderSetting(player, $frag, config.settings)
 
+  registerSpeedSetting(player, config.speed)
+
   if (config.subtitle) {
     renderSubtitle(player, $frag, config.subtitle)
   }
 
   if (!isMobile) {
     focusListener.startListening(player, config.autoFocus)
-    hotkey(player)
+    registerHotKey(player)
   }
 
   initListener.startListening(player)
