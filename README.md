@@ -110,3 +110,4 @@ Player.make(document.body, {
 - [Boy\_\_Yan](https://www.iconfont.cn/collections/detail?cid=40262)
 - [1214monkey](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=12086)
 - [loop](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=15901)
+- [quality](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=13520)

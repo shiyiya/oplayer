@@ -31,5 +31,8 @@
   "Danmaku": "弹幕",
   "Show Danmaku": "显示弹幕",
   "Hide Danmaku": "关闭弹幕",
-  "TextDecoder Not Supported": "不支持原生字幕"
+  "TextDecoder Not Supported": "不支持原生字幕",
+
+  "Quantity": "画质",
+  "Auto": "自动"
 }

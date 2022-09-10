@@ -3,6 +3,9 @@ import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig } from 'hls.js'
 
+//@ts-ignore
+import qualitySvg from './quality.svg?raw'
+
 let importedHls: typeof import('hls.js/dist/hls.light.min.js')
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
@@ -71,6 +74,7 @@ const generateSetting = (
       name: player.locales.get('Quantity'),
       type: 'selector',
       key: PLUGIN_NAME,
+      icon: qualitySvg,
       onChange: (level: typeof settingOptions[number], { isInit }: any) => {
         if (!player.isPlaying && isInit) {
           hlsInstance.startLevel = level.value

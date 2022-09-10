@@ -16,7 +16,7 @@
     "@oplayer/hls": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "@oplayer/danmaku": "workspace:*",
-    "hls.js": "^1.2.1",
+    "hls.js": "^1.2.2",
     "lit": "^2.3.1"
   }
 }
