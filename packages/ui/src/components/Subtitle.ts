@@ -51,16 +51,16 @@ class Subtitle {
 
     this.$dom = $.create(
       `div.${$.css({
-        width: '95%',
-        color: '#fff',
-        left: '5%',
+        color: options.color ?? '#fff',
+        left: '2%',
+        right: '2%',
         'text-align': 'center',
         'pointer-events': 'none',
         'text-shadow':
           '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
 
         position: 'absolute',
-        bottom: isMobile ? '6px' : '50px',
+        bottom: `${options.bottom ?? '5%'}`,
         'line-height': '1.2',
         'font-size': `${options.fontSize || (isMobile ? 14 : 16)}px`,
 

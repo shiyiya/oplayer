@@ -61,6 +61,7 @@ const p = Player.make(document.getElementById('player')!, {
       autoFocus: true,
       theme: { primaryColor: '#f00' },
       subtitle: {
+        color: 'hotpink',
         fontSize: isMobile ? 16 : 20,
         source: [
           {

@@ -10,6 +10,8 @@ export type Subtitle = {
   source: SubtitleSource[]
   fontSize?: number
   enabled?: boolean
+  bottom?: string
+  color?: string
 }
 
 export type Setting = {
