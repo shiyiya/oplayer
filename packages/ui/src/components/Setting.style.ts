@@ -19,6 +19,14 @@ export const setting = $.css({
   'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
 
+  '::-webkit-scrollbar': {
+    width: '4px'
+  },
+
+  '::-webkit-scrollbar-thumb': {
+    background: 'var(--primary-color)'
+  },
+
   // panel
   '& > div': {
     display: 'none'

@@ -45,7 +45,6 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
 const generateSetting = (
   player: Player,
   hlsInstance: Hls,
-  HLS: typeof import('hls.js/dist/hls.light.min.js'),
   options: Required<hlsPluginOptions['options']> = {} as any
 ) => {
   if (!options.hlsQualityControl) return
@@ -100,7 +99,7 @@ const generateSetting = (
     })
   }
 
-  hlsInstance.once(HLS.Events.MANIFEST_PARSED, settingUpdater)
+  hlsInstance.once(importedHls.Events.MANIFEST_PARSED, settingUpdater)
 }
 
 const hlsPlugin = ({
@@ -146,7 +145,7 @@ const hlsPlugin = ({
 
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
-      generateSetting(player, hlsInstance, importedHls, pluginOptions)
+      generateSetting(player, hlsInstance, pluginOptions)
 
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js
