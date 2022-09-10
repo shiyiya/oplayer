@@ -47,7 +47,8 @@ const p = Player.make(document.getElementById('player')!, {
       hlsConfig: {},
       options: {
         hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate'
+        hlsQualitySwitch: 'immediate',
+        preferredQuality: 'high'
       }
     }),
     // danmaku({

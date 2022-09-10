@@ -51,8 +51,8 @@ const generateSetting = (
   if (!options.hlsQualityControl) return
 
   const settingUpdater = () => {
-    hlsInstance.levels.sort((a, b) => b.height - a.height)
-    let defaultLevel: number
+    hlsInstance.levels.sort((a, b) => b.height - a.height) // high -> low
+    let defaultLevel: number | undefined
 
     if (options.preferredQuality && hlsInstance.levels.length > 1)
       if (options.preferredQuality == 'low') {
@@ -76,8 +76,7 @@ const generateSetting = (
     settingOptions.unshift({
       name: player.locales.get('Auto'),
       type: 'switcher',
-      default:
-        hlsInstance.autoLevelEnabled || settingOptions.findIndex((option) => option.default) == -1,
+      default: settingOptions.findIndex((option) => option.default) == -1,
       value: -1
     })
 
