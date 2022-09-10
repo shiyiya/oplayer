@@ -28,6 +28,8 @@ type hlsPluginOptions = {
      *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
      */
     hlsQualitySwitch?: 'immediate' | 'smooth'
+
+    preferredQuality?: 'low' | 'medium' | 'high'
   }
 }
 
@@ -50,13 +52,23 @@ const generateSetting = (
 
   const settingUpdater = () => {
     hlsInstance.levels.sort((a, b) => b.height - a.height)
+    let defaultLevel: number
+
+    if (options.preferredQuality && hlsInstance.levels.length > 1)
+      if (options.preferredQuality == 'low') {
+        defaultLevel = hlsInstance.levels.length - 1
+      } else if (options.preferredQuality == 'medium') {
+        defaultLevel = ~~(hlsInstance.levels.length / 2)
+      } else if (options.preferredQuality == 'high') {
+        defaultLevel = hlsInstance.levels.length - 1
+      }
 
     const settingOptions = hlsInstance.levels.map((level, i) => {
       const name = level.name || level.height
       return {
         name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
         type: 'switcher',
-        default: hlsInstance.currentLevel == i,
+        default: defaultLevel == i || hlsInstance.currentLevel == i,
         value: i
       } as const
     })
@@ -71,7 +83,7 @@ const generateSetting = (
 
     player.emit('removesetting', PLUGIN_NAME)
     player.emit('addsetting', {
-      name: player.locales.get('Quantity'),
+      name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
       icon: qualitySvg,

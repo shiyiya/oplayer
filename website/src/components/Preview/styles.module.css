@@ -14,7 +14,7 @@
   font-weight: bold;
 }
 
-.Quantity {
+.Quality {
   position: relative;
   padding: 0 8px;
   cursor: pointer;
@@ -23,17 +23,17 @@
   white-space: nowrap;
   opacity: 0.8;
 }
-.Quantity:hover {
+.Quality:hover {
   opacity: 1;
 }
-.QuantityItem {
+.QualityItem {
   padding: 5px 20px;
   font-weight: normal;
 }
-.QuantityItem:hover {
+.QualityItem:hover {
   background: rgba(255, 255, 255, 0.3);
 }
-.QuantityItemActive {
+.QualityItemActive {
   color: var(--theme-color);
 }
 

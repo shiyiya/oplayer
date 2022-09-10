@@ -64,9 +64,8 @@ const p = Player.make(document.getElementById('player')!, {
         source: [
           {
             name: 'Default',
-            type: 'raw',
             default: true,
-            src: SRT
+            src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
           }
         ]
       },

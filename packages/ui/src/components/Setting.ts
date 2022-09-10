@@ -210,12 +210,11 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     $panels.slice(($panels.length || 1) - 1).forEach(($p) => $.render($p.$ref, $dom))
   })
 
-  player.on(
-    'selectsetting',
-    ({ payload }: PlayerEvent<{ key: string; value: boolean | number }>) => {
-      //TODO:
-    }
-  )
+  //TODO:
+  // player.on(
+  //   'selectsetting',
+  //   ({ payload }: PlayerEvent<{ key: string; value: boolean | number }>) => {}
+  // )
 
   player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
     $panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
