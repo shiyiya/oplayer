@@ -51,7 +51,7 @@ const generateSetting = (
     const settingOptions = hlsInstance.levels.map((level, i) => {
       const name = level.name || level.height
       return {
-        name: `${name}${typeof name == 'number' && isFinite(name) ? 'p' : ''}` as string,
+        name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
         type: 'switcher',
         default: hlsInstance.currentLevel == i,
         value: i
@@ -71,8 +71,8 @@ const generateSetting = (
       name: player.locales.get('Quantity'),
       type: 'selector',
       key: PLUGIN_NAME,
-      onChange: (level: typeof settingOptions[number]) => {
-        if (!player.isPlaying) {
+      onChange: (level: typeof settingOptions[number], { isInit }: any) => {
+        if (!player.isPlaying && isInit) {
           hlsInstance.startLevel = level.value
           return
         }

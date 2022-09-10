@@ -43,13 +43,18 @@ const p = Player.make(document.getElementById('player')!, {
   // }
 })
   .use([
-    hls(),
-    danmaku({
-      source: DANMAKU,
-      fontSize: isMobile ? 0.6 : 0.8,
-      opacity: 0.8,
-      filter: (d: DanmakuItem) => d.text == '+1s'
+    hls({
+      options: {
+        hlsQualityControl: true,
+        hlsQualitySwitch: 'immediate'
+      }
     }),
+    // danmaku({
+    //   source: DANMAKU,
+    //   fontSize: isMobile ? 0.6 : 0.8,
+    //   opacity: 0.8,
+    //   filter: (d: DanmakuItem) => d.text == '+1s'
+    // }),
     ui({
       autoFocus: true,
       theme: { primaryColor: '#f00' },

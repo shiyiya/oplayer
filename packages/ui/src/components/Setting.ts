@@ -22,7 +22,7 @@ export type Panel = {
   key: string
 }
 
-export const switcher = (name: string, icon: string = '', closedtext?: string) =>
+export const switcher = (name: string, icon: string = '', closedText?: string) =>
   `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
@@ -30,7 +30,7 @@ export const switcher = (name: string, icon: string = '', closedtext?: string) =
     <svg class=${yesIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24">
       <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#fff"></path>
     </svg>
-    ${closedtext ? `<span role="label" class=${switcherText}>${closedtext}</span>` : ''}
+    ${closedText ? `<span role="label" class=${switcherText}>${closedText}</span>` : ''}
 `
 
 export const nexter = (name: string, icon: string = '') => `
@@ -48,7 +48,7 @@ export const nexter = (name: string, icon: string = '') => `
 
 function createItem(
   options: Setting,
-  { key, closedtext, isAllSwitch }: { key?: string; isAllSwitch: boolean; closedtext: string }
+  { key, closedText, isAllSwitch }: { key?: string; isAllSwitch: boolean; closedText: string }
 ) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key
@@ -60,7 +60,7 @@ function createItem(
 
   switch (options.type) {
     case 'switcher':
-      $item.innerHTML = switcher(options.name, options.icon, isAllSwitch ? undefined : closedtext)
+      $item.innerHTML = switcher(options.name, options.icon, isAllSwitch ? undefined : closedText)
       $item.setAttribute('data-selected', options.default || false)
       $item.children[0]!.setAttribute('data-selected', options.default || false)
       break
@@ -111,7 +111,7 @@ function createPanel(
     const { $: $item, $label } = createItem(item, {
       key: item.key,
       isAllSwitch,
-      closedtext: player.locales.get('OFF')
+      closedText: player.locales.get('OFF')
     })
     $.render($item, $panel.$ref)
 
@@ -181,7 +181,7 @@ function createPanel(
 export default function (player: Player, $el: HTMLElement, options: Setting[] = []) {
   const $dom = $.create(`div.${setting}`)
   let $panels: Panel[] = []
-  let $tigger: HTMLElement | null = null
+  let $trigger: HTMLElement | null = null
 
   const defaultSetting: Setting[] = [
     {
@@ -208,8 +208,8 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       isPatch: true,
       onHide: hide
     })
-    const $needRenderpanels = oldLen > 0 ? $panels.slice(oldLen - 1) : $panels
-    $needRenderpanels.forEach(($p) => ($.render($p.$ref, $dom), $panels.push($p)))
+    const $needRenderPanels = oldLen > 0 ? $panels.slice(oldLen - 1) : $panels
+    $needRenderPanels.forEach(($p) => ($.render($p.$ref, $dom), $panels.push($p)))
   })
 
   player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
@@ -224,7 +224,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   })
 
   player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
-    $tigger = payload.target
+    $trigger = payload.target
     if (player.$root.classList.toggle(settingShown)) {
       $panels[0]!.$ref.classList.add(activeCls)
     } else {
@@ -232,9 +232,9 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     }
   })
 
-  function outClicklistener(e: Event) {
+  function outClickListener(e: Event) {
     if (
-      $tigger != e.target &&
+      $trigger != e.target &&
       <HTMLElement>e.target != $dom &&
       !$dom.contains(<HTMLElement>e.target)
     ) {
@@ -242,8 +242,8 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     }
   }
 
-  document.addEventListener('click', outClicklistener)
-  player.on('destroy', () => document.removeEventListener('click', outClicklistener))
+  document.addEventListener('click', outClickListener)
+  player.on('destroy', () => document.removeEventListener('click', outClickListener))
 
   player.emit('loadedsetting')
 
