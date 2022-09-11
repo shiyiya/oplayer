@@ -149,12 +149,6 @@ const hlsPlugin = ({
 
       Object.values(importedHls.Events).forEach((e) => {
         hlsInstance.on(e as any, (event: string, data: ErrorData) => {
-          if (
-            event === importedHls.Events.ERROR &&
-            data.details == importedHls.ErrorDetails.MANIFEST_LOAD_ERROR
-          ) {
-            player.emit('pluginerror', { message: data.type, ...data })
-          }
           player.emit(event, data)
         })
       })

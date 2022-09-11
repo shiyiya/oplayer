@@ -103,13 +103,17 @@ const dashPlugin = ({
       generateSetting(player, dashInstance)
 
       Object.values(importedDash.MediaPlayer.events).forEach((eventName) => {
-        dashInstance.on(eventName as any, (event) => {
-          //@ts-ignore
-          if (event.type === importedDash.MediaPlayer.events.ERROR) {
-            player.emit('pluginerror', { message: event.type, ...event })
-          }
-          player.emit(event.type, event)
-        })
+        //error 信息不会设置到target上 这里额外处理
+        if (eventName == importedDash.MediaPlayer.events.ERROR) {
+          dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event) => {
+            //@ts-ignore
+            player.emit('error', { ...event.error, pluginName: PLUGIN_NAME })
+          })
+        } else {
+          dashInstance.on(eventName as any, (event) => {
+            player.emit(event.type, event)
+          })
+        }
       })
 
       return true

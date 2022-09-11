@@ -35,24 +35,28 @@ const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' })
 
   player.on(['error', 'pluginerror'], ({ payload }: PlayerEvent) => {
-    addClass($dom, showCls)
-
     let message: string = payload.message
-    if (payload instanceof Error) {
-      message = payload.message
-    } else if (payload instanceof Event) {
-      // @ts-ignore
-      message = (payload.currentTarget?.error as Error)?.message
 
+    if (payload instanceof Event) {
       //@ts-ignore
-      if (!message && payload.target?.error?.code) {
-        message =
-          //@ts-ignore
-          VIDEO_ERROR_MAP[payload.currentTarget?.error?.code as keyof typeof VIDEO_ERROR_MAP]
+      const error = payload.target?.error as {
+        message: string
+        code: keyof typeof VIDEO_ERROR_MAP
+      } | null
+
+      // err==null || err= {message:'',code:undefined}
+      if (!error || (!error.message && typeof error.code != 'number')) {
+        return
       }
+
+      message = error.message || VIDEO_ERROR_MAP[error.code]
+    } else {
+      // object { message:'...' }
+      message = payload.message
     }
 
-    $dom.innerText = message || 'UNKNOWN_ERROR ' + (payload.target?.error?.code || '')
+    $dom.innerText = message || 'UNKNOWN_ERROR'
+    addClass($dom, showCls)
   })
 
   player.on('videosourcechange', () => {
