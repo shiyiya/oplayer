@@ -1,5 +1,5 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import type { MediaPlayerClass, MediaSettings } from 'dashjs'
+import type { MediaPlayerClass, MediaPlayerSettingClass } from 'dashjs'
 
 //@ts-ignore
 import qualitySvg from '../../hls/src/quality.svg?raw'
@@ -9,7 +9,7 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 type dashPluginOptions = {
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
-  setting?: MediaSettings
+  setting?: MediaPlayerSettingClass
 }
 
 const defaultMatcher: dashPluginOptions['matcher'] = (_, source) =>
@@ -19,12 +19,18 @@ const defaultMatcher: dashPluginOptions['matcher'] = (_, source) =>
 
 const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
   const settingUpdater = () => {
+    const isAutoSwitch = dashInstance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
+
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
         type: 'switcher',
-        default: true, // 默认都是 auto ?
-        value: -1
+        default: isAutoSwitch,
+        value: () => {
+          dashInstance.updateSettings({
+            streaming: { abr: { autoSwitchBitrate: { video: true } } }
+          })
+        }
       }
     ]
 
@@ -32,10 +38,12 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
       dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
         const name = Math.floor(bitrate.bitrate / 1000)
         settingOptions.push({
-          name: isNaN(bitrate.qualityIndex) ? 'Auto Switch' : (`${name} kbps` as string),
+          name: `${name} kbps`,
           type: 'switcher',
-          default: false, // 默认都是 auto ?
-          value: bitrate.qualityIndex
+          default: isAutoSwitch
+            ? false
+            : bitrate.qualityIndex == dashInstance.getQualityFor('video'), // 默认都是 auto ?
+          value: bitrate.qualityIndex as any
         })
       })
     }
@@ -47,7 +55,15 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
       key: PLUGIN_NAME,
       icon: qualitySvg,
       onChange: ({ value }: typeof settingOptions[number], { isInit }: any) => {
-        if (!isInit) dashInstance.setQualityFor('video', value)
+        if (isInit) return
+        if (typeof value == 'function') {
+          value()
+        } else {
+          dashInstance.updateSettings({
+            streaming: { abr: { autoSwitchBitrate: { video: false } } }
+          })
+          dashInstance.setQualityFor('video', value)
+        }
       },
       children: settingOptions
     })
@@ -82,7 +98,7 @@ const dashPlugin = ({
       if (!importedDash.supportsMediaSource()) return false
 
       dashInstance = importedDash.MediaPlayer().create()
-      if (setting) dashInstance.setInitialMediaSettingsFor('video', setting)
+      if (setting) dashInstance.updateSettings(setting)
       dashInstance.initialize(player.$video, source.src, player.$video.autoplay)
       generateSetting(player, dashInstance)
 
