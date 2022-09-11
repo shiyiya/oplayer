@@ -74,7 +74,7 @@ const generateSetting = (
       type: 'selector',
       key: PLUGIN_NAME,
       icon: qualitySvg,
-      onChange: async (level: typeof settingOptions[number], { isInit }: any) => {
+      onChange: (level: typeof settingOptions[number], { isInit }: any) => {
         if (isInit) return
 
         //TODO: fallback while switch err

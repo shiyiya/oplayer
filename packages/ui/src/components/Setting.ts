@@ -17,11 +17,6 @@ import {
   yesIcon
 } from './Setting.style'
 
-export type Panel = {
-  $ref: HTMLElement
-  key: string
-}
-
 export const switcher = (name: string, icon: string = '', closedText?: string) =>
   `<div class="${settingItemLeft}">
       ${icon}
@@ -48,7 +43,11 @@ export const nexter = (name: string, icon: string = '') => `
 
 function createItem(
   options: Setting,
-  { key, closedText, isAllSwitch }: { key?: string; isAllSwitch: boolean; closedText: string }
+  {
+    key,
+    closedText,
+    isSelectorOptionsPanel
+  }: { key?: string; isSelectorOptionsPanel: boolean; closedText: string }
 ) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key
@@ -60,7 +59,11 @@ function createItem(
 
   switch (options.type) {
     case 'switcher':
-      $item.innerHTML = switcher(options.name, options.icon, isAllSwitch ? undefined : closedText)
+      $item.innerHTML = switcher(
+        options.name,
+        options.icon,
+        isSelectorOptionsPanel ? undefined : closedText
+      )
       $item.setAttribute('data-selected', options.default || false)
       $item.children[0]!.setAttribute('data-selected', options.default || false)
       break
@@ -73,9 +76,14 @@ function createItem(
   return res
 }
 
+export type Panel = {
+  $ref: HTMLElement
+  key: string
+}
+
 function createPanel(
   player: Player,
-  $panels: Panel[],
+  panels: Panel[],
   options: Setting[],
   {
     onChange,
@@ -86,96 +94,95 @@ function createPanel(
 ) {
   if (!options?.length) return
 
-  let $panel: Panel
+  let isFirst = false
+  let isSelectorOptionsPanel = false
+  let hasFirstPanel = panels.length //是否初始化第一个
+  let panel: Panel = {} as Panel
 
-  if (isPatch && $panels[0]) {
-    $panel = $panels[0]
+  if (!hasFirstPanel) {
+    isFirst = true
+    panel.$ref = $.create(`div.${panelCls}`, { 'data-key': 'root' })
+    panels.push(panel)
   } else {
-    $panel = {
-      $ref: $.create(`div.${onChange ? subPanelCls : panelCls}`, {
-        'data-key': key || 'root'
-      }),
-      key: key || 'root'
+    if (isPatch) {
+      panel = panels[0]!
+    } else {
+      panel.$ref = $.create(`div.${subPanelCls}`, { 'data-key': key })
+      isSelectorOptionsPanel = options.every((it) => it.type === 'switcher')
+      panels.push(panel)
     }
-    $panels.push($panel)
   }
 
-  // 只有第一个 panel 没有onChange
-  const isRoot = !Boolean(onChange)
-  // 整个面板全部是 switcher
-  const isAllSwitch = !isRoot && options.every((it) => it.type === 'switcher')
-
   for (let index = 0; index < options.length; index++) {
-    const item = options[index]!
+    const option = options[index]!
 
-    const { $: $item, $label } = createItem(item, {
-      key: item.key,
-      isAllSwitch,
+    const { $: $item, $label } = createItem(option, {
+      key: option.key,
+      isSelectorOptionsPanel,
       closedText: player.locales.get('OFF')
     })
-    $.render($item, $panel.$ref)
 
-    $item.addEventListener('click', function () {
-      switch (item.type) {
+    $.render($item, panel.$ref).addEventListener('click', function () {
+      switch (option.type) {
         case 'switcher':
-          if (isAllSwitch) {
+          if (isSelectorOptionsPanel) {
             const preSelected = this.parentElement!.querySelector('[data-selected=true]')
             this.setAttribute('data-selected', 'true')
             siblings(this, (el) => el.setAttribute('data-selected', 'false'))
-            $panel.$ref.classList.remove(activeCls)
+            panel.$ref.classList.remove(activeCls)
 
-            onChange!(item, { index })?.catch(() => {
+            onChange!(option, { index })?.catch(() => {
               preSelected?.setAttribute('data-selected', 'true')
               this.setAttribute('data-selected', 'false')
             })
           } else {
             const value = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!Boolean(value)}`)
-            item.onChange?.(!Boolean(value), { isInit: false })?.catch(() => {
+            option.onChange?.(!Boolean(value), { isInit: false })?.catch(() => {
               this.setAttribute('data-selected', `${!!Boolean(value)}`)
             })
 
-            if (isRoot) {
+            if (isFirst) {
               onHide!()
             } else {
-              $panel.$ref.classList.remove(activeCls)
+              panel.$ref.classList.remove(activeCls)
             }
           }
 
           break
         case 'selector':
-          $panel.$ref.classList.toggle(activeCls)
+          panel.$ref.classList.toggle(activeCls)
           break
         default:
           break
       }
     })
 
-    if (isRoot && item.default && item.type == 'switcher') {
-      item.onChange!(item.default, { isInit: true })
+    if (isFirst && option.default && option.type == 'switcher') {
+      option.onChange!(option.default, { isInit: true })
     }
 
-    if (item.children) {
-      if (item.type == 'selector') {
+    if (option.children) {
+      if (option.type == 'selector') {
         //TODO: children.children
-        const selected = item.children.findIndex((_) => _.default)
-        if (item.children[selected]) {
-          $label.innerText = item.children[selected]!.name!
-          item.onChange?.(item.children[selected], { index: selected, isInit: true })
+        const selected = option.children.findIndex((_) => _.default)
+        if (option.children[selected]) {
+          $label.innerText = option.children[selected]!.name!
+          option.onChange?.(option.children[selected], { index: selected, isInit: true })
         }
       }
 
-      const $nextPanel = createPanel(player, $panels, item.children, {
+      const $nextPanel = createPanel(player, panels, option.children, {
         onChange: (option: Setting, index: number) => {
           const preName = $label.innerText
           $label.innerText = option.name
-          $panel.$ref.classList.add(activeCls)
-          return item.onChange?.(option, { index })?.catch(() => {
+          panel.$ref.classList.add(activeCls)
+          return option.onChange?.(option, { index })?.catch(() => {
             $label.innerText = preName
             throw new Error('fallback')
           })
         },
-        key: key || item.key || item.name
+        key: key || option.key || option.name
       })
 
       $item.onclick = () => {
@@ -184,12 +191,12 @@ function createPanel(
     }
   }
 
-  return $panel
+  return panel
 }
 
 export default function (player: Player, $el: HTMLElement, options: Setting[] = []) {
   const $dom = $.create(`div.${setting}`)
-  let $panels: Panel[] = []
+  let panels: Panel[] = []
   let $trigger: HTMLElement | null = null
 
   const defaultSetting: Setting[] = [
@@ -204,27 +211,24 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   ]
 
   const hide = () => {
-    $panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+    panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
     player.$root.classList.remove(settingShown)
   }
 
-  createPanel(player, $panels, defaultSetting, { onHide: hide })
-  $panels.forEach(($p) => $.render($p.$ref, $dom))
+  createPanel(player, panels, defaultSetting, { onHide: hide })
+  panels.forEach(($p) => $.render($p.$ref, $dom))
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
-    createPanel(player, $panels, Array.isArray(payload) ? payload : [payload], {
+    createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
       isPatch: true,
       onHide: hide
     })
-    $panels.slice(($panels.length || 1) - 1).forEach(($p) => $.render($p.$ref, $dom))
+    panels.slice((panels.length || 1) - 1).forEach(($p) => $.render($p.$ref, $dom))
   })
 
   player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
-    const { key, name: name } = payload
-    const $item = $dom.querySelector(`[data-key="${key}"] span[role="label"]`) as HTMLElement
-    if ($item) {
-      $item.innerHTML = name
-    }
+    const $item = $dom.querySelector(`[data-key="${payload.key}"] span[role="label"]`)
+    if ($item) $item.innerHTML = payload.name
   })
 
   //TODO:
@@ -234,8 +238,8 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   // )
 
   player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
-    $panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-    $panels = $panels.filter((p) => {
+    panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
+    panels = panels.filter((p) => {
       if (p.key === payload) {
         p.$ref.remove()
         return false
@@ -247,7 +251,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
     $trigger = payload.target
     if (player.$root.classList.toggle(settingShown)) {
-      $panels[0]!.$ref.classList.add(activeCls)
+      panels[0]!.$ref.classList.add(activeCls)
     } else {
       hide()
     }
