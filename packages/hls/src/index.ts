@@ -60,8 +60,9 @@ const generateSetting = (
     if (hlsInstance.levels.length > 1)
       hlsInstance.levels.forEach((level, i) => {
         const name = level.name || level.height
+        const bitrate = Math.floor(level?.bitrate / 1000)
         return settingOptions.push({
-          name: `${name}${isFinite(+name) ? 'p' : ''}` as string,
+          name: `${name}${isFinite(+name) ? 'p' : ''} (${bitrate} kbps)` as string,
           type: 'switcher',
           default: false,
           value: i
@@ -90,7 +91,7 @@ const generateSetting = (
 
   // Update settings menu with the information about current level
   const menuUpdater = () => {
-    if (hlsInstance.manualLevel != -1) return
+    if (!hlsInstance.autoLevelEnabled) return
 
     const level = hlsInstance.currentLevel
     const height = hlsInstance.levels[level]?.height
