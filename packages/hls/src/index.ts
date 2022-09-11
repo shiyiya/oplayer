@@ -48,9 +48,6 @@ const generateSetting = (
   if (!options.hlsQualityControl) return
 
   const settingUpdater = () => {
-    // default low -> high ?
-    // hlsInstance.levels.sort((a, b) => b.height - a.height) // high -> low
-
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
@@ -77,7 +74,7 @@ const generateSetting = (
       type: 'selector',
       key: PLUGIN_NAME,
       icon: qualitySvg,
-      onChange: (level: typeof settingOptions[number], { isInit }: any) => {
+      onChange: async (level: typeof settingOptions[number], { isInit }: any) => {
         if (isInit) return
 
         //TODO: fallback while switch err

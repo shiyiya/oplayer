@@ -88,6 +88,7 @@ const dashPlugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
+        player.emit('removesetting', PLUGIN_NAME)
         dashInstance?.reset()
         return false
       }

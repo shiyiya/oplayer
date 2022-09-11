@@ -167,9 +167,13 @@ function createPanel(
 
       const $nextPanel = createPanel(player, $panels, item.children, {
         onChange: (option: Setting, index: number) => {
+          const preName = $label.innerText
           $label.innerText = option.name
           $panel.$ref.classList.add(activeCls)
-          item.onChange?.(option, { index })
+          return item.onChange?.(option, { index })?.catch(() => {
+            $label.innerText = preName
+            throw new Error('fallback')
+          })
         },
         key: key || item.key || item.name
       })
