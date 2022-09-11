@@ -37,9 +37,9 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
     if (dashInstance.getBitrateInfoListFor('video').length > 1) {
       dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
         const name = Math.floor(bitrate.bitrate / 1000)
-        const resolution = bitrate.width + 'x' + bitrate.height
+        const resolution = `${bitrate.height}p`
         settingOptions.push({
-          name: `${resolution}(${name} kbps)`,
+          name: `${name} kbps (${resolution})`,
           type: 'switcher',
           default: isAutoSwitch
             ? false
