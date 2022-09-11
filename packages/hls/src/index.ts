@@ -93,17 +93,13 @@ const generateSetting = (
 
   // Update settings menu with the information about current level
   const menuUpdater = () => {
+    if (hlsInstance.manualLevel != -1) return
+
     const level = hlsInstance.currentLevel
     const height = hlsInstance.levels[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    if (hlsInstance.manualLevel === -1) {
-      player.emit('updatesettinglabel', {
-        name: levelName,
-        key: PLUGIN_NAME,
-      })
-    }
+    player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
   }
-
 
   hlsInstance.once(importedHls.Events.MANIFEST_PARSED, settingUpdater)
   hlsInstance.on(importedHls.Events.LEVEL_SWITCHED, menuUpdater)

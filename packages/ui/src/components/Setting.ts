@@ -119,16 +119,21 @@ function createPanel(
       switch (item.type) {
         case 'switcher':
           if (isAllSwitch) {
+            const preSelected = this.parentElement!.querySelector('[data-selected=true]')
             this.setAttribute('data-selected', 'true')
-            siblings(this, (el) => {
-              el.setAttribute('data-selected', 'false')
-            })
+            siblings(this, (el) => el.setAttribute('data-selected', 'false'))
             $panel.$ref.classList.remove(activeCls)
-            onChange!(item, { index })
+
+            onChange!(item, { index })?.catch(() => {
+              preSelected?.setAttribute('data-selected', 'true')
+              this.setAttribute('data-selected', 'false')
+            })
           } else {
             const value = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!Boolean(value)}`)
-            item.onChange?.(!Boolean(value), { isInit: false })
+            item.onChange?.(!Boolean(value), { isInit: false })?.catch(() => {
+              this.setAttribute('data-selected', `${!!Boolean(value)}`)
+            })
 
             if (isRoot) {
               onHide!()
