@@ -212,7 +212,6 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
     const { key, name: name } = payload
-    console.dir(payload)
     const $item = $dom.querySelector(`[data-key="${key}"] span[role="label"]`) as HTMLElement
     if ($item) {
       $item.innerHTML = name
