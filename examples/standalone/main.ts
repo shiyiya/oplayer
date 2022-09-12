@@ -16,9 +16,9 @@ import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
 const dataSrcs = [
+  MP4,
   'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-  MP4,
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4'
@@ -158,7 +158,7 @@ p.on((e: PlayerEvent) => {
       logs.value.split('==>').slice(0, 20).join('==>')
   }
 
-  console.info(e)
+  // console.info(e)
 })
 
 // p.$root.addEventListener('click', p.unmute.bind(p), { once: true })

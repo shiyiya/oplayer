@@ -14,22 +14,22 @@ export type Subtitle = {
   color?: string
 }
 
-export type Setting = {
+export type Setting<T = any> = {
   name: string
   key?: string // children 可无 （用于移除）
   /**
    * selector 切换下个面板单选 1 ｜ 2 ｜ 3
    * switcher  当前面板切换 true or false
    */
-  type?: 'selector' | 'switcher'
+  type: 'selector' | 'switcher'
   icon?: string
   children?: Setting[]
   onChange?: (
-    a: any /* Setting | boolean */,
-    b?: { index?: number; isInit?: boolean }
+    a: T /* Setting | boolean */,
+    b?: { index: number; isInit?: boolean }
   ) => void | Promise<void>
   default?: any
-  [x: string]: any
+  value?: T
 }
 
 export type Thumbnails = {
