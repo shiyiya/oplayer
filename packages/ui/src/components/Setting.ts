@@ -186,7 +186,12 @@ function createPanel(
             const selected = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!selected}`)
             panel.$ref.classList.remove(activeCls)
-            if (isRoot) panels[0]!.onHide?.()
+            if (isRoot) {
+              panels[0]!.onHide?.()
+            } else {
+              //hide previous panel
+              panels[0]!.onHide?.()
+            }
             onChange?.(!selected)
           })
         }

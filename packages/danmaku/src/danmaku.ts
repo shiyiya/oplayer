@@ -329,6 +329,18 @@ export default class Danmaku {
     this.$danmaku.style.opacity = `${opacity}`
   }
 
+  setMargin(margin: [number, number]) {
+    if (margin[0] < 1 && margin[0] > 0) {
+      margin[0] = this.$player.clientHeight * margin[0]
+    }
+    if (margin[1] < 1 && margin[1] > 1) {
+      margin[1] = this.$player.clientHeight * margin[1]
+    }
+
+    //@ts-ignore
+    this.options.margin = margin
+  }
+
   reset() {
     this.queue.forEach((danmaku) => this.makeWait(danmaku))
   }

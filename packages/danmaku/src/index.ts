@@ -14,85 +14,64 @@ export default (option: Options): PlayerPlugin => ({
 
     const emitSetting = () => {
       player.emit('addsetting', {
-        name: player.locales.get('弹幕设置'),
+        name: player.locales.get('Danmaku setting'),
         type: 'selector',
         default: true,
         key: 'danmaku',
         icon: subtitleSvg,
         children: [
           {
-            name: player.locales.get('显示弹幕'),
+            name: player.locales.get('Display'),
             type: 'switcher',
             default: true,
-            key: 'danmaku-switcher'
+            key: 'danmaku-switcher',
+            onChange: (value: boolean) => {
+              if (value) danmaku?.show()
+              else danmaku?.hide()
+            }
           },
           {
-            name: player.locales.get('字体大小'),
+            name: player.locales.get('FontSize'),
             type: 'selector',
             key: 'danmaku-font',
-            children: [
-              {
-                name: player.locales.get('大'),
-                type: 'switcher'
-              },
-              {
-                name: player.locales.get('中'),
-                type: 'switcher',
-                default: true
-              },
-              {
-                name: player.locales.get('小'),
-                type: 'switcher'
-              }
-            ]
+            onChange: ({ value }: any) => {
+              danmaku.setSize(value)
+            },
+            children: [0.5, 0.75, 1, 1.25].map((it) => ({
+              name: player.locales.get(`${it * 100}%`),
+              type: 'switcher',
+              value: it,
+              default: it == 1
+            }))
           },
+
           {
-            name: player.locales.get('显示区域'),
-            type: 'selector',
-            key: 'danmaku-area',
-            children: [
-              {
-                name: player.locales.get('1/4'),
-                type: 'switcher'
-              },
-              {
-                name: player.locales.get('1/2'),
-                type: 'switcher'
-              },
-              {
-                name: player.locales.get('3/4'),
-                type: 'switcher'
-              },
-              {
-                name: player.locales.get('不限制'),
-                type: 'switcher',
-                default: true
-              }
-            ]
-          },
-          {
-            name: player.locales.get('透明度'),
+            name: player.locales.get('Opacity'),
             type: 'selector',
             key: 'danmaku-opacity',
-            children: [
-              {
-                name: player.locales.get('1'),
-                type: 'switcher',
-                default: true
-              },
-              {
-                name: player.locales.get('0.8'),
-                type: 'switcher'
-              },
-              {
-                name: player.locales.get('0.5'),
-                type: 'switcher'
-              },
-              {
-                name: player.locales.get('0.3'),
-                type: 'switcher'
-              }
-            ]
+            onChange: ({ value }: any) => {
+              danmaku.setOpacity(value)
+            },
+            children: [0.3, 0.5, 0.8, 1].map((it) => ({
+              name: player.locales.get(`${it * 100}%`),
+              type: 'switcher',
+              value: it,
+              default: it == option.opacity
+            }))
+          },
+          {
+            name: player.locales.get('Display Area'),
+            type: 'selector',
+            key: 'danmaku-area',
+            onChange: ({ value }: any) => {
+              danmaku.setMargin([0, 1 - value])
+            },
+            children: [0.25, 0.5, 0.8, 1].map((it) => ({
+              name: player.locales.get(`${it * 100}%`),
+              type: 'switcher',
+              value: it,
+              default: it == 1
+            }))
           }
         ]
       })

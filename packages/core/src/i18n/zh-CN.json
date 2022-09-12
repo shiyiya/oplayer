@@ -18,8 +18,13 @@
   "TextDecoder Not Supported": "不支持原生字幕",
 
   "Danmaku": "弹幕",
+  "Danmaku setting": "弹幕设置",
+  "Display": "显示",
+  "FontSize": "字体大小",
+  "Display Area": "显示区域",
   "Show Danmaku": "显示弹幕",
   "Hide Danmaku": "关闭弹幕",
+  "Opacity": "透明度",
 
   "OFF": "关闭",
   "Default": "默认",

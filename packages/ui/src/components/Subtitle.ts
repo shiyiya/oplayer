@@ -209,6 +209,10 @@ class Subtitle {
 
   loadSetting() {
     const { source, enabled } = this.options
+    if (!this.$track && this.currentSubtitle) {
+      this.createTrack()
+      this.load()
+    }
 
     if (source.length) {
       this.player.emit('addsetting', <Setting>{
