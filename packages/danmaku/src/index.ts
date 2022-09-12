@@ -15,19 +15,80 @@ export default (option: Options): PlayerPlugin => ({
     const emitSetting = () => {
       player.emit('addsetting', {
         name: player.locales.get('Danmaku'),
-        type: 'switcher',
+        type: 'selector',
         default: true,
         key: 'danmaku',
         icon: subtitleSvg,
-        onChange: (flag: boolean) => {
-          if (flag) {
-            danmaku?.show()
-            isDanmakuShowing = true
-          } else {
-            danmaku?.hide()
-            isDanmakuShowing = false
+        children: [
+          {
+            name: player.locales.get('字体大小'),
+            type: 'selector',
+            key: 'danmaku-font',
+            children: [
+              {
+                name: player.locales.get('大'),
+                type: 'switcher'
+              },
+              {
+                name: player.locales.get('中'),
+                type: 'switcher',
+                default: true
+              },
+              {
+                name: player.locales.get('小'),
+                type: 'switcher'
+              }
+            ]
+          },
+          {
+            name: player.locales.get('显示区域'),
+            type: 'selector',
+            key: 'danmaku-area',
+            children: [
+              {
+                name: player.locales.get('1/4'),
+                type: 'switcher'
+              },
+              {
+                name: player.locales.get('1/2'),
+                type: 'switcher'
+              },
+              {
+                name: player.locales.get('3/4'),
+                type: 'switcher'
+              },
+              {
+                name: player.locales.get('unlimited'),
+                type: 'switcher',
+                default: true
+              }
+            ]
+          },
+          {
+            name: player.locales.get('透明度'),
+            type: 'selector',
+            key: 'danmaku-opacity',
+            children: [
+              {
+                name: player.locales.get('1'),
+                type: 'switcher',
+                default: true
+              },
+              {
+                name: player.locales.get('0.8'),
+                type: 'switcher'
+              },
+              {
+                name: player.locales.get('0.5'),
+                type: 'switcher'
+              },
+              {
+                name: player.locales.get('0.3'),
+                type: 'switcher'
+              }
+            ]
           }
-        }
+        ]
       })
     }
 
