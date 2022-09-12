@@ -14,12 +14,18 @@ export default (option: Options): PlayerPlugin => ({
 
     const emitSetting = () => {
       player.emit('addsetting', {
-        name: player.locales.get('Danmaku'),
+        name: player.locales.get('弹幕设置'),
         type: 'selector',
         default: true,
         key: 'danmaku',
         icon: subtitleSvg,
         children: [
+          {
+            name: player.locales.get('显示弹幕'),
+            type: 'switcher',
+            default: true,
+            key: 'danmaku-switcher'
+          },
           {
             name: player.locales.get('字体大小'),
             type: 'selector',
@@ -58,7 +64,7 @@ export default (option: Options): PlayerPlugin => ({
                 type: 'switcher'
               },
               {
-                name: player.locales.get('unlimited'),
+                name: player.locales.get('不限制'),
                 type: 'switcher',
                 default: true
               }

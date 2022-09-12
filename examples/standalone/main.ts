@@ -45,14 +45,14 @@ const p = Player.make(document.getElementById('player')!, {
   // }
 })
   .use([
-    // dash(),
-    // hls({
-    //   hlsConfig: {},
-    //   options: {
-    //     hlsQualityControl: true,
-    //     hlsQualitySwitch: 'immediate'
-    //   }
-    // }),
+    dash(),
+    hls({
+      hlsConfig: {},
+      options: {
+        hlsQualityControl: true,
+        hlsQualitySwitch: 'immediate'
+      }
+    }),
     danmaku({
       source: DANMAKU,
       fontSize: isMobile ? 0.6 : 0.8,

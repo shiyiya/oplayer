@@ -110,6 +110,11 @@ class Subtitle {
       if ($iosTrack.src) URL.revokeObjectURL($iosTrack.src)
     })
 
+    player.on('videosourcechange', () => {
+      $dom.innerHTML = ''
+      player.emit('removesetting', SETTING_KEY)
+    })
+
     player.on('subtitlechange', ({ payload }) => {
       if (this.isShow) this.hide()
       player.emit('removesetting', SETTING_KEY)
