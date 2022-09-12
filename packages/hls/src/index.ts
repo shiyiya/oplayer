@@ -60,9 +60,11 @@ const generateSetting = (
     if (hlsInstance.levels.length > 1)
       hlsInstance.levels.forEach((level, i) => {
         const name = level.name || level.height
-        const bitrate = Math.floor(level?.bitrate / 1000)
+        const kb = level.bitrate / 1000
+        const useMb = kb > 1000
+        const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
         return settingOptions.push({
-          name: `${name}${isFinite(+name) ? 'p' : ''} (${bitrate} kbps)` as string,
+          name: `${name}${isFinite(+name) ? 'p' : ''} (${number}${useMb ? 'm' : 'k'}bps)`,
           type: 'switcher',
           default: false,
           value: i

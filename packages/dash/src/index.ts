@@ -36,12 +36,15 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
 
     if (dashInstance.getBitrateInfoListFor('video').length > 1) {
       dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
+        const kb = bitrate.bitrate / 1000
+        const useMb = kb > 1000
+        const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
         settingOptions.push({
-          name: `${bitrate.height}p (${Math.floor(bitrate.bitrate / 1000)} kbps)`,
+          name: `${bitrate.height}p (${number}${useMb ? 'm' : 'k'}bps)`,
           type: 'switcher',
           default: isAutoSwitch
             ? false
-            : bitrate.qualityIndex == dashInstance.getQualityFor('video'), // 默认都是 auto ?
+            : bitrate.qualityIndex == dashInstance.getQualityFor('video'),
           value: bitrate.qualityIndex as any
         })
       })
