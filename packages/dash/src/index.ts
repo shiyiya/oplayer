@@ -38,7 +38,7 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
       dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
         const kb = bitrate.bitrate / 1000
         const useMb = kb > 1000
-        const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
+        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
         settingOptions.push({
           name: `${bitrate.height}p (${number}${useMb ? 'm' : 'k'}bps)`,
           type: 'switcher',
@@ -56,8 +56,7 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
       type: 'selector',
       key: PLUGIN_NAME,
       icon: qualitySvg,
-      onChange: ({ value }: typeof settingOptions[number], { isInit }: any) => {
-        if (isInit) return
+      onChange: ({ value }: typeof settingOptions[number]) => {
         if (typeof value == 'function') {
           value()
         } else {

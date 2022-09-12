@@ -123,7 +123,6 @@ function createPanel(
 
   for (let i = 0; i < setting.length; i++) {
     const { name, type, key, children, icon, default: selected, onChange } = setting[i]!
-    console.log(key)
 
     const { $row, $label } = createRow(
       Object.assign(
@@ -187,6 +186,8 @@ function createPanel(
             const selected = this.getAttribute('data-selected') == 'true'
             this.setAttribute('data-selected', `${!selected}`)
             panel.$ref.classList.remove(activeCls)
+            if (isRoot) panels[0]!.onHide?.()
+            onChange?.(!selected)
           })
         }
       }
@@ -214,8 +215,6 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   ]
 
   createPanel(player, panels, defaultSetting, { target: $dom })
-
-  console.log(panels)
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
@@ -260,6 +259,12 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   })
 
   let isShow = false
+
+  panels[0]!.onHide = () => {
+    isShow = false
+    player.$root.classList.remove(settingShown)
+  }
+
   player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
     $trigger = payload.target
     isShow = player.$root.classList.toggle(settingShown)

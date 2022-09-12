@@ -16,8 +16,6 @@ export default function registerSpeedSetting(player: Player, speeds: UiConfig['s
         type: 'switcher',
         default: player.playbackRate == +speed
       })),
-      onChange: ({ value }, { isInit }: any) => {
-        if (!isInit) player.setPlaybackRate(value)
-      }
+      onChange: ({ value }) => player.setPlaybackRate(value)
     })
 }

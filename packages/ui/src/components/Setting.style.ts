@@ -48,6 +48,8 @@ export const subPanelCls = $.css(`
 
 // √
 export const yesIcon = $.css(`
+  position: absolute;
+  right: 10px;
   display: none;
   width: 18px;
   height: 18px;

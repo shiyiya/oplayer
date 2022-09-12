@@ -24,10 +24,7 @@ export type Setting<T = any> = {
   type: 'selector' | 'switcher'
   icon?: string
   children?: Setting[]
-  onChange?: (
-    a: T /* Setting | boolean */,
-    b?: { index: number; isInit?: boolean }
-  ) => void | Promise<void>
+  onChange?: (a: T /* Setting | boolean */, b?: { index: number }) => void | Promise<void>
   default?: any
   value?: T
 }

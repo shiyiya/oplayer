@@ -62,7 +62,7 @@ const generateSetting = (
         const name = level.name || level.height
         const kb = level.bitrate / 1000
         const useMb = kb > 1000
-        const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
+        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
         return settingOptions.push({
           name: `${name}${isFinite(+name) ? 'p' : ''} (${number}${useMb ? 'm' : 'k'}bps)`,
           type: 'switcher',
@@ -77,9 +77,7 @@ const generateSetting = (
       type: 'selector',
       key: PLUGIN_NAME,
       icon: qualitySvg,
-      onChange: (level: typeof settingOptions[number], { isInit }: any) => {
-        if (isInit) return
-
+      onChange: (level: typeof settingOptions[number]) => {
         //TODO: fallback while switch err
         if (options.hlsQualitySwitch == 'immediate') {
           hlsInstance.currentLevel = level.value
