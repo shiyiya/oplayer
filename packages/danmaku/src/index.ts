@@ -14,7 +14,7 @@ export default (option: Options): PlayerPlugin => ({
 
     const emitSetting = () => {
       player.emit('addsetting', {
-        name: player.locales.get('Danmaku setting'),
+        name: player.locales.get('Danmaku'),
         type: 'selector',
         default: true,
         key: 'danmaku',

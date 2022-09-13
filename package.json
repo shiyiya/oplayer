@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.24.4",
-    "@types/node": "^18.7.16",
+    "@types/node": "^18.7.17",
     "@vitejs/plugin-react": "^2.1.0",
     "concurrently": "^7.4.0",
     "cross-env": "^7.0.3",

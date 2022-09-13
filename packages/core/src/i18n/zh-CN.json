@@ -5,29 +5,22 @@
   "Volume": "音量",
   "Volume: %s": "音量：%s",
   "Mute": "静音",
-
-  "SPD": "倍速",
-  "Playback speed": "播放速度",
+  "Speed": "播放速度",
 
   "Screenshot": "截图",
-  "Play Speed": "播放速度",
-  "Switch Video": "切换",
   "Subtitle": "字幕",
   "Quality": "画质",
   "Fullscreen": "全屏",
   "TextDecoder Not Supported": "不支持原生字幕",
 
   "Danmaku": "弹幕",
-  "Danmaku setting": "弹幕设置",
   "Display": "显示",
+  "Opacity": "透明度",
   "FontSize": "字体大小",
   "Display Area": "显示区域",
-  "Show Danmaku": "显示弹幕",
-  "Hide Danmaku": "关闭弹幕",
-  "Opacity": "透明度",
 
   "OFF": "关闭",
+  "Auto": "自动",
   "Default": "默认",
   "Normal": "正常",
-  "Auto": "自动"
 }
