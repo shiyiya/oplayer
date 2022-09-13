@@ -90,8 +90,8 @@ const generateSetting = (
 
   // Update settings menu with the information about current level
   const menuUpdater = (data: LevelSwitchedData) => {
+    const level = data.level
     if (hlsInstance.autoLevelEnabled) {
-      const level = data.level
       const height = hlsInstance.levels[level]!.height
       const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
       player.emit('updatesettinglabel', { key: PLUGIN_NAME, name: levelName })
