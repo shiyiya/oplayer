@@ -6,7 +6,7 @@ import speedSvg from '../icons/speed.svg?raw'
 export default function registerSpeedSetting(player: Player, speeds: UiConfig['speed']) {
   if (speeds?.length)
     player.emit('addsetting', <Setting>{
-      name: player.locales.get('Playback speed'),
+      name: player.locales.get('Speed'),
       type: 'selector',
       icon: speedSvg,
       key: 'speed',
