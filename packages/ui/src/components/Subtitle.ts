@@ -89,7 +89,8 @@ class Subtitle {
         this.player.$video
       )
 
-      this.player.on('fullscreenchange', () => {
+      this.player.on('fullscreenchange', ({ payload }) => {
+        if (payload.isWeb) return
         if (this.player.isFullScreen) {
           if (this.isShow) this.player.$video.textTracks[1]!.mode = 'showing'
         } else {

@@ -56,7 +56,7 @@ export default (option: Options): PlayerPlugin => ({
               name: player.locales.get(`${it * 100}%`),
               type: 'switcher',
               value: it,
-              default: it == option.opacity
+              default: it == danmaku.options.opacity
             }))
           },
           {
@@ -64,7 +64,7 @@ export default (option: Options): PlayerPlugin => ({
             type: 'selector',
             key: 'danmaku-area',
             onChange: ({ value }: any) => {
-              danmaku.setMargin([0, 1 - value])
+              danmaku.setMargin([undefined, 1 - value])
             },
             children: [0.25, 0.5, 0.8, 1].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
@@ -80,9 +80,10 @@ export default (option: Options): PlayerPlugin => ({
     player.on('loadedsetting', emitSetting)
     player.on(['play', 'playing'], danmaku.start.bind(danmaku))
     player.on(['pause', 'waiting'], danmaku.stop.bind(danmaku))
-    player.on(['webfullscreen', 'seeking'], danmaku.reset.bind(danmaku))
+    player.on('seeking', danmaku.reset.bind(danmaku))
     player.on('destroy', danmaku.destroy)
-    player.on('fullscreenchange', () => {
+    player.on('fullscreenchange', ({ payload }) => {
+      if (payload.isWeb) return danmaku.reset()
       setTimeout(() => {
         if (isIOS) {
           if (player.isFullScreen) {

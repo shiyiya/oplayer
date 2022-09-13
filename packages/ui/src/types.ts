@@ -66,10 +66,6 @@ export type UiConfig = {
    */
   fullscreen?: boolean
   /**
-   * default: false
-   */
-  fullscreenWeb?: boolean
-  /**
    * default: true
    */
   pictureInPicture?: boolean

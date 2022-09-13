@@ -329,16 +329,22 @@ export default class Danmaku {
     this.$danmaku.style.opacity = `${opacity}`
   }
 
-  setMargin(margin: [number, number]) {
-    if (margin[0] < 1 && margin[0] > 0) {
-      margin[0] = this.$player.clientHeight * margin[0]
-    }
-    if (margin[1] < 1 && margin[1] > 1) {
-      margin[1] = this.$player.clientHeight * margin[1]
+  setMargin(margin: [number | undefined, number | undefined]) {
+    if (typeof margin[0] == 'number') {
+      if (margin[0] > 0 && margin[0] <= 1) {
+        this.options.margin[0] = this.$player.clientHeight * margin[0]
+      } else {
+        this.options.margin[0] = margin[0]
+      }
     }
 
-    //@ts-ignore
-    this.options.margin = margin
+    if (typeof margin[1] == 'number') {
+      if (margin[1] > 1 && margin[1] <= 1) {
+        this.options.margin[1] = this.$player.clientHeight * margin[1]
+      } else {
+        this.options.margin[1] = margin[1]
+      }
+    }
   }
 
   reset() {

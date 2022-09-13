@@ -76,21 +76,17 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       ${
-        config.fullscreenWeb
-          ? `<button aria-label="WebFullscreen" class="${icon} ${
-              player.isFullScreen ? on : off
-            }" type="button">
-                ${webExpandSvg}
-                ${webCompressSvg}
-              </button>`
-          : ''
-      }
-
-      ${
-        config.fullscreen && player.isFullscreenEnabled
-          ? `<button aria-label="Fullscreen" class="${icon} ${off}" type="button">
+        config.fullscreen
+          ? player.isFullscreenEnabled
+            ? `<button aria-label="Fullscreen" class="${icon} ${off}" type="button">
                 ${expandSvg}
                 ${compressSvg}
+              </button>`
+            : `<button aria-label="WebFullscreen" class="${icon} ${
+                player.isFullScreen ? on : off
+              }" type="button">
+                ${webExpandSvg}
+                ${webCompressSvg}
               </button>`
           : ''
       }
@@ -111,16 +107,16 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     el.classList.remove(display ? off : on)
   }
 
-  if (player.isFullscreenEnabled && config.fullscreen) {
+  if (config.fullscreen) {
     player.on('fullscreenchange', () =>
-      setTimeout(() => switcher($fullscreen, player.isFullScreen))
+      setTimeout(() => {
+        if ($fullscreen) {
+          switcher($fullscreen, player.isFullScreen)
+        } else {
+          switcher($webFull, toggleClass(player.$root, webFullScreen))
+        }
+      })
     )
-  }
-
-  if (config.fullscreenWeb) {
-    player.on('webfullscreen', () => {
-      switcher($webFull, toggleClass(player.$root, webFullScreen))
-    })
   }
 
   !isMobile && player.on(['play', 'pause'], () => switcher($play, player.isPlaying))
@@ -152,7 +148,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       case 'Fullscreen':
         return player.toggleFullScreen()
       case 'WebFullscreen':
-        player.emit('webfullscreen')
+        player.emit('fullscreenchange', { isWeb: true })
         break
       case 'Screenshot':
         screenShot(player)

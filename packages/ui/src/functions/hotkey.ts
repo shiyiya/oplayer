@@ -35,7 +35,7 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
       return
     }
     if (player.$root.classList.contains(webFullScreen)) {
-      player.emit('webfullscreen')
+      player.emit('fullscreenchange', { isWeb: true })
     }
   },
 
