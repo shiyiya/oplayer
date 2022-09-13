@@ -163,17 +163,18 @@ function createPanel(
 
         optionPanel.select = (i: number) => {
           const childrenElm = optionPanel.$ref.children
-          childrenElm[i]!.setAttribute('data-selected', 'true')
-          siblings(<HTMLDivElement>childrenElm[i], (sibling) => {
-            sibling.setAttribute('data-selected', 'false')
-          })
+          if (childrenElm[i]!.getAttribute('data-selected') != 'true') {
+            childrenElm[i]!.setAttribute('data-selected', 'true')
+            siblings(<HTMLDivElement>childrenElm[i], (sibling) => {
+              sibling.setAttribute('data-selected', 'false')
+            })
+            const value = children[i]
+            $label.innerText = value!.name
+            onChange?.(value, { index: i })
+          }
 
-          const value = children[i]
-          $label.innerText = value!.name
           panel.$ref.classList.add(activeCls)
           optionPanel.$ref.classList.remove(activeCls)
-
-          onChange?.(value, { index: i })
         }
 
         optionPanel.$ref.addEventListener('click', (e) => {
