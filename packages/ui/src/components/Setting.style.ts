@@ -20,7 +20,7 @@ export const setting = $.css({
   fill: '#fff',
 
   '::-webkit-scrollbar': {
-    width: '4px'
+    width: '2px'
   },
 
   '::-webkit-scrollbar-thumb': {
@@ -53,13 +53,13 @@ export const yesIcon = $.css(`
   display: none;
   width: 18px;
   height: 18px;
-  margin-right: 6px;
 `)
 
 // >
 export const nextIcon = $.css(`
   width: 30px;
   height: 30px;
+  margin: 0 -10px 0 -5px;
 `)
 
 // `selectedText` >
