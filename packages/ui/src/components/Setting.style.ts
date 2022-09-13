@@ -39,7 +39,7 @@ export const setting = $.css({
 })
 
 export const panelCls = $.css(`
-  min-width: 240px;
+  min-width: 220px;
 `)
 
 export const subPanelCls = $.css(`
