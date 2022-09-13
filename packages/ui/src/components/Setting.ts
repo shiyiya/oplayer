@@ -81,6 +81,7 @@ export type Panel = {
   // isSelector: boolean
   onHide?: Function
   select?: Function // 全是选项才有
+  parent?: Panel
 }
 
 function createPanel(
@@ -97,10 +98,11 @@ function createPanel(
      */
     key?: string
     target: HTMLElement
+    parent?: Panel
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
-  const { isPatch, key: parentKey, target } = options
+  const { isPatch, key: parentKey, target, parent } = options
 
   let panel = {} as Panel
   let key: string = parentKey! || 'root'
@@ -119,6 +121,7 @@ function createPanel(
     panels.push(panel)
   }
 
+  panel.parent = parent
   if (panel.key == 'root') isRoot = true
 
   for (let i = 0; i < setting.length; i++) {
@@ -142,8 +145,9 @@ function createPanel(
 
     if (children) {
       const optionPanel = createPanel(player, panels, children, {
-        key: key,
-        target
+        key,
+        target,
+        parent: panel
       })!
 
       $row.addEventListener('click', () => {
@@ -189,8 +193,7 @@ function createPanel(
             if (isRoot) {
               panels[0]!.onHide?.()
             } else {
-              //hide previous panel
-              panels[0]!.onHide?.()
+              panel.parent!.$ref.classList.add(activeCls)
             }
             onChange?.(!selected)
           })
