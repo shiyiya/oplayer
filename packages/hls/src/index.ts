@@ -1,7 +1,7 @@
 // import Hls from 'hls.js/dist/hls.light.min.js'
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
-import type { ErrorData, HlsConfig } from 'hls.js'
+import type { ErrorData, HlsConfig, LevelSwitchedData } from 'hls.js'
 
 //@ts-ignore
 import qualitySvg from './quality.svg?raw'
@@ -78,7 +78,6 @@ const generateSetting = (
       key: PLUGIN_NAME,
       icon: qualitySvg,
       onChange: (level: typeof settingOptions[number]) => {
-        //TODO: fallback while switch err
         if (options.hlsQualitySwitch == 'immediate') {
           hlsInstance.currentLevel = level.value
         } else if (options.hlsQualitySwitch == 'smooth') {
@@ -90,13 +89,15 @@ const generateSetting = (
   }
 
   // Update settings menu with the information about current level
-  const menuUpdater = (data: any) => {
-    if (!hlsInstance.autoLevelEnabled) return
-
-    const level = data.level 
-    const height = hlsInstance.levels[level]?.height
-    const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
+  const menuUpdater = (data: LevelSwitchedData) => {
+    if (hlsInstance.autoLevelEnabled) {
+      const level = data.level
+      const height = hlsInstance.levels[level]!.height
+      const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
+      player.emit('updatesettinglabel', { key: PLUGIN_NAME, name: levelName })
+    } else {
+      player.emit('selectsetting', { key: PLUGIN_NAME, value: level })
+    }
   }
 
   hlsInstance.once(importedHls.Events.MANIFEST_PARSED, settingUpdater)
