@@ -62,7 +62,7 @@ importers:
       '@oplayer/dash': workspace:*
       '@oplayer/hls': workspace:*
       '@oplayer/ui': workspace:*
-      hls.js: ^1.2.2
+      hls.js: ^1.2.3
       lit: ^2.3.1
     dependencies:
       '@oplayer/core': link:../../packages/core
@@ -70,7 +70,7 @@ importers:
       '@oplayer/dash': link:../../packages/dash
       '@oplayer/hls': link:../../packages/hls
       '@oplayer/ui': link:../../packages/ui
-      hls.js: 1.2.2
+      hls.js: 1.2.3
       lit: 2.3.1
 
   packages/core:
@@ -93,10 +93,10 @@ importers:
   packages/hls:
     specifiers:
       '@oplayer/core': workspace:*
-      hls.js: ^1.2.2
+      hls.js: ^1.2.3
     devDependencies:
       '@oplayer/core': link:../core
-      hls.js: 1.2.2
+      hls.js: 1.2.3
 
   packages/react:
     specifiers:
@@ -2817,8 +2817,8 @@ packages:
       function-bind: 1.1.1
     dev: true
 
-  /hls.js/1.2.2:
-    resolution: {integrity: sha512-T+plugLYzBG+QCGEdL6qxyXZAc54zisJaR0o3KsZQ8j/HveLeE+ouHd5sJOHvE9hvEyF3OffVP5EvDWnczdwXg==}
+  /hls.js/1.2.3:
+    resolution: {integrity: sha512-CC/vHi82ldiiydIhliNI3whlcepRXxI2jdpd/KKb6lyEv+74e7lXs4cGk5PHfTLxZMKOj6+m5LX9VAbvV/r7AQ==}
 
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
