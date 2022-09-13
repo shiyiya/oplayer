@@ -266,7 +266,7 @@ export class Player {
   }
 
   enterFullscreen() {
-    if (isIOS()) {
+    if (isIOS) {
       return (this.$video as any).webkitEnterFullscreen()
     } else {
       return this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
@@ -283,7 +283,7 @@ export class Player {
       (document as any).webkitFullscreenEnabled ||
       (document as any).mozFullScreenEnabled ||
       (document as any).msFullscreenEnabled ||
-      Boolean(isIOS() && (this.$video as any).webkitEnterFullscreen)
+      Boolean(isIOS && (this.$video as any).webkitEnterFullscreen)
     )
   }
 
@@ -293,7 +293,7 @@ export class Player {
         (document as any).webkitFullscreenElement ||
         (document as any).mozFullScreenElement ||
         (document as any).msFullscreenElement) === this.$root ||
-        (isIOS() && (this.$video as any).webkitDisplayingFullscreen)
+        (isIOS && (this.$video as any).webkitDisplayingFullscreen)
     )
   }
 

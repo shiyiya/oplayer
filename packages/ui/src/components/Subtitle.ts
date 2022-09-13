@@ -80,7 +80,7 @@ class Subtitle {
       this.player.$video
     )
 
-    if (isIOS()) {
+    if (isIOS) {
       this.$iosTrack = <HTMLTrackElement>$.render(
         $.create('track', {
           default: false,

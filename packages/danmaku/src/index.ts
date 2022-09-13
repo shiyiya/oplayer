@@ -84,7 +84,7 @@ export default (option: Options): PlayerPlugin => ({
     player.on('destroy', danmaku.destroy)
     player.on('fullscreenchange', () => {
       setTimeout(() => {
-        if (isIOS()) {
+        if (isIOS) {
           if (player.isFullScreen) {
             danmaku?.hide()
           } else {

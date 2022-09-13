@@ -9,4 +9,4 @@ export const isMobile =
     globalThis.navigator?.userAgent
   ) || isIpad
 
-export const isIOS = () => /(iPad|iPhone|iPod)/gi.test(globalThis?.navigator?.userAgent)
+export const isIOS = /(iPad|iPhone|iPod)/gi.test(globalThis.navigator?.userAgent)
