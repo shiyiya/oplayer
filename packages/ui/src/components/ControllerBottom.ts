@@ -23,7 +23,9 @@ import {
   dropdown,
   dropdownHoverable,
   expand,
-  time
+  time,
+  on,
+  off
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
@@ -33,7 +35,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     `<div>
       ${
         !isMobile
-          ? `<button aria-label="Play" class="${icon}" type="button">
+          ? `<button aria-label="Play" class="${icon} ${player.isPlaying ? on : off}" type="button">
               ${playSvg}
               ${pauseSvg}
             </button>`
@@ -54,7 +56,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       <div class="${dropdown} ${dropdownHoverable}">
-        <button class=${icon} type="button" aria-label="Volume">
+        <button class="${icon} ${player.isMuted ? on : off}" type="button" aria-label="Volume">
             ${volumeSvg}
             ${volumeOffSvg}
         </button>
@@ -74,29 +76,22 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       ${
+        config.fullscreenWeb
+          ? `<button aria-label="WebFullscreen" class="${icon} ${
+              player.isFullScreen ? on : off
+            }" type="button">
+                ${webExpandSvg}
+                ${webCompressSvg}
+              </button>`
+          : ''
+      }
+
+      ${
         config.fullscreen && player.isFullscreenEnabled
-          ? `<div class="${dropdown} ${dropdownHoverable}">
-              <button aria-label="Fullscreen" class="${icon}" type="button">
+          ? `<button aria-label="Fullscreen" class="${icon} ${off}" type="button">
                 ${expandSvg}
                 ${compressSvg}
-              </button>
-
-              ${
-                config.fullscreenWeb
-                  ? `<div class=${expand}>
-                      <button aria-label="WebFullscreen" class="${icon}" type="button"  >
-                        ${webExpandSvg}
-                        ${webCompressSvg}
-                      </button>
-                    </div>`
-                  : ''
-              }
-            </div>`
-          : config.fullscreenWeb
-          ? `<button aria-label="WebFullscreen" class="${icon}" type="button">
-              ${webExpandSvg}
-              ${webCompressSvg}
-            </button>`
+              </button>`
           : ''
       }
     </div>`
@@ -111,59 +106,31 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $webFull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
 
-  const switcher = (el: HTMLCollection, key: 0 | 1) => {
-    el[key]!.removeAttribute('style')
-    ;(el.item(key == 1 ? 0 : 1) as HTMLDivElement).style.display = 'none'
+  const switcher = (el: HTMLElement, display: boolean) => {
+    el.classList.add(display ? on : off)
+    el.classList.remove(display ? off : on)
   }
-
-  const playerSwitcher = () => {
-    !isMobile && switcher($play.children, player.isPlaying ? 1 : 0)
-  }
-
-  const volumeSwitcher = () => {
-    switcher($volume.children, player.isMuted || player.volume == 0 ? 1 : 0)
-  }
-
-  const toggleWebFullIcon = () => {
-    if (!$webFull) return
-    if (player.isFullScreen) {
-      $webFull.style.display = 'none'
-    } else {
-      $webFull.removeAttribute('style')
-    }
-  }
-
-  const fullscreenSwitcher = () => {
-    switcher($fullscreen.children, (toggleWebFullIcon(), player.isFullScreen ? 1 : 0))
-  }
-
-  const webFullscreenSwitcher = (isWebFullScreen: boolean) => {
-    switcher($webFull.children, isWebFullScreen ? 1 : 0)
-  }
-
-  playerSwitcher(), volumeSwitcher()
 
   if (player.isFullscreenEnabled && config.fullscreen) {
-    fullscreenSwitcher()
-    player.on('fullscreenchange', () => setTimeout(fullscreenSwitcher))
-  }
-
-  if (config.fullscreenWeb) {
-    webFullscreenSwitcher(false)
-    player.on('webfullscreen', () =>
-      webFullscreenSwitcher(toggleClass(player.$root, webFullScreen))
+    player.on('fullscreenchange', () =>
+      setTimeout(() => switcher($fullscreen, player.isFullScreen))
     )
   }
 
-  !isMobile && player.on(['play', 'pause'], playerSwitcher)
-  player.on('volumechange', volumeSwitcher)
+  if (config.fullscreenWeb) {
+    player.on('webfullscreen', () => {
+      switcher($webFull, toggleClass(player.$root, webFullScreen))
+    })
+  }
+
+  !isMobile && player.on(['play', 'pause'], () => switcher($play, player.isPlaying))
+  player.on('volumechange', () => switcher($volume, player.isMuted))
+
   player.on(['durationchange', 'timeupdate'], () => {
     $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
-  player.on('videosourcechange', () => {
-    $time.innerText = '00:00 / --:--'
-    playerSwitcher()
-  })
+
+  player.on('videosourcechange', () => ($time.innerText = '00:00 / --:--'))
 
   $dom.addEventListener('click', (e: Event) => {
     const target = e.target! as HTMLDivElement
