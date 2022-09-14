@@ -1,5 +1,6 @@
 import { $ } from '@oplayer/core'
 import { settingShown } from '../style'
+import { maskCls } from './Mask'
 
 export const activeCls = $.css('display: block;')
 
@@ -10,9 +11,6 @@ export const selectorOptionsPanel = $.css('/*selectorOptionsPanelCls*/')
 export const setting = $.css({
   'z-index': '98',
   'max-height': '300px',
-  // 'max-width': '250px',
-  width: 'auto',
-  height: 'auto',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
@@ -28,10 +26,13 @@ export const setting = $.css({
   visibility: 'hidden',
   'transform-origin': 'bottom right',
   'transition-property': 'all',
-  // transform: 'scale(0)',
 
   [`@global .${settingShown} &`]: {
     visibility: 'visible'
+  },
+
+  [`@global .${settingShown} .${maskCls}`]: {
+    'z-index': '98'
   },
 
   '::-webkit-scrollbar': {
@@ -42,14 +43,8 @@ export const setting = $.css({
     background: 'var(--primary-color)'
   },
 
-  // // panel
-  // '& > div': {
-  //   opacity: '0'
-  // },
-
   [`& > .${panelCls}`]: {
     display: 'none'
-    // opacity: 1
   },
 
   // active panel
