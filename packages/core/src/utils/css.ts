@@ -74,7 +74,7 @@ function build(
     rules,
     mediaQuery,
     globalSelector
-  }: { rules: Record<string, any>; mediaQuery: string; globalSelector?: string }
+  }: { rules: Record<string, any>; mediaQuery?: string; globalSelector?: string }
 ) {
   let css: any = {}
 
@@ -169,7 +169,7 @@ function styleString(style: Record<string, any>): string[] {
 }
 
 export function css(css: DeepCssObject, selector: string) {
-  return styleString(build(selector, { rules: css, mediaQuery: undefined }))
+  return styleString(build(selector, { rules: css }))
 }
 
 export type CssKey =
