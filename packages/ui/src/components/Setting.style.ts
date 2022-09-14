@@ -4,9 +4,9 @@ import { maskCls } from './Mask'
 
 export const activeCls = $.css('display: block;')
 
-export const panelCls = $.css('/*panelCls*/')
+export const panelCls = $.css('/* panelCls */')
 
-export const selectorOptionsPanel = $.css('/*selectorOptionsPanelCls*/')
+export const selectorOptionsPanel = $.css('/* selectorOptionsPanelCls */')
 
 export const setting = $.css({
   'z-index': '98',
@@ -119,7 +119,6 @@ export const settingItemCls = $.css({
 export const settingItemLeft = $.css({
   display: 'flex',
   'align-items': 'center',
-  'margin-right': '20px',
 
   [`@global .${selectorOptionsPanel} & `]: {
     'margin-right': '45px'
