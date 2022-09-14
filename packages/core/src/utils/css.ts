@@ -82,12 +82,26 @@ function build(
 
   Object.keys(rules)?.forEach((key) => {
     if (isGlobal(key)) {
+      const rawKey = key
+      key = key.substring(8)
+      const selfKey = key.indexOf('&')
+      let _selector
+
+      if (selfKey != -1) {
+        //只能 @global .xxx & :{} & 为当前整个的selector .xxx 为global
+        _selector = joinSelectors(selector, key)
+        globalSelector = key.substring(0, selfKey - 1).trim()
+      } else {
+        // @global .xxx{ &:{} } &为.xxx
+        _selector = key
+      }
+
       mergeDeep(
         css,
-        build(key.includes('&') ? joinSelectors(selector!, key.substring(8)) : key.substring(8), {
+        build(_selector, {
           mediaQuery: mediaQuery,
-          rules: rules[key],
-          globalSelector: key.includes('&') ? selector : undefined
+          rules: rules[rawKey],
+          globalSelector: _selector
         })
       )
     } else if (isSelector(key)) {
