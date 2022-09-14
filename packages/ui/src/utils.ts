@@ -23,9 +23,10 @@ export function download(url: string, name: string) {
 export const resolveVideoDataURL = ($video: HTMLVideoElement): string | Error => {
   try {
     const $canvas = document.createElement('canvas')
-    $canvas.width = $video.videoWidth
-    $canvas.height = $video.videoHeight
-    $canvas.getContext('2d')?.drawImage($video, 0, 0)
+    const { videoWidth, videoHeight } = $video
+    $canvas.width = videoWidth
+    $canvas.height = videoHeight
+    $canvas.getContext('2d')?.drawImage($video, 0, 0, videoWidth, videoHeight)
     return $canvas.toDataURL('image/png')
   } catch (error) {
     return error as Error
