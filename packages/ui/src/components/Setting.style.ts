@@ -1,23 +1,38 @@
 import { $ } from '@oplayer/core'
+import { settingShown } from '../style'
 
 export const activeCls = $.css('display: block;')
 
+export const panelCls = $.css('/*panelCls*/')
+
+export const selectorOptionsPanel = $.css('/*selectorOptionsPanelCls*/')
+
 export const setting = $.css({
   'z-index': '98',
-  height: 'auto',
   'max-height': '300px',
-  'max-width': '250px',
+  // 'max-width': '250px',
+  width: 'auto',
+  height: 'auto',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
   position: 'absolute',
   right: '10px',
   bottom: '40px',
-  overflow: 'auto',
+  'overflow-y': 'auto',
   '-webkit-backdrop-filter': 'saturate(180%) blur(20px)',
   'backdrop-filter': 'saturate(180%) blur(20px)',
   'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
+  transition: 'all 0.25s cubic-bezier(.4,0,.2,1)',
+  visibility: 'hidden',
+  'transform-origin': 'bottom right',
+  'transition-property': 'all',
+  // transform: 'scale(0)',
+
+  [`@global .${settingShown} &`]: {
+    visibility: 'visible'
+  },
 
   '::-webkit-scrollbar': {
     width: '2px'
@@ -27,9 +42,14 @@ export const setting = $.css({
     background: 'var(--primary-color)'
   },
 
-  // panel
-  '& > div': {
+  // // panel
+  // '& > div': {
+  //   opacity: '0'
+  // },
+
+  [`& > .${panelCls}`]: {
     display: 'none'
+    // opacity: 1
   },
 
   // active panel
@@ -37,14 +57,6 @@ export const setting = $.css({
     display: 'block'
   }
 })
-
-export const panelCls = $.css(`
-  min-width: 220px;
-`)
-
-export const subPanelCls = $.css(`
-  width: 150px;
-`)
 
 // √
 export const yesIcon = $.css(`
@@ -112,6 +124,11 @@ export const settingItemCls = $.css({
 export const settingItemLeft = $.css({
   display: 'flex',
   'align-items': 'center',
+  'margin-right': '20px',
+
+  [`@global .${selectorOptionsPanel} & `]: {
+    'margin-right': '45px'
+  },
 
   '& > svg': {
     width: '22px',

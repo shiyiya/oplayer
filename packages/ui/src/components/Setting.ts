@@ -8,11 +8,11 @@ import {
   nextIcon,
   nextLabelText,
   panelCls,
+  selectorOptionsPanel,
   setting,
   settingItemCls,
   settingItemLeft,
   settingItemRight,
-  subPanelCls,
   switcherText,
   yesIcon
 } from './Setting.style'
@@ -82,6 +82,8 @@ export type Panel = {
   onHide?: Function
   select?: Function // 全是选项才有
   parent?: Panel
+  width: number
+  height: number
 }
 
 function createPanel(
@@ -114,12 +116,11 @@ function createPanel(
     key = panels[0]!.key
   } else {
     //创建新的选项面板
-    panel.$ref = $.create(`div.${panels[0] && isSelectorOptionsPanel ? subPanelCls : panelCls}`, {
-      'data-key': key
-    })
+    panel.$ref = $.create(`div`, { 'data-key': key })
     panel.key = key
     panels.push(panel)
   }
+  $.render(panel.$ref, target)
 
   panel.parent = parent
   if (panel.key == 'root') isRoot = true
@@ -141,7 +142,6 @@ function createPanel(
       )
     )
     $.render($row, panel.$ref)
-    $.render(panel.$ref, target)
 
     if (children) {
       const optionPanel = createPanel(player, panels, children, {
@@ -153,9 +153,14 @@ function createPanel(
       $row.addEventListener('click', () => {
         panel.$ref.classList.remove(activeCls)
         optionPanel.$ref.classList.add(activeCls)
+
+        target.style.width = optionPanel.width + 'px'
+        target.style.height = optionPanel.height + 'px'
       })
 
       if (children.every((it) => it.type == 'switcher')) {
+        optionPanel.$ref.classList.add(selectorOptionsPanel)
+
         const defaultSelected = children.find((it) => it.default)
         if (defaultSelected) {
           $label.innerText = defaultSelected.name
@@ -175,6 +180,9 @@ function createPanel(
 
           panel.$ref.classList.add(activeCls)
           optionPanel.$ref.classList.remove(activeCls)
+
+          target.style.width = panel.width + 'px'
+          target.style.height = panel.height + 'px'
         }
 
         optionPanel.$ref.addEventListener('click', (e) => {
@@ -195,6 +203,8 @@ function createPanel(
               panels[0]!.onHide?.()
             } else {
               panel.parent!.$ref.classList.add(activeCls)
+              target.style.width = panel.parent!.width + 'px'
+              target.style.height = panel.parent!.height + 'px'
             }
             onChange?.(!selected)
           })
@@ -202,6 +212,18 @@ function createPanel(
       }
     }
   }
+
+  setTimeout(() => {
+    const { width, height } = panel.$ref.getBoundingClientRect()
+
+    if (width > 0) panel.width = width + 3
+    if (width > 0 && (isRoot || !isSelectorOptionsPanel) && width < 220) {
+      panel.width = 220
+      console.log(1)
+    }
+    if (height > 0) panel.height = height
+    panel.$ref.classList.add(panelCls)
+  })
 
   return panel
 }
@@ -223,13 +245,20 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     ...options
   ]
 
-  createPanel(player, panels, defaultSetting, { target: $dom })
+  const registerPanel = (payload: Setting[], isPatch?: boolean) => {
+    $dom.style.height = 'auto'
+    $dom.style.width = 'auto'
+    createPanel(player, panels, payload, { isPatch, target: $dom })
+    setTimeout(() => {
+      // $dom.style.height = 0 + 'px'
+      // $dom.style.width = 0 + 'px'
+    })
+  }
+
+  registerPanel(defaultSetting)
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
-    createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
-      isPatch: true,
-      target: $dom
-    })
+    registerPanel(Array.isArray(payload) ? payload : [payload], true)
   })
 
   player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
@@ -244,10 +273,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     ({ payload: { key, value } }: PlayerEvent<{ key: string; value: boolean | number }>) => {
       if (typeof value == 'number') {
         panels.some((it) => {
-          if (it.key == key) {
-            it.select!(value)
-            return true
-          }
+          if (it.key == key) return it.select!(value), true
           return false
         })
       } else {
@@ -259,28 +285,33 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
     panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
     panels = panels.filter((p) => {
-      if (p.key === payload) {
-        p.$ref.remove()
-        return false
-      }
+      if (p.key === payload) return p.$ref.remove(), false
       return true
     })
   })
 
   let isShow = false
 
-  panels[0]!.onHide = () => {
+  const onHide = () => {
     isShow = false
     player.$root.classList.remove(settingShown)
+    panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+    $dom.style.height = 0 + 'px'
+    $dom.style.width = 0 + 'px'
   }
+
+  panels[0]!.onHide = onHide
 
   player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
     $trigger = payload.target
     isShow = player.$root.classList.toggle(settingShown)
+
     if (isShow) {
-      panels[0]!.$ref.classList.toggle(activeCls)
+      panels[0]!.$ref.classList.add(activeCls)
+      $dom.style.width = panels[0]!.width + 'px'
+      $dom.style.height = panels[0]!.height + 'px'
     } else {
-      panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+      onHide()
     }
   })
 
@@ -290,9 +321,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       <HTMLElement>e.target != $dom &&
       !$dom.contains(<HTMLElement>e.target)
     ) {
-      isShow = false
-      player.$root.classList.remove(settingShown)
-      panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+      onHide()
     }
   }
 
