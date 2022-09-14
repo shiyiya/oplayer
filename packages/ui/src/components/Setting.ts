@@ -214,12 +214,12 @@ function createPanel(
   }
 
   setTimeout(() => {
+    panel.$ref.classList.remove(panelCls) //显示才能获取宽高
     const { width, height } = panel.$ref.getBoundingClientRect()
 
     if (width > 0) panel.width = width + 3
     if (width > 0 && (isRoot || !isSelectorOptionsPanel) && width < 220) {
       panel.width = 220
-      console.log(1)
     }
     if (height > 0) panel.height = height
     panel.$ref.classList.add(panelCls)
@@ -255,42 +255,8 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     })
   }
 
-  registerPanel(defaultSetting)
-
-  player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
-    registerPanel(Array.isArray(payload) ? payload : [payload], true)
-  })
-
-  player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
-    const $item = $dom.querySelector<HTMLSpanElement>(
-      `[data-key="${payload.key}"] span[role="label"]`
-    )
-    if ($item) $item.innerText = payload.name
-  })
-
-  TODO: player.on(
-    'selectsetting',
-    ({ payload: { key, value } }: PlayerEvent<{ key: string; value: boolean | number }>) => {
-      if (typeof value == 'number') {
-        panels.some((it) => {
-          if (it.key == key) return it.select!(value), true
-          return false
-        })
-      } else {
-        $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"][data-selected]`)?.click()
-      }
-    }
-  )
-
-  player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
-    panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-    panels = panels.filter((p) => {
-      if (p.key === payload) return p.$ref.remove(), false
-      return true
-    })
-  })
-
   let isShow = false
+  registerPanel(defaultSetting)
 
   const onHide = () => {
     isShow = false
@@ -327,6 +293,39 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   document.addEventListener('click', outClickListener)
   player.on('destroy', () => document.removeEventListener('click', outClickListener))
+
+  player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
+    registerPanel(Array.isArray(payload) ? payload : [payload], true)
+  })
+
+  player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
+    const $item = $dom.querySelector<HTMLSpanElement>(
+      `[data-key="${payload.key}"] span[role="label"]`
+    )
+    if ($item) $item.innerText = payload.name
+  })
+
+  player.on(
+    'selectsetting',
+    ({ payload: { key, value } }: PlayerEvent<{ key: string; value: boolean | number }>) => {
+      if (typeof value == 'number') {
+        panels.some((it) => {
+          if (it.key == key) return it.select!(value), true
+          return false
+        })
+      } else {
+        $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"][data-selected]`)?.click()
+      }
+    }
+  )
+
+  player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
+    panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
+    panels = panels.filter((p) => {
+      if (p.key === payload) return p.$ref.remove(), false
+      return true
+    })
+  })
 
   $.render($dom, $el)
   setTimeout(() => player.emit('loadedsetting'))
