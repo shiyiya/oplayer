@@ -70,11 +70,27 @@ function isGlobal(key: string) {
 
 function build(
   selector: string,
-  { rules, mediaQuery }: { rules: Record<string, any>; mediaQuery: string | undefined }
+  {
+    rules,
+    mediaQuery,
+    globalSelector
+  }: { rules: Record<string, any>; mediaQuery: string; globalSelector?: string }
 ) {
   let css: any = {}
+
+  if (globalSelector) selector = globalSelector
+
   Object.keys(rules)?.forEach((key) => {
-    if (isSelector(key)) {
+    if (isGlobal(key)) {
+      mergeDeep(
+        css,
+        build(key.includes('&') ? joinSelectors(selector!, key.substring(8)) : key.substring(8), {
+          mediaQuery: mediaQuery,
+          rules: rules[key],
+          globalSelector: key.includes('&') ? selector : undefined
+        })
+      )
+    } else if (isSelector(key)) {
       mergeDeep(
         css,
         build(joinSelectors(selector, key), {
@@ -87,14 +103,6 @@ function build(
         css,
         build(selector, {
           mediaQuery: joinMediaQueries(mediaQuery, key),
-          rules: rules[key]
-        })
-      )
-    } else if (isGlobal(key)) {
-      mergeDeep(
-        css,
-        build(key.substring(8), {
-          mediaQuery,
           rules: rules[key]
         })
       )
