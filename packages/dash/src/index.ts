@@ -1,5 +1,5 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import type { MediaPlayerClass, MediaPlayerSettingClass } from 'dashjs'
+import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
 
 //@ts-ignore
 import qualitySvg from '../../hls/src/quality.svg?raw'
@@ -70,7 +70,18 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
     })
   }
 
+  const menuUpdater = (data: QualityChangeRenderedEvent) => {
+    const settings = dashInstance.getSettings()
+    if (data.mediaType !== 'video' && !settings.streaming?.abr?.autoSwitchBitrate?.video) return
+
+    const level = dashInstance.getQualityFor('video')
+    const height = dashInstance.getBitrateInfoListFor('video')[level]?.height
+    const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
+    player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
+  }
+
   dashInstance.on(importedDash.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
+  dashInstance.on(importedDash.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
 const dashPlugin = ({
