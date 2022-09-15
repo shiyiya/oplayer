@@ -1,7 +1,7 @@
 // import Hls from 'hls.js/dist/hls.light.min.js'
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
-import type { ErrorData, HlsConfig, LevelSwitchedData } from 'hls.js'
+import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 
 //@ts-ignore
 import qualitySvg from './quality.svg?raw'
