@@ -10,6 +10,12 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 type dashPluginOptions = {
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
   setting?: MediaPlayerSettingClass
+  options?: {
+    /**
+     * @default: false
+     */
+    withBitrate?: boolean
+  }
 }
 
 const defaultMatcher: dashPluginOptions['matcher'] = (_, source) =>
@@ -17,7 +23,11 @@ const defaultMatcher: dashPluginOptions['matcher'] = (_, source) =>
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
     /.mpd(#|\?|$)/i.test(source.src))
 
-const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
+const generateSetting = (
+  player: Player,
+  dashInstance: MediaPlayerClass,
+  options: dashPluginOptions['options']
+) => {
   const settingUpdater = () => {
     const isAutoSwitch = dashInstance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
 
@@ -36,11 +46,16 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
 
     if (dashInstance.getBitrateInfoListFor('video').length > 1) {
       dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
-        const kb = bitrate.bitrate / 1000
-        const useMb = kb > 1000
-        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+        let name = bitrate.height + 'p'
+        if (options?.withBitrate) {
+          const kb = bitrate.bitrate / 1000
+          const useMb = kb > 1000
+          const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+          name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+        }
+
         settingOptions.push({
-          name: `${bitrate.height}p (${number}${useMb ? 'm' : 'k'}bps)`,
+          name,
           type: 'switcher',
           default: isAutoSwitch
             ? false
@@ -86,7 +101,8 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
 
 const dashPlugin = ({
   matcher = defaultMatcher,
-  setting
+  setting,
+  options: pluginOptions
 }: dashPluginOptions = {}): PlayerPlugin => {
   let dashInstance: MediaPlayerClass
 
@@ -113,7 +129,7 @@ const dashPlugin = ({
       dashInstance = importedDash.MediaPlayer().create()
       if (setting) dashInstance.updateSettings(setting)
       dashInstance.initialize(player.$video, source.src, player.$video.autoplay)
-      generateSetting(player, dashInstance)
+      generateSetting(player, dashInstance, pluginOptions)
 
       dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event: any) => {
         const err = event.event || event.error

@@ -28,6 +28,10 @@ type hlsPluginOptions = {
      *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
      */
     hlsQualitySwitch?: 'immediate' | 'smooth'
+    /**
+     * @default: false
+     */
+    withBitrate?: boolean
   }
 }
 
@@ -59,16 +63,16 @@ const generateSetting = (
 
     if (hlsInstance.levels.length > 1)
       hlsInstance.levels.forEach((level, i) => {
-        const name = level.name || level.height
-        const kb = level.bitrate / 1000
-        const useMb = kb > 1000
-        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
-        return settingOptions.push({
-          name: `${name}${isFinite(+name) ? 'p' : ''} (${number}${useMb ? 'm' : 'k'}bps)`,
-          type: 'switcher',
-          default: false,
-          value: i
-        })
+        let name = level.name || level.height.toString()
+        if (isFinite(+name)) name += 'p'
+        if (options.withBitrate) {
+          const kb = level.bitrate / 1000
+          const useMb = kb > 1000
+          const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+          name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+        }
+
+        return settingOptions.push({ name, type: 'switcher', default: false, value: i })
       })
 
     player.emit('removesetting', PLUGIN_NAME)

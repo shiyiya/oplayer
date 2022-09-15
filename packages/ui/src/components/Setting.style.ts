@@ -4,14 +4,12 @@ export const activeCls = $.css('display: block;')
 
 export const setting = $.css({
   'z-index': '98',
-  height: 'auto',
   'max-height': '300px',
-  'max-width': '250px',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
   position: 'absolute',
-  right: '10px',
+  right: '15px',
   bottom: '40px',
   overflow: 'auto',
   '-webkit-backdrop-filter': 'saturate(180%) blur(20px)',
@@ -43,13 +41,11 @@ export const panelCls = $.css(`
 `)
 
 export const subPanelCls = $.css(`
-  width: 150px;
+  min-width: 150px;
 `)
 
 // √
 export const yesIcon = $.css(`
-  position: absolute;
-  right: 10px;
   display: none;
   width: 18px;
   height: 18px;
@@ -112,6 +108,7 @@ export const settingItemCls = $.css({
 export const settingItemLeft = $.css({
   display: 'flex',
   'align-items': 'center',
+  'margin-right': '10px',
 
   '& > svg': {
     width: '22px',
