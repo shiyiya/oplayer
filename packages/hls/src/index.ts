@@ -47,7 +47,7 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
 const generateSetting = (
   player: Player,
   hlsInstance: Hls,
-  options: Required<hlsPluginOptions['options']> = {} as any
+  options: Required<hlsPluginOptions>['options'] = {}
 ) => {
   if (!options.hlsQualityControl) return
 
@@ -112,15 +112,15 @@ const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher,
   options: _pluginOptions
-}: hlsPluginOptions = {}): PlayerPlugin => {
+}: hlsPluginOptions): PlayerPlugin => {
   let hlsInstance: Hls
 
-  const pluginOptions: Required<hlsPluginOptions['options']> = {
+  const pluginOptions = {
     light: true,
     hlsQualityControl: false,
     hlsQualitySwitch: 'smooth',
     ..._pluginOptions
-  }
+  } as Required<hlsPluginOptions>['options']
   if (pluginOptions.hlsQualityControl) pluginOptions.light = false
 
   const getHls = async () => {
