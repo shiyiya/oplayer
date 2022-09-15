@@ -1,5 +1,5 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import type { MediaPlayerClass, MediaPlayerSettingClass } from 'dashjs'
+import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
 
 //@ts-ignore
 import qualitySvg from '../../hls/src/quality.svg?raw'
