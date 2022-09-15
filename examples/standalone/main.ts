@@ -16,6 +16,8 @@ import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
 const dataSrcs = [
+  'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
+  'https://cdn6.hnzycdn.com:65/20220712/xb2EScnz/1672kb/hls/index.m3u8',
   MP4,
   'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',

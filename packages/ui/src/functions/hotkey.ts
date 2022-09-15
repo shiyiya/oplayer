@@ -1,7 +1,7 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import focusListener from '../listeners/focus'
 import { webFullScreen } from '../style'
-import { screenShot } from '../utils'
+import { formatTime, screenShot } from '../utils'
 
 const VOLUME_SETUP = 10 //10% 0.1 有精度问题
 const SEEK_SETUP = 5
@@ -20,11 +20,15 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
 
   ArrowLeft: (player: Player) => {
     player.seek(player.currentTime - SEEK_SETUP)
-    player.emit('notice', { text: `-${SEEK_SETUP}s` })
+    player.emit('notice', {
+      text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
+    })
   },
   ArrowRight: (player: Player) => {
     player.seek(player.currentTime + SEEK_SETUP)
-    player.emit('notice', { text: `+${SEEK_SETUP}s` })
+    player.emit('notice', {
+      text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
+    })
   },
 
   ' ': (player: Player) => player.togglePlay(),
