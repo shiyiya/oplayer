@@ -50,8 +50,6 @@ const render = (player: Player, el: HTMLElement) => {
       // loading
       if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
         show()
-        console.log('setInterval')
-
         bufferingDetected = true
       }
 

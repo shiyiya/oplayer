@@ -157,18 +157,17 @@ const hlsPlugin = ({
       //   }
       // )
 
-      Object.values(importedHls.Events).forEach((e) => {
-        hlsInstance.on(e as any, (event: string, data: ErrorData) => {
-          player.emit(event, data)
-        })
-      })
-
       return true
     },
     apply: (player) => {
       player.on('destroy', () => {
         hlsInstance?.destroy()
         hlsInstance = null as any
+      })
+
+      Object.defineProperty(player, 'hls', {
+        enumerable: true,
+        get: () => ({ value: hlsInstance, constructor: importedHls })
       })
     }
   }

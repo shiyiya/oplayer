@@ -10,12 +10,12 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
   ArrowUp: (player: Player) => {
     const nextVolume = player.volume * 100 + VOLUME_SETUP
     player.setVolume(nextVolume / 100)
-    player.emit('notice', { text: player.locales.get('Volume: %s', `${player.volume * 100}%`) })
+    player.emit('notice', { text: player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`) })
   },
   ArrowDown: (player: Player) => {
     const nextVolume = player.volume * 100 - VOLUME_SETUP
     player.setVolume(nextVolume / 100)
-    player.emit('notice', { text: player.locales.get('Volume: %s', `${player.volume * 100}%`) })
+    player.emit('notice', { text: player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`) })
   },
 
   ArrowLeft: (player: Player) => {

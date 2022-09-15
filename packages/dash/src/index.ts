@@ -115,18 +115,10 @@ const dashPlugin = ({
       dashInstance.initialize(player.$video, source.src, player.$video.autoplay)
       generateSetting(player, dashInstance)
 
-      Object.values(importedDash.MediaPlayer.events).forEach((eventName) => {
-        //error 信息不会设置到target上 这里额外处理
-        if (eventName == importedDash.MediaPlayer.events.ERROR) {
-          dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event) => {
-            //@ts-ignore
-            player.emit('error', { ...event.error, pluginName: PLUGIN_NAME })
-          })
-        } else {
-          dashInstance.on(eventName as any, (event) => {
-            player.emit(event.type, event)
-          })
-        }
+      dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event: any) => {
+        const err = event.event || event.error
+        const message = event.event ? event.event.message || event.type : undefined
+        player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
       })
 
       return true
@@ -135,6 +127,11 @@ const dashPlugin = ({
       player.on('destroy', () => {
         dashInstance?.reset()
         dashInstance = null as any
+      })
+
+      Object.defineProperty(player, 'dash', {
+        enumerable: true,
+        get: () => ({ value: dashInstance, constructor: importedDash })
       })
     }
   }
