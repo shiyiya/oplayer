@@ -70,7 +70,7 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
     })
   }
 
-  const menuUpdater = (data: any) => {
+  const menuUpdater = (data: QualityChangeRenderedEvent) => {
     const settings = dashInstance.getSettings()
     if (data.mediaType !== 'video' && !settings.streaming?.abr?.autoSwitchBitrate?.video) return
 
@@ -81,7 +81,7 @@ const generateSetting = (player: Player, dashInstance: MediaPlayerClass) => {
   }
 
   dashInstance.on(importedDash.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
-  dashInstance.on(importedDash.MediaPlayer.events.QUALITY_CHANGE_RENDERED, (event) => {menuUpdater(event)})
+  dashInstance.on(importedDash.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
 const dashPlugin = ({
