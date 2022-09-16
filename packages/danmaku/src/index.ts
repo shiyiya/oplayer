@@ -13,7 +13,7 @@ export default (option: Options): PlayerPlugin => ({
     let isDanmakuShowing = false
 
     const emitSetting = () => {
-      player.emit('addsetting', {
+      player.emit('registersetting', {
         name: player.locales.get('Danmaku'),
         type: 'selector',
         default: true,
@@ -98,7 +98,7 @@ export default (option: Options): PlayerPlugin => ({
     })
 
     player.on('danmakusourcechange', ({ payload }) => {
-      player.emit('removesetting', 'danmaku')
+      player.emit('unregistersetting', 'danmaku')
       emitSetting()
       danmaku = new Danmaku(player, { ...option, ...payload, source: payload.source })
     })
@@ -106,7 +106,7 @@ export default (option: Options): PlayerPlugin => ({
     player.on('videosourcechange', function () {
       danmaku?.destroy()
       danmaku = null as any
-      player.emit('removesetting', 'danmaku')
+      player.emit('unregistersetting', 'danmaku')
     })
   }
 })

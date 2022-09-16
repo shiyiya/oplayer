@@ -65,8 +65,8 @@ const generateSetting = (
       })
     }
 
-    player.emit('removesetting', PLUGIN_NAME)
-    player.emit('addsetting', {
+    player.emit('unregistersetting', PLUGIN_NAME)
+    player.emit('registersetting', {
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -117,7 +117,7 @@ const dashPlugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
-        player.emit('removesetting', PLUGIN_NAME)
+        player.emit('unregistersetting', PLUGIN_NAME)
         dashInstance?.reset()
         return false
       }

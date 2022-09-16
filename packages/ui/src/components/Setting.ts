@@ -225,7 +225,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   createPanel(player, panels, defaultSetting, { target: $dom })
 
-  player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
+  player.on('registersetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
       isPatch: true,
       target: $dom
@@ -256,7 +256,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     }
   )
 
-  player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
+  player.on('unregistersetting', ({ payload }: PlayerEvent<string>) => {
     panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
     panels = panels.filter((p) => {
       if (p.key === payload) {

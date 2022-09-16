@@ -75,8 +75,8 @@ const generateSetting = (
         return settingOptions.push({ name, type: 'switcher', default: false, value: i })
       })
 
-    player.emit('removesetting', PLUGIN_NAME)
-    player.emit('addsetting', {
+    player.emit('unregistersetting', PLUGIN_NAME)
+    player.emit('registersetting', {
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -139,7 +139,7 @@ const hlsPlugin = ({
 
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
-        player.emit('removesetting', PLUGIN_NAME)
+        player.emit('unregistersetting', PLUGIN_NAME)
 
         return false
       }
