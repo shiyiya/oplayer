@@ -61,7 +61,8 @@ export default () => {
         id="oplayer-playground"
         initialSnippet={{
           markup: `<div id=oplayer />`,
-          javascript: (window && new URL(window.location).searchParams.get('code')) || code
+          javascript:
+            (globalThis?.window && new URL(window.location).searchParams.get('code')) || code
         }}
         defaultEditorTab="javascript"
         transformJs
