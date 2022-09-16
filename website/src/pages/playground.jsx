@@ -1,5 +1,6 @@
 import React from 'react'
 import Playground from '@agney/playground'
+import Layout from '@theme/Layout'
 import '@reach/tabs/styles.css'
 
 const code = `
@@ -11,7 +12,7 @@ import dash from '/dash.es.js'
 
 // https://cdn.jsdelivr.net/gh/shiyiya/oplayer@master/README.md
 
-Player.make(document.getElementById('app'), {
+Player.make(document.getElementById('oplayer'), {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',
     poster: 'https://oplayer.vercel.app/poster.png'
@@ -54,11 +55,17 @@ Player.make(document.getElementById('app'), {
   .create()`
 
 export default () => {
-  const snippet = {
-    markup: `<div id=app />`,
-    javascript: code
-  }
   return (
-    <Playground id="example" initialSnippet={snippet} defaultEditorTab="javascript" transformJs />
+    <Layout title="Oh! Another HTML5 video player" description="Oh! Another HTML5 video player">
+      <Playground
+        id="oplayer-playground"
+        initialSnippet={{
+          markup: `<div id=oplayer />`,
+          javascript: (window && new URL(window.location).searchParams.get('code')) || code
+        }}
+        defaultEditorTab="javascript"
+        transformJs
+      />
+    </Layout>
   )
 }

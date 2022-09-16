@@ -107,8 +107,8 @@ class Subtitle {
       player.emit('removesetting', SETTING_KEY)
 
       $track?.removeEventListener('cuechange', this.update)
-      if ($track.src) URL.revokeObjectURL($track.src)
-      if ($iosTrack.src) URL.revokeObjectURL($iosTrack.src)
+      if ($track?.src) URL.revokeObjectURL($track.src)
+      if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
     })
 
     player.on('videosourcechange', () => {
