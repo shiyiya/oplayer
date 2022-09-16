@@ -103,7 +103,7 @@ const dashPlugin = ({
   matcher = defaultMatcher,
   setting,
   options: pluginOptions
-}: dashPluginOptions): PlayerPlugin => {
+}: dashPluginOptions = {}): PlayerPlugin => {
   let dashInstance: MediaPlayerClass
 
   const getDash = async () => {

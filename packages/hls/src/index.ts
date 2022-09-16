@@ -112,7 +112,7 @@ const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher,
   options: _pluginOptions
-}: hlsPluginOptions): PlayerPlugin => {
+}: hlsPluginOptions = {}): PlayerPlugin => {
   let hlsInstance: Hls
 
   const pluginOptions = {
