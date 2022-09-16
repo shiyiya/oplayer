@@ -75,8 +75,8 @@ const generateSetting = (
         return settingOptions.push({ name, type: 'switcher', default: false, value: i })
       })
 
-    player.emit('unregistersetting', PLUGIN_NAME)
-    player.emit('registersetting', {
+    player.emit('setting:unregister', PLUGIN_NAME)
+    player.emit('setting:register', {
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -98,9 +98,9 @@ const generateSetting = (
     if (hlsInstance.autoLevelEnabled) {
       const height = hlsInstance.levels[level]!.height
       const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-      player.emit('updatesettinglabel', { key: PLUGIN_NAME, name: levelName })
+      player.emit('setting:updatelabel', { key: PLUGIN_NAME, name: levelName })
     } else {
-      player.emit('selectsetting', { key: PLUGIN_NAME, value: level })
+      player.emit('setting:select', { key: PLUGIN_NAME, value: level })
     }
   }
 
@@ -139,7 +139,7 @@ const hlsPlugin = ({
 
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
-        player.emit('unregistersetting', PLUGIN_NAME)
+        player.emit('setting:unregister', PLUGIN_NAME)
 
         return false
       }

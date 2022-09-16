@@ -154,7 +154,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         screenShot(player)
         break
       case 'Setting': {
-        player.emit('settingvisibilitychange', e)
+        player.emit('setting:visibilitychange', e)
         break
       }
       default:

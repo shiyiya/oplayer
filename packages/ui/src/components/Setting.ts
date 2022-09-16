@@ -225,14 +225,14 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   createPanel(player, panels, defaultSetting, { target: $dom })
 
-  player.on('registersetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
+  player.on('setting:register', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
       isPatch: true,
       target: $dom
     })
   })
 
-  player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
+  player.on('setting:updatelabel', ({ payload }: PlayerEvent<Setting>) => {
     const $item = $dom.querySelector<HTMLSpanElement>(
       `[data-key="${payload.key}"] span[role="label"]`
     )
@@ -240,7 +240,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   })
 
   TODO: player.on(
-    'selectsetting',
+    'setting:select',
     ({ payload: { key, value } }: PlayerEvent<{ key: string; value: boolean | number }>) => {
       if (typeof value == 'number') {
         panels.some((it) => {
@@ -256,7 +256,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     }
   )
 
-  player.on('unregistersetting', ({ payload }: PlayerEvent<string>) => {
+  player.on('setting:unregister', ({ payload }: PlayerEvent<string>) => {
     panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
     panels = panels.filter((p) => {
       if (p.key === payload) {
@@ -274,7 +274,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
     player.$root.classList.remove(settingShown)
   }
 
-  player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
+  player.on('setting:visibilitychange', ({ payload }: PlayerEvent) => {
     $trigger = payload.target
     isShow = player.$root.classList.toggle(settingShown)
     if (isShow) {
@@ -300,5 +300,5 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   player.on('destroy', () => document.removeEventListener('click', outClickListener))
 
   $.render($dom, $el)
-  setTimeout(() => player.emit('loadedsetting'))
+  setTimeout(() => player.emit('setting:loaded'))
 }
