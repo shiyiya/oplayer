@@ -71,7 +71,7 @@ export default function registerHotKey(player: Player) {
     }, 200)
   }
 
-  player.on('addhotkey', ({ payload }: PlayerEvent) => {
+  player.on('hotkey:register', ({ payload }: PlayerEvent) => {
     for (const key in payload) {
       if (Object.prototype.hasOwnProperty.call(payload, key)) {
         HOTKEY_FN[key] = payload[key]
@@ -79,7 +79,7 @@ export default function registerHotKey(player: Player) {
     }
   })
 
-  player.on('removehotkey', ({ payload }: PlayerEvent) => {
+  player.on('hotkey:unregister', ({ payload }: PlayerEvent) => {
     ;(<string[]>payload).forEach((k) => {
       delete HOTKEY_FN[k]
     })
