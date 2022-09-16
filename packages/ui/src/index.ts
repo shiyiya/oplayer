@@ -12,8 +12,7 @@ import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle from './components/Subtitle'
 
-import registerSpeedSetting from './functions/speed'
-import registerHotKey from './functions/hotkey'
+import { registerSpeedSetting, registerHotKey, registerMenubar } from './functions'
 
 import focusListener from './listeners/focus'
 import initListener from './listeners/init'
@@ -27,9 +26,10 @@ const apply = (player: Player, config: UiConfig) => {
   renderLoading(player, $frag)
   renderMask(player, $frag)
 
+  registerMenubar(player, config.menu)
+
   const { show, hide } = renderCoverButton(player, $frag)
   renderControllerBar(player, $frag, config, show, hide)
-
   renderSetting(player, $frag, config.settings)
 
   registerSpeedSetting(player, config.speed)

@@ -93,6 +93,38 @@ const p = Player.make(document.getElementById('player')!, {
           time: 88,
           text: '－－终わり－－'
         }
+      ],
+      menu: [
+        {
+          name: '剧集',
+          children: [
+            {
+              name: '第一集'
+            },
+            {
+              name: '第二集'
+            },
+            {
+              name: '第三集'
+            }
+          ],
+          onChange() {}
+        },
+        {
+          name: '清晰度',
+          children: [
+            {
+              name: '1080p'
+            },
+            {
+              name: '2K'
+            },
+            {
+              name: '4K'
+            }
+          ],
+          onChange() {}
+        }
       ]
     })
   ])

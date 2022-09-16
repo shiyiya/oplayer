@@ -163,6 +163,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   })
 
   $.render($dom, el)
+  player.emit('menubarloaded', $dom.children[1])
 }
 
 export default render

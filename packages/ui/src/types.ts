@@ -14,6 +14,20 @@ export type Subtitle = {
   color?: string
 }
 
+export type MenuBar<
+  T = {
+    name: string
+    default?: boolean
+    value?: any
+  }
+> = {
+  name?: string
+  icon?: string
+  children: T[]
+  onChange: (arg: T) => void
+  onClick: () => void
+}
+
 export type Setting<T = any> = {
   name: string
   key?: string // children 可无 （用于移除）
@@ -81,6 +95,8 @@ export type UiConfig = {
   thumbnails?: Thumbnails
 
   highlight?: Highlight[]
+
+  menu?: MenuBar[]
 
   /*  --- WIP ---  */
 

@@ -58,6 +58,7 @@ export const dropItem = $.css({
   'border-radius': '4px',
   'margin-bottom': '2px',
   transition: 'color .2s',
+  'word-break': 'keep-all',
 
   '&:nth-last-child(1)': {
     'margin-bottom': '0px'
