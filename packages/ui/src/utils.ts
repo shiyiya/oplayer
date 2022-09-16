@@ -46,7 +46,7 @@ export const screenShot = (player: Player) => {
 }
 
 export const debounce = (fn: () => void, ms: number = 1500) => {
-  let time: NodeJS.Timeout | null = null
+  let time: number | null = null
   const clear = () => time && clearTimeout(time)
   const callee = () => {
     clear()
