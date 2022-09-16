@@ -5,6 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
+    "prebuild": "cp ../packages/core/dist/index.es.js ./static/core.es.js && cp ../packages/ui/dist/index.es.js ./static/ui.es.js && cp ../packages/hls/dist/index.es.js ./static/hls.es.js &&  cp ../packages/dash/dist/index.es.js ./static/dash.es.js && cp ../packages/danmaku/dist/index.es.js ./static/danmaku.es.js",
     "build": "docusaurus build",
     "build:ghp": "docusaurus build --config docusaurus.ghp.config.js",
     "swizzle": "docusaurus swizzle",
@@ -16,6 +17,7 @@
     "crowdin": "crowdin"
   },
   "dependencies": {
+    "@agney/playground": "^0.8.0",
     "@crowdin/cli": "3",
     "@docusaurus/core": "^2.1.0",
     "@docusaurus/preset-classic": "^2.1.0",
