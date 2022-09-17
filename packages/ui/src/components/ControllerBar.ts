@@ -1,6 +1,6 @@
 import Player, { $, isMobile } from '@oplayer/core'
 import initListener from '../listeners/init'
-import { settingShown } from '../style'
+import { controllerHidden, settingShown } from '../style'
 import type { UiConfig } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
@@ -16,8 +16,6 @@ const controllerBar = $.css({
   transition: 'transform 0.3s ease, padding 0.3s ease',
   'background-image': 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3))'
 })
-
-const controllerHidden = $.css('/* controllerHidden */')
 
 const CTRL_HIDE_DELAY = 1500
 
@@ -81,8 +79,8 @@ const render = (
     })
     player.$root.addEventListener('mouseleave', hideCtrl)
   } else {
-    player.on('controllervisibilitychange', () => {
-      if (hasClass(player.$root, controllerHidden)) {
+    player.on('controllervisibilitychange', ({ payload }) => {
+      if (payload) {
         showCtrl()
       } else {
         hideCtrl()

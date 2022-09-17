@@ -47,6 +47,8 @@ export const icon = $.css({
   width: '100%'
 })
 
+export const controllerHidden = $.css('/* controllerHidden */')
+
 // export const loading = $.css('/* loading */')
 
 // export const playing = $.css('/* playing */')
