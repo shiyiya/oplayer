@@ -1,5 +1,5 @@
 import type { Player } from '@oplayer/core'
-import { $, isIOS, isMobile } from '@oplayer/core'
+import { $, isiPhone, isMobile } from '@oplayer/core'
 import subtitleSvg from '../icons/subtitles.svg?raw'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
@@ -80,7 +80,7 @@ class Subtitle {
       this.player.$video
     )
 
-    if (isIOS) {
+    if (isiPhone) {
       this.$iosTrack = <HTMLTrackElement>$.render(
         $.create('track', {
           default: false,

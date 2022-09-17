@@ -1,5 +1,5 @@
 //@ts-nocheck
-import Player, { PlayerEvent, isMobile } from '@oplayer/core'
+import Player, { PlayerEvent, isMobile, isIOS, isiPad, isiPhone } from '@oplayer/core'
 import danmaku, { DanmakuItem } from '@oplayer/danmaku'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
@@ -167,3 +167,16 @@ p.on((e: PlayerEvent) => {
 render(meta(), document.getElementById('meta')!)
 
 window.p = p
+
+console.table({
+  UA: globalThis.navigator?.userAgent,
+  isMobile,
+  isIOS,
+  isiPad,
+  isiPhone,
+  fullscreenEnabled: Boolean(document.fullscreenEnabled),
+  webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
+  mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
+  msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
+  video: Boolean(p.$video.webkitEnterFullscreen)
+})

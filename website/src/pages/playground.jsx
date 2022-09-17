@@ -4,7 +4,7 @@ import Layout from '@theme/Layout'
 import '@reach/tabs/styles.css'
 
 const code = `
-import Player, { isMobile, isiPad, isIOS } from '/core.es.js'
+import Player, { isMobile, isiPad, isiPhone, isIOS } from '/core.es.js'
 import ui from '/ui.es.js'
 import danmaku from '/danmaku.es.js'
 import hls from '/hls.es.js'
@@ -54,16 +54,20 @@ const player =Player.make(document.getElementById('oplayer'), {
   ])
   .create();
 
-  console.table({
-    isMobile,
-    isiPad,
-    isIOS,
-    fullscreenEnabled: document.fullscreenEnabled,
-    webkitFullscreenEnabled: document.webkitFullscreenEnabled,
-    mozFullScreenEnabled: document.mozFullScreenEnabled,
-    msFullscreenEnabled: document.msFullscreenEnabled,
-    video: player.$video.webkitEnterFullscreen
-  });
+  console.table(
+    JSON.stringify({
+      UA: globalThis.navigator?.userAgent,
+      isMobile,
+      isIOS,
+      isiPad,
+      isiPhone,
+      fullscreenEnabled: Boolean(document.fullscreenEnabled),
+      webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
+      mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
+      msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
+      video: Boolean(player.$video.webkitEnterFullscreen),
+    })
+  )
 
   `
 

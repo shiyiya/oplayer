@@ -1,4 +1,4 @@
-import { isIOS, Player, PlayerPlugin } from '@oplayer/core'
+import { isiPhone, Player, PlayerPlugin } from '@oplayer/core'
 import Danmaku from './danmaku'
 import type { Options } from './types'
 // @ts-ignore
@@ -85,7 +85,7 @@ export default (option: Options): PlayerPlugin => ({
     player.on('fullscreenchange', ({ payload }) => {
       if (payload.isWeb) return danmaku?.reset()
       setTimeout(() => {
-        if (isIOS) {
+        if (isiPhone) {
           if (player.isFullScreen) {
             danmaku?.hide()
           } else {

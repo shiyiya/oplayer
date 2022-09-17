@@ -1,4 +1,4 @@
-import { $, isIOS, isiPad, isMobile } from '@oplayer/core'
+import { $, isiPhone, isiPad, isMobile } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
@@ -90,7 +90,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
   // IOS只能使用物理按键控制音量大小
-  if (!isIOS && !isiPad) renderVolumeBar(player, $volume.nextElementSibling! as HTMLDivElement)
+  if (!isiPhone && !isiPad) renderVolumeBar(player, $volume.nextElementSibling! as HTMLDivElement)
 
   const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
   const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
@@ -131,7 +131,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       case 'Play':
         return player.togglePlay()
       case 'Volume':
-        if (isMobile && !isIOS && !isiPad) return
+        if (isMobile && !isiPhone && !isiPad) return
         if (player.isMuted) {
           player.unmute()
         } else {
