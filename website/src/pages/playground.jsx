@@ -54,7 +54,7 @@ const player =Player.make(document.getElementById('oplayer'), {
   ])
   .create();
 
-  console.table(
+  console.log(
     JSON.stringify({
       UA: globalThis.navigator?.userAgent,
       isMobile,
