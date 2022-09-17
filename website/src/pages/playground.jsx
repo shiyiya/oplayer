@@ -4,7 +4,7 @@ import Layout from '@theme/Layout'
 import '@reach/tabs/styles.css'
 
 const code = `
-import Player from '/core.es.js'
+import Player, { isMobile, isiPad, isIOS } from '/core.es.js'
 import ui from '/ui.es.js'
 import danmaku from '/danmaku.es.js'
 import hls from '/hls.es.js'
@@ -12,7 +12,7 @@ import dash from '/dash.es.js'
 
 // https://cdn.jsdelivr.net/gh/shiyiya/oplayer@master/README.md
 
-Player.make(document.getElementById('oplayer'), {
+const player =Player.make(document.getElementById('oplayer'), {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',
     poster: 'https://oplayer.vercel.app/poster.png'
@@ -52,7 +52,20 @@ Player.make(document.getElementById('oplayer'), {
       ]
     })
   ])
-  .create()`
+  .create();
+
+  console.table({
+    isMobile,
+    isiPad,
+    isIOS,
+    fullscreenEnabled: document.fullscreenEnabled,
+    webkitFullscreenEnabled: document.webkitFullscreenEnabled,
+    mozFullScreenEnabled: document.mozFullScreenEnabled,
+    msFullscreenEnabled: document.msFullscreenEnabled,
+    video: player.$video.webkitEnterFullscreen
+  });
+
+  `
 
 export default () => {
   return (
