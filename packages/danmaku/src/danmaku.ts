@@ -1,8 +1,10 @@
+import { $, isMobile } from '@oplayer/core'
 import { danmakuParseFromUrl } from './danmaku-parse'
 import getDanmakuTop from './top'
 
-import Player, { $ } from '@oplayer/core'
 import DanmakuWorker from './danmaku.worker?worker&inline'
+
+import type { Player } from '@oplayer/core'
 import type { ActiveDanmakuRect, DanmakuItem, Options, QueueItem, _Options } from './types'
 
 const danmakuWrap = (opacity?: number) =>
@@ -57,7 +59,7 @@ export default class Danmaku {
       antiOverlap: true,
       useWorker: true,
       synchronousPlayback: true,
-      fontSize: 1,
+      fontSize: isMobile ? 0.6 : 1,
       ...options
     }
 
