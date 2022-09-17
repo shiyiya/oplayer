@@ -17,6 +17,12 @@ export const setting = $.css({
   'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
 
+  '@media only screen and (max-width: 768px)': {
+    '&': {
+      'max-height': '140px'
+    }
+  },
+
   '::-webkit-scrollbar': {
     width: '2px'
   },
