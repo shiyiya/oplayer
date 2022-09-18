@@ -47,19 +47,6 @@ const p = Player.make(document.getElementById('player')!, {
   // }
 })
   .use([
-    dash(),
-    hls({
-      hlsConfig: {},
-      options: {
-        hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate'
-      }
-    }),
-    danmaku({
-      source: DANMAKU,
-      opacity: 0.8,
-      filter: (d: DanmakuItem) => d.text == '+1s'
-    }),
     ui({
       autoFocus: true,
       theme: { primaryColor: '#f00' },
@@ -93,6 +80,18 @@ const p = Player.make(document.getElementById('player')!, {
           text: '－－终わり－－'
         }
       ]
+    }),
+    dash(),
+    hls({
+      options: {
+        hlsQualityControl: true,
+        hlsQualitySwitch: 'immediate'
+      }
+    }),
+    danmaku({
+      source: DANMAKU,
+      opacity: 0.8,
+      filter: (d: DanmakuItem) => d.text == '+1s'
     })
   ])
   .create()

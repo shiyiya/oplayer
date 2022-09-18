@@ -77,7 +77,7 @@ export default (option: Options): PlayerPlugin => ({
       })
     }
 
-    player.on('loadedsetting', emitSetting)
+    emitSetting()
     player.on(['play', 'playing'], () => danmaku?.start())
     player.on(['pause', 'waiting'], () => danmaku?.stop())
     player.on('seeking', () => danmaku?.reset())

@@ -19,7 +19,6 @@ const player =Player.make(document.getElementById('oplayer'), {
   }
 })
   .use([
-    danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
     ui({
       theme: { primaryColor: '#6668ab' },
       subtitle: {
@@ -50,7 +49,15 @@ const player =Player.make(document.getElementById('oplayer'), {
           text: '－－终わり－－'
         }
       ]
-    })
+    }),
+    hls({
+      options: {
+        hlsQualityControl: true,
+        hlsQualitySwitch: 'immediate'
+      }
+    }),
+    dash(),
+    danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
   ])
   .create();
 
