@@ -77,13 +77,13 @@ export default (option: Options): PlayerPlugin => ({
       })
     }
 
-    player.on('setting:loaded', emitSetting)
-    player.on(['play', 'playing'], danmaku.start.bind(danmaku))
-    player.on(['pause', 'waiting'], danmaku.stop.bind(danmaku))
-    player.on('seeking', danmaku.reset.bind(danmaku))
-    player.on('destroy', danmaku.destroy)
+    emitSetting()
+    player.on(['play', 'playing'], () => danmaku?.start())
+    player.on(['pause', 'waiting'], () => danmaku?.stop())
+    player.on('seeking', () => danmaku?.reset())
+    player.on('destroy', () => danmaku?.destroy())
     player.on('fullscreenchange', ({ payload }) => {
-      if (payload.isWeb) return danmaku.reset()
+      if (payload.isWeb) return danmaku?.reset()
       setTimeout(() => {
         if (isIOS) {
           if (player.isFullScreen) {

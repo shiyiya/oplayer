@@ -1,7 +1,7 @@
 import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import initListener from '../listeners/init'
-import { settingShown } from '../style'
+import { settingShown, controllerHidden } from '../style'
 import { hasClass } from '../utils'
 
 export const maskCls = $.css({
@@ -24,7 +24,7 @@ const render = (player: Player, el: HTMLElement) => {
   $dom.addEventListener('click', () => {
     if (!initListener.isInitialized() || hasClass(player.$root, settingShown)) return
     if (isMobile) {
-      player.emit('controller:visibilitychange')
+      player.emit('controllervisibilitychange', hasClass(player.$root, controllerHidden))
     } else {
       player.togglePlay()
     }

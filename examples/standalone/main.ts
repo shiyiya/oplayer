@@ -1,5 +1,5 @@
 //@ts-nocheck
-import Player, { PlayerEvent, isMobile } from '@oplayer/core'
+import Player, { PlayerEvent, isMobile, isIOS, isiPad, isiPhone } from '@oplayer/core'
 import danmaku, { DanmakuItem } from '@oplayer/danmaku'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
@@ -47,20 +47,6 @@ const p = Player.make(document.getElementById('player')!, {
   // }
 })
   .use([
-    dash(),
-    hls({
-      hlsConfig: {},
-      options: {
-        hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate'
-      }
-    }),
-    // danmaku({
-    //   source: DANMAKU,
-    //   fontSize: isMobile ? 0.6 : 0.8,
-    //   opacity: 0.8,
-    //   filter: (d: DanmakuItem) => d.text == '+1s'
-    // }),
     ui({
       autoFocus: true,
       theme: { primaryColor: '#f00' },
@@ -126,6 +112,18 @@ const p = Player.make(document.getElementById('player')!, {
           onChange() {}
         }
       ]
+    }),
+    dash(),
+    hls({
+      options: {
+        hlsQualityControl: true,
+        hlsQualitySwitch: 'immediate'
+      }
+    }),
+    danmaku({
+      source: DANMAKU,
+      opacity: 0.8,
+      filter: (d: DanmakuItem) => d.text == '+1s'
     })
   ])
   .create()
@@ -200,3 +198,16 @@ p.on((e: PlayerEvent) => {
 render(meta(), document.getElementById('meta')!)
 
 window.p = p
+
+console.table({
+  UA: globalThis.navigator?.userAgent,
+  isMobile,
+  isIOS,
+  isiPad,
+  isiPhone,
+  fullscreenEnabled: Boolean(document.fullscreenEnabled),
+  webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
+  mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
+  msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
+  video: Boolean(p.$video.webkitEnterFullscreen)
+})

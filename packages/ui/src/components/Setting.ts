@@ -300,5 +300,4 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   player.on('destroy', () => document.removeEventListener('click', outClickListener))
 
   $.render($dom, $el)
-  setTimeout(() => player.emit('setting:loaded'))
 }

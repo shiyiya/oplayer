@@ -4,6 +4,8 @@
 # Production
 /build
 
+static/*.es.js
+
 /i18n
 
 # Generated files

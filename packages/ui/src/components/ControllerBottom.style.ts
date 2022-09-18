@@ -11,7 +11,6 @@ export const expand = $.css(`
     top: 0;
     right: 50%;
     z-index: 10;
-    padding: 4px;
     border-radius: 4px;
     box-sizing: border-box;
     transform: translate(50%, -100%);

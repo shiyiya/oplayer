@@ -113,3 +113,5 @@ Player.make(document.body, {
 - [loop](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=15901)
 - [quality](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=13520)
 - [speed](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=39216)
+
+- https://developer.mozilla.org/zh-CN/docs/Web/CSS/::backdrop

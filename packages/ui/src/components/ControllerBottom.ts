@@ -1,4 +1,4 @@
-import { $, isIOS, isMobile } from '@oplayer/core'
+import { $, isMobile, isIOS } from '@oplayer/core'
 import { icon, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
@@ -14,8 +14,6 @@ import playSvg from '../icons/play.svg?raw'
 import screenshotSvg from '../icons/screenshot.svg?raw'
 import volumeOffSvg from '../icons/sound-off.svg?raw'
 import volumeSvg from '../icons/sound-on.svg?raw'
-import webExpandSvg from '../icons/webfullscreen-enter.svg?raw'
-import webCompressSvg from '../icons/webfullscreen-exit.svg?raw'
 import settingsSvg from '../icons/settings.svg?raw'
 
 import {
@@ -77,16 +75,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
       ${
         config.fullscreen
-          ? player.isFullscreenEnabled
-            ? `<button aria-label="Fullscreen" class="${icon} ${off}" type="button">
+          ? `<button
+                aria-label="${player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen'}"
+                class="${icon} ${off}"
+                type="button"
+              >
                 ${expandSvg}
                 ${compressSvg}
-              </button>`
-            : `<button aria-label="WebFullscreen" class="${icon} ${
-                player.isFullScreen ? on : off
-              }" type="button">
-                ${webExpandSvg}
-                ${webCompressSvg}
               </button>`
           : ''
       }
@@ -108,12 +103,12 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   if (config.fullscreen) {
-    player.on('fullscreenchange', () =>
+    player.on('fullscreenchange', ({ payload }) =>
       setTimeout(() => {
-        if ($fullscreen) {
-          switcher($fullscreen, player.isFullScreen)
-        } else {
+        if (payload.isWeb) {
           switcher($webFull, toggleClass(player.$root, webFullScreen))
+        } else {
+          switcher($fullscreen, player.isFullScreen)
         }
       })
     )

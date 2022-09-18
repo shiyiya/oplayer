@@ -65,6 +65,12 @@ const config = {
             position: 'left'
           },
           {
+            to: '/playground',
+            docId: 'playground',
+            label: 'Playground',
+            position: 'left'
+          },
+          {
             href: 'https://github.com/shiyiya/oplayer/issues/new',
             label: 'Feedback',
             position: 'left'

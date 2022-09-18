@@ -279,21 +279,21 @@ export class Player {
 
   get isFullscreenEnabled() {
     return (
+      Boolean(isIOS && (this.$video as any).webkitEnterFullscreen) ||
       document.fullscreenEnabled ||
       (document as any).webkitFullscreenEnabled ||
       (document as any).mozFullScreenEnabled ||
-      (document as any).msFullscreenEnabled ||
-      Boolean(isIOS && (this.$video as any).webkitEnterFullscreen)
+      (document as any).msFullscreenEnabled
     )
   }
 
   get isFullScreen() {
     return Boolean(
-      (document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement ||
-        (document as any).msFullscreenElement) === this.$root ||
-        (isIOS && (this.$video as any).webkitDisplayingFullscreen)
+      (isIOS && (this.$video as any).webkitDisplayingFullscreen) ||
+        (document.fullscreenElement ||
+          (document as any).webkitFullscreenElement ||
+          (document as any).mozFullScreenElement ||
+          (document as any).msFullscreenElement) === this.$root
     )
   }
 
