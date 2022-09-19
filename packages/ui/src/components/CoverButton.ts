@@ -50,7 +50,6 @@ const render = (player: Player, el: HTMLElement) => {
       ${needPause ? pauseSvg : ''}
     </button>`
   )
-  const $button = <HTMLButtonElement>$dom.querySelector('button')!
 
   if (player.evil()) {
     addClass($dom, showCls)
