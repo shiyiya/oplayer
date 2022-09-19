@@ -150,7 +150,7 @@ const hlsPlugin = ({
 
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
-      generateSetting(player, hlsInstance, pluginOptions)
+      if (!player.evil()) generateSetting(player, hlsInstance, pluginOptions)
 
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js

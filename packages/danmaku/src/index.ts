@@ -9,6 +9,8 @@ export * from './types'
 export default (option: Options): PlayerPlugin => ({
   name: 'oplayer-plugin-danmaku',
   apply: (player: Player) => {
+    if (player.evil()) return
+
     let danmaku: Danmaku = new Danmaku(player, option)
     let isDanmakuShowing = false
 

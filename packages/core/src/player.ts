@@ -51,6 +51,7 @@ export class Player {
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
+    this.evil = this.#options.evil // QQ浏览器会劫持 video
     this.locales = new I18n(this.#options.lang)
   }
 
