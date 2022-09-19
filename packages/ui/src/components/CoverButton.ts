@@ -42,13 +42,19 @@ const render = (player: Player, el: HTMLElement) => {
     {},
     `<button aria-label="Play" class=${icon} type="button">
         ${playSvg}
-        ${isMobile ? pauseSvg : ''}
+        ${!player.evil() && isMobile ? pauseSvg : ''}
       </button>`
   )
   const $button = <HTMLButtonElement>$dom.querySelector('button')!
 
+  if (player.evil()) {
+    addClass($dom, showCls)
+    $.render($dom, el)
+    $dom.addEventListener('click', () => (player.play(), $dom.remove()), { once: true })
+    return
+  }
+
   $dom.addEventListener('click', (e: Event) => {
-    e.stopPropagation()
     player.togglePlay()
   })
 

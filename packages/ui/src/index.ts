@@ -19,7 +19,11 @@ import focusListener from './listeners/focus'
 import initListener from './listeners/init'
 
 const apply = (player: Player, config: UiConfig) => {
-  if (player.evil()) return
+  if (player.evil()) {
+    renderCoverButton(player, player.$root)
+    return
+  }
+
   const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
   const $root = $.create(`div.${root(config.theme)}`)
 
@@ -28,7 +32,7 @@ const apply = (player: Player, config: UiConfig) => {
   renderLoading(player, $frag)
   renderMask(player, $frag)
 
-  const { show, hide } = renderCoverButton(player, $frag)
+  const { show, hide } = renderCoverButton(player, $frag) as any
   renderControllerBar(player, $frag, config, show, hide)
 
   renderSetting(player, $frag, config.settings)
