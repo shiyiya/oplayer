@@ -1,5 +1,5 @@
 import { $, isMobile, isIOS } from '@oplayer/core'
-import { icon, webFullScreen } from '../style'
+import { icon, off, on, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
@@ -21,9 +21,7 @@ import {
   dropdown,
   dropdownHoverable,
   expand,
-  time,
-  on,
-  off
+  time
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {

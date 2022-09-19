@@ -49,6 +49,18 @@ export const icon = $.css({
 
 export const controllerHidden = $.css('/* controllerHidden */')
 
+export const on = $.css({
+  '& > svg:nth-child(1)': {
+    display: 'none'
+  }
+})
+
+export const off = $.css({
+  '& > svg:nth-child(2)': {
+    display: 'none'
+  }
+})
+
 // export const loading = $.css('/* loading */')
 
 // export const playing = $.css('/* playing */')

@@ -109,15 +109,3 @@ export const controllerBottom = $.css({
     'align-items': 'center'
   }
 })
-
-export const on = $.css({
-  '& > svg:nth-child(1)': {
-    display: 'none'
-  }
-})
-
-export const off = $.css({
-  '& > svg:nth-child(2)': {
-    display: 'none'
-  }
-})

@@ -4,7 +4,7 @@ import pauseSvg from '../icons/pause.svg?raw'
 import playSvg from '../icons/play.svg?raw'
 
 import initListener from '../listeners/init'
-import { icon } from '../style'
+import { icon, on, off } from '../style'
 import { addClass, removeClass } from '../utils'
 
 const styles = $.css({
@@ -37,13 +37,18 @@ const styles = $.css({
 const showCls = $.css('display: block; /* CoverButton */')
 
 const render = (player: Player, el: HTMLElement) => {
+  const needPause = !player.evil() && isMobile
   const $dom = $.create(
     `div.${styles}`,
     {},
-    `<button aria-label="Play" class=${icon} type="button">
-        ${playSvg}
-        ${!player.evil() && isMobile ? pauseSvg : ''}
-      </button>`
+    `<button
+      aria-label="Play"
+      class="${icon} ${needPause ? (player.isPlaying ? on : off) : ''}"
+      type="button"
+    >
+      ${playSvg}
+      ${needPause ? pauseSvg : ''}
+    </button>`
   )
   const $button = <HTMLButtonElement>$dom.querySelector('button')!
 
@@ -75,20 +80,19 @@ const render = (player: Player, el: HTMLElement) => {
       }
     })
   } else {
-    const $play = <HTMLButtonElement>$button.children[0]!
-    const $pause = <HTMLButtonElement>$button.children[1]!
+    const $target = <HTMLButtonElement>$dom.firstElementChild!
 
     function switcher() {
       if (player.isPlaying) {
-        $play.style.display = 'none'
-        $pause.style.display = 'block'
+        removeClass($target, off)
+        addClass($target, on)
       } else {
-        $play.style.display = 'block'
-        $pause.style.display = 'none'
+        addClass($target, off)
+        removeClass($target, on)
       }
     }
-    switcher()
 
+    switcher()
     player.on(['play', 'pause', 'videosourcechange'], switcher)
   }
 
