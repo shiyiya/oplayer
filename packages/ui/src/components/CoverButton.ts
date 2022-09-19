@@ -54,7 +54,7 @@ const render = (player: Player, el: HTMLElement) => {
     return
   }
 
-  $dom.addEventListener('click', (e: Event) => {
+  $dom.addEventListener('click', () => {
     player.togglePlay()
   })
 
