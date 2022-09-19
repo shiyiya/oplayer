@@ -19,6 +19,7 @@ import focusListener from './listeners/focus'
 import initListener from './listeners/init'
 
 const apply = (player: Player, config: UiConfig) => {
+  if(player.evil()) return
   const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
   const $root = $.create(`div.${root(config.theme)}`)
 

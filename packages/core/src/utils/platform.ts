@@ -14,3 +14,7 @@ export const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(
     globalThis.navigator?.userAgent
   ) || isIOS
+
+export const isQQBrowser =
+  /mqqbrowser/i.test(globalThis.navigator?.userAgent) &&
+  !/ qq/i.test(globalThis.navigator?.userAgent)

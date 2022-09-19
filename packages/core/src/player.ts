@@ -9,7 +9,7 @@ import type {
   PlayerPlugin,
   Source
 } from './types'
-import { isIOS } from './utils/platform'
+import { isIOS, isQQBrowser } from './utils/platform'
 import $ from './utils/dom'
 
 export class Player {
@@ -27,6 +27,8 @@ export class Player {
   hasError: boolean = false
   #isCustomLoader: boolean
 
+  evil: () => boolean
+
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   #playPromise: Promise<void> | undefined
 
@@ -43,7 +45,8 @@ export class Player {
         playsinline: true,
         lang: 'auto',
         source: {},
-        videoAttr: {}
+        videoAttr: {},
+        evil: () => isQQBrowser // QQ浏览器会劫持 video
       },
       typeof options === 'string' ? { source: { src: options } } : options
     )

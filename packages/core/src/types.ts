@@ -20,6 +20,7 @@ export type PlayerOptions = {
   source: Source
   videoAttr?: Record<string, boolean | string>
   lang?: Lang
+  evil?: () => boolean
 }
 
 export type PlayerPlugin = {
