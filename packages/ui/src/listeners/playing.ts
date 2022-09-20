@@ -6,7 +6,7 @@ const playingListener = (player: Player) => {
     player.$root.classList.add(playing)
   })
 
-  player.on('paused', () => {
+  player.on('pause', () => {
     player.$root.classList.remove(playing)
   })
 }
