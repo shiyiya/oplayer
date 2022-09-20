@@ -14,6 +14,7 @@ const styles = $.css(
         bottom: '50px',
         fill: '#fff',
         width: '3.5em',
+        'z-index': '97',
 
         '& > svg': Object.assign(
           {
