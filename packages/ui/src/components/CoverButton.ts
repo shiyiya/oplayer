@@ -75,6 +75,7 @@ const render = (player: Player, el: HTMLElement) => {
       }
     })
   } else {
+    player.on('videoinitialized', show)
     const $target = <HTMLButtonElement>$dom.firstElementChild!
 
     function switcher() {
