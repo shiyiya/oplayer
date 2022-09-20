@@ -19,13 +19,7 @@ const controllerBar = $.css({
 
 const CTRL_HIDE_DELAY = 1500
 
-const render = (
-  player: Player,
-  el: HTMLElement,
-  config: UiConfig,
-  onShow?: Function,
-  onHide?: Function
-) => {
+const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(`div.${controllerBar}`)
   renderProgress(player, $dom, config)
   renderControllerBottom(player, $dom, config)
@@ -56,7 +50,6 @@ const render = (
       return
     }
     addClass(player.$root, controllerHidden)
-    onHide?.()
   }
 
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -65,7 +58,6 @@ const render = (
     if (hasClass(player.$root, controllerHidden)) {
       cancelHideCtrl()
       removeClass(player.$root, controllerHidden)
-      onShow?.()
     }
   }
 

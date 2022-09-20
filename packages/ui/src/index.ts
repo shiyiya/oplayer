@@ -40,9 +40,8 @@ const apply = (player: Player, config: UiConfig) => {
   renderLoading(player, $frag)
   renderMask(player, $frag)
 
-  const { show, hide } = renderCoverButton(player, $frag) as any
-  renderControllerBar(player, $frag, config, show, hide)
-
+  renderCoverButton(player, $frag)
+  renderControllerBar(player, $frag, config)
   renderSetting(player, $frag, config.settings)
   registerSpeedSetting(player, config.speed)
 

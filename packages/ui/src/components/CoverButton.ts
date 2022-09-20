@@ -92,10 +92,17 @@ const render = (player: Player, el: HTMLElement) => {
     player.on(['play', 'pause', 'videosourcechange'], switcher)
   }
 
-  $.render($dom, el)
+  if (isMobile) {
+    player.on('controllervisibilitychange', ({ payload }) => {
+      if (payload) {
+        show()
+      } else {
+        hide()
+      }
+    })
+  }
 
-  // 手机上跟随 controller 显示/隐藏
-  return isMobile ? { show, hide } : {}
+  $.render($dom, el)
 }
 
 export default render
