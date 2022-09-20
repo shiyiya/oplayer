@@ -112,7 +112,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   }
 
-  !isMobile && player.on(['play', 'pause'], () => switcher($play, player.isPlaying))
+  !isMobile &&
+    player.on(['play', 'pause', 'videosourcechange'], () => switcher($play, player.isPlaying))
   player.on('volumechange', () => switcher($volume, player.isMuted))
 
   player.on(['durationchange', 'timeupdate'], () => {
