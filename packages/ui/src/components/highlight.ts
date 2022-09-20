@@ -55,9 +55,8 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     $.render($dom, container)
   }
 
-  player.on('durationchange', () => {
-    if (player.duration !== Infinity && player.duration > 0)
-      createHighlights(highlights, player.duration)
+  player.on('videoinitialized', () => {
+    createHighlights(highlights, player.duration)
   })
 
   player.on('videosourcechange', () => {

@@ -14,6 +14,7 @@ const initListener = (player: Player) => {
     if (isInitialized) return
     isInitialized = true
     player.$root.classList.add(initialized)
+    player.emit('videoinitialized')
   }
 
   if (isMobile) {
