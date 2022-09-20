@@ -1,5 +1,5 @@
 import Player, { $, isMobile } from '@oplayer/core'
-import initListener from '../listeners/init'
+import { isInitialed } from '../listeners'
 import { controllerHidden, settingShown } from '../style'
 import type { UiConfig } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
@@ -48,7 +48,7 @@ const render = (
 
   const hideCtrl = () => {
     if (
-      !initListener.isInitialized() ||
+      !isInitialed(player) ||
       (!player.isPlaying && !isMobile) ||
       hasClass(player.$root, controllerHidden) ||
       hasClass(player.$root, settingShown)

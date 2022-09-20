@@ -2,8 +2,8 @@ import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import pauseSvg from '../icons/pause.svg?raw'
 import playSvg from '../icons/play.svg?raw'
+import { isInitialed } from '../listeners'
 
-import initListener from '../listeners/init'
 import { icon, on, off } from '../style'
 import { addClass, removeClass } from '../utils'
 
@@ -65,13 +65,9 @@ const render = (player: Player, el: HTMLElement) => {
   const show = () => addClass($dom, showCls)
   const hide = () => removeClass($dom, showCls)
 
-  initListener.add(hide, () => {
-    if (!player.isPlaying) show()
-  })
-
   if (!isMobile) {
     player.on(['canplaythrough', 'play', 'pause', 'seeking', 'videosourcechange'], () => {
-      if (!initListener.isInitialized()) return
+      if (!isInitialed(player)) return
       if (player.isPlaying || (player.isLoading && !player.isPlaying)) {
         hide()
       } else {

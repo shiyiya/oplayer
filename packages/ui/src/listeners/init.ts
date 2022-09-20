@@ -1,44 +1,34 @@
 import type Player from '@oplayer/core'
 import { isMobile } from '@oplayer/core'
+import { initialized } from '../style'
 
-const initListener = (() => {
+const initListener = (player: Player) => {
   let isInitialized = false
-  let before = <Function[]>[]
-  let after = <Function[]>[]
 
   const initStart = () => {
+    if (isInitialized) player.$root.classList.remove(initialized)
     isInitialized = false
-    before.forEach((f) => f())
   }
 
   const initEnd = () => {
     if (isInitialized) return
     isInitialized = true
-    after.forEach((f) => f())
+    player.$root.classList.add(initialized)
   }
 
-  return {
-    isInitialized: () => isInitialized,
-    startListening: function listener(player: Player) {
-      initStart()
-      // https://www.cnblogs.com/taoze/p/5783928.html
-      if (isMobile) {
-        player.on('durationchange', function durationchange() {
-          if (player.duration !== Infinity && player.duration > 0) {
-            initEnd()
-          }
-        })
-      } else {
-        player.on('canplaythrough', initEnd)
+  if (isMobile) {
+    player.on('durationchange', function durationchange() {
+      if (player.duration !== Infinity && player.duration > 0) {
+        initEnd()
       }
-
-      player.on('videosourcechange', initStart)
-    },
-    add: (be: Function, af: Function) => {
-      before.push(be)
-      after.push(af)
-    }
+    })
+  } else {
+    player.on('canplaythrough', initEnd)
   }
-})()
 
-export default initListener
+  player.on('videosourcechange', initStart)
+}
+
+const isInitialed = (player: Player) => player.$root.classList.contains(initialized)
+
+export { initListener, isInitialed }

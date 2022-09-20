@@ -1,26 +1,25 @@
 import type Player from '@oplayer/core'
+import { focused } from '../style'
 
-const focusListener = (() => {
-  let isFocus = false
-
-  return {
-    isFocus: () => isFocus,
-    startListening: function listener(player: Player, autoFocus: boolean = false) {
-      function focus({ target }: FocusEvent) {
-        if (target && (player.$root.contains(target as Node) || player.$root == target!)) {
-          isFocus = true
-        } else {
-          isFocus = false
-        }
-      }
-
-      isFocus = autoFocus
-      document.addEventListener('click', focus)
-      player.on('destroy', () => {
-        document.removeEventListener('click', focus)
-      })
+const focusListener = (player: Player, autoFocus: boolean = false) => {
+  function focus({ target }: FocusEvent) {
+    if (target && (player.$root.contains(target as Node) || player.$root == target!)) {
+      player.$root.classList.add(focused)
+    } else {
+      player.$root.classList.remove(focused)
     }
   }
-})()
 
-export default focusListener
+  if (autoFocus) player.$root.classList.add(focused)
+
+  document.addEventListener('click', focus)
+  document.addEventListener('contextmenu', focus)
+  player.on('destroy', () => {
+    document.removeEventListener('click', focus)
+    document.removeEventListener('contextmenu', focus)
+  })
+}
+
+const isFocused = (player: Player) => player.$root.classList.contains(focused)
+
+export { focusListener, isFocused }

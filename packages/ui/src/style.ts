@@ -27,12 +27,12 @@ export const root = (theme: UiConfig['theme']) => {
 }
 
 export const webFullScreen = $.css`
-    z-index: 9999 !important;
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;`
+  z-index: 9999 !important;
+  position: fixed !important;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;`
 
 export const icon = $.css({
   background: 'none',
@@ -61,8 +61,10 @@ export const off = $.css({
   }
 })
 
-// export const loading = $.css('/* loading */')
+export const loading = $.css('/* loading */')
 
-// export const playing = $.css('/* playing */')
+export const initialized = $.css('/* isInitialized */')
 
-// export const paused = $.css('/* playing */')
+export const playing = $.css('/* playing */')
+
+export const focused = $.css('/* focused */')

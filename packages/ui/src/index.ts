@@ -15,13 +15,21 @@ import renderSubtitle from './components/Subtitle'
 import registerSpeedSetting from './functions/speed'
 import registerHotKey from './functions/hotkey'
 
-import focusListener from './listeners/focus'
-import initListener from './listeners/init'
+import { initListener, playingListener, focusListener, loadingListener } from './listeners'
 
 const apply = (player: Player, config: UiConfig) => {
   if (player.evil()) {
     renderCoverButton(player, player.$root)
     return
+  }
+
+  initListener(player)
+  playingListener(player)
+  loadingListener(player)
+
+  if (!isMobile) {
+    focusListener(player, config.autoFocus)
+    registerHotKey(player)
   }
 
   const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
@@ -36,19 +44,11 @@ const apply = (player: Player, config: UiConfig) => {
   renderControllerBar(player, $frag, config, show, hide)
 
   renderSetting(player, $frag, config.settings)
-
   registerSpeedSetting(player, config.speed)
 
   if (config.subtitle) {
     renderSubtitle(player, $frag, config.subtitle)
   }
-
-  if (!isMobile) {
-    focusListener.startListening(player, config.autoFocus)
-    registerHotKey(player)
-  }
-
-  initListener.startListening(player)
 
   $.render($frag, $root)
   $.render($root, player.$root)
