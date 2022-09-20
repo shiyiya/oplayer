@@ -69,7 +69,7 @@ export const progress = $.css({
   },
 
   [`&:hover .${highlightCls}`]: {
-    transform: 'translate(-4px, -2px)',
+    transform: 'translate(-4px, -1.5px)',
     height: '6px',
     width: '8px'
   }

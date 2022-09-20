@@ -8,11 +8,28 @@ const loadingListener = (player: Player) => {
   let bufferingDetected = false
   let enable = false
 
-  const show = () => player.$root.classList.add(loading)
-  const hide = () => player.$root.classList.remove(loading)
+  const add = () => player.$root.classList.add(loading)
+  const remove = () => player.$root.classList.remove(loading)
 
-  player.$root.classList.add(loading)
-  player.on('videoinitialized', hide)
+  add()
+  player.on('videoinitialized', remove)
+
+  player.on('seeking', () => {
+    if (!player.isPlaying) {
+      add()
+      player.on('canplaythrough', remove, { once: true })
+    }
+  })
+
+  player.on('play', () => (enable = true))
+
+  player.on('pause', () => ((enable = false), remove()))
+
+  player.on('videosourcechange', () => {
+    add()
+    enable = false
+    lastTime = currentTime = 0
+  })
 
   setInterval(() => {
     if (enable && isInitialed(player)) {
@@ -20,33 +37,17 @@ const loadingListener = (player: Player) => {
 
       // loading
       if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
-        show()
+        add()
         bufferingDetected = true
       }
 
       if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
-        player.$root.classList.remove(loading)
+        remove()
         bufferingDetected = false
       }
       lastTime = currentTime
     }
   }, 100)
-
-  player.on('seeking', () => {
-    if (!player.isPlaying) {
-      show()
-      player.on('canplaythrough', hide, { once: true })
-    }
-  })
-
-  player.on(['videosourcechange', 'pause', 'play', 'ended'], (e) => {
-    if (enable && e.type == 'pause') hide
-    enable = e.type != 'pause'
-  })
-
-  player.on('videosourcechange', () => {
-    lastTime = currentTime = 0
-  })
 }
 
 const isLoading = (player: Player) => player.$root.classList.contains(loading)
