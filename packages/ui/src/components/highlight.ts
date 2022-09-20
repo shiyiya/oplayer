@@ -1,5 +1,4 @@
 import Player, { $ } from '@oplayer/core'
-import initListener from '../listeners/init'
 import type { Highlight } from '../types'
 
 export const highlightTextCls = $.css(`
@@ -56,14 +55,11 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     $.render($dom, container)
   }
 
-  initListener.add(
-    () => {
-      $highlights.forEach((it) => it.remove())
-    },
-    () => {
-      createHighlights(highlights, player.duration)
-    }
-  )
+  player.on('videoinitialized', () => {
+    createHighlights(highlights, player.duration)
+  })
 
-  return {}
+  player.on('videosourcechange', () => {
+    $highlights.forEach((it) => it.remove())
+  })
 }

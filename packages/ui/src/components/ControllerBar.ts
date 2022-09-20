@@ -1,5 +1,5 @@
 import Player, { $, isMobile } from '@oplayer/core'
-import initListener from '../listeners/init'
+import { isInitialed } from '../listeners'
 import { controllerHidden, settingShown } from '../style'
 import type { UiConfig } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
@@ -19,13 +19,7 @@ const controllerBar = $.css({
 
 const CTRL_HIDE_DELAY = 1500
 
-const render = (
-  player: Player,
-  el: HTMLElement,
-  config: UiConfig,
-  onShow?: Function,
-  onHide?: Function
-) => {
+const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(`div.${controllerBar}`)
   renderProgress(player, $dom, config)
   renderControllerBottom(player, $dom, config)
@@ -48,7 +42,7 @@ const render = (
 
   const hideCtrl = () => {
     if (
-      !initListener.isInitialized() ||
+      !isInitialed(player) ||
       (!player.isPlaying && !isMobile) ||
       hasClass(player.$root, controllerHidden) ||
       hasClass(player.$root, settingShown)
@@ -56,7 +50,6 @@ const render = (
       return
     }
     addClass(player.$root, controllerHidden)
-    onHide?.()
   }
 
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -65,7 +58,6 @@ const render = (
     if (hasClass(player.$root, controllerHidden)) {
       cancelHideCtrl()
       removeClass(player.$root, controllerHidden)
-      onShow?.()
     }
   }
 

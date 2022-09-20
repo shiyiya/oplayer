@@ -29,6 +29,6 @@ export const VIDEO_EVENTS = [
 
 export const PLAYER_EVENTS = ['contextmenu', 'fullscreenchange', 'fullscreenerror'] as const
 
-export const OH_EVENTS = ['loadedplugin', 'pluginerror', 'videosourcechange', 'destroy'] as const
+export const OH_EVENTS = ['loadedplugin', 'videosourcechange', 'destroy'] as const
 
 export const EVENTS = [...VIDEO_EVENTS, ...PLAYER_EVENTS, ...OH_EVENTS] as const

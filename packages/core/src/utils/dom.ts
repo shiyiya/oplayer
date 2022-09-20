@@ -1,4 +1,4 @@
-import hash from './hash'
+import { hashify } from './hash'
 import { css as _css, DeepCssObject } from './css'
 
 export namespace $ {
@@ -64,7 +64,7 @@ export namespace $ {
       const key = typeof s == 'object' ? JSON.stringify(s) : s
 
       if (!cachedCss[key]) {
-        cachedCss[key] = 'css-' + hash(key).toString(36)
+        cachedCss[key] = 'css-' + hashify(key)
       }
 
       return cachedCss[key]!
@@ -131,6 +131,8 @@ export namespace $ {
 
   //TODO: support ssr
   export const { css, getCssValue } = createStyled()
+
+  export const hashifyClass = (str: string) => 'css-' + hashify(str)
 }
 
 export default $

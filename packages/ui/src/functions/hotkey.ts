@@ -1,5 +1,5 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
-import focusListener from '../listeners/focus'
+import { isFocused } from '../listeners/focus'
 import { webFullScreen } from '../style'
 import { formatTime, screenShot } from '../utils'
 
@@ -50,7 +50,7 @@ export default function registerHotKey(player: Player) {
   let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {
-    if (document.activeElement?.getAttribute('contenteditable') || !focusListener.isFocus()) return
+    if (document.activeElement?.getAttribute('contenteditable') || !isFocused(player)) return
 
     const key = e.key
 
