@@ -1,11 +1,9 @@
 // murmurhash2 via https://gist.github.com/raycmorgan/588423
-export function hashify(obj: Object) {
-  let str = JSON.stringify(obj)
-  let toRet = hash(str).toString(36)
-  return toRet
+export function hashify(str: string) {
+  return hash(str).toString(36)
 }
 
-export default function hash(str: string, seed: number = 0) {
+export function hash(str: string, seed: number = 0) {
   let m = 0x5bd1e995
   let r = 24
   let h = seed ^ str.length

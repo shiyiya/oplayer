@@ -61,10 +61,10 @@ export const off = $.css({
   }
 })
 
-export const loading = $.css('/* loading */')
+export const loading = $.hashifyClass('/* loading */')
 
-export const initialized = $.css('/* isInitialized */')
+export const initialized = $.hashifyClass('/* isInitialized */')
 
-export const playing = $.css('/* playing */')
+export const playing = $.hashifyClass('/* playing */')
 
-export const focused = $.css('/* focused */')
+export const focused = $.hashifyClass('/* focused */')
