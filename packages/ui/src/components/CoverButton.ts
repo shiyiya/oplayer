@@ -67,14 +67,10 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   if (player.evil()) {
-    $.render($dom, el)
     $dom.addEventListener('click', () => (player.play(), $dom.remove()), { once: true })
-    return
+  } else {
+    $dom.addEventListener('click', () => player.togglePlay())
   }
-
-  $dom.addEventListener('click', () => {
-    player.togglePlay()
-  })
 
   $.render($dom, el)
 }

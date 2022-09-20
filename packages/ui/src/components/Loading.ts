@@ -5,7 +5,7 @@ import { line, loading, wrap } from './Loading.style'
 const render = (_: Player, el: HTMLElement) => {
   const $dom = $.create(
     `div.${wrap}`,
-    {},
+    { 'aria-label': 'Loading' },
     `<div class=${loading}>
       <div class="${line}"></div>
     </div>

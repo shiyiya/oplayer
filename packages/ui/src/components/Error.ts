@@ -34,7 +34,7 @@ const VIDEO_ERROR_MAP = {
 const render = (player: Player, el: HTMLElement) => {
   const $dom = $.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' })
 
-  player.on(['error', 'pluginerror'], ({ payload }: PlayerEvent) => {
+  player.on('error', ({ payload }: PlayerEvent) => {
     let message: string = payload.message
 
     if (payload instanceof Event) {
