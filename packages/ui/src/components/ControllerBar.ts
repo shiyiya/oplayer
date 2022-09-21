@@ -70,14 +70,14 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       debounceHideCtrl()
     })
     player.$root.addEventListener('mouseleave', hideCtrl)
-  } else {
-    player.on('controllervisibilitychange', ({ payload }) => {
-      if (payload) {
-        showCtrl()
-      } else {
-        hideCtrl()
-      }
-    })
+  }
+
+  return () => {
+    if (hasClass(player.$root, controllerHidden)) {
+      showCtrl()
+    } else {
+      hideCtrl()
+    }
   }
 }
 

@@ -38,10 +38,9 @@ const apply = (player: Player, config: UiConfig) => {
   renderError(player, $frag)
   renderNotice(player, $frag)
   renderLoading(player, $frag)
-  renderMask(player, $frag)
-
   renderCoverButton(player, $frag)
-  renderControllerBar(player, $frag, config)
+  renderMask(player, $frag, renderControllerBar(player, $frag, config))
+
   renderSetting(player, $frag, config.settings)
   registerSpeedSetting(player, config.speed)
 
