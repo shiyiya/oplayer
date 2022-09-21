@@ -13,19 +13,19 @@ import { isIOS, isQQBrowser } from './utils/platform'
 import $ from './utils/dom'
 
 export class Player {
-  readonly #container: HTMLElement
-  readonly #options: Required<PlayerOptions>
+  readonly container: HTMLElement
+  readonly options: Required<PlayerOptions>
 
   readonly #E = new E()
-  public locales: I18n
-  readonly #plugins: Set<PlayerPlugin> = new Set()
+  readonly locales: I18n
+  readonly plugins: Set<PlayerPlugin> = new Set()
 
   $root: HTMLElement
   $video: HTMLVideoElement
   listeners: Record<typeof EVENTS[number], Function> = Object.create(null)
 
   hasError: boolean = false
-  #isCustomLoader: boolean
+  isCustomLoader: boolean = false
 
   evil: () => boolean
 
@@ -33,8 +33,8 @@ export class Player {
   #playPromise: Promise<void> | undefined
 
   constructor(el: HTMLElement, options: PlayerOptions | string) {
-    this.#container = el
-    this.#options = Object.assign(
+    this.container = el
+    this.options = Object.assign(
       {
         autoplay: false,
         muted: false,
@@ -51,8 +51,8 @@ export class Player {
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
-    this.evil = this.#options.evil // QQ浏览器会劫持 video
-    this.locales = new I18n(this.#options.lang)
+    this.evil = this.options.evil // QQ浏览器会劫持 video
+    this.locales = new I18n(this.options.lang)
   }
 
   static make(el: HTMLElement, options: PlayerOptions | string): Player {
@@ -61,7 +61,7 @@ export class Player {
 
   readonly use = (plugins: PlayerPlugin | PlayerPlugin[]) => {
     ;[plugins].flat().forEach((plugin) => {
-      this.#plugins.add(plugin)
+      this.plugins.add(plugin)
     })
     return this
   }
@@ -101,7 +101,7 @@ export class Player {
     this.render()
     this.initEvent()
     this.#applyPlugins()
-    if (this.#options.source.src) this.load(this.#options.source)
+    if (this.options.source.src) this.load(this.options.source)
     return this
   }
 
@@ -155,20 +155,20 @@ export class Player {
         position: relative;
       `)}`,
       {
-        autoplay: this.#options.autoplay,
-        loop: this.#options.loop,
-        playsinline: this.#options.playsinline,
-        'webkit-playsinline': this.#options.playsinline,
-        'x5-playsinline': this.#options.playsinline,
-        preload: this.#options.preload,
-        poster: this.#options.source.poster,
-        ...this.#options.videoAttr
+        autoplay: this.options.autoplay,
+        loop: this.options.loop,
+        playsinline: this.options.playsinline,
+        'webkit-playsinline': this.options.playsinline,
+        'x5-playsinline': this.options.playsinline,
+        preload: this.options.preload,
+        poster: this.options.source.poster,
+        ...this.options.videoAttr
       }
     )
 
     // not working `setAttribute`
-    this.$video.muted = !!this.#options.muted
-    this.$video.volume = this.#options.volume
+    this.$video.muted = !!this.options.muted
+    this.$video.volume = this.options.volume
 
     this.$root = $.create(
       `div.${$.css(`
@@ -189,20 +189,20 @@ export class Player {
   }
 
   load = async (source: Source) => {
-    for await (const plugin of this.#plugins) {
-      if (plugin.load && !this.#isCustomLoader) {
-        if ((await plugin.load(this, source, { loader: this.#isCustomLoader })) === true) {
-          this.#isCustomLoader = true
+    for await (const plugin of this.plugins) {
+      if (plugin.load && !this.isCustomLoader) {
+        if ((await plugin.load(this, source, { loader: this.isCustomLoader })) === true) {
+          this.isCustomLoader = true
         }
       }
     }
-    if (!this.#isCustomLoader) {
+    if (!this.isCustomLoader) {
       this.$video.src = source.src
     }
   }
 
   #applyPlugins = () => {
-    this.#plugins.forEach((plugin) => {
+    this.plugins.forEach((plugin) => {
       if (plugin.apply) {
         plugin.apply(this)
       }
@@ -339,7 +339,7 @@ export class Player {
   async changeSource(source: Source) {
     this.#playPromise = undefined
     this.hasError = false
-    this.#isCustomLoader = false
+    this.isCustomLoader = false
     this.$video.poster = source.poster || ''
     await this.load(source)
     this.emit('videosourcechange', source)
@@ -349,15 +349,11 @@ export class Player {
     this.emit('destroy')
     this.pause()
     this.isFullScreen && this.exitFullscreen()
-    this.#plugins.clear()
+    this.plugins.clear()
     this.$video.src = ''
     this.$video.remove()
-    this.#container.remove()
+    this.container.remove()
     this.#E.offAll()
-  }
-
-  get container() {
-    return this.#container
   }
 
   get state() {
@@ -438,10 +434,6 @@ export class Player {
       (Document.prototype as any).mozCancelFullScreen ||
       (Document.prototype as any).msExitFullscreen
     )
-  }
-
-  get plugins() {
-    return [...this.#plugins].map((plugin) => plugin.name || 'anonymous')
   }
 
   static get version() {

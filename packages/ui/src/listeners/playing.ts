@@ -6,12 +6,8 @@ const playingListener = (player: Player) => {
     player.$root.classList.add(playing)
   })
 
-  player.on('pause', () => {
+  player.on(['pause', 'videosourcechange'], () => {
     player.$root.classList.remove(playing)
-  })
-
-  player.on('videosourcechange', () => {
-    player.isPlaying ? player.$root.classList.add(playing) : player.$root.classList.remove(playing)
   })
 }
 
