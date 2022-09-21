@@ -1,4 +1,4 @@
-import { $ } from '@oplayer/core'
+import Player, { $ } from '@oplayer/core'
 import type { Thumbnails } from '../types'
 
 const noop = () => {}
@@ -14,15 +14,15 @@ export const thumbnailCls = $.css(`
   width: 160px;
   height: 90px;`)
 
-export default function (container: HTMLElement, options?: Thumbnails) {
+export default function (player: Player, container: HTMLElement, options?: Thumbnails) {
   if (!options) return { update: noop, hide: noop, init: noop }
 
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
-
-  let isImgLoaded = false
+  let isActive = false
   const chunk = 100 / options.number
   let minRate = 0,
-    maxRate = 0
+    maxRate = 0,
+    src = options.src
 
   setTimeout(() => {
     minRate = 80 / container.clientWidth
@@ -30,11 +30,19 @@ export default function (container: HTMLElement, options?: Thumbnails) {
   })
 
   const init = () => {
-    if (!isImgLoaded) {
-      isImgLoaded = true
-      $dom.style.backgroundImage = `url(${options.src})`
+    if (!isActive) {
+      isActive = true
+      $dom.style.backgroundImage = `url(${src})`
     }
   }
+
+  player.on('videosourcechange', () => {
+    isActive = false
+  })
+
+  player.on('thumbnailssourcechange', ({ payload }) => {
+    src = payload
+  })
 
   return {
     init,

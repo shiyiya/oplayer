@@ -61,7 +61,13 @@ const p = Player.make(document.getElementById('player')!, {
           }
         ]
       },
-      thumbnails: { src: THUMB, number: 100 },
+      thumbnails: {
+        src:
+          'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt' ||
+          THUMB,
+        isVTT: true,
+        number: 100
+      },
       highlight: [
         {
           time: 12,

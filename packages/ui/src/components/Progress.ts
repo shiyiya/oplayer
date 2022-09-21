@@ -12,6 +12,7 @@ import {
   progressInner
 } from './Progress.style'
 import renderThumbnail from './thumbnail'
+import renderVTTThumbnail from './vtt-thumbnails'
 import renderHighlight, { highlightCls } from './highlight'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
@@ -25,7 +26,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       <div class="${dot}" style="transform: translateX(0%);"></div>
   </div>`
   )
-  const { init: initThumbnail, update: thumbnailUpdater } = renderThumbnail($dom, config.thumbnails)
+  const { init: initThumbnail, update: thumbnailUpdater } = config.thumbnails?.isVTT
+    ? renderVTTThumbnail(player, $dom, config.thumbnails)
+    : renderThumbnail(player, $dom, config.thumbnails)
 
   renderHighlight(player, $dom, config.highlight)
 

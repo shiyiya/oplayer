@@ -1,6 +1,7 @@
 import { $, isMobile } from '@oplayer/core'
 import { highlightCls } from './highlight'
 import { thumbnailCls } from './thumbnail'
+import { vttThumbnailsCls } from './vtt-thumbnails'
 
 export const buffered = $.css({
   'background-color': 'hsla(0, 0%, 100%, 0.4)'
@@ -64,9 +65,10 @@ export const progress = $.css({
     transform: 'scale(1)'
   },
 
-  [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}`]: {
-    display: 'block'
-  },
+  [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}, &.${progressDragging} .${vttThumbnailsCls}`]:
+    {
+      display: 'block'
+    },
 
   [`&:hover .${highlightCls}`]: {
     transform: 'translate(-4px, -1.5px)',

@@ -34,6 +34,7 @@ export type Thumbnails = {
   number: number
   width?: number
   height?: number
+  isVTT?: boolean
 }
 
 export type Highlight = {
