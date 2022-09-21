@@ -104,23 +104,17 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     const cssObj = {} as any
 
     if (!vttImageDef.match(/#xywh=/i)) {
-      cssObj.background = 'url("' + vttImageDef + '")'
+      cssObj.background = 'url("' + options.base || '' + vttImageDef + '")'
       return cssObj
     }
 
     const imageProps = getPropsFromDef(vttImageDef)
 
     cssObj.background =
-      'url("https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/' +
-      imageProps.image +
-      '") no-repeat -' +
-      imageProps.x +
-      'px -' +
-      imageProps.y +
-      'px'
+      'url("' + imageProps.image + '") no-repeat -' + imageProps.x + 'px -' + imageProps.y + 'px'
     cssObj.width = imageProps.w + 'px'
     cssObj.height = imageProps.h + 'px'
-    cssObj.url = imageProps.image
+    cssObj.url = options.base || '' + imageProps.image
 
     return cssObj
   }
