@@ -65,6 +65,7 @@ const p = Player.make(document.getElementById('player')!, {
         src:
           'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt' ||
           THUMB,
+        base: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/',
         isVTT: true,
         number: 100
       },
