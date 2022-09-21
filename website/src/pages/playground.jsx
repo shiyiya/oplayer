@@ -10,7 +10,10 @@ import danmaku from '/danmaku.es.js'
 import hls from '/hls.es.js'
 import dash from '/dash.es.js'
 
-// https://cdn.jsdelivr.net/gh/shiyiya/oplayer@master/README.md
+// dash: https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd
+// hls:  https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+// HDR:
+// ...
 
 const player =Player.make(document.getElementById('oplayer'), {
   source: {

@@ -22,12 +22,13 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     isActive = false,
     chunk = 100 / options.number
 
-  $dom.style.width = (options?.width || 160) + 'px'
-  $dom.style.height = (options?.height || 90) + 'px'
-
   setTimeout(() => {
-    minRate = $dom.style.width / container.clientWidth
-    maxRate = (container.clientWidth - $dom.style.width) / container.clientWidth
+    const width = options?.width || 160
+    const height = options?.height || 90
+    $dom.style.width = width + 'px'
+    $dom.style.height = height + 'px'
+    minRate = width / container.clientWidth
+    maxRate = (container.clientWidth - width) / container.clientWidth
   })
 
   const init = () => {
