@@ -27,8 +27,8 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     const height = options?.height || 90
     $dom.style.width = width + 'px'
     $dom.style.height = height + 'px'
-    minRate = width / container.clientWidth
-    maxRate = (container.clientWidth - width) / container.clientWidth
+    minRate = width / 2 / container.clientWidth
+    maxRate = (container.clientWidth - width / 2) / container.clientWidth
   })
 
   const init = () => {
