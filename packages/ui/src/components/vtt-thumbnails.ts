@@ -17,11 +17,15 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
 
   type Def = { start: number; end: number; css: any }
 
-  const $dom = $.render($.create(`div.${vttThumbnailsCls}`), container)
   let vttData = [] as Def[]
   let cache = {} as any
   let lastStyle: Def
   let isActive = false
+  let src = options.src
+  const $dom = $.render($.create(`div.${vttThumbnailsCls}`), container)
+
+  $dom.style.width = (options?.width || 160) + 'px'
+  $dom.style.height = (options?.height || 90) + 'px'
 
   const bootstrap = (src: string) => {
     fetch(src)
@@ -104,20 +108,48 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     const cssObj = {} as any
 
     if (!vttImageDef.match(/#xywh=/i)) {
-      cssObj.background = 'url("' + options.base || '' + vttImageDef + '")'
+      cssObj.background = 'url("' + mergeSrc(vttImageDef) + '")'
       return cssObj
     }
 
     const imageProps = getPropsFromDef(vttImageDef)
 
     cssObj.background =
-      'url("' + imageProps.image + '") no-repeat -' + imageProps.x + 'px -' + imageProps.y + 'px'
+      'url("' +
+      mergeSrc(imageProps.image!) +
+      '") no-repeat -' +
+      imageProps.x +
+      'px -' +
+      imageProps.y +
+      'px'
     cssObj.width = imageProps.w + 'px'
     cssObj.height = imageProps.h + 'px'
-    cssObj.url = options.base || '' + imageProps.image
+    cssObj.url = mergeSrc(imageProps.image!)
 
     return cssObj
   }
+
+  const mergeSrc = (() => {
+    const cache = {} as Record<string, string>
+    return (path: string) => {
+      if (cache[path]) return cache[path]
+      if (/(https?:)?\/\//.test(path)) return path
+
+      let plain = src
+      if (/(https?:)?\/\//.test(path)) {
+        plain = src.substring(0, src.indexOf('?') || undefined)
+      }
+
+      const i = plain.lastIndexOf('/')
+      if (plain.startsWith('https://') && i < 8) return src + path
+      if (plain.startsWith('http://') && i < 7) return src + path
+
+      const fileName = plain.substring(i + 1) // 不包含 '/'
+      cache[path] = src.replace(fileName, path)
+
+      return cache[path]
+    }
+  })()
 
   const getPropsFromDef = (def: string) => {
     const imageDefSplit = def.split(/#xywh=/i)

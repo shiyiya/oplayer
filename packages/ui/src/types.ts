@@ -35,7 +35,6 @@ export type Thumbnails = {
   width?: number
   height?: number
   isVTT?: boolean
-  base?: string // vtt base
 }
 
 export type Highlight = {

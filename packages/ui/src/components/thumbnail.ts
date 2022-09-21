@@ -10,23 +10,24 @@ export const thumbnailCls = $.css(`
   pointer-events: none;
   transform: translateX(-50%);
   background-position-y: center;
-  display: none;
-  width: 160px;
-  height: 90px;`)
+  display: none;`)
 
 export default function (player: Player, container: HTMLElement, options?: Thumbnails) {
   if (!options) return { update: noop, hide: noop, init: noop }
 
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
-  let isActive = false
-  const chunk = 100 / options.number
   let minRate = 0,
     maxRate = 0,
-    src = options.src
+    src = options.src,
+    isActive = false,
+    chunk = 100 / options.number
+
+  $dom.style.width = (options?.width || 160) + 'px'
+  $dom.style.height = (options?.height || 90) + 'px'
 
   setTimeout(() => {
-    minRate = 80 / container.clientWidth
-    maxRate = (container.clientWidth - 80) / container.clientWidth
+    minRate = $dom.style.width / container.clientWidth
+    maxRate = (container.clientWidth - $dom.style.width) / container.clientWidth
   })
 
   const init = () => {
