@@ -68,6 +68,7 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   if (player.evil()) {
+    $dom.style.display = 'block'
     $dom.addEventListener('click', () => (player.play(), $dom.remove()), { once: true })
   } else {
     $dom.addEventListener('click', () => player.togglePlay())
