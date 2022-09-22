@@ -1,6 +1,6 @@
 import type Player from '@oplayer/core'
 import { loading } from '../style'
-import { isInitialed } from './init'
+import { isInitialized } from './init'
 
 const loadingListener = (player: Player) => {
   let lastTime = 0
@@ -32,7 +32,7 @@ const loadingListener = (player: Player) => {
   })
 
   setInterval(() => {
-    if (enable && isInitialed(player)) {
+    if (enable && isInitialized(player)) {
       currentTime = player.currentTime
 
       // loading

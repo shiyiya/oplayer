@@ -1,6 +1,6 @@
 import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
-import { isInitialed } from '../listeners'
+import { isInitialized } from '../listeners'
 import { settingShown } from '../style'
 import { hasClass } from '../utils'
 
@@ -22,7 +22,7 @@ const render = (player: Player, el: HTMLElement, toggleController: Function) => 
   const $dom = $.create(`div.${maskCls}`)
 
   $dom.addEventListener('click', () => {
-    if (!isInitialed(player) || hasClass(player.$root, settingShown)) return
+    if (!isInitialized(player) || hasClass(player.$root, settingShown)) return
     if (isMobile) {
       toggleController()
     } else {

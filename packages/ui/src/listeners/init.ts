@@ -30,6 +30,6 @@ const initListener = (player: Player) => {
   player.on('videosourcechange', initStart)
 }
 
-const isInitialed = (player: Player) => player.$root.classList.contains(initialized)
+const isInitialized = (player: Player) => player.$root.classList.contains(initialized)
 
-export { initListener, isInitialed }
+export { initListener, isInitialized }
