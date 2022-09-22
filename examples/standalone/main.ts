@@ -40,15 +40,16 @@ let logs: HTMLTextAreaElement
 const p = Player.make(document.getElementById('player')!, {
   muted: true,
   volume: 0.5,
-  source: { src, poster: POSTER }
+  source: { src, poster: POSTER },
   // screenshot
-  // videoAttr: {
-  //   crossorigin: 'anonymous'
-  // }
+  videoAttr: {
+    crossorigin: 'anonymous'
+  }
 })
   .use([
     ui({
       autoFocus: true,
+      screenshot: true,
       theme: { primaryColor: '#f00' },
       subtitle: {
         color: 'hotpink',
