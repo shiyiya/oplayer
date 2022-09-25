@@ -51,6 +51,29 @@ const player =Player.make(document.getElementById('oplayer'), {
           time: 88,
           text: '－－终わり－－'
         }
+      ],
+      menu: [
+        {
+          name: '剧集',
+          children: [
+            {
+              name: 'mp4',
+              default: true,
+              value: 'https://oplayer.vercel.app/君の名は.mp4'
+            },
+            {
+              name: 'hls',
+              value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+            },
+            {
+              name: 'dash',
+              value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
+            }
+          ],
+          onChange({ value }) {
+            player.changeSource({ src: value })
+          }
+        }
       ]
     }),
     hls({

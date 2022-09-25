@@ -30,6 +30,8 @@ export default (player: Player, initialState?: MenuBar[]) => {
       const label = elm.getAttribute('aria-label')
       const target = menus.find((it) => it.name == label)
 
+      if (elm.getAttribute('data-selected') == 'true') return
+
       if (elm.tagName == 'div') {
         target?.onClick?.()
       } else {
