@@ -63,7 +63,7 @@ const generateSetting = (
 
     if (hlsInstance.levels.length > 1)
       hlsInstance.levels.forEach((level, i) => {
-        let name = level.name || level.height.toString()
+        let name = (level.name || level.height).toString()
         if (isFinite(+name)) name += 'p'
         if (options.withBitrate) {
           const kb = level.bitrate / 1000
