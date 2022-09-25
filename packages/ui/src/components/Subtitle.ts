@@ -4,7 +4,7 @@ import subtitleSvg from '../icons/subtitles.svg?raw'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
-export default function (player: Player, el: HTMLElement, options: SubtitleConfig) {
+export default function (player: Player, el: HTMLElement, options?: SubtitleConfig) {
   new Subtitle(player, el, options)
 }
 

@@ -43,13 +43,10 @@ const apply = (player: Player, config: UiConfig) => {
   renderMask(player, $frag, renderControllerBar(player, $frag, config))
 
   renderSetting(player, $frag, config.settings)
-  registerSpeedSetting(player, config.speed)
-
   renderMenubar(player, config.menu)
 
-  if (config.subtitle) {
-    renderSubtitle(player, $frag, config.subtitle)
-  }
+  registerSpeedSetting(player, config.speed)
+  renderSubtitle(player, $frag, config.subtitle)
 
   $.render($frag, $root)
   $.render($root, player.$root)
