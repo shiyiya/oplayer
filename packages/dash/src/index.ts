@@ -65,7 +65,9 @@ const generateSetting = (
       })
     }
 
+    //@ts-ignore
     player.unRegisterSetting?.(PLUGIN_NAME)
+    //@ts-ignore
     player.registerSetting?.({
       name: player.locales.get('Quality'),
       type: 'selector',
@@ -92,6 +94,7 @@ const generateSetting = (
     const level = dashInstance.getQualityFor('video')
     const height = dashInstance.getBitrateInfoListFor('video')[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
+    //@ts-ignore
     player.updateSettingLabel?.(PLUGIN_NAME, levelName)
   }
 
@@ -117,6 +120,7 @@ const dashPlugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
+        //@ts-ignore
         player.unRegisterSetting?.(PLUGIN_NAME)
         dashInstance?.reset()
         return false

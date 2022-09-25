@@ -75,7 +75,9 @@ const generateSetting = (
         return settingOptions.push({ name, type: 'switcher', default: false, value: i })
       })
 
+    //@ts-ignore
     player.unRegisterSetting?.(PLUGIN_NAME)
+    //@ts-ignore
     player.registerSetting?.({
       name: player.locales.get('Quality'),
       type: 'selector',
@@ -98,8 +100,10 @@ const generateSetting = (
     if (hlsInstance.autoLevelEnabled) {
       const height = hlsInstance.levels[level]!.height
       const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
+      //@ts-ignore
       player.updateSettingLabel?.(PLUGIN_NAME, levelName)
     } else {
+      //@ts-ignore
       player.selectSetting(PLUGIN_NAME, level)
     }
   }
@@ -139,6 +143,7 @@ const hlsPlugin = ({
 
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
+        //@ts-ignore
         player.unRegisterSetting?.(PLUGIN_NAME)
 
         return false
