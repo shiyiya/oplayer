@@ -54,7 +54,7 @@ const player =Player.make(document.getElementById('oplayer'), {
       ],
       menu: [
         {
-          name: '剧集',
+          name: 'source',
           children: [
             {
               name: 'mp4',
