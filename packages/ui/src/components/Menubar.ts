@@ -26,7 +26,6 @@ export default (player: Player, initialState?: MenuBar[]) => {
   setTimeout(() => {
     $bar = document.querySelector(`.${controllerBottom}`)!.children[1]! as HTMLDivElement
     $bar.addEventListener('click', (e) => {
-      e.stopImmediatePropagation()
       const elm: HTMLElement = e.target as HTMLElement
       const label = elm.getAttribute('aria-label')
       const target = menus.find((it) => it.name == label)

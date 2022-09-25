@@ -93,7 +93,8 @@ const p = Player.make(document.getElementById('player')!, {
           name: '剧集',
           children: [
             {
-              name: '第一集'
+              name: '第一集',
+              default: true
             },
             {
               name: '第二集'

@@ -56,7 +56,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
             ${volumeSvg}
             ${volumeOffSvg}
         </button>
-        <div class=${expand}></div>
+        ${!isIOS ? `<div class=${expand}></div>` : ''}
       </div>
 
       <button aria-label="Setting" class=${icon} type="button">
