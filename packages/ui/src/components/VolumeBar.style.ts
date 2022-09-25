@@ -3,7 +3,6 @@ import { $ } from '@oplayer/core'
 export const wrap = $.css`
   width: 35px;
   height: 110px;
-  padding: 4px;
 `
 
 export const volumeValue = $.css(`

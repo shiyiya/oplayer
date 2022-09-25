@@ -11,6 +11,7 @@ import renderMask from './components/Mask'
 import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle from './components/Subtitle'
+import renderMenubar from './components/Menubar'
 
 import registerSpeedSetting from './functions/speed'
 import registerHotKey from './functions/hotkey'
@@ -43,6 +44,8 @@ const apply = (player: Player, config: UiConfig) => {
 
   renderSetting(player, $frag, config.settings)
   registerSpeedSetting(player, config.speed)
+
+  renderMenubar(player, config.menu)
 
   if (config.subtitle) {
     renderSubtitle(player, $frag, config.subtitle)

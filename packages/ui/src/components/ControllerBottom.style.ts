@@ -11,6 +11,7 @@ export const expand = $.css(`
     top: 0;
     right: 50%;
     z-index: 10;
+    padding: 4px;
     border-radius: 4px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
@@ -57,6 +58,7 @@ export const dropItem = $.css({
   'border-radius': '4px',
   'margin-bottom': '2px',
   transition: 'color .2s',
+  'word-break': 'keep-all',
 
   '&:nth-last-child(1)': {
     'margin-bottom': '0px'

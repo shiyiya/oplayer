@@ -87,6 +87,25 @@ const p = Player.make(document.getElementById('player')!, {
           time: 88,
           text: '－－终わり－－'
         }
+      ],
+      menu: [
+        {
+          name: '剧集',
+          children: [
+            {
+              name: '第一集'
+            },
+            {
+              name: '第二集'
+            },
+            {
+              name: '第三集'
+            }
+          ],
+          onChange(...arg) {
+            console.log(arg)
+          }
+        }
       ]
     }),
     dash(),
