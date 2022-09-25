@@ -115,12 +115,12 @@ const p = Player.make(document.getElementById('player')!, {
         hlsQualityControl: true,
         hlsQualitySwitch: 'immediate'
       }
-    }),
-    danmaku({
-      source: DANMAKU,
-      opacity: 0.8,
-      filter: (d: DanmakuItem) => d.text == '+1s'
     })
+    // danmaku({
+    //   source: DANMAKU,
+    //   opacity: 0.8,
+    //   filter: (d: DanmakuItem) => d.text == '+1s'
+    // })
   ])
   .create()
 
