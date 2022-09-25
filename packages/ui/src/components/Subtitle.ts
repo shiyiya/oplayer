@@ -139,11 +139,10 @@ class Subtitle {
     const { $dom, player } = this
     const activeCues = player.$video.textTracks[0]?.activeCues
 
-    if (activeCues) {
+    if (activeCues?.length) {
       let html = ''
       for (let i = 0; i < activeCues.length; i++) {
         const activeCue = activeCues[i]
-
         if (activeCue) {
           //@ts-ignore
           html += activeCue.text
@@ -151,10 +150,10 @@ class Subtitle {
             .map((item: string) => `<p>${item}</p>`)
             .join('')
         }
-
-        $dom.innerHTML = ''
-        $dom.innerHTML = html
       }
+      $dom.innerHTML = html
+    } else {
+      $dom.innerHTML = ''
     }
   }
 
