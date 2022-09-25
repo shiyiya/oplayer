@@ -65,8 +65,8 @@ const generateSetting = (
       })
     }
 
-    player.emit('removesetting', PLUGIN_NAME)
-    player.emit('addsetting', {
+    player.unRegisterSetting?.(PLUGIN_NAME)
+    player.registerSetting?.({
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -81,7 +81,7 @@ const generateSetting = (
           dashInstance.setQualityFor('video', value)
         }
       },
-      children: settingOptions
+      children: settingOptions as any
     })
   }
 
@@ -92,7 +92,7 @@ const generateSetting = (
     const level = dashInstance.getQualityFor('video')
     const height = dashInstance.getBitrateInfoListFor('video')[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
+    player.updateSettingLabel?.(PLUGIN_NAME, levelName)
   }
 
   dashInstance.on(importedDash.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
@@ -117,7 +117,7 @@ const dashPlugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
-        player.emit('removesetting', PLUGIN_NAME)
+        player.unRegisterSetting?.(PLUGIN_NAME)
         dashInstance?.reset()
         return false
       }

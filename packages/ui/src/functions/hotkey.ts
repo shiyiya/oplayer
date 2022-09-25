@@ -1,4 +1,4 @@
-import type { Player, PlayerEvent } from '@oplayer/core'
+import type { Player } from '@oplayer/core'
 import { isFocused } from '../listeners/focus'
 import { webFullScreen } from '../style'
 import { formatTime, screenShot } from '../utils'
@@ -71,18 +71,25 @@ export default function registerHotKey(player: Player) {
     }, 200)
   }
 
-  player.on('addhotkey', ({ payload }: PlayerEvent) => {
-    for (const key in payload) {
-      if (Object.prototype.hasOwnProperty.call(payload, key)) {
-        HOTKEY_FN[key] = payload[key]
+  Object.defineProperties(player, {
+    registerHotKey: {
+      enumerable: true,
+      value: (map: { key: string; fn: Function }[]) => {
+        for (const key in map) {
+          if (Object.prototype.hasOwnProperty.call(map, key)) {
+            HOTKEY_FN[key] = map[key] as any
+          }
+        }
+      }
+    },
+    unRegisterHotKey: {
+      enumerable: true,
+      value: (keys: string[]) => {
+        ;(<string[]>keys).forEach((k) => {
+          delete HOTKEY_FN[k]
+        })
       }
     }
-  })
-
-  player.on('removehotkey', ({ payload }: PlayerEvent) => {
-    ;(<string[]>payload).forEach((k) => {
-      delete HOTKEY_FN[k]
-    })
   })
 
   document.addEventListener('keydown', keydown)

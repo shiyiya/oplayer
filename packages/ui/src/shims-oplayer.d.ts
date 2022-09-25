@@ -1,49 +1,21 @@
-// import { PlayerEventName, PlayerListener } from '@oplayer/core/src/types'
+import { Player } from '@oplayer/core'
+import { Setting, MenuBar, SubtitleSource, Thumbnails } from './types'
 
-//TODO: 扩展 PlayerEventName
-// NEED PR
+declare module '@oplayer/core' {
+  export interface Player {
+    registerSetting: (setting: Setting | Setting[]) => void
+    unRegisterSetting: (key: string) => void
+    selectSetting: (key: string, value: boolean | number) => void
+    updateSettingLabel: (key: string, text: string) => void
 
-// declare global {
-//   module '@oplayer/core' {
-//     export * from '@oplayer/core'
-//     interface Player {
-//       readonly on: (
-//         name:
-//           | PlayerEventName
-//           | PlayerListener
-//           | 'ui:notice'
-//           | 'ui:controllerchange'
-//           | 'ui:subtitlechange' // Switch existing subtitles eg: switch Chinese subtitles to English subtitles
-//           | 'ui:subtitleconfigchange' // Modify existing subtitles eg: Add English subtitles
-//           | 'ui:settingloaded'
-//           | 'ui:settingshow'
-//           | 'ui:settinghide'
-//           | 'ui:settingadd'
-//           | 'ui:settingremove',
-//         listener?: PlayerListener,
-//         options?: { once: boolean }
-//       ) => this
-//     }
-//   }
-// }
+    registerMenu: (menu: MenuBar) => void
+    unRegisterMenu: (key: string) => void
+    selectMenu: (key: string, value: boolean | number) => void
 
-// declare module '@oplayer/core' {
-//   interface Player {
-//     readonly on: (
-//       name:
-//         | PlayerEventName
-//         | PlayerListener
-//         | 'ui:notice'
-//         | 'ui:controllerchange'
-//         | 'ui:subtitlechange' // Switch existing subtitles eg: switch Chinese subtitles to English subtitles
-//         | 'ui:subtitleconfigchange' // Modify existing subtitles eg: Add English subtitles
-//         | 'ui:settingloaded'
-//         | 'ui:settingshow'
-//         | 'ui:settinghide'
-//         | 'ui:settingadd'
-//         | 'ui:settingremove',
-//       listener?: PlayerListener,
-//       options?: { once: boolean }
-//     ) => this
-//   }
-// }
+    registerHotKey: (map: { key: string; fn: Function }[]) => void
+    unRegisterHotKey: (key: string[]) => void
+
+    changeSubtitleSource: (source: SubtitleSource[]) => void
+    changeThumbnailsSource: (src: string) => void
+  }
+}

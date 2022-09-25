@@ -119,7 +119,7 @@ const p = Player.make(document.getElementById('player')!, {
   ])
   .create()
 
-p.emit('subtitlechange', [
+p.changeSubtitleSource([
   {
     name: 'Default',
     default: true,

@@ -210,6 +210,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   const $dom = $.create(`div.${setting}`)
   let panels: Panel[] = []
   let $trigger: HTMLElement | null = null
+  let isShow = false
 
   const defaultSetting: Setting[] = [
     {
@@ -224,50 +225,6 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   ]
 
   createPanel(player, panels, defaultSetting, { target: $dom })
-
-  player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
-    createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
-      isPatch: true,
-      target: $dom
-    })
-  })
-
-  player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
-    const $item = $dom.querySelector<HTMLSpanElement>(
-      `[data-key="${payload.key}"] span[role="label"]`
-    )
-    if ($item) $item.innerText = payload.name
-  })
-
-  TODO: player.on(
-    'selectsetting',
-    ({ payload: { key, value } }: PlayerEvent<{ key: string; value: boolean | number }>) => {
-      if (typeof value == 'number') {
-        panels.some((it) => {
-          if (it.key == key) {
-            it.select!(value)
-            return true
-          }
-          return false
-        })
-      } else {
-        $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"][data-selected]`)?.click()
-      }
-    }
-  )
-
-  player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
-    panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-    panels = panels.filter((p) => {
-      if (p.key === payload) {
-        p.$ref.remove()
-        return false
-      }
-      return true
-    })
-  })
-
-  let isShow = false
 
   panels[0]!.onHide = () => {
     isShow = false
@@ -298,6 +255,38 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   document.addEventListener('click', outClickListener)
   player.on('destroy', () => document.removeEventListener('click', outClickListener))
+
+  Object.defineProperties(player, {
+    registerSetting: {
+      enumerable: true,
+      value: (payload: Setting | Setting[]) => {
+        createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
+          isPatch: true,
+          target: $dom
+        })
+      }
+    },
+    unRegisterSetting: {
+      enumerable: true,
+      value: (payload: string) => {
+        panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
+        panels = panels.filter((p) => {
+          if (p.key === payload) {
+            p.$ref.remove()
+            return false
+          }
+          return true
+        })
+      }
+    },
+    updateSettingLabel: {
+      enumerable: true,
+      value: (key: string, text: string) => {
+        const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
+        if ($item) $item.innerText = text
+      }
+    }
+  })
 
   $.render($dom, $el)
 }

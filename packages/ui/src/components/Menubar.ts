@@ -1,4 +1,4 @@
-import Player, { $, PlayerEvent } from '@oplayer/core'
+import Player, { $ } from '@oplayer/core'
 import { icon as iconCls } from '../style'
 import {
   dropdown,
@@ -42,28 +42,6 @@ export default (player: Player, initialState?: MenuBar[]) => {
     queue.forEach((it) => create(it))
   })
 
-  player.on('menubar:register', ({ payload }) => {
-    if (!$bar) {
-      queue.push(payload)
-    } else {
-      create(payload)
-    }
-  })
-
-  player.on('menubar:unregister', ({ payload }) => {
-    $bar.querySelector(`[aria-label=${payload.name}]`)?.remove()
-  })
-
-  player.on('menubar:select', ({ payload }: PlayerEvent<{ name: string; index: number }>) => {
-    console.log(`.${expand} > span:[aria-label=${payload.name}]:nth-child(${payload.index})`)
-
-    select(
-      $bar.querySelector(
-        `.${expand} > span[aria-label=${payload.name}]:nth-child(${payload.index + 1})`
-      )!
-    )
-  })
-
   const create = (menu: MenuBar) => {
     const { name, icon, children } = menu
     let $menu: string = ''
@@ -99,4 +77,29 @@ export default (player: Player, initialState?: MenuBar[]) => {
     menus.push(menu)
     $bar.insertAdjacentHTML('afterbegin', $menu)
   }
+
+  Object.defineProperties(player, {
+    registerMenu: {
+      enumerable: true,
+      value: (payload: MenuBar) => {
+        if (!$bar) {
+          queue.push(payload)
+        } else {
+          create(payload)
+        }
+      }
+    },
+    unRegisterMenu: {
+      enumerable: true,
+      value: (key: string) => {
+        $bar.querySelector(`[aria-label=${key}]`)?.remove()
+      }
+    },
+    selectMenu: {
+      enumerable: true,
+      value: (key: string, index: number) => {
+        select($bar.querySelector(`.${expand} > span[aria-label=${key}]:nth-child(${index + 1})`)!)
+      }
+    }
+  })
 }

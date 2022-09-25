@@ -106,7 +106,7 @@ class Subtitle {
     const { player, $dom, $track, $iosTrack } = this
     player.on('destroy', () => {
       $dom.innerHTML = ''
-      player.emit('removesetting', SETTING_KEY)
+      player.unRegisterSetting(SETTING_KEY)
 
       $track?.removeEventListener('cuechange', this.update)
       if ($track?.src) URL.revokeObjectURL($track.src)
@@ -115,15 +115,20 @@ class Subtitle {
 
     player.on('videosourcechange', () => {
       $dom.innerHTML = ''
-      player.emit('removesetting', SETTING_KEY)
+      player.unRegisterSetting(SETTING_KEY)
     })
 
-    player.on('subtitlechange', ({ payload }) => {
-      if (this.isShow) this.hide()
-      player.emit('removesetting', SETTING_KEY)
-      this.options.source = payload
-      this.processDefault()
-      this.loadSetting()
+    Object.defineProperties(player, {
+      changeSubtitleSource: {
+        enumerable: true,
+        value: (payload: SubtitleSource[]) => {
+          if (this.isShow) this.hide()
+          player.unRegisterSetting(SETTING_KEY)
+          this.options.source = payload
+          this.processDefault()
+          this.loadSetting()
+        }
+      }
     })
   }
 
@@ -215,7 +220,7 @@ class Subtitle {
     }
 
     if (source.length) {
-      this.player.emit('addsetting', <Setting>{
+      this.player.registerSetting(<Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
         icon: subtitleSvg,
