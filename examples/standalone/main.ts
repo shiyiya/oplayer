@@ -14,6 +14,7 @@ import POSTER from '../../website/static/poster.png'
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
+import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
   'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
@@ -54,13 +55,7 @@ const p = Player.make(document.getElementById('player')!, {
       subtitle: {
         color: 'hotpink',
         fontSize: isMobile ? 16 : 20,
-        source: [
-          {
-            name: 'Default',
-            default: true,
-            src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-          }
-        ]
+        source: []
       },
       thumbnails: {
         src:
@@ -123,6 +118,14 @@ const p = Player.make(document.getElementById('player')!, {
     // })
   ])
   .create()
+
+p.emit('subtitlechange', [
+  {
+    name: 'Default',
+    default: true,
+    src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+  }
+])
 
 const meta = () => html`
   <div>

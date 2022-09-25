@@ -26,6 +26,13 @@ class Subtitle {
 
     this.options = options || { source: [] }
 
+    this.processDefault()
+    this.createContainer()
+    this.initEvents()
+    this.loadSetting()
+  }
+
+  processDefault() {
     const { source, enabled } = this.options
     this.currentSubtitle = findDefault(source)
 
@@ -39,11 +46,6 @@ class Subtitle {
     if (this.currentSubtitle && enabled === undefined) {
       this.options.enabled = true
     }
-
-    // Create the dom before the fragment is inserted into the dom
-    this.createContainer()
-    this.initEvents()
-    this.loadSetting()
   }
 
   createContainer() {
@@ -120,6 +122,7 @@ class Subtitle {
       if (this.isShow) this.hide()
       player.emit('removesetting', SETTING_KEY)
       this.options.source = payload
+      this.processDefault()
       this.loadSetting()
     })
   }
