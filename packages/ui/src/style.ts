@@ -47,6 +47,8 @@ export const icon = $.css({
   width: '100%'
 })
 
+export const text = $.css('width:auto; margin:0 8px;')
+
 export const controllerHidden = $.css('/* controllerHidden */')
 
 export const on = $.css({

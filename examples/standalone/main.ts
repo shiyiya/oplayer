@@ -100,6 +100,9 @@ const p = Player.make(document.getElementById('player')!, {
           ],
           onChange(...arg) {
             console.log(arg)
+          },
+          onClick(...arg) {
+            console.log(arg)
           }
         }
       ]

@@ -1,5 +1,5 @@
-import Player, { $, PlayerEvent } from '@oplayer/core'
-import { icon as iconCls } from '../style'
+import Player, { PlayerEvent } from '@oplayer/core'
+import { icon as iconCls, text } from '../style'
 import {
   dropdown,
   dropdownHoverable,
@@ -30,12 +30,12 @@ export default (player: Player, initialState?: MenuBar[]) => {
       const label = elm.getAttribute('aria-label')
       const target = menus.find((it) => it.name == label)
 
-      if (elm.getAttribute('data-selected') == 'true' || !target) return
+      if (!target || elm.getAttribute('data-selected') == 'true') return
 
-      if (elm.tagName == 'span') {
+      if (elm.tagName.toUpperCase() == 'SPAN') {
         select(elm)
         target?.onChange?.(target.children[+elm.getAttribute('data-index')!]!)
-      } else if (elm.tagName == 'bottom') {
+      } else if (elm.tagName.toUpperCase() == 'BUTTON') {
         target?.onClick?.(elm as any)
       }
     })
@@ -51,12 +51,11 @@ export default (player: Player, initialState?: MenuBar[]) => {
   })
 
   player.on('menubar:unregister', ({ payload }) => {
-    $bar.querySelector(`[aria-label=${payload.name}]`)?.remove()
+    $bar.querySelector(`button[aria-label=${payload.name}]`)?.remove()
+    $bar.querySelector(`div[aria-label=${payload.name}]`)?.remove()
   })
 
   player.on('menubar:select', ({ payload }: PlayerEvent<{ name: string; index: number }>) => {
-    console.log(`.${expand} > span:[aria-label=${payload.name}]:nth-child(${payload.index})`)
-
     select(
       $bar.querySelector(
         `.${expand} > span[aria-label=${payload.name}]:nth-child(${payload.index + 1})`
@@ -68,15 +67,13 @@ export default (player: Player, initialState?: MenuBar[]) => {
     const { name, icon, children } = menu
     let $menu: string = ''
     const $button = `
-    <button aria-label="${name}" class="${iconCls} ${
-      !icon ? $.css('width:auto!important;margin:0 8px;') : ''
-    }" type="button">
+    <button aria-label="${name}" class="${iconCls} ${!icon ? text : ''}" type="button">
       ${icon || name}
     </button>`
 
     if (menu.children) {
       $menu = `
-      <div class="${dropdown} ${dropdownHoverable}">
+      <div class="${dropdown} ${dropdownHoverable}" aria-label="${name}">
         ${$button}
         <div class=${expand}>
           ${children

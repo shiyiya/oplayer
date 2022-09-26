@@ -20,7 +20,7 @@ export type MenuBar<
     value?: any
   }
 > = {
-  name?: string
+  name: string
   icon?: string
   children: T[]
   onChange: (arg: T) => void
