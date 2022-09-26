@@ -71,9 +71,10 @@ export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
             .map(
               (it, i) =>
                 `<span
-                  aria-label="${name}"
-                  class="${dropItem}"
-                  data-selected="${Boolean(it.default)}" data-index=${i}"
+                  aria-label=${name}
+                  class=${dropItem}
+                  data-selected=${Boolean(it.default)}
+                  data-index=${i}
                 >${it.name}</span>`
             )
             .join('')}

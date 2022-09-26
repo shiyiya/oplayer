@@ -24,7 +24,7 @@ export type MenuBar<
   icon?: string
   children: T[]
   onChange: (arg: T) => void
-  onClick: (elm: HTMLButtonElement) => void
+  onClick?: (elm: HTMLButtonElement) => void
 }
 
 export type Setting<T = any> = {
