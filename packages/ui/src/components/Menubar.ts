@@ -1,5 +1,5 @@
 import Player, { PlayerEvent } from '@oplayer/core'
-import { icon as iconCls, text } from '../style'
+import { icon as iconCls } from '../style'
 import {
   dropdown,
   dropdownHoverable,
@@ -67,7 +67,7 @@ export default (player: Player, initialState?: MenuBar[]) => {
     const { name, icon, children } = menu
     let $menu: string = ''
     const $button = `
-    <button aria-label="${name}" class="${iconCls} ${!icon ? text : ''}" type="button">
+    <button aria-label="${name}" class="${iconCls} ${!icon ? '--text' : ''}" type="button">
       ${icon || name}
     </button>`
 

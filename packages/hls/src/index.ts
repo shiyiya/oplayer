@@ -140,7 +140,6 @@ const hlsPlugin = ({
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
         player.emit('removesetting', PLUGIN_NAME)
-
         return false
       }
 
