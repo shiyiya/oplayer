@@ -34,6 +34,7 @@ export const highlightCls = $.css({
 export default function (player: Player, container: HTMLElement, highlights: Highlight[] = []) {
   const $dom = document.createDocumentFragment() as unknown as HTMLDivElement
   let $highlights: HTMLDivElement[] = []
+  let active = true
 
   function createDto(options: { left: number; text: string }) {
     const dto = $.create(
@@ -56,10 +57,17 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
   }
 
   player.on('videoinitialized', () => {
-    createHighlights(highlights, player.duration)
+    if (active) createHighlights(highlights, player.duration)
   })
 
   player.on('videosourcechange', () => {
+    active = false
     $highlights.forEach((it) => it.remove())
+  })
+
+  player.on('highlightchange', () => {
+    active = true
+    $highlights.forEach((it) => it.remove())
+    createHighlights(highlights, player.duration)
   })
 }

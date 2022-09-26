@@ -88,10 +88,9 @@ export const controllerBottom = $.css({
   'margin-right': isMobile ? '-9px' : '0px',
   'text-align': 'center',
 
-  [`& .${expand} .${icon}[aria-label="WebFullscreen"]`]: {
-    width: '25px',
-    height: '20px',
-    'margin-top': '2px'
+  [`& .${icon}.--text`]: {
+    width: 'auto',
+    margin: '0 8px'
   },
 
   [`& .${icon}`]: {

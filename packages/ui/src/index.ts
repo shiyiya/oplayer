@@ -43,7 +43,7 @@ const apply = (player: Player, config: UiConfig) => {
   renderMask(player, $frag, renderControllerBar(player, $frag, config))
 
   renderSetting(player, $frag, config.settings)
-  renderMenubar(player, config.menu)
+  renderMenubar(player, $frag, config.menu)
 
   registerSpeedSetting(player, config.speed)
   renderSubtitle(player, $frag, config.subtitle)

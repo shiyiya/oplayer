@@ -11,8 +11,8 @@ export default function (player: Player, el: HTMLElement, options?: SubtitleConf
 class Subtitle {
   options: SubtitleConfig
 
-  $track: HTMLTrackElement
-  $iosTrack: HTMLTrackElement
+  $track?: HTMLTrackElement
+  $iosTrack?: HTMLTrackElement
   $dom: HTMLDivElement
 
   isShow = false
@@ -30,22 +30,11 @@ class Subtitle {
     this.createContainer()
     this.initEvents()
     this.loadSetting()
+    this.load()
   }
 
   processDefault() {
-    const { source, enabled } = this.options
-    this.currentSubtitle = findDefault(source)
-
-    if (!this.currentSubtitle && enabled) {
-      if (source[0]) {
-        this.currentSubtitle = source[0]
-        this.options.source[0]!.default = true
-      }
-    }
-
-    if (this.currentSubtitle && enabled === undefined) {
-      this.options.enabled = true
-    }
+    this.currentSubtitle = findDefault(this.options.source)
   }
 
   createContainer() {
@@ -103,22 +92,15 @@ class Subtitle {
   }
 
   initEvents() {
-    const { player, $dom, $track, $iosTrack } = this
-    player.on('destroy', () => {
-      $dom.innerHTML = ''
-      player.unRegisterSetting(SETTING_KEY)
+    this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
 
-      $track?.removeEventListener('cuechange', this.update)
-      if ($track?.src) URL.revokeObjectURL($track.src)
-      if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
-    })
-
-    player.on('videosourcechange', () => {
-      $dom.innerHTML = ''
-      player.unRegisterSetting(SETTING_KEY)
-    })
-
-    Object.defineProperties(player, {
+    this.player.on('subtitlechange', ({ payload }) => {
+      this.destroy()
+      this.options.source = payload
+      this.processDefault()
+      this.loadSetting()
+      this.load()
+      Object.defineProperties(player, {
       changeSubtitleSource: {
         enumerable: true,
         value: (payload: SubtitleSource[]) => {
@@ -133,11 +115,25 @@ class Subtitle {
   }
 
   load() {
+    if (!this.currentSubtitle) return
+    if (!this.$track) this.createTrack()
+
     this.loadSubtitle()
       .then(() => this.show())
       .catch((e) => {
         this.player.emit('notice', { text: (<Error>e).message })
       })
+  }
+
+  destroy() {
+    const { player, $dom, $track, $iosTrack } = this
+    $track?.removeEventListener('cuechange', this.update)
+    $dom.innerHTML = ''
+    player.emit('removesetting', SETTING_KEY)
+    if ($track?.src) URL.revokeObjectURL($track.src)
+    if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
+    $track?.remove()
+    $iosTrack?.remove()
   }
 
   update = (_: Event) => {
@@ -163,10 +159,8 @@ class Subtitle {
   }
 
   show() {
-    const { $track } = this
     this.isShow = true
-
-    $track.addEventListener('cuechange', this.update)
+    this.$track!.addEventListener('cuechange', this.update)
   }
 
   hide() {
@@ -174,7 +168,7 @@ class Subtitle {
 
     this.isShow = false
     $dom.innerHTML = ''
-    $track.removeEventListener('cuechange', this.update)
+    $track!.removeEventListener('cuechange', this.update)
   }
 
   loadSubtitle() {
@@ -199,8 +193,8 @@ class Subtitle {
         }
       })
       .then((url) => {
-        if ($track.src) URL.revokeObjectURL($track.src)
-        $track.src = url
+        if ($track?.src) URL.revokeObjectURL($track!.src)
+        $track!.src = url
 
         if ($iosTrack) {
           if ($iosTrack.src) URL.revokeObjectURL($iosTrack.src)
@@ -213,12 +207,7 @@ class Subtitle {
   }
 
   loadSetting() {
-    const { source, enabled } = this.options
-    if (!this.$track && this.currentSubtitle) {
-      this.createTrack()
-      this.load()
-    }
-
+    const source = this.options.source
     if (source.length) {
       this.player.registerSetting(<Setting>{
         name: this.player.locales.get('Subtitle'),
@@ -226,8 +215,6 @@ class Subtitle {
         icon: subtitleSvg,
         key: SETTING_KEY,
         onChange: ({ value }) => {
-          if (!this.$track && value) this.createTrack()
-
           if (value) {
             this.currentSubtitle = value
             this.load()
@@ -236,11 +223,15 @@ class Subtitle {
           }
         },
         children: [
-          { type: 'switcher', name: this.player.locales.get('OFF'), default: !enabled },
+          {
+            type: 'switcher',
+            name: this.player.locales.get('OFF'),
+            default: !this.currentSubtitle
+          },
           ...source?.map((s) => ({
             type: 'switcher',
             name: s.name,
-            default: enabled ? s.default : false,
+            default: this.currentSubtitle?.src == s.src,
             value: s
           }))
         ]

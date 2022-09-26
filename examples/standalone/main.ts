@@ -17,9 +17,9 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
+  MP4,
   'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
   'https://cdn6.hnzycdn.com:65/20220712/xb2EScnz/1672kb/hls/index.m3u8',
-  MP4,
   'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
@@ -38,7 +38,7 @@ const quailitySrcs = [
 
 let logs: HTMLTextAreaElement
 
-const p = Player.make(document.getElementById('player')!, {
+const player = Player.make(document.getElementById('player')!, {
   muted: true,
   volume: 0.5,
   source: { src, poster: POSTER },
@@ -85,21 +85,24 @@ const p = Player.make(document.getElementById('player')!, {
       ],
       menu: [
         {
-          name: '剧集',
+          name: 'source',
           children: [
             {
-              name: '第一集',
-              default: true
+              name: 'mp4',
+              default: true,
+              value: 'https://oplayer.vercel.app/君の名は.mp4'
             },
             {
-              name: '第二集'
+              name: 'hls',
+              value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
             },
             {
-              name: '第三集'
+              name: 'dash',
+              value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
             }
           ],
-          onChange(...arg) {
-            console.log(arg)
+          onChange({ value }) {
+            player.changeSource({ src: value })
           }
         }
       ]
@@ -145,7 +148,7 @@ const actions = () => html`<p style="display:flex;">
       .value=${live(src)}
     />
 
-    <button @click=${() => p.changeSource({ src })}>Load</button>
+    <button @click=${() => player.changeSource({ src })}>Load</button>
 
     <button
       @click=${() => {
@@ -155,7 +158,7 @@ const actions = () => html`<p style="display:flex;">
               ? (currentDataSrcId = 0)
               : (currentDataSrcId += 1)
           ]!
-        p.changeSource({ src })
+        player.changeSource({ src })
       }}
     >
       Queue
@@ -166,14 +169,14 @@ const actions = () => html`<p style="display:flex;">
 
 render(actions(), document.getElementById('actions')!)
 
-p.on((e: PlayerEvent) => {
+player.on((e: PlayerEvent) => {
   if (e.type == 'mousemove') return
 
   render(actions(), document.getElementById('actions')!)
 
   let eventName = `==> ${e.type}`
   if ('durationchange' == e.type) {
-    eventName += `: ${p.duration}`
+    eventName += `: ${player.duration}`
   }
 
   logs.value = eventName + '\r\n' + logs.value
@@ -196,7 +199,7 @@ p.on((e: PlayerEvent) => {
 
 render(meta(), document.getElementById('meta')!)
 
-window.p = p
+window.p = player
 
 console.table({
   UA: globalThis.navigator?.userAgent,
@@ -208,5 +211,5 @@ console.table({
   webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
   mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
   msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
-  video: Boolean(p.$video.webkitEnterFullscreen)
+  video: Boolean(player.$video.webkitEnterFullscreen)
 })

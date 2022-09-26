@@ -143,9 +143,7 @@ const hlsPlugin = ({
 
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
-        //@ts-ignore
         player.unRegisterSetting?.(PLUGIN_NAME)
-
         return false
       }
 

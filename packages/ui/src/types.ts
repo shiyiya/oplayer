@@ -9,7 +9,6 @@ export type SubtitleSource = {
 export type Subtitle = {
   source: SubtitleSource[]
   fontSize?: number
-  enabled?: boolean
   bottom?: string
   color?: string
 }
@@ -21,11 +20,11 @@ export type MenuBar<
     value?: any
   }
 > = {
-  name?: string
+  name: string
   icon?: string
   children: T[]
   onChange: (arg: T) => void
-  onClick: () => void
+  onClick?: (elm: HTMLButtonElement) => void
 }
 
 export type Setting<T = any> = {
