@@ -31,9 +31,9 @@ export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
 
     if (elm.tagName.toUpperCase() == 'SPAN') {
       select(elm)
-      target?.onChange?.(target.children[+elm.getAttribute('data-index')!]!)
+      target.onChange?.(target.children[+elm.getAttribute('data-index')!]!)
     } else if (elm.tagName.toUpperCase() == 'BUTTON') {
-      target?.onClick?.(elm as any)
+      target.onClick?.(elm as any)
     }
   })
 
@@ -56,9 +56,11 @@ export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     const { name, icon, children } = menu
     let $menu: string = ''
     const $button = `
-    <button aria-label="${name}" class="${iconCls} ${!icon ? '--text' : ''}" type="button">
-      ${icon || name}
-    </button>`
+    <button
+      aria-label="${name}"
+      class="${iconCls} ${!icon ? '--text' : ''}"
+      type="button"
+    >${icon || name}</button>`
 
     if (menu.children) {
       $menu = `
@@ -68,16 +70,15 @@ export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
           ${children
             .map(
               (it, i) =>
-                `<span aria-label="${name}" class=${dropItem} data-selected=${Boolean(
-                  it.default
-                )} data-index=${i}>
-                  ${it.name}
-                </span>`
+                `<span
+                  aria-label="${name}"
+                  class="${dropItem}"
+                  data-selected="${Boolean(it.default)}" data-index=${i}"
+                >${it.name}</span>`
             )
             .join('')}
           </div>
-      </div>
-      `
+      </div>`
     } else {
       $menu = $button
     }
