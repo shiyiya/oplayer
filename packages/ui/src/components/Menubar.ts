@@ -30,13 +30,13 @@ export default (player: Player, initialState?: MenuBar[]) => {
       const label = elm.getAttribute('aria-label')
       const target = menus.find((it) => it.name == label)
 
-      if (elm.getAttribute('data-selected') == 'true') return
+      if (elm.getAttribute('data-selected') == 'true' || !target) return
 
-      if (elm.tagName == 'div') {
-        target?.onClick?.()
-      } else {
+      if (elm.tagName == 'span') {
         select(elm)
         target?.onChange?.(target.children[+elm.getAttribute('data-index')!]!)
+      } else if (elm.tagName == 'bottom') {
+        target?.onClick?.(elm as any)
       }
     })
     queue.forEach((it) => create(it))
