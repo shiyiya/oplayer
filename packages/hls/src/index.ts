@@ -100,7 +100,7 @@ const generateSetting = (
       const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
       player.emit('updatesettinglabel', { key: PLUGIN_NAME, name: levelName })
     } else {
-      player.emit('selectsetting', { key: PLUGIN_NAME, value: level })
+      player.emit('selectsetting', { key: PLUGIN_NAME, value: level, shouldBeCallFn: false })
     }
   }
 
