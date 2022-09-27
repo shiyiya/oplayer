@@ -191,7 +191,8 @@ export class Player {
   load = async (source: Source) => {
     for await (const plugin of this.plugins) {
       if (plugin.load) {
-        this.isCustomLoader = await plugin.load(this, source, { loader: this.isCustomLoader })
+        const match = await plugin.load(this, source, { loader: this.isCustomLoader })
+        if (match && !this.isCustomLoader) this.isCustomLoader = true
       }
     }
     if (!this.isCustomLoader) {

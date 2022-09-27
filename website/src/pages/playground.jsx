@@ -4,16 +4,11 @@ import Layout from '@theme/Layout'
 import '@reach/tabs/styles.css'
 
 const code = `
-import Player, { isMobile, isiPad, isiPhone, isIOS } from '/core.es.js'
+import Player from '/core.es.js'
 import ui from '/ui.es.js'
-import danmaku from '/danmaku.es.js'
 import hls from '/hls.es.js'
 import dash from '/dash.es.js'
-
-// dash: https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd
-// hls:  https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-// HDR:
-// ...
+import danmaku from '/danmaku.es.js'
 
 const player =Player.make(document.getElementById('oplayer'), {
   source: {
@@ -23,38 +18,9 @@ const player =Player.make(document.getElementById('oplayer'), {
 })
   .use([
     ui({
-      theme: { primaryColor: '#6668ab' },
-      subtitle: {
-        source: [
-          {
-            name: 'Default',
-            default: true,
-            src: 'https://oplayer.vercel.app/君の名は.srt'
-          }
-        ]
-      },
-      thumbnails: { src: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
-      highlight: [
-        {
-          time: 12,
-          text: '谁でもいいはずなのに'
-        },
-        {
-          time: 34,
-          text: '夏の想い出がまわる'
-        },
-        {
-          time: 58,
-          text: 'こんなとこにあるはずもないのに'
-        },
-        {
-          time: 88,
-          text: '－－终わり－－'
-        }
-      ],
       menu: [
         {
-          name: 'source',
+          name: 'SOURCE',
           children: [
             {
               name: 'mp4',
@@ -83,24 +49,8 @@ const player =Player.make(document.getElementById('oplayer'), {
       }
     }),
     dash(),
-    danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
   ])
   .create();
-
-  console.log(
-    JSON.stringify({
-      UA: globalThis.navigator?.userAgent,
-      isMobile,
-      isIOS,
-      isiPad,
-      isiPhone,
-      fullscreenEnabled: Boolean(document.fullscreenEnabled),
-      webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
-      mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
-      msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
-      video: Boolean(player.$video.webkitEnterFullscreen),
-    })
-  )
 
   `
 
