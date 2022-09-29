@@ -270,13 +270,9 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       enumerable: true,
       value: (payload: string) => {
         panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-        panels = panels.filter((p) => {
-          if (p.key === payload) {
-            p.$ref.remove()
-            return false
-          }
-          return true
-        })
+        panels = panels.filter((p) =>
+          p.key === payload ? (p.$ref.remove(), (p = null as any), false) : true
+        )
       }
     },
     updateSettingLabel: {
@@ -284,6 +280,22 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       value: (key: string, text: string) => {
         const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
         if ($item) $item.innerText = text
+      }
+    },
+    selectSetting: {
+      enumerable: true,
+      value: (key: string, value: boolean | number, shouldBeCallFn: Boolean) => {
+        if (typeof value == 'number') {
+          for (let i = 0; i < panels.length; i++) {
+            const panel = panels[i]!
+            if (panel.key == key) {
+              if (shouldBeCallFn) panel.select!(value)
+              break
+            }
+          }
+        } else {
+          $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"][data-selected]`)?.click()
+        }
       }
     }
   })

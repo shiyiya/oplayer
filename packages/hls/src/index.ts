@@ -104,7 +104,7 @@ const generateSetting = (
       player.updateSettingLabel?.(PLUGIN_NAME, levelName)
     } else {
       //@ts-ignore
-      player.selectSetting(PLUGIN_NAME, level)
+      player.selectSetting(PLUGIN_NAME, level, false)
     }
   }
 
