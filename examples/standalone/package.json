@@ -17,7 +17,7 @@
     "@oplayer/dash": "workspace:*",
     "@oplayer/hls": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "hls.js": "^1.2.3",
+    "hls.js": "^1.2.4",
     "lit": "^2.3.1"
   }
 }

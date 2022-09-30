@@ -3,11 +3,13 @@ import fs from 'fs'
 import { defineConfig } from 'vite'
 import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
+// import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 export const globals = {
   '@oplayer/core': 'OPlayer',
   '@oplayer/ui': 'OUI',
   '@oplayer/hls': 'OHls',
+  'hls.js': 'Hls',
   'hls.js/dist/hls.light.min.js': 'Hls',
   '@oplayer/torrent': 'OTorrent',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
@@ -25,7 +27,12 @@ const makeExternalPredicate = (externalArr: string[]) => {
 
 export const libFileName = (format: string) => `index.${format}.js`
 
-export const rollupPlugins: Plugin[] = []
+export const rollupPlugins: Plugin[] = [
+  // getBabelOutputPlugin({
+  //   allowAllFormats: true,
+  //   presets: [['@babel/preset-env', { targets: 'ie 11, not ie_mob 11' }]]
+  // })
+]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions => {
   const pkg = JSON.parse(

@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "dashjs": "^4.4.1"
+    "dashjs": "^4.5.0"
   }
 }
