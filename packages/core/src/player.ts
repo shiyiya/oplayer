@@ -340,8 +340,8 @@ export class Player {
     this.hasError = false
     this.isCustomLoader = false
     this.$video.poster = source.poster || ''
-    await this.load(source)
     this.emit('videosourcechange', source)
+    await this.load(source)
   }
 
   destroy() {
