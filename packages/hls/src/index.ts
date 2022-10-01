@@ -84,8 +84,10 @@ const generateSetting = (
       onChange: (level: typeof settingOptions[number]) => {
         if (options.hlsQualitySwitch == 'immediate') {
           hlsInstance.currentLevel = level.value
+          hlsInstance.loadLevel = level.value
         } else if (options.hlsQualitySwitch == 'smooth') {
           hlsInstance.nextLevel = level.value
+          hlsInstance.nextLoadLevel = level.value
         }
       },
       children: settingOptions

@@ -33,6 +33,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
       .then((data) => {
         vttData = processVtt(data)
         isActive = true
+        $dom.style.opacity = '1'
       })
   }
 
@@ -40,6 +41,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
 
   player.on('videosourcechange', () => {
     isActive = false
+    $dom.style.opacity = '0'
     vttData = []
     cache = {}
   })
