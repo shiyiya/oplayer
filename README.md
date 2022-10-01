@@ -38,7 +38,7 @@ Discussions: [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.
 
 ## Usage
 
-### 通过 npm 使用
+### 1. Use the module manager to import:
 
 ```bash
 pnpm i @oplayer/core @oplayer/ui @oplayer/hls
@@ -61,7 +61,7 @@ Player.make(document.body, {
   .create()
 ```
 
-### 通过 `<script>` 使用
+### 2. Use the script tag to introduce:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
