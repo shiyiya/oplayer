@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "cli-spinner": "^0.2.10",
-    "commander": "^9.4.0",
+    "commander": "^9.4.1",
     "fluent-ffmpeg": "^2.1.2",
     "jimp": "^0.16.2",
     "node-sprite-generator": "^0.10.2",

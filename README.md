@@ -2,16 +2,13 @@
 
 Oh! Another HTML5 video player.
 
+[Examples](./examples) | [Contributing](./CONTRIBUTING.md)
+| [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
+
 Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
-
-Examples: [./examples](./examples) | [Contributing](./CONTRIBUTING.md)
-
-Discussions: [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
-![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/ui?style=flat-square&label=ui)
-![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@oplayer/react?style=flat-square&label=react)
 ![npm dw](https://img.shields.io/npm/dw/@oplayer/core?style=flat-square)
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](https://paypal.me/ShiYiYa)
 
@@ -41,9 +38,7 @@ Discussions: [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.
 ### 1. Use the module manager to import:
 
 ```bash
-pnpm i @oplayer/core @oplayer/ui @oplayer/hls
-# or
-yarn add @oplayer/core @oplayer/ui @oplayer/hls
+npm i @oplayer/core @oplayer/ui @oplayer/hls
 ```
 
 ```ts
@@ -51,7 +46,7 @@ import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 
-Player.make(document.body, {
+Player.make(document.getElementById('oplayer'), {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',
     poster: 'https://oplayer.vercel.app/poster.png'
@@ -82,10 +77,9 @@ Player.make(document.body, {
 </script>
 ```
 
-## Official plugin
+## Plugins
 
-- [@oplayer/ui](./packages//ui/)
-- [@oplayer/hls](./packages/hls/)
+- [@oplayer/ui](./packages/ui/)
 - [@oplayer/dash](./packages/dash/)
 - [@oplayer/torrent](./packages/torrent/)
 - [@oplayer/danmaku](./packages/danmaku/)
