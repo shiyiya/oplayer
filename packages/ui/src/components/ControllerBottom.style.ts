@@ -21,7 +21,7 @@ export const expand = $.css(`
 
 export const dropdown = $.css({
   position: 'relative',
-  'line-height': '100%',
+  display: 'flex',
 
   [`& .${expand}`]: {
     visibility: 'hidden',
@@ -72,7 +72,7 @@ export const dropItem = $.css({
     color: 'var(--primary-color)'
   },
 
-  '&[data-selected=true],&:hover': {
+  '&:hover': {
     'background-color': 'rgba(255, 255, 255, 0.1)'
   }
 })
