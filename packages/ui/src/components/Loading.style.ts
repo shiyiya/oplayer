@@ -20,7 +20,7 @@ export const loading = $.css({
   overflow: 'hidden',
   width: '20%',
   height: '4px',
-  'background-color': 'var(--shadow-color-4)',
+  'background-color': 'var(--primary-color-4)',
   'border-radius': '4px'
 })
 

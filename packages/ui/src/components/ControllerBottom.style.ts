@@ -42,13 +42,6 @@ export const dropdownHoverable = $.css({
   }
 })
 
-// export const dropdownClickable = $.css({
-//   [`& input[type=checkbox]:checked ~ div`]: {
-//     visibility: 'visible',
-//     opacity: 1
-//   }
-// })
-
 export const dropItem = $.css({
   display: 'block',
   padding: '6px 15px',
@@ -85,7 +78,7 @@ export const controllerBottom = $.css({
   fill: '#fff',
   height: '35px',
   padding: isMobile ? 0 : '0px 0px 5px 0px',
-  'margin-right': isMobile ? '-9px' : '0px',
+  'margin-right': isMobile ? '-8px' : '0px',
   'text-align': 'center',
 
   [`& .${icon}.--text`]: {

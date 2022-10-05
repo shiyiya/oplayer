@@ -9,10 +9,10 @@ export const root = (theme: UiConfig['theme']) => {
 
   return $.css({
     '--primary-color': `rgba(${rbg}, 1)`,
-    '--shadow-color-4': `rgba(${rbg}, 0.4)`,
+    '--primary-color-4': `rgba(${rbg}, 0.4)`,
 
     //TODO: more
-    '--shadow-background-color': 'rgba(28 ,28 ,28 ,.9)',
+    '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
 
     width: '100%',
     height: '100%',
@@ -61,10 +61,10 @@ export const off = $.css({
   }
 })
 
-export const loading = $.hashifyClass('/* loading */')
+export const loading = $.cls('/* loading */')
 
-export const initialized = $.hashifyClass('/* isInitialized */')
+export const initialized = $.cls('/* isInitialized */')
 
-export const playing = $.hashifyClass('/* playing */')
+export const playing = $.cls('/* playing */')
 
-export const focused = $.hashifyClass('/* focused */')
+export const focused = $.cls('/* focused */')

@@ -132,7 +132,7 @@ export namespace $ {
   //TODO: support ssr
   export const { css, getCssValue } = createStyled()
 
-  export const hashifyClass = (str: string) => 'css-' + hashify(str)
+  export const cls = (str: string) => 'css-' + hashify(str)
 }
 
 export default $

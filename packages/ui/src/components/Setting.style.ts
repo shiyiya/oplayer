@@ -14,7 +14,7 @@ export const setting = $.css({
   overflow: 'auto',
   '-webkit-backdrop-filter': 'saturate(180%) blur(20px)',
   'backdrop-filter': 'saturate(180%) blur(20px)',
-  'background-color': 'var(--shadow-background-color)',
+  'background-color': 'rgb(0 0 0 / 70%)',
   fill: '#fff',
 
   '@media only screen and (max-width: 768px)': {

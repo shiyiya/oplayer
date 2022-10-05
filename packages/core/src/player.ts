@@ -439,3 +439,10 @@ export class Player {
     return __VERSION__
   }
 }
+
+console.log(
+  `%c Oh Player %c v${Player.version} %c https://github.com/shiyiya/oplayer`,
+  'color: #fff; background: #6668ab',
+  'color: #fff; background: #5f5f5f',
+  ''
+)
