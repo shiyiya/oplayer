@@ -1,8 +1,9 @@
-import path from 'path'
 import fs from 'fs'
-import { defineConfig } from 'vite'
+import path from 'path'
 import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
+import { defineConfig } from 'vite'
+import banner from 'vite-plugin-banner'
 // import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 export const globals = {
@@ -42,6 +43,7 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
   )
   return mergeDeep<BuildOptions>(
     {
+      minify: 'terser',
       sourcemap: true,
       commonjsOptions: {
         sourceMap: false
@@ -70,17 +72,20 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
 
 export const viteConfig = (packageDirName: string, options: ViteUserConfig = {}) => {
   const vitePlugins = options.plugins ?? []
-  const version = JSON.parse(
+  const { name, version, description, author, homepage } = JSON.parse(
     fs.readFileSync(resolvePath(`packages/${packageDirName}/package.json`), { encoding: 'utf-8' })
-  ).version
-
+  )
   return defineConfig({
     ...options,
     build: viteBuild(packageDirName, options.build),
-    plugins: [...vitePlugins, ...rollupPlugins] as any,
-    define: {
-      __VERSION__: `'${version}'`
-    }
+    plugins: [
+      ...vitePlugins,
+      ...rollupPlugins,
+      banner(
+        `/**\n * name: ${name}\n * version: v${version}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
+      )
+    ] as any,
+    define: { __VERSION__: `'${version}'` }
   })
 }
 

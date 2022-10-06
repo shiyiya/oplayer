@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Thumbnail tool for oplayer",
   "main": "src/index.js",
-  "author": "",
+  "author": "shiyiya",
   "bin": {
     "oplayer-thumbnails": "src/index.js"
   },
