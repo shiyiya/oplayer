@@ -153,6 +153,17 @@ const hlsPlugin = ({
       hlsInstance.attachMedia(player.$video)
       if (!player.evil()) generateSetting(player, hlsInstance, pluginOptions)
 
+      hlsInstance.on(importedHls.Events.ERROR, function (_, data) {
+        const { type, details, fatal } = data
+
+        if (!fatal) {
+          player.emit('notice', { ...data, pluginName: PLUGIN_NAME, text: type + ': ' + details })
+        } else {
+          player.hasError = true
+          player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
+        }
+      })
+
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js
       // hlsInstance.on(

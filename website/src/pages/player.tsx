@@ -19,6 +19,7 @@ export default () => {
         })
       ])
       .create()
+      .on(console.log)
   }, [])
 
   return <div id="oplayer" style={{ width: '100vw', height: '100vh' }} />
