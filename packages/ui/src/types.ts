@@ -98,6 +98,8 @@ export type UiConfig = {
 
   menu?: MenuBar[]
 
+  errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
+
   /*  --- WIP ---  */
 
   contextmenu?: []

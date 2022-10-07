@@ -1,5 +1,6 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import { $ } from '@oplayer/core'
+import { UiConfig } from '../types'
 import { addClass, removeClass } from '../utils'
 
 const showCls = $.css('display: flex !important;')
@@ -22,6 +23,7 @@ const errorCls = $.css(`
   -webkit-user-select: text;
   -ms-user-select: text;
   user-select: text;
+  word-break: break-all;
 `)
 
 const VIDEO_ERROR_MAP = {
@@ -31,7 +33,14 @@ const VIDEO_ERROR_MAP = {
   4: 'MEDIA_ERR_SRC_NOT_SUPPORTED'
 }
 
-const render = (player: Player, el: HTMLElement) => {
+const render = (player: Player, el: HTMLElement, config: UiConfig) => {
+  if (config.errorBuilder) {
+    player.on('error', ({ payload }: PlayerEvent) => {
+      config.errorBuilder!(payload)
+    })
+    return
+  }
+
   const $dom = $.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' })
 
   player.on('error', ({ payload }: PlayerEvent) => {

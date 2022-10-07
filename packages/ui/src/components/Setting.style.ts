@@ -4,7 +4,7 @@ export const activeCls = $.css('display: block;')
 
 export const setting = $.css({
   'z-index': '98',
-  'max-height': '300px',
+  'max-height': '70%',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
@@ -16,12 +16,6 @@ export const setting = $.css({
   'backdrop-filter': 'saturate(180%) blur(20px)',
   'background-color': 'rgb(0 0 0 / 70%)',
   fill: '#fff',
-
-  '@media only screen and (max-width: 768px)': {
-    '&': {
-      'max-height': '140px'
-    }
-  },
 
   '::-webkit-scrollbar': {
     width: '2px'

@@ -36,7 +36,7 @@ const apply = (player: Player, config: UiConfig) => {
   const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
   const $root = $.create(`div.${root(config.theme)}`)
 
-  renderError(player, $frag)
+  renderError(player, $frag, config)
   renderNotice(player, $frag)
   renderLoading(player, $frag)
   renderCoverButton(player, $frag)
