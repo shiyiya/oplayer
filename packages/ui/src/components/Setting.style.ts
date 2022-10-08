@@ -4,7 +4,7 @@ export const activeCls = $.css('display: block;')
 
 export const setting = $.css({
   'z-index': '98',
-  'max-height': '70%',
+  'max-height': '78%',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
@@ -17,11 +17,11 @@ export const setting = $.css({
   'background-color': 'rgb(0 0 0 / 70%)',
   fill: '#fff',
 
-  '::-webkit-scrollbar': {
+  '&::-webkit-scrollbar': {
     width: '2px'
   },
 
-  '::-webkit-scrollbar-thumb': {
+  '&::-webkit-scrollbar-thumb': {
     background: 'var(--primary-color)'
   },
 
