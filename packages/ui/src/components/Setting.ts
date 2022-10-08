@@ -13,11 +13,13 @@ import {
   settingItemLeft,
   settingItemRight,
   subPanelCls,
-  switcherText,
-  yesIcon
+  yesIcon,
+  switcherCls,
+  switcherContainer
 } from './Setting.style'
 
-export const switcher = (name: string, icon: string = '', closedText?: string) =>
+// Selector Options
+export const selectorOption = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
@@ -25,11 +27,10 @@ export const switcher = (name: string, icon: string = '', closedText?: string) =
     <svg class=${yesIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24">
       <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#fff"></path>
     </svg>
-    ${closedText ? `<span role="label" class=${switcherText}>${closedText}</span>` : ''}
 `
 
-export const nexter = (name: string, icon: string = '') => `
-    <div class="${settingItemLeft}">
+export const nexter = (name: string, icon: string = '') =>
+  `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
     </div>
@@ -41,14 +42,25 @@ export const nexter = (name: string, icon: string = '') => `
     </div>
 `
 
+export const switcher = (name: string, icon: string = '') =>
+  `<div class="${settingItemLeft}">
+    ${icon}
+    <span>${name}</span>
+  </div>
+  <div class=${settingItemRight}>
+    <label class=${switcherContainer}>
+      <span class=${switcherCls}></span>
+    </label>
+  </div>
+`
+
 function createRow({
   type,
   key,
   name,
   icon,
   default: selected,
-  index,
-  switcherLabe
+  index
 }: Omit<Setting, 'onChange' | 'children' | 'value'> & { index?: number; switcherLabe?: string }) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key
@@ -60,15 +72,19 @@ function createRow({
 
   switch (type) {
     case 'switcher':
-      $item.innerHTML = switcher(name, icon, switcherLabe)
+      $item.innerHTML = switcher(name, icon)
+      $item.setAttribute('data-selected', selected || false)
+      break
+    case 'selector':
+      $item.innerHTML = nexter(name, icon)
+      res['$label'] = $item.querySelector('span[role="label"]')!
+      break
+    default: // select option 不用 type
+      $item.innerHTML = selectorOption(name, icon)
       $item.setAttribute('data-selected', selected || false)
       if (typeof index == 'number') {
         $item.setAttribute('data-index', index.toString())
       }
-      break
-    default:
-      $item.innerHTML = nexter(name, icon)
-      res['$label'] = $item.querySelector('span[role="label"]')!
       break
   }
 
@@ -99,15 +115,15 @@ function createPanel(
     key?: string
     target: HTMLElement
     parent?: Panel
+    isSelectorOptionsPanel?: boolean
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
-  const { isPatch, key: parentKey, target, parent } = options
+  const { isPatch, key: parentKey, target, parent, isSelectorOptionsPanel } = options
 
   let panel = {} as Panel
   let key: string = parentKey! || 'root'
   let isRoot = false
-  let isSelectorOptionsPanel = setting.every((it) => it.type == 'switcher')
 
   if (isPatch) {
     panel = panels[0]! // 将 options 挂在第一个面板
@@ -136,18 +152,22 @@ function createPanel(
           icon,
           default: selected
         },
-        !isSelectorOptionsPanel && { switcherLabe: player.locales.get('OFF') },
         !isRoot && isSelectorOptionsPanel && { index: i }
       )
     )
     $.render($row, panel.$ref)
     $.render(panel.$ref, target)
 
+    //处理 selector，因为依赖label，所以需先创建子 panel
     if (children) {
+      const nextIsSelectorOptionsPanel =
+        type == 'selector' && children.every((it) => !Boolean(it.type))
+
       const optionPanel = createPanel(player, panels, children, {
         key,
         target,
-        parent: panel
+        parent: panel,
+        isSelectorOptionsPanel: nextIsSelectorOptionsPanel
       })!
 
       $row.addEventListener('click', () => {
@@ -155,7 +175,7 @@ function createPanel(
         optionPanel.$ref.classList.add(activeCls)
       })
 
-      if (children.every((it) => it.type == 'switcher')) {
+      if (nextIsSelectorOptionsPanel) {
         const defaultSelected = children.find((it) => it.default)
         if (defaultSelected) {
           $label.innerText = defaultSelected.name
@@ -184,21 +204,12 @@ function createPanel(
         })
       }
     } else {
-      // 非 root 和全部是选项 被上面 children 覆盖
-      if (isRoot || !isSelectorOptionsPanel) {
-        if (type == 'switcher') {
-          $row.addEventListener('click', function () {
-            const selected = this.getAttribute('data-selected') == 'true'
-            this.setAttribute('data-selected', `${!selected}`)
-            panel.$ref.classList.remove(activeCls)
-            if (isRoot) {
-              panels[0]!.onHide?.()
-            } else {
-              panel.parent!.$ref.classList.add(activeCls)
-            }
-            onChange?.(!selected)
-          })
-        }
+      if (type == 'switcher') {
+        $row.addEventListener('click', function () {
+          const selected = this.getAttribute('data-selected') == 'true'
+          this.setAttribute('data-selected', `${!selected}`)
+          onChange?.(!selected)
+        })
       }
     }
   }
@@ -210,6 +221,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   const $dom = $.create(`div.${setting}`)
   let panels: Panel[] = []
   let $trigger: HTMLElement | null = null
+  let isShow = false
 
   const defaultSetting: Setting[] = [
     {
@@ -224,6 +236,11 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
   ]
 
   createPanel(player, panels, defaultSetting, { target: $dom })
+
+  panels[0]!.onHide = () => {
+    isShow = false
+    player.$root.classList.remove(settingShown)
+  }
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
     createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
@@ -261,13 +278,6 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       p.key === payload ? (p.$ref.remove(), (p = null as any), false) : true
     )
   })
-
-  let isShow = false
-
-  panels[0]!.onHide = () => {
-    isShow = false
-    player.$root.classList.remove(settingShown)
-  }
 
   player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
     $trigger = payload.target

@@ -34,7 +34,6 @@ const generateSetting = (
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
-        type: 'switcher',
         default: isAutoSwitch,
         value: () => {
           dashInstance.updateSettings({
@@ -56,7 +55,6 @@ const generateSetting = (
 
         settingOptions.push({
           name,
-          type: 'switcher',
           default: isAutoSwitch
             ? false
             : bitrate.qualityIndex == dashInstance.getQualityFor('video'),

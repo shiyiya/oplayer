@@ -13,7 +13,6 @@ export default function registerSpeedSetting(player: Player, speeds: UiConfig['s
       children: speeds.map((speed) => ({
         name: +speed == 1 ? 'Normal' : speed + 'x',
         value: +speed,
-        type: 'switcher',
         default: player.playbackRate == +speed
       })),
       onChange: ({ value }) => player.setPlaybackRate(value)

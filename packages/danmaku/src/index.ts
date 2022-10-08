@@ -41,7 +41,6 @@ export default (option: Options): PlayerPlugin => ({
             },
             children: [0.5, 0.75, 1, 1.25].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
-              type: 'switcher',
               value: it,
               default: it == 1
             }))
@@ -56,7 +55,6 @@ export default (option: Options): PlayerPlugin => ({
             },
             children: [0.3, 0.5, 0.8, 1].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
-              type: 'switcher',
               value: it,
               default: it == danmaku.options.opacity
             }))
@@ -70,7 +68,6 @@ export default (option: Options): PlayerPlugin => ({
             },
             children: [0.25, 0.5, 0.8, 1].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
-              type: 'switcher',
               value: it,
               default: it == 1
             }))

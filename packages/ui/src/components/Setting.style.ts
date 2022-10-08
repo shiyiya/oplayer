@@ -58,18 +58,41 @@ export const nextIcon = $.css(`
   margin: 0 -10px 0 -5px;
 `)
 
+export const switcherCls = $.css({
+  position: 'absolute',
+  cursor: 'pointer',
+  top: '0',
+  left: '0',
+  right: '0',
+  bottom: '0',
+  'background-color': '#ccc',
+  transition: '.3s',
+  'border-radius': '34px',
+
+  '&:before': {
+    position: 'absolute',
+    content: '""',
+    height: '16px',
+    width: '16px',
+    left: '4px',
+    bottom: '3px',
+    'background-color': 'white',
+    transition: '.3s',
+    'border-radius': '50%'
+  }
+})
+
+export const switcherContainer = $.css(`
+  position: relative;
+  width: 40px;
+  height: 22px;
+`)
+
 // `selectedText` >
 export const nextLabelText = $.css(`
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px
-`)
-
-// `switcherText` >
-export const switcherText = $.css(`
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
-  margin-right: 4px;
 `)
 
 export const settingItemCls = $.css({
@@ -95,12 +118,16 @@ export const settingItemCls = $.css({
     'background-color': 'rgba(255, 255, 255, 0.1)',
     color: '#fff',
 
-    [`& .${yesIcon}`]: {
-      display: 'block'
+    [`& .${switcherCls}`]: {
+      'background-color': 'var(--primary-color)',
+
+      '&:before': {
+        transform: 'translateX(16px)'
+      }
     },
 
-    [`& .${switcherText}`]: {
-      display: 'none'
+    [`& .${yesIcon}`]: {
+      display: 'block'
     }
   }
 })

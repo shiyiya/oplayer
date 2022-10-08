@@ -214,12 +214,10 @@ class Subtitle {
         },
         children: [
           {
-            type: 'switcher',
             name: this.player.locales.get('OFF'),
             default: !this.currentSubtitle
           },
           ...source?.map((s) => ({
-            type: 'switcher',
             name: s.name,
             default: this.currentSubtitle?.src == s.src,
             value: s

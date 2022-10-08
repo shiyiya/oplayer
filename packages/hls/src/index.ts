@@ -55,7 +55,6 @@ const generateSetting = (
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
-        type: 'switcher',
         default: true,
         value: -1
       }
@@ -72,7 +71,7 @@ const generateSetting = (
           name += ` (${number}${useMb ? 'm' : 'k'}bps)`
         }
 
-        return settingOptions.push({ name, type: 'switcher', default: false, value: i })
+        return settingOptions.push({ name, default: false, value: i })
       })
 
     player.emit('removesetting', PLUGIN_NAME)
