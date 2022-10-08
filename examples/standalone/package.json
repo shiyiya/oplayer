@@ -18,6 +18,6 @@
     "@oplayer/hls": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "hls.js": "^1.2.4",
-    "lit": "^2.3.1"
+    "lit": "^2.4.0"
   }
 }

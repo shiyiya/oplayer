@@ -8,7 +8,7 @@ importers:
       '@babel/preset-env': ^7.19.3
       '@changesets/cli': ^2.25.0
       '@rollup/plugin-babel': ^5.3.1
-      '@types/node': ^18.8.1
+      '@types/node': ^18.8.3
       '@vitejs/plugin-react': ^2.1.0
       concurrently: ^7.4.0
       cross-env: ^7.0.3
@@ -17,18 +17,18 @@ importers:
       prettier: ^2.7.1
       rimraf: ^3.0.2
       rollup: ^2.79.1
-      terser: ^5.15.0
+      terser: ^5.15.1
       tslib: ^2.4.0
       typescript: ^4.8.4
-      vite: ^3.1.4
+      vite: ^3.1.6
       vite-plugin-banner: ^0.5.0
     devDependencies:
       '@babel/core': 7.19.3
       '@babel/preset-env': 7.19.3_@babel+core@7.19.3
       '@changesets/cli': 2.25.0
       '@rollup/plugin-babel': 5.3.1_vy4anxjpv2s44kyfi2kxqu576u
-      '@types/node': 18.8.1
-      '@vitejs/plugin-react': 2.1.0_vite@3.1.4
+      '@types/node': 18.8.3
+      '@vitejs/plugin-react': 2.1.0_vite@3.1.6
       concurrently: 7.4.0
       cross-env: 7.0.3
       lint-staged: 13.0.3
@@ -36,10 +36,10 @@ importers:
       prettier: 2.7.1
       rimraf: 3.0.2
       rollup: 2.79.1
-      terser: 5.15.0
+      terser: 5.15.1
       tslib: 2.4.0
       typescript: 4.8.4
-      vite: 3.1.4_terser@5.15.0
+      vite: 3.1.6_terser@5.15.1
       vite-plugin-banner: 0.5.0
 
   examples/react:
@@ -71,7 +71,7 @@ importers:
       '@oplayer/hls': workspace:*
       '@oplayer/ui': workspace:*
       hls.js: ^1.2.4
-      lit: ^2.3.1
+      lit: ^2.4.0
     dependencies:
       '@oplayer/core': link:../../packages/core
       '@oplayer/danmaku': link:../../packages/danmaku
@@ -79,7 +79,7 @@ importers:
       '@oplayer/hls': link:../../packages/hls
       '@oplayer/ui': link:../../packages/ui
       hls.js: 1.2.4
-      lit: 2.3.1
+      lit: 2.4.0
 
   packages/core:
     specifiers: {}
@@ -2104,8 +2104,8 @@ packages:
     resolution: {integrity: sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==}
     dev: false
 
-  /@types/node/18.8.1:
-    resolution: {integrity: sha512-vuYaNuEIbOYLTLUAJh50ezEbvxrD43iby+lpUA2aa148Nh5kX/AVO/9m1Ahmbux2iU5uxJTNF9g2Y+31uml7RQ==}
+  /@types/node/18.8.3:
+    resolution: {integrity: sha512-0os9vz6BpGwxGe9LOhgP/ncvYN5Tx1fNcd2TM3rD/aCGBkysb+ZWpXEocG24h6ZzOi13+VB8HndAQFezsSOw1w==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -2133,7 +2133,7 @@ packages:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: false
 
-  /@vitejs/plugin-react/2.1.0_vite@3.1.4:
+  /@vitejs/plugin-react/2.1.0_vite@3.1.6:
     resolution: {integrity: sha512-am6rPyyU3LzUYne3Gd9oj9c4Rzbq5hQnuGXSMT6Gujq45Il/+bunwq3lrB7wghLkiF45ygMwft37vgJ/NE8IAA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -2146,7 +2146,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.18.6_@babel+core@7.19.3
       magic-string: 0.26.5
       react-refresh: 0.14.0
-      vite: 3.1.4_terser@5.15.0
+      vite: 3.1.6_terser@5.15.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4493,21 +4493,21 @@ packages:
     resolution: {integrity: sha512-6ZgxBR9KNroqKb6+htkyBwD90XGRiqKDHVrW/Eh0EZ+l+iC+u+v+w3/BA5NGi4nizAVHGYvQBHUDuSmLjPp7NQ==}
     dependencies:
       '@lit/reactive-element': 1.4.1
-      lit-html: 2.3.1
+      lit-html: 2.4.0
     dev: false
 
-  /lit-html/2.3.1:
-    resolution: {integrity: sha512-FyKH6LTW6aBdkfNhNSHyZTnLgJSTe5hMk7HFtc/+DcN1w74C215q8B+Cfxc2OuIEpBNcEKxgF64qL8as30FDHA==}
+  /lit-html/2.4.0:
+    resolution: {integrity: sha512-G6qXu4JNUpY6aaF2VMfaszhO9hlWw0hOTRFDmuMheg/nDYGB+2RztUSOyrzALAbr8Nh0Y7qjhYkReh3rPnplVg==}
     dependencies:
       '@types/trusted-types': 2.0.2
     dev: false
 
-  /lit/2.3.1:
-    resolution: {integrity: sha512-TejktDR4mqG3qB32Y8Lm5Lye3c8SUehqz7qRsxe1PqGYL6me2Ef+jeQAEqh20BnnGncv4Yxy2njEIT0kzK1WCw==}
+  /lit/2.4.0:
+    resolution: {integrity: sha512-fdgzxEtLrZFQU/BqTtxFQCLwlZd9bdat+ltzSFjvWkZrs7eBmeX0L5MHUMb3kYIkuS8Xlfnii/iI5klirF8/Xg==}
     dependencies:
       '@lit/reactive-element': 1.4.1
       lit-element: 3.2.2
-      lit-html: 2.3.1
+      lit-html: 2.4.0
     dev: false
 
   /load-bmfont/1.4.1:
@@ -6083,8 +6083,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /terser/5.15.0:
-    resolution: {integrity: sha512-L1BJiXVmheAQQy+as0oF3Pwtlo4s3Wi1X2zNZ2NxOB4wx9bdS9Vk67XQENLFdLYGCK/Z2di53mTj/hBafR+dTA==}
+  /terser/5.15.1:
+    resolution: {integrity: sha512-K1faMUvpm/FBxjBXud0LWVAGxmvoPbZbfTCYbSgaaYQaIXI3/TdI7a7ZGA73Zrou6Q8Zmz3oeUTsp/dj+ag2Xw==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -6431,8 +6431,8 @@ packages:
     resolution: {integrity: sha512-GDyecw4mb7uUeE6BFsicFOJ4sL9KWof+QNRvASXehpNNwwQVYCtB9HAjvKt6ixgvwSp6jWR1gM9dKLqNDZaEjQ==}
     dev: true
 
-  /vite/3.1.4_terser@5.15.0:
-    resolution: {integrity: sha512-JoQI08aBjY9lycL7jcEq4p9o1xUjq5aRvdH4KWaXtkSx7e7RpAh9D3IjzDWRD4Fg44LS3oDAIOG/Kq1L+82psA==}
+  /vite/3.1.6_terser@5.15.1:
+    resolution: {integrity: sha512-qMXIwnehvvcK5XfJiXQUiTxoYAEMKhM+jqCY6ZSTKFBKu1hJnAKEzP3AOcnTerI0cMZYAaJ4wpW1wiXLMDt4mA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -6454,7 +6454,7 @@ packages:
       postcss: 8.4.17
       resolve: 1.22.1
       rollup: 2.78.1
-      terser: 5.15.0
+      terser: 5.15.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
