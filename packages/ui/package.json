@@ -1,7 +1,7 @@
 {
   "name": "@oplayer/ui",
-  "version": "1.0.44",
-  "description": "Official ui for oplayer",
+  "version": "1.0.45",
+  "description": "ui plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/index.d.ts",

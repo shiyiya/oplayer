@@ -14,25 +14,6 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 
 ![oplayer](./oplayer.png)
 
-## Feature
-
-- Streaming formats
-  - HLS
-  - MPEG DASH
-  - WebTorrent
-  - FLV
-  - Any other custom streaming formats
-- Media formats
-  - MP4 H.264
-  - WebM
-  - Ogg Theora Vorbis
-- Features
-  - Danmaku
-  - Screenshot
-  - Hotkeys
-  - Thumbnails
-  - Subtitle
-
 ## Usage
 
 ### 1. Use the module manager to import:
@@ -89,14 +70,3 @@ Player.make(document.getElementById('oplayer'), {
 
 - [UPV](https://月色真美.life) : free animes no ad
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
-- ...
-
-## Thanks
-
-- [Boy\_\_Yan](https://www.iconfont.cn/collections/detail?cid=40262)
-- [1214monkey](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=12086)
-- [loop](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=15901)
-- [quality](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=13520)
-- [speed](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.0.da5a778a4&cid=39216)
-
-- https://developer.mozilla.org/zh-CN/docs/Web/CSS/::backdrop

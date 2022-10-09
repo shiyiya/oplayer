@@ -16,7 +16,6 @@ const errorCls = $.css(`
   font-size: 1em;
   background: #000;
   z-index: 99;
-  justify-content: center;
   align-items: center;
   padding: 0 10px;
   -moz-user-select: text;
