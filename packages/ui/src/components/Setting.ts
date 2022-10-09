@@ -198,9 +198,7 @@ function createPanel(
         }
 
         optionPanel.$ref.addEventListener('click', (e) => {
-          const target = (<HTMLDivElement>e.target) as HTMLDivElement
-          const index = +target.getAttribute('data-index')!
-          optionPanel.select!(index)
+          optionPanel.select!(+(e.target as HTMLDivElement).getAttribute('data-index')!)
         })
       }
     } else {

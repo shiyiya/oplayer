@@ -4,7 +4,7 @@ export const activeCls = $.css('display: block;')
 
 export const setting = $.css({
   'z-index': '98',
-  'max-height': '78%',
+  'max-height': '75%',
   'border-radius': '3px',
   'font-size': '14px',
   display: 'block',
@@ -26,23 +26,15 @@ export const setting = $.css({
   },
 
   // panel
-  '& > div': {
-    display: 'none'
-  },
+  '& > div': { display: 'none' },
 
   // active panel
-  [`& > div.${activeCls}`]: {
-    display: 'block'
-  }
+  [`& > div.${activeCls}`]: { display: 'block' }
 })
 
-export const panelCls = $.css(`
-  min-width: 220px;
-`)
+export const panelCls = $.css('min-width: 220px;')
 
-export const subPanelCls = $.css(`
-  min-width: 150px;
-`)
+export const subPanelCls = $.css('min-width: 150px;')
 
 // √
 export const yesIcon = $.css(`
@@ -98,7 +90,7 @@ export const nextLabelText = $.css(`
 export const settingItemCls = $.css({
   height: '35px',
   cursor: 'pointer',
-  color: '#eee',
+  color: '#fff',
   'justify-content': 'space-between',
   'align-items': 'center',
   padding: '0 10px',
@@ -106,28 +98,22 @@ export const settingItemCls = $.css({
   display: 'flex',
   overflow: 'hidden',
 
-  '& > *': {
-    'pointer-events': 'none'
-  },
+  '& > *': { 'pointer-events': 'none' },
 
   '&:hover': {
     'background-color': 'rgba(255, 255, 255, 0.1)'
   },
 
   [`&[data-selected='true']`]: {
-    'background-color': 'rgba(255, 255, 255, 0.1)',
-    color: '#fff',
+    [`& .${yesIcon}`]: { display: 'block' },
+    [`&[data-index]`]: {
+      'background-color': 'rgba(255, 255, 255, 0.1)'
+    },
 
     [`& .${switcherCls}`]: {
       'background-color': 'var(--primary-color)',
 
-      '&:before': {
-        transform: 'translateX(16px)'
-      }
-    },
-
-    [`& .${yesIcon}`]: {
-      display: 'block'
+      '&:before': { transform: 'translateX(16px)' }
     }
   }
 })
