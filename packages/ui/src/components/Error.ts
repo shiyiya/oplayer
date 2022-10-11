@@ -3,8 +3,6 @@ import { $ } from '@oplayer/core'
 import { UiConfig } from '../types'
 import { addClass, removeClass } from '../utils'
 
-const showCls = $.css('display: flex !important;')
-
 const errorCls = $.css(`
   display: none;
   position: absolute;
@@ -23,7 +21,10 @@ const errorCls = $.css(`
   -ms-user-select: text;
   user-select: text;
   word-break: break-all;
+  justify-content: center;
 `)
+
+const showCls = $.css('display: flex;')
 
 const VIDEO_ERROR_MAP = {
   1: 'MEDIA_ERR_ABORTED',

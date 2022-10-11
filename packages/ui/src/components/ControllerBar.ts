@@ -31,7 +31,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       [`& .${controllerBar}`]: config.miniProgressBar
         ? {
             transform: 'translateY(calc(100% - 7px))',
-            padding: '0 !important',
+            padding: '0',
             'pointer-events': 'none'
           }
         : {

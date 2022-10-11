@@ -12,7 +12,7 @@ export const wrap = $.css({
   'justify-content': 'center',
 
   [`@global .${globalLoading} &`]: {
-    display: 'flex!important'
+    display: 'flex'
   }
 })
 
