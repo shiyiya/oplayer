@@ -21,7 +21,7 @@ const CTRL_HIDE_DELAY = 1500
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(`div.${controllerBar}`)
-  renderProgress(player, $dom, config)
+  if (!player.options.isLive) renderProgress(player, $dom, config)
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
 

@@ -17,6 +17,7 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
+  'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   MP4,
   'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
@@ -41,11 +42,9 @@ let logs: HTMLTextAreaElement
 const player = Player.make(document.getElementById('player')!, {
   muted: true,
   volume: 0.5,
+  isLive: true,
   source: { src, poster: POSTER },
-  // screenshot
-  videoAttr: {
-    crossorigin: 'anonymous'
-  }
+  videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
   .use([
     ui({

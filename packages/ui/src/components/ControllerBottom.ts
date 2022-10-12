@@ -38,7 +38,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
           : ''
       }
 
-      <span class=${time}>00:00 / --:--</span>
+      <span class=${time}>${player.options.isLive ? '00:00' : '00:00 / --:--'}</span>
     </div>
 
     <!-- right -->
@@ -117,10 +117,15 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   player.on('volumechange', () => switcher($volume, player.isMuted))
 
   player.on(['durationchange', 'timeupdate'], () => {
-    $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
+    $time.innerText = `${formatTime(player.currentTime)} ${
+      player.options.isLive ? '' : ` / ${formatTime(player.duration)}`
+    }`
   })
 
-  player.on('videosourcechange', () => ($time.innerText = '00:00 / --:--'))
+  player.on(
+    'videosourcechange',
+    () => ($time.innerText = player.options.isLive ? '00:00' : '00:00 / --:--')
+  )
 
   $dom.addEventListener('click', (e: Event) => {
     const target = e.target! as HTMLDivElement

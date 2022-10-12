@@ -21,6 +21,7 @@ export type PlayerOptions = {
   videoAttr?: Record<string, boolean | string>
   lang?: Lang
   evil?: () => boolean
+  isLive?: boolean
 }
 
 export type PlayerPlugin = {
