@@ -199,24 +199,7 @@ class Subtitle {
   loadSetting() {
     const source = this.options.source
 
-    this.player.emit('removesetting', SETTING_KEY)
-    if (source.length == 1) {
-      this.player.emit('addsetting', <Setting>{
-        name: this.player.locales.get('Subtitle'),
-        type: 'switcher',
-        icon: subtitleSvg,
-        key: SETTING_KEY,
-        default: !!this.currentSubtitle,
-        onChange: (value) => {
-          if (value) {
-            this.currentSubtitle = source[0]
-            this.load()
-          } else {
-            this.hide()
-          }
-        }
-      })
-    } else if (source.length > 1) {
+    if (source.length) {
       this.player.emit('addsetting', <Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
