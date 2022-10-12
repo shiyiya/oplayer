@@ -46,6 +46,7 @@ export class Player {
         lang: 'auto',
         source: {},
         videoAttr: {},
+        isLive: false,
         evil: () => isQQBrowser // QQ浏览器会劫持 video
       },
       typeof options === 'string' ? { source: { src: options } } : options

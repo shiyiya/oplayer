@@ -4,14 +4,14 @@ Oh! Another HTML5 video player.
 
 Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 
-[Examples](./examples) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
-
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
 ![npm dw](https://img.shields.io/npm/dw/@oplayer/core?style=flat-square)
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](https://paypal.me/ShiYiYa)
 
-![oplayer](./oplayer.png)
+![oplayer](./oplayer.jpg)
+
+[Examples](./examples) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 ## Feature
 
