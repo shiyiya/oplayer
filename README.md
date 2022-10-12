@@ -2,10 +2,9 @@
 
 Oh! Another HTML5 video player.
 
-[Examples](./examples) | [Contributing](./CONTRIBUTING.md)
-| [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
-
 Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
+
+[Examples](./examples) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
@@ -13,6 +12,25 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](https://paypal.me/ShiYiYa)
 
 ![oplayer](./oplayer.png)
+
+## Feature
+
+- Streaming formats
+  - HLS
+  - MPEG DASH
+  - WebTorrent
+  - Any other custom streaming formats
+- Media formats
+  - MP4 H.264
+  - WebM
+  - Ogg Theora Vorbis
+- Features
+  - Danmaku
+  - Screenshot
+  - Hotkeys
+  - Thumbnails
+  - Subtitle
+  - Highlight Marker
 
 ## Usage
 
