@@ -29,11 +29,9 @@
     "IE 11"
   ],
   "peerDependencies": {
-    "@oplayer/core": ">=1.0.0",
-    "dashjs": ">=2.0.0"
+    "@oplayer/core": ">=1.0.0"
   },
   "devDependencies": {
-    "@oplayer/core": "workspace:*",
-    "dashjs": "^4.5.0"
+    "@oplayer/core": "workspace:*"
   }
 }

@@ -4,6 +4,7 @@ import danmaku, { DanmakuItem } from '@oplayer/danmaku'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
+import ad from '@oplayer/ad'
 
 import MP4 from '../../website/static/君の名は.mp4'
 import SRT from '../../website/static/君の名は.srt'
@@ -112,6 +113,20 @@ const player = Player.make(document.getElementById('player')!, {
         hlsQualityControl: true,
         hlsQualitySwitch: 'immediate'
       }
+    }),
+    ad({
+      image: POSTER,
+      // video: dataSrcs[1],
+      duration: 10,
+      skipDuration: 5,
+      plugins: [
+        hls({
+          options: {
+            hlsQualityControl: true,
+            hlsQualitySwitch: 'immediate'
+          }
+        })
+      ]
     })
     // danmaku({
     //   source: DANMAKU,
