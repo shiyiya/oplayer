@@ -115,6 +115,7 @@ const player = Player.make(document.getElementById('player')!, {
       }
     }),
     ad({
+      autoplay: false,
       image:
         'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
       // video: dataSrcs[1],
