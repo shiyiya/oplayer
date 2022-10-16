@@ -12,12 +12,12 @@
     "build": "vite build && cp ../umd.html ../../docs/"
   },
   "dependencies": {
+    "@oplayer/ad": "workspace:*",
     "@oplayer/core": "workspace:*",
     "@oplayer/danmaku": "workspace:*",
     "@oplayer/dash": "workspace:*",
     "@oplayer/hls": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "@oplayer/ad": "workspace:*",
     "hls.js": "^1.2.4",
     "lit": "^2.4.0"
   }
