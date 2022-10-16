@@ -78,11 +78,13 @@ Player.make(document.getElementById('oplayer'), {
 
 ## Plugins
 
-- [@oplayer/ui](./packages/ui/)
-- [@oplayer/dash](./packages/dash/)
-- [@oplayer/torrent](./packages/torrent/)
-- [@oplayer/danmaku](./packages/danmaku/)
-- [@oplayer/react](./packages/react/)
+- [@oplayer/ui](./packages/ui)
+- [@oplayer/hls](./packages/hls)
+- [@oplayer/dash](./packages/dash)
+- [@oplayer/torrent](./packages/torrent)
+- [@oplayer/danmaku](./packages/danmaku)
+- [@oplayer/ad](./packages/ad)
+- [@oplayer/react](./packages/react)
 
 ## Who use OPlayer?
 
