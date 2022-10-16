@@ -2,11 +2,14 @@
 
 Oh! Another HTML5 video player.
 
+Preview on https://oplayer.vercel.app/player?url=/君の名は.mp4
+
 Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
 ![npm dw](https://img.shields.io/npm/dw/@oplayer/core?style=flat-square)
+[![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](https://paypal.me/ShiYiYa)
 
 ![oplayer](./oplayer.jpg)
