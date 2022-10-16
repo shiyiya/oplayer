@@ -22,7 +22,7 @@
 
       #actions button {
         padding: 4px 6px;
-        margin: 0 8px;
+        margin-left: 0.6em;
       }
 
       #meta > div {
@@ -60,6 +60,40 @@
         min-height: 280px;
         overflow: auto;
       }
+
+      .heart {
+        color: #ddd;
+        display: block;
+        height: 2rem;
+        line-height: 2rem;
+        margin: 0.5rem 0;
+        position: relative;
+        text-align: center;
+        width: 100%;
+      }
+
+      .heart:hover {
+        color: #ff4136;
+      }
+
+      .heart::before {
+        border-top: 1px solid #eee;
+        content: ' ';
+        display: block;
+        height: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 50%;
+      }
+
+      .heart::after {
+        background-color: #fff;
+        content: '♥';
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        position: relative;
+      }
     </style>
   </head>
   <body>
@@ -68,7 +102,7 @@
     <div class="asp">
       <div id="player"></div>
     </div>
-    <p>--</p>
+    <p class="heart"></p>
 
     <div id="actions"></div>
     <script type="module" src="/main.ts"></script>
