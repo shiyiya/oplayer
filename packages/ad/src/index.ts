@@ -85,11 +85,14 @@ export default ({
         `<div class=${topRight}>
             ${
               skipDuration
-                ? `<div class=${area} skipDuration> ${skipDuration} 秒后可关闭广告</div>`
+                ? `<div class=${area} skipDuration>${player.locales.get(
+                    'Can be closed after %ss',
+                    skipDuration
+                  )}</div>`
                 : ''
             }
 
-            <div class=${area} duration>${duration} 秒</div>
+            <div class=${area} duration>${player.locales.get('%ss', duration)}</div>
 
             ${
               video
@@ -142,10 +145,12 @@ export default ({
       //TODO: fix hotkey
       const timer = setInterval(() => {
         if (skipDuration !== undefined) {
+          count++
+
           if (skipDuration - count > -1) {
-            $skip!.innerText = `${skipDuration - count} 秒后可关闭广告`
+            $skip!.innerText = player.locales.get('Can be closed after %ss', skipDuration - count)
           } else {
-            $skip!.innerText = `关闭`
+            $skip!.innerText = player.locales.get('Close')
             $skip!.onclick ??= () => {
               onSkip?.(count)
               destroy()
@@ -154,11 +159,10 @@ export default ({
         }
 
         if (duration - count > -1) {
-          $duration.innerText = `${duration - count} 秒`
+          $duration.innerText = player.locales.get('%ss', duration - count)
         } else {
           destroy()
         }
-        count++
       }, 1000)
 
       if (target) {

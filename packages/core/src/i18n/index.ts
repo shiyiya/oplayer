@@ -37,11 +37,11 @@ export default class I18n {
     if (!this.languages[this.lang]) this.lang = 'zh-CN'
   }
 
-  get(key: string, ...arg: string[]): string {
+  get(key: string, ...arg: Array<string | number>): string {
     const result = this.languages[this.lang][key]
-    if (!result) return key
+    if (result == undefined) return key
     let i = 0
-    return result.replace(/%s/gi, () => arg[i++] || '')
+    return result.replace(/%s/gi, () => arg[i++] ?? '')
   }
 
   update(languages: Partial<Record<Lang, any>>): void {

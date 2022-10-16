@@ -19,8 +19,11 @@
   "FontSize": "字体大小",
   "Display Area": "显示区域",
 
-  "OFF": "关闭",
+  "Close": "关闭",
   "Auto": "自动",
   "Default": "默认",
-  "Normal": "正常"
+  "Normal": "正常",
+
+  "%ss": "%s秒",
+  "Can be closed after %ss": "%s秒后可关闭广告"
 }
