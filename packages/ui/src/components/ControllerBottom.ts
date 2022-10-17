@@ -25,6 +25,14 @@ import {
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
+  const [playLabel, screenshotLabel, settingLabel, pipLabel, fullscreenLabel] = [
+    player.locales.get('Play'),
+    player.locales.get('Screenshot'),
+    player.locales.get('Setting'),
+    player.locales.get('Picture in Picture'),
+    player.locales.get(player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen')
+  ]
+
   const $dom = $.create(
     `div.${controllerBottom}`,
     {},
@@ -32,9 +40,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       ${
         !isMobile
           ? `<button
-              aria-label="Play"
               class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
-              type="button"
+              aria-label="${playLabel}"
             >
               ${playSvg}
               ${pauseSvg}
@@ -49,40 +56,35 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     <div>
       ${
         config.screenshot
-          ? `<button aria-label="Screenshot" class="${icon} ${tooltip}" type="button">
+          ? `<button class="${icon} ${tooltip}" aria-label="${screenshotLabel}">
               ${screenshotSvg}
             </button>`
           : ''
       }
 
       <div class="${dropdown} ${dropdownHoverable}">
-        <button class="${icon} ${player.isMuted ? on : off}" type="button" aria-label="Volume">
+        <button class="${icon} ${player.isMuted ? on : off}" aria-label="Volume">
             ${volumeSvg}
             ${volumeOffSvg}
         </button>
         ${!isIOS ? `<div class=${expand}></div>` : ''}
       </div>
 
-      <button aria-label="Setting" class="${icon} ${tooltip}" type="button">
+      <button class="${icon} ${tooltip}" aria-label="${settingLabel}">
         ${settingsSvg}
       </button>
 
       ${
         config.pictureInPicture && player.isPipEnabled
-          ? `<button aria-label="Picture in Picture" class="${icon} ${tooltip}" type="button">
-              ${pipSvg}
+          ? `<button class="${icon} ${tooltip}" aria-label="${pipLabel}">
+                ${pipSvg}
             </button>`
           : ''
       }
 
       ${
         config.fullscreen
-          ? `<button
-                aria-label="${player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen'}"
-                class="${icon} ${off} ${tooltip}"
-                type="button"
-                data-tooltip-pos="up-right"
-              >
+          ? `<button class="${icon} ${off} ${tooltip}" data-tooltip-pos="up-right" aria-label="${fullscreenLabel}">
                 ${expandSvg}
                 ${compressSvg}
               </button>`
@@ -91,14 +93,15 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     </div>`
   )
 
-  const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label="Volume"]')!
+  const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label=Volume]')!
   // IOS只能使用物理按键控制音量大小
   if (!isIOS) renderVolumeBar(player, $volume.nextElementSibling! as HTMLDivElement)
 
-  const $play = $dom.querySelector<HTMLButtonElement>('button[aria-label="Play"]')!
-  const $fullscreen = $dom.querySelector<HTMLButtonElement>('button[aria-label="Fullscreen"]')!
-  const $webFull = $dom.querySelector<HTMLButtonElement>('button[aria-label="WebFullscreen"]')!
+  const $play = $dom.querySelector<HTMLButtonElement>(`button[aria-label=${playLabel}]`)!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
+  const $fullscreen = $dom.querySelector<HTMLButtonElement>(
+    `button[aria-label="${fullscreenLabel}"]`
+  )!
 
   const switcher = (el: HTMLElement, display: boolean) => {
     el.classList.add(display ? on : off)
@@ -109,7 +112,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     player.on('fullscreenchange', ({ payload }) =>
       setTimeout(() => {
         if (payload.isWeb) {
-          switcher($webFull, toggleClass(player.$root, webFullScreen))
+          switcher($fullscreen, toggleClass(player.$root, webFullScreen))
         } else {
           switcher($fullscreen, player.isFullScreen)
         }
@@ -117,10 +120,11 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   }
 
-  !isMobile &&
+  if (!isMobile) {
     player.on(['play', 'pause', 'videosourcechange'], () => switcher($play, player.isPlaying))
-  player.on('volumechange', () => switcher($volume, player.isMuted))
+  }
 
+  player.on('volumechange', () => switcher($volume, player.isMuted))
   player.on(['durationchange', 'timeupdate'], () => {
     $time.innerText = `${formatTime(player.currentTime)} ${
       player.options.isLive ? '' : ` / ${formatTime(player.duration)}`
@@ -137,7 +141,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     const label = target.getAttribute('aria-label')
 
     switch (label) {
-      case 'Play':
+      case playLabel:
         return player.togglePlay()
       case 'Volume':
         if (isMobile && !isIOS) return
@@ -147,17 +151,19 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
           player.mute()
         }
         break
-      case 'Picture in Picture':
+      case pipLabel:
         return player.togglePip()
-      case 'Fullscreen':
-        return player.toggleFullScreen()
-      case 'WebFullscreen':
-        player.emit('fullscreenchange', { isWeb: true })
-        break
-      case 'Screenshot':
+      case fullscreenLabel:
+        if (player.isFullscreenEnabled) {
+          player.toggleFullScreen()
+        } else {
+          player.emit('fullscreenchange', { isWeb: true })
+        }
+        return
+      case screenshotLabel:
         screenShot(player)
         break
-      case 'Setting': {
+      case settingLabel: {
         player.emit('settingvisibilitychange', e)
         break
       }

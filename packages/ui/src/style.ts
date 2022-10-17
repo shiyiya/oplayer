@@ -75,13 +75,13 @@ export const tooltip = $.css({
   '&:hover': {
     '&::after': {
       opacity: 1,
-      transform: 'translate(-50%, 0) scale(1)'
+      transform: 'translateX(-50%) scale(1)'
     },
     // '&[left]::after': {
     //   transform: 'translateY(0) scale(1)'
     // },
     '&[data-tooltip-pos=up-right]::after': {
-      right: '0',
+      right: 0,
       left: 'auto',
       transform: 'translateY(0) scale(1)'
     }
@@ -92,20 +92,21 @@ export const tooltip = $.css({
     content: 'attr(aria-label)',
     bottom: '100%',
     left: '50%',
-    'margin-bottom': '10px',
+    'margin-bottom': '5px',
     'white-space': 'nowrap',
     background: 'var(--shadow-background-color)',
     transform: 'translate(-50%, 10px) scale(.8)',
     'transform-origin': '50% 100%',
     opacity: 0,
-    padding: '6px 10px',
+    'font-size': '12px',
+    padding: '4px 8px',
     'border-radius': '4px',
     transition: 'transform .2s ease .1s,opacity .2s ease .1s',
     'pointer-events': 'none'
   },
 
   '&[data-tooltip-pos=up-right]::after': {
-    right: '0',
+    right: 0,
     left: 'auto',
     transform: 'translateY(10px) scale(.8)',
     'transform-origin': '100% 100%'
