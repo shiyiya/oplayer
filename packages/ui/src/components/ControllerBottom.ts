@@ -1,5 +1,5 @@
 import { $, isMobile, isIOS } from '@oplayer/core'
-import { icon, off, on, webFullScreen } from '../style'
+import { icon, off, on, tooltip, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
@@ -31,7 +31,11 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     `<div>
       ${
         !isMobile
-          ? `<button aria-label="Play" class="${icon} ${player.isPlaying ? on : off}" type="button">
+          ? `<button
+              aria-label="Play"
+              class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
+              type="button"
+            >
               ${playSvg}
               ${pauseSvg}
             </button>`
@@ -45,7 +49,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     <div>
       ${
         config.screenshot
-          ? `<button aria-label="Screenshot" class="${icon}" type="button">
+          ? `<button aria-label="Screenshot" class="${icon} ${tooltip}" type="button">
               ${screenshotSvg}
             </button>`
           : ''
@@ -59,13 +63,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         ${!isIOS ? `<div class=${expand}></div>` : ''}
       </div>
 
-      <button aria-label="Setting" class=${icon} type="button">
+      <button aria-label="Setting" class="${icon} ${tooltip}" type="button">
         ${settingsSvg}
       </button>
 
       ${
         config.pictureInPicture && player.isPipEnabled
-          ? `<button aria-label="Picture in Picture" class="${icon}" type="button">
+          ? `<button aria-label="Picture in Picture" class="${icon} ${tooltip}" type="button">
               ${pipSvg}
             </button>`
           : ''
@@ -75,8 +79,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         config.fullscreen
           ? `<button
                 aria-label="${player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen'}"
-                class="${icon} ${off}"
+                class="${icon} ${off} ${tooltip}"
                 type="button"
+                data-tooltip-pos="up-right"
               >
                 ${expandSvg}
                 ${compressSvg}
