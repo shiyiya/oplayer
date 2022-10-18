@@ -8,7 +8,7 @@ const topRight = $.css({
 })
 
 const area = $.css(
-  'display: inline-block;background: rgba(28 ,28 ,28 , 0.9);color: #fff;padding: 4px 8px;border-radius: 22px; fill:#fff; font-size: 14px'
+  'display: inline-block;background: rgba(28 ,28 ,28 , 0.9);color: #fff;padding: 4px 8px;border-radius: 4px; fill:#fff; font-size: 14px'
 )
 
 const mute = $.css({

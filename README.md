@@ -2,7 +2,7 @@
 
 Oh! Another HTML5 video player.
 
-Preview on https://oplayer.vercel.app/player?url=/君の名は.mp4
+Preview on https://oplayer.vercel.app/player?url=../君の名は.mp4
 
 Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 
