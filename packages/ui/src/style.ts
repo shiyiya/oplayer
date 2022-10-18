@@ -1,4 +1,4 @@
-import { $ } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import type { UiConfig } from './types'
 import { hexToRgb } from './utils'
 
@@ -69,52 +69,54 @@ export const playing = $.cls('/* playing */')
 
 export const focused = $.cls('/* focused */')
 
-export const tooltip = $.css({
-  position: 'relative',
+export const tooltip = isMobile
+  ? ''
+  : $.css({
+      position: 'relative',
 
-  '&:hover': {
-    '&::after': {
-      opacity: 1,
-      transform: 'translateX(-50%) scale(1)'
-    },
-    // '&[left]::after': {
-    //   transform: 'translateY(0) scale(1)'
-    // },
-    '&[data-tooltip-pos=up-right]::after': {
-      right: 0,
-      left: 'auto',
-      transform: 'translateY(0) scale(1)'
-    }
-  },
+      '&:hover': {
+        '&::after': {
+          opacity: 1,
+          transform: 'translateX(-50%) scale(1)'
+        },
+        // '&[left]::after': {
+        //   transform: 'translateY(0) scale(1)'
+        // },
+        '&[data-tooltip-pos=up-right]::after': {
+          right: 0,
+          left: 'auto',
+          transform: 'translateY(0) scale(1)'
+        }
+      },
 
-  '&::after': {
-    position: 'absolute',
-    content: 'attr(aria-label)',
-    bottom: '100%',
-    left: '50%',
-    'margin-bottom': '5px',
-    'white-space': 'nowrap',
-    background: 'var(--shadow-background-color)',
-    transform: 'translate(-50%, 10px) scale(.8)',
-    'transform-origin': '50% 100%',
-    opacity: 0,
-    'font-size': '12px',
-    padding: '4px 8px',
-    'border-radius': '4px',
-    transition: 'transform .2s ease .1s,opacity .2s ease .1s',
-    'pointer-events': 'none'
-  },
+      '&::after': {
+        position: 'absolute',
+        content: 'attr(aria-label)',
+        bottom: '100%',
+        left: '50%',
+        'margin-bottom': '5px',
+        'white-space': 'nowrap',
+        background: 'var(--shadow-background-color)',
+        transform: 'translate(-50%, 10px) scale(.8)',
+        'transform-origin': '50% 100%',
+        opacity: 0,
+        'font-size': '12px',
+        padding: '4px 8px',
+        'border-radius': '4px',
+        transition: 'transform .2s ease .1s,opacity .2s ease .1s',
+        'pointer-events': 'none'
+      },
 
-  '&[data-tooltip-pos=up-right]::after': {
-    right: 0,
-    left: 'auto',
-    transform: 'translateY(10px) scale(.8)',
-    'transform-origin': '100% 100%'
-  }
+      '&[data-tooltip-pos=up-right]::after': {
+        right: 0,
+        left: 'auto',
+        transform: 'translateY(10px) scale(.8)',
+        'transform-origin': '100% 100%'
+      }
 
-  // '&[left]::after': {
-  //   left: '0',
-  //   transform: 'translateY(10px) scale(.8)',
-  //   'transform-origin': '0% 100%'
-  // },
-})
+      // '&[left]::after': {
+      //   left: '0',
+      //   transform: 'translateY(10px) scale(.8)',
+      //   'transform-origin': '0% 100%'
+      // },
+    })
