@@ -16,60 +16,41 @@ export const wrap = $.css({
   }
 })
 
-export const loading = $.css({
+export const line = $.css({
+  position: 'relative',
   overflow: 'hidden',
   width: '20%',
   height: '4px',
   'background-color': 'var(--primary-color-4)',
-  'border-radius': '4px'
-})
+  'border-radius': '4px',
 
-export const line = $.css({
-  '&': {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    '-webkit-transition': 'width 500ms ease-out 1s',
-    '-moz-transition': 'width 500ms ease-out 1s',
-    '-o-transition': 'width 500ms ease-out 1s',
-    transition: 'width 500ms ease-out 1s'
-  },
-
-  '&::before, &::after': {
+  '&::after': {
     display: 'block',
     content: "''",
     position: 'absolute',
     height: '100%',
-    'background-color': 'var(--primary-color)'
+    width: '100%',
+    'background-color': 'var(--primary-color)',
+    'border-radius': '4px',
+    animation: 'indeterminate 1.3s infinite linear',
+    'transform-origin': '0% 50%'
   },
 
-  '&::before': {
-    animation: 'indeterminate_first 1.5s infinite ease-out'
-  },
-
-  '&::after': {
-    animation: 'indeterminate_second 1.5s infinite ease-in'
-  },
-
-  '@keyframes indeterminate_first': {
+  '@keyframes indeterminate': {
     '0%': {
-      left: '-100%',
-      width: '100%'
+      transform: 'translateX(0) scaleX(0)'
+    },
+    '10%': {
+      transform: 'translateX(0) scaleX(0.2)'
+    },
+    '40%': {
+      transform: 'translateX(0) scaleX(0.7)'
+    },
+    '60%': {
+      transform: 'translateX(60%) scaleX(0.4)'
     },
     '100%': {
-      left: '100%',
-      width: '10%'
-    }
-  },
-
-  '@keyframes indeterminate_second': {
-    '0%': {
-      left: '-150%',
-      width: '100%'
-    },
-    '100%': {
-      left: '100%',
-      width: '10%'
+      transform: 'translateX(100%) scaleX(0.2)'
     }
   }
 })
