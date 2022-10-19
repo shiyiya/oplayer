@@ -21,17 +21,23 @@ export const line = $.css({
   overflow: 'hidden',
   width: '20%',
   height: '4px',
-  'background-color': 'var(--primary-color-4)',
   'border-radius': '4px',
 
-  '&::after': {
+  '&::before,&::after': {
     display: 'block',
     content: "''",
     position: 'absolute',
     height: '100%',
     width: '100%',
     'background-color': 'var(--primary-color)',
-    'border-radius': '4px',
+    'border-radius': '4px'
+  },
+
+  '&::before': {
+    opacity: '0.4'
+  },
+
+  '&::after': {
     animation: 'indeterminate 1.3s infinite linear',
     'transform-origin': '0% 50%'
   },
