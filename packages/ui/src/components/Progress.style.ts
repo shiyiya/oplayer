@@ -22,12 +22,11 @@ export const dot = $.css({
     display: 'block',
     position: 'absolute',
     left: '0',
-    top: '0',
+    top: '-9px',
     bottom: '0',
-    height: '0.7em',
-    width: '0.7em',
+    height: '13px',
+    width: '13px',
     'background-color': '#fff',
-    'margin-top': '-4.5px',
     'z-index': '1',
     'border-radius': '50%',
     'will-change': 'left'
@@ -49,10 +48,29 @@ export const hit = $.css({
   transform: 'translateX(-50%)',
   display: 'none',
   'white-space': 'pre',
-  bottom: '10px'
+  bottom: '16px'
 })
 
 export const progressDragging = $.css('/* progressDragging */')
+
+export const progressInner = $.css({
+  position: 'relative',
+  height: '5px',
+  transform: 'scaleY(0.6)',
+  width: '100%',
+  'background-color': 'hsla(0, 0%, 100%, 0.2)',
+  'border-radius': '4px',
+  transition: 'transform .1s cubic-bezier(0.4,0,1,1),-webkit-transform .1s cubic-bezier(0.4,0,1,1)',
+
+  [`& .${buffered},& .${played}`]: {
+    position: 'absolute',
+    left: '0',
+    top: '0',
+    bottom: '0',
+    'will-change': 'width',
+    'pointer-events': 'none'
+  }
+})
 
 export const progress = $.css({
   position: 'relative',
@@ -71,26 +89,13 @@ export const progress = $.css({
     },
 
   [`&:hover .${highlightCls}`]: {
-    transform: 'translate(-4px, -1.5px)',
-    height: '6px',
-    width: '8px'
-  }
-})
+    // transform: 'translateX(-50%) scale(1.8)',
+    width: '8px',
+    height: '5px',
+    top: '5px'
+  },
 
-export const progressInner = $.css({
-  position: 'relative',
-  height: '3px',
-  width: '100%',
-  'background-color': 'hsla(0, 0%, 100%, 0.2)',
-  'border-radius': '4px',
-
-  [`& .${buffered},& .${played}`]: {
-    position: 'absolute',
-    left: '0',
-    top: '0',
-    bottom: '0',
-    'will-change': 'width',
-    'pointer-events': 'none',
-    'border-radius': '4px'
+  [`&:hover .${progressInner}`]: {
+    transform: 'none'
   }
 })

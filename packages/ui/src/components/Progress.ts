@@ -20,11 +20,12 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     `div.${progress}`,
     {},
     `<div class=${progressInner}>
-      <div class="${hit}">00:00</div>
       <div class="${buffered}" style="width:0%"></div>
       <div class="${played}" style="width:0%"></div>
-      <div class="${dot}" style="transform: translateX(0%);"></div>
-  </div>`
+    </div>
+
+    <div class="${hit}">00:00</div>
+    <div class="${dot}" style="transform: translateX(0%);"></div>`
   )
   const { init: initThumbnail, update: thumbnailUpdater } = config.thumbnails?.isVTT
     ? renderVTTThumbnail(player, $dom, config.thumbnails)

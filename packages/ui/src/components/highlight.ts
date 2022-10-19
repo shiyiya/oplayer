@@ -18,12 +18,12 @@ export const highlightTextCls = $.css(`
 
 export const highlightCls = $.css({
   position: 'absolute',
-  top: '5px',
+  top: '6px',
   width: '6px',
   height: '3px',
   'border-radius': '2px',
   'background-color': '#fff',
-  transform: 'translateX(-3px)',
+  transform: 'translateX(-50%)',
   transition: 'all 0.2s',
 
   [`&:hover > .${highlightTextCls}`]: {

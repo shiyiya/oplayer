@@ -6,7 +6,7 @@ const noop = () => {}
 export const thumbnailCls = $.css(`
   position: absolute;
   left: 0;
-  bottom: 12px;
+  bottom: 16px;
   pointer-events: none;
   transform: translateX(-50%);
   background-position-y: center;
