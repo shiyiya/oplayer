@@ -57,7 +57,7 @@ export type Highlight = {
 
 export type UiConfig = {
   theme?: {
-    primaryColor: `#${string}`
+    primaryColor: string
   }
   /**
    * default: false

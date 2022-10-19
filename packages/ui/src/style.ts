@@ -1,15 +1,11 @@
 import { $, isMobile } from '@oplayer/core'
 import type { UiConfig } from './types'
-import { hexToRgb } from './utils'
 
 export const settingShown = $.css('/* settingShown */')
 
 export const root = (theme: UiConfig['theme']) => {
-  const rbg = hexToRgb(theme!.primaryColor)!
-
   return $.css({
-    '--primary-color': `rgba(${rbg}, 1)`,
-    '--primary-color-4': `rgba(${rbg}, 0.4)`,
+    '--primary-color': `${theme!.primaryColor}`,
 
     //TODO: more
     '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
@@ -113,10 +109,4 @@ export const tooltip = isMobile
         transform: 'translateY(10px) scale(.8)',
         'transform-origin': '100% 100%'
       }
-
-      // '&[left]::after': {
-      //   left: '0',
-      //   transform: 'translateY(10px) scale(.8)',
-      //   'transform-origin': '0% 100%'
-      // },
     })
