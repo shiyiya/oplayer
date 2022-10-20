@@ -25,8 +25,9 @@ import {
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  const [playLabel, screenshotLabel, settingLabel, pipLabel, fullscreenLabel] = [
+  const [playLabel, pauseLabel, screenshotLabel, settingLabel, pipLabel, fullscreenLabel] = [
     player.locales.get('Play'),
+    player.locales.get('Pause'),
     player.locales.get('Screenshot'),
     player.locales.get('Setting'),
     player.locales.get('Picture in Picture'),
@@ -121,7 +122,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   if (!isMobile) {
-    player.on(['play', 'pause', 'videosourcechange'], () => switcher($play, player.isPlaying))
+    player.on(['play', 'pause', 'videosourcechange'], () => {
+      $play.setAttribute('aria-label', player.isPlaying ? pauseLabel : playLabel)
+      switcher($play, player.isPlaying)
+    })
   }
 
   player.on('volumechange', () => switcher($volume, player.isMuted))
@@ -142,6 +146,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
     switch (label) {
       case playLabel:
+      case pauseLabel:
         return player.togglePlay()
       case 'Volume':
         if (isMobile && !isIOS) return
