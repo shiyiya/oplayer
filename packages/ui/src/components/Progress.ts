@@ -91,7 +91,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   // moving
   $dom.addEventListener('mouseenter', () => {
     if (isDargMoving) return
-    $dom.classList.add(progressDragging)
     initThumbnail()
   })
 
@@ -99,6 +98,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     'mousemove',
     (e) => {
       if (isDargMoving) return
+      $dom.classList.add(progressDragging)
       if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
         $hit.style.display = 'none'
       } else {
