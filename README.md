@@ -14,7 +14,7 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 
 ![oplayer](./oplayer.jpg)
 
-[Examples](./examples) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
+[Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 ## Feature
 
@@ -88,6 +88,8 @@ Player.make(document.getElementById('oplayer'), {
 - [@oplayer/danmaku](./packages/danmaku)
 - [@oplayer/ad](./packages/ad)
 - [@oplayer/react](./packages/react)
+- https://github.com/shiyiya/WordPress-Plugin-OPlayer
+- [Plugin Collection](https://github.com/shiyiya/oplayer/issues/41)
 
 ## Who use OPlayer?
 
