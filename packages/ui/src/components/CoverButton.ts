@@ -1,7 +1,6 @@
 import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
-import pauseSvg from '../icons/pause.svg?raw'
-import playSvg from '../icons/play.svg?raw'
+import { Icons } from '../functions/icons'
 
 import { icon, playing, loading, controllerHidden, initialized } from '../style'
 
@@ -63,8 +62,8 @@ const render = (player: Player, el: HTMLElement) => {
     `div.${styles}`,
     {},
     `<button aria-label="Play" class="${icon}" type="button">
-      ${playSvg}
-      ${needPause ? pauseSvg : ''}
+      ${Icons.get('play')}
+      ${needPause ? Icons.get('pause') : ''}
     </button>`
   )
 

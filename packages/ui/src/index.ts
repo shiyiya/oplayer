@@ -1,22 +1,21 @@
-import type Player from '@oplayer/core'
-import { $, PlayerPlugin, isMobile } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import { root } from './style'
-import type { UiConfig } from './types'
+
+import { Icons, registerHotKey, registerSpeedSetting } from './functions'
+import { focusListener, initListener, loadingListener, playingListener } from './listeners'
 
 import renderControllerBar from './components/ControllerBar'
 import renderCoverButton from './components/CoverButton'
 import renderError from './components/Error'
 import renderLoading from './components/Loading'
 import renderMask from './components/Mask'
+import renderMenubar from './components/Menubar'
 import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle from './components/Subtitle'
-import renderMenubar from './components/Menubar'
 
-import registerSpeedSetting from './functions/speed'
-import registerHotKey from './functions/hotkey'
-
-import { initListener, playingListener, focusListener, loadingListener } from './listeners'
+import type { Player, PlayerPlugin } from '@oplayer/core'
+import type { UiConfig } from './types'
 
 const apply = (player: Player, config: UiConfig) => {
   if (player.evil()) {
@@ -32,6 +31,8 @@ const apply = (player: Player, config: UiConfig) => {
     focusListener(player, config.autoFocus)
     registerHotKey(player)
   }
+
+  Icons.setupIcons(player, config.icons)
 
   const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
   const $root = $.create(`div.${root(config.theme)}`)

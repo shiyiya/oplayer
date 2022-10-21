@@ -1,3 +1,4 @@
-import hotKey from './hotkey'
+export { Icons } from './icons'
 
-export { hotKey }
+export { default as registerHotKey } from './hotkey'
+export { default as registerSpeedSetting } from './speed'

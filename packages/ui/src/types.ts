@@ -100,6 +100,18 @@ export type UiConfig = {
 
   errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
 
+  icons?: {
+    play: string
+    pause: string
+    volume: [string, string] //on off
+    fullscreen: [string, string]
+    pip: string
+    setting: string
+    screenshot: string
+    playbackRate: string
+    loop: string
+  }
+
   /*  --- WIP ---  */
 
   contextmenu?: []

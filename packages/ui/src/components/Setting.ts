@@ -1,5 +1,5 @@
 import Player, { $, PlayerEvent } from '@oplayer/core'
-import loopSvg from '../icons/loop.svg?raw'
+import { Icons } from '../functions/icons'
 import { settingShown } from '../style'
 import type { Setting } from '../types'
 import { siblings } from '../utils'
@@ -226,7 +226,7 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
       name: player.locales.get('Loop'),
       type: 'switcher',
       key: 'loop',
-      icon: loopSvg,
+      icon: Icons.get('loop'),
       default: player.isLoop,
       onChange: (value: boolean) => player.setLoop(value)
     },

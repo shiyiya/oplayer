@@ -1,20 +1,11 @@
-import { $, isMobile, isIOS } from '@oplayer/core'
+import { $, isIOS, isMobile } from '@oplayer/core'
+import { Icons } from '../functions/icons'
 import { icon, off, on, tooltip, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 
 import type { Player } from '@oplayer/core'
 import type { UiConfig } from '../types'
-
-import expandSvg from '../icons/fullscreen-enter.svg?raw'
-import compressSvg from '../icons/fullscreen-exit.svg?raw'
-import pauseSvg from '../icons/pause.svg?raw'
-import pipSvg from '../icons/pip.svg?raw'
-import playSvg from '../icons/play.svg?raw'
-import screenshotSvg from '../icons/screenshot.svg?raw'
-import volumeOffSvg from '../icons/sound-off.svg?raw'
-import volumeSvg from '../icons/sound-on.svg?raw'
-import settingsSvg from '../icons/settings.svg?raw'
 
 import {
   controllerBottom,
@@ -44,8 +35,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
               class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
               aria-label="${playLabel}"
             >
-              ${playSvg}
-              ${pauseSvg}
+              ${Icons.get('play')}
+              ${Icons.get('pause')}
             </button>`
           : ''
       }
@@ -58,27 +49,27 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       ${
         config.screenshot
           ? `<button class="${icon} ${tooltip}" aria-label="${screenshotLabel}">
-              ${screenshotSvg}
+              ${Icons.get('screenshot')}
             </button>`
           : ''
       }
 
       <div class="${dropdown} ${dropdownHoverable}">
         <button class="${icon} ${player.isMuted ? on : off}" aria-label="Volume">
-            ${volumeSvg}
-            ${volumeOffSvg}
+            ${Icons.get('volume')[0]}
+            ${Icons.get('volume')[1]}
         </button>
         ${!isIOS ? `<div class=${expand}></div>` : ''}
       </div>
 
       <button class="${icon} ${tooltip}" aria-label="${settingLabel}">
-        ${settingsSvg}
+        ${Icons.get('setting')}
       </button>
 
       ${
         config.pictureInPicture && player.isPipEnabled
           ? `<button class="${icon} ${tooltip}" aria-label="${pipLabel}">
-                ${pipSvg}
+                ${Icons.get('pip')}
             </button>`
           : ''
       }
@@ -86,8 +77,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       ${
         config.fullscreen
           ? `<button class="${icon} ${off} ${tooltip}" data-tooltip-pos="up-right" aria-label="${fullscreenLabel}">
-                ${expandSvg}
-                ${compressSvg}
+                ${Icons.get('fullscreen')[0]}
+                ${Icons.get('fullscreen')[1]}
               </button>`
           : ''
       }

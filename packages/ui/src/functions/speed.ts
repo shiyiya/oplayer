@@ -1,6 +1,6 @@
 import type { Player } from '@oplayer/core'
 import { Setting, UiConfig } from '../types'
-import speedSvg from '../icons/speed.svg?raw'
+import { Icons } from './icons'
 
 // TODO: listen playback change
 export default function registerSpeedSetting(player: Player, speeds: UiConfig['speed']) {
@@ -8,7 +8,7 @@ export default function registerSpeedSetting(player: Player, speeds: UiConfig['s
     player.emit('addsetting', <Setting>{
       name: player.locales.get('Speed'),
       type: 'selector',
-      icon: speedSvg,
+      icon: Icons.get('playbackRate'),
       key: 'speed',
       children: speeds.map((speed) => ({
         name: +speed == 1 ? 'Normal' : speed + 'x',

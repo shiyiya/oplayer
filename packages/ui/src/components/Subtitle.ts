@@ -1,6 +1,6 @@
 import type { Player } from '@oplayer/core'
 import { $, isIOS, isMobile } from '@oplayer/core'
-import subtitleSvg from '../icons/subtitles.svg?raw'
+import { Icons } from '../functions/icons'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
@@ -203,7 +203,7 @@ class Subtitle {
       this.player.emit('addsetting', <Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
-        icon: subtitleSvg,
+        icon: Icons.get('subtitle'),
         key: SETTING_KEY,
         onChange: ({ value }) => {
           if (value) {
