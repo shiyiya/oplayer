@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-//https://github.com/shiyiya/DPlayer-thumbnails/blob/master/index.js
+//https://github.com/shiyiya/OPlayer-thumbnails/blob/master/index.js
 
 var ffmpeg = require('fluent-ffmpeg')
 var nsg = require('node-sprite-generator')

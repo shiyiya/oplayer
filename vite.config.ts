@@ -12,6 +12,7 @@ export const globals = {
   '@oplayer/hls': 'OHls',
   'hls.js': 'Hls',
   'hls.js/dist/hls.light.min.js': 'Hls',
+  'hls.js/dist/hls.min.js': 'Hls',
   '@oplayer/torrent': 'OTorrent',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
   '@oplayer/danmaku': 'ODanmaku',

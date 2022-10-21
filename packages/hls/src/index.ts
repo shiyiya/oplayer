@@ -1,22 +1,16 @@
-// import Hls from 'hls.js/dist/hls.light.min.js'
+import Hls from 'hls.js/dist/hls.min.js'
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import type Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 
 //@ts-ignore
 import qualitySvg from './quality.svg?raw'
 
-let importedHls: typeof import('hls.js/dist/hls.light.min.js')
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 type hlsPluginOptions = {
   hlsConfig?: Partial<HlsConfig>
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
   options?: {
-    /**
-     * @default: true
-     */
-    light?: boolean
     /**
      * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
      * default: false
@@ -84,7 +78,7 @@ const generateSetting = (
         if (options.hlsQualitySwitch == 'immediate') {
           hlsInstance.currentLevel = level.value
           if (level.value !== -1) hlsInstance.loadLevel = level.value
-        } else if (options.hlsQualitySwitch == 'smooth') {
+        } /* if (options.hlsQualitySwitch == 'smooth')*/ else {
           hlsInstance.nextLevel = level.value
           if (level.value !== -1) hlsInstance.nextLoadLevel = level.value
         }
@@ -105,33 +99,16 @@ const generateSetting = (
     }
   }
 
-  hlsInstance.once(importedHls.Events.MANIFEST_PARSED, settingUpdater)
-  hlsInstance.on(importedHls.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
+  hlsInstance.once(Hls.Events.MANIFEST_PARSED, settingUpdater)
+  hlsInstance.on(Hls.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
 }
 
 const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher,
-  options: _pluginOptions
+  options: pluginOptions
 }: hlsPluginOptions = {}): PlayerPlugin => {
   let hlsInstance: Hls
-
-  const pluginOptions = {
-    light: true,
-    hlsQualityControl: false,
-    hlsQualitySwitch: 'smooth',
-    ..._pluginOptions
-  } as Required<hlsPluginOptions>['options']
-  if (pluginOptions.hlsQualityControl) pluginOptions.light = false
-
-  const getHls = async () => {
-    if (hlsInstance) hlsInstance.destroy()
-
-    importedHls ??= (
-      await import(pluginOptions.light ? 'hls.js/dist/hls.light.min.js' : 'hls.js/dist/hls.min.js')
-    ).default
-    hlsInstance = new importedHls(hlsConfig)
-  }
 
   return {
     name: PLUGIN_NAME,
@@ -144,15 +121,16 @@ const hlsPlugin = ({
         return false
       }
 
-      await getHls()
+      if (!Hls.isSupported()) return false
 
-      if (!importedHls.isSupported()) return false
+      hlsInstance?.destroy()
+      hlsInstance = new Hls(hlsConfig)
 
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
       if (!player.evil()) generateSetting(player, hlsInstance, pluginOptions)
 
-      hlsInstance.on(importedHls.Events.ERROR, function (_, data) {
+      hlsInstance.on(Hls.Events.ERROR, function (_, data) {
         const { type, details, fatal } = data
 
         if (!fatal) {
@@ -182,7 +160,7 @@ const hlsPlugin = ({
 
       Object.defineProperty(player, 'hls', {
         enumerable: true,
-        get: () => ({ value: hlsInstance, constructor: importedHls })
+        get: () => ({ value: hlsInstance, constructor: Hls })
       })
     }
   }
