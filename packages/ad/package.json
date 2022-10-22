@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/ad",
-  "version": "1.0.46-beta.0",
+  "version": "1.0.49",
   "description": "AD plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
