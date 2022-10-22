@@ -1,24 +1,35 @@
 module.exports = {
   docs: [
-    'installation',
-    'getting-started',
-    'shortcut',
-    'settings',
-    'thumbnail',
-    'plugin',
-    'streaming',
+    'Introduction',
     {
       type: 'category',
-      label: 'Ecosystem',
+      label: 'Getting Started',
       collapsed: false,
-      items: ['ecosystem/ui', 'ecosystem/hls', 'ecosystem/danmaku', 'ecosystem/react']
+      items: [
+        'getting-started/Installation',
+        'getting-started/Configuration',
+        'getting-started/Plugin'
+      ]
     },
     {
+      link: {
+        type: 'generated-index',
+        title: 'Plugins',
+        slug: '/Plugins'
+      },
       type: 'category',
-      label: 'Examples',
+      label: 'Plugins',
       collapsed: false,
-      items: ['examples/custom-videoloader']
+      items: [
+        'plugins/ui',
+        'plugins/hls',
+        'plugins/dash',
+        'plugins/torrent',
+        'plugins/danmaku',
+        'plugins/ad',
+        'plugins/react'
+      ]
     }
-  ],
-  api: ['api/config', 'api/events', 'api/attrs', 'api/methods']
+  ]
+  // api: ['api/config', 'api/events', 'api/attrs', 'api/methods']
 }

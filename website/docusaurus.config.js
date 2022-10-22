@@ -54,16 +54,16 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'getting-started',
+            docId: 'Introduction',
             label: 'Doc',
             position: 'left'
           },
-          {
-            type: 'doc',
-            docId: 'api/config',
-            label: 'API',
-            position: 'left'
-          },
+          // {
+          //   type: 'doc',
+          //   docId: 'api/config',
+          //   label: 'API',
+          //   position: 'left'
+          // },
           {
             to: '/playground',
             docId: 'playground',
@@ -135,6 +135,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       {
         docs: {
+          remarkPlugins: [[require('@docusaurus/remark-plugin-npm2yarn'), { sync: true }]],
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/shiyiya/oplayer/edit/main/website/'
         },
