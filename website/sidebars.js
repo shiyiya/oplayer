@@ -1,21 +1,21 @@
 module.exports = {
   docs: [
-    'Introduction',
+    'introduction',
     {
       type: 'category',
       label: 'Getting Started',
       collapsed: false,
       items: [
-        'getting-started/Installation',
-        'getting-started/Configuration',
-        'getting-started/Plugin'
+        'getting-started/installation',
+        'getting-started/configuration',
+        'getting-started/plugin'
       ]
     },
     {
       link: {
         type: 'generated-index',
         title: 'Plugins',
-        slug: '/Plugins'
+        slug: '/plugins'
       },
       type: 'category',
       label: 'Plugins',
