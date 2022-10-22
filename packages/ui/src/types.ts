@@ -110,6 +110,8 @@ export type UiConfig = {
     screenshot: string
     playbackRate: string
     loop: string
+    progressIndicator: string
+    loadingIndicator: string
   }
 
   /*  --- WIP ---  */

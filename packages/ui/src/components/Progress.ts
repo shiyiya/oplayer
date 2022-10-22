@@ -1,7 +1,11 @@
 import type Player from '@oplayer/core'
 import { $ } from '@oplayer/core'
+import { Icons } from '../functions'
 import { UiConfig } from '../types'
 import { DRAG_EVENT_MAP, formatTime } from '../utils'
+import renderHighlight, { highlightCls } from './highlight'
+import renderThumbnail from './thumbnail'
+import renderVTTThumbnail from './vtt-thumbnails'
 import {
   buffered,
   dot,
@@ -11,9 +15,6 @@ import {
   progressDragging,
   progressInner
 } from './Progress.style'
-import renderThumbnail from './thumbnail'
-import renderVTTThumbnail from './vtt-thumbnails'
-import renderHighlight, { highlightCls } from './highlight'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(
@@ -23,7 +24,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       <div class="${hit}">00:00</div>
       <div class="${buffered}" style="width:0%"></div>
       <div class="${played}" style="width:0%"></div>
-      <div class="${dot}" style="transform: translateX(0%);"></div>
+      <div class="${dot}" style="transform: translateX(0%);">
+        ${Icons.get('progressIndicator') || `<span />`}
+      </div>
   </div>`
   )
   const { init: initThumbnail, update: thumbnailUpdater } = config.thumbnails?.isVTT

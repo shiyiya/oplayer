@@ -14,23 +14,30 @@ export const played = $.css({
 export const dot = $.css({
   width: '100%',
   'pointer-events': 'none',
-  '&::before': {
+
+  '& > *': {
     'margin-left': '-0.35em',
     transition: 'transform 0.3s ease',
-    transform: 'scale(0)',
     content: "''",
     display: 'block',
     position: 'absolute',
+    width: '1em',
+    height: '1em',
     left: '0',
     top: '0',
     bottom: '0',
-    height: '0.7em',
-    width: '0.7em',
-    'background-color': '#fff',
-    'margin-top': '-4.5px',
+    'margin-top': 'calc(-0.5em + 1.5px)',
+    transform: 'scale(0)',
     'z-index': '1',
     'border-radius': '50%',
     'will-change': 'left'
+  },
+
+  '& > *:not(svg)': {
+    width: '0.7em',
+    height: '0.7em',
+    'background-color': '#fff',
+    'margin-top': 'calc(-0.35em + 1.5px)'
   }
 })
 
@@ -61,7 +68,7 @@ export const progress = $.css({
   cursor: 'pointer',
   width: '100%',
 
-  [`&.${progressDragging} .${dot}::before ${!isMobile ? `,&:hover .${dot}::before` : ''}`]: {
+  [`&.${progressDragging} .${dot} > * ${!isMobile ? `,&:hover .${dot} > *` : ''}`]: {
     transform: 'scale(1)'
   },
 

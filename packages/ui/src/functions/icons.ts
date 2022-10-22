@@ -24,7 +24,9 @@ const ICONS_MAP = {
   screenshot: screenshotSvg,
   playbackRate: speedSvg,
   subtitle: subtitleSvg,
-  loop: loopSvg
+  loop: loopSvg,
+  progressIndicator: null,
+  loadingIndicator: null
 }
 
 export namespace Icons {
