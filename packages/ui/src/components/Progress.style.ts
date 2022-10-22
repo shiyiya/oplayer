@@ -21,23 +21,21 @@ export const dot = $.css({
     position: 'absolute',
     width: '1em',
     height: '1em',
-    left: '0',
-    top: '0',
+    top: 'calc(-0.5em + 1.5px)',
+    left: '-0.5em',
     bottom: '0',
     transform: 'scale(0)',
-    'margin-left': '-0.5em',
-    'margin-top': 'calc(-0.5em + 1.5px)',
     transition: 'transform 0.3s ease',
-    'z-index': '1',
+    'z-index': '1'
   },
 
   '& > *:not(svg)': {
     width: '0.7em',
     height: '0.7em',
-    'background-color': '#fff',
-    'margin-top': 'calc(-0.35em + 1.5px)',
-    'margin-left': '-0.35em',
+    top: 'calc(-0.35em + 1.5px)',
+    left: '-0.35em',
     'border-radius': '50%',
+    'background-color': '#fff'
   }
 })
 
