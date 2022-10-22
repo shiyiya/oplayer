@@ -16,8 +16,6 @@ export const dot = $.css({
   'pointer-events': 'none',
 
   '& > *': {
-    'margin-left': '-0.35em',
-    transition: 'transform 0.3s ease',
     content: "''",
     display: 'block',
     position: 'absolute',
@@ -26,18 +24,20 @@ export const dot = $.css({
     left: '0',
     top: '0',
     bottom: '0',
-    'margin-top': 'calc(-0.5em + 1.5px)',
     transform: 'scale(0)',
+    'margin-left': '-0.5em',
+    'margin-top': 'calc(-0.5em + 1.5px)',
+    transition: 'transform 0.3s ease',
     'z-index': '1',
-    'border-radius': '50%',
-    'will-change': 'left'
   },
 
   '& > *:not(svg)': {
     width: '0.7em',
     height: '0.7em',
     'background-color': '#fff',
-    'margin-top': 'calc(-0.35em + 1.5px)'
+    'margin-top': 'calc(-0.35em + 1.5px)',
+    'margin-left': '-0.35em',
+    'border-radius': '50%',
   }
 })
 
