@@ -3,8 +3,7 @@ import type { Highlight } from '../types'
 
 export const highlightTextCls = $.css(`
   display: none;
-  z-index: 2;
-  bottom: 10px;
+  bottom: 15px;
   position: absolute;
   left: 50%;
   padding: 5px 8px;
@@ -18,10 +17,9 @@ export const highlightTextCls = $.css(`
 
 export const highlightCls = $.css({
   position: 'absolute',
-  top: '5px',
   width: '6px',
-  height: '3px',
-  'border-radius': '2px',
+  height: '4px',
+  'border-radius': '1px',
   'background-color': '#fff',
   transform: 'translateX(-3px)',
   transition: 'all 0.2s',

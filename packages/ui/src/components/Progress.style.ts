@@ -1,5 +1,4 @@
 import { $, isMobile } from '@oplayer/core'
-import { highlightCls } from './highlight'
 import { thumbnailCls } from './thumbnail'
 import { vttThumbnailsCls } from './vtt-thumbnails'
 
@@ -14,6 +13,8 @@ export const played = $.css({
 export const dot = $.css({
   width: '100%',
   'pointer-events': 'none',
+  position: 'relative',
+  'z-index': 1,
 
   '& > *': {
     content: "''",
@@ -21,7 +22,7 @@ export const dot = $.css({
     position: 'absolute',
     width: '1em',
     height: '1em',
-    top: 'calc(-0.5em + 1.5px)',
+    top: 'calc(-0.5em + 2px)',
     left: '-0.5em',
     bottom: '0',
     transform: 'scale(0)',
@@ -32,7 +33,7 @@ export const dot = $.css({
   '& > *:not(svg)': {
     width: '0.7em',
     height: '0.7em',
-    top: 'calc(-0.35em + 1.5px)',
+    top: 'calc(-0.35em + 2px)',
     left: '-0.35em',
     'border-radius': '50%',
     'background-color': '#fff'
@@ -54,7 +55,7 @@ export const hit = $.css({
   transform: 'translateX(-50%)',
   display: 'none',
   'white-space': 'pre',
-  bottom: '10px'
+  bottom: '15px'
 })
 
 export const progressDragging = $.css('/* progressDragging */')
@@ -73,29 +74,23 @@ export const progress = $.css({
   [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}, &.${progressDragging} .${vttThumbnailsCls}`]:
     {
       display: 'block'
-    },
-
-  [`&:hover .${highlightCls}`]: {
-    transform: 'translate(-4px, -1.5px)',
-    height: '6px',
-    width: '8px'
-  }
+    }
 })
 
 export const progressInner = $.css({
   position: 'relative',
-  height: '3px',
+  height: '4px',
   width: '100%',
   'background-color': 'hsla(0, 0%, 100%, 0.2)',
-  'border-radius': '4px',
+  'border-radius': '2px',
 
-  [`& .${buffered},& .${played}`]: {
+  [`& .${buffered}, & .${played}`]: {
     position: 'absolute',
     left: '0',
     top: '0',
     bottom: '0',
     'will-change': 'width',
     'pointer-events': 'none',
-    'border-radius': '4px'
+    'border-radius': '2px'
   }
 })

@@ -22,7 +22,7 @@ const App = () => {
   const player = useRef<Player | null>(null)
 
   if (document.location.pathname == '/react') {
-    return <Playground />
+    // return <Playground />
   }
 
   return (

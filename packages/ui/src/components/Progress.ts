@@ -30,10 +30,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   </div>`
   )
   const { init: initThumbnail, update: thumbnailUpdater } = config.thumbnails?.isVTT
-    ? renderVTTThumbnail(player, $dom, config.thumbnails)
-    : renderThumbnail(player, $dom, config.thumbnails)
+    ? renderVTTThumbnail(player, $dom.firstChild, config.thumbnails)
+    : renderThumbnail(player, $dom.firstChild, config.thumbnails)
 
-  renderHighlight(player, $dom, config.highlight)
+  renderHighlight(player, $dom.firstChild, config.highlight)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
