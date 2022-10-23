@@ -2,7 +2,7 @@
 title: Plugin
 ---
 
-如何编写 oplayer 插件？照着这些插件抄把 :)
+如何编写 oplayer 插件？参考以下插件吧 :)
 
 - [@oplayer/ui](../plugins/ui)
 - [@oplayer/hls](../plugins/hls)

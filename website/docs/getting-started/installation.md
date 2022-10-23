@@ -8,8 +8,6 @@ npm install --save @oplayer/core @oplayer/ui
 
 ## 使用
 
-import CodeBlock from '../../src/components/CodeBlock'
-
 <Tabs>
 <TabItem value="js" label="npm">
 
@@ -51,5 +49,3 @@ Player.make(document.getElementById('oplayer'), {
 </TabItem>
 
 </Tabs>
-
-就这么简单，enjoy it!

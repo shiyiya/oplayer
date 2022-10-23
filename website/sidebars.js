@@ -24,9 +24,9 @@ module.exports = {
         'plugins/ui',
         'plugins/hls',
         'plugins/dash',
-        'plugins/torrent',
         'plugins/danmaku',
         'plugins/ad',
+        'plugins/torrent',
         'plugins/react'
       ]
     }
