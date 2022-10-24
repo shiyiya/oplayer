@@ -6,7 +6,7 @@
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "cp": "cp ../packages/core/dist/index.es.js ./static/core.es.js && cp ../packages/ui/dist/index.es.js ./static/ui.es.js && cp ../packages/hls/dist/index.es.js ./static/hls.es.js &&  cp ../packages/dash/dist/index.es.js ./static/dash.es.js && cp ../packages/danmaku/dist/index.es.js ./static/danmaku.es.js",
-    "sed": "sed -i 's/@oplayer\\/core/\\/core\\.es\\.js/' ./static/ui.es.js && sed -i 's/@oplayer\\/core/\\/core.es.js/' ./static/danmaku.es.js && sed -i 's/hls.js\\/dist\\/hls.light.min.js/https:\\/\\/cdn.skypack.dev\\/hls.js@v1.2.3/' ./static/hls.es.js && sed -i 's/hls.js\\/dist\\/hls.min.js/https:\\/\\/cdn.skypack.dev\\/hls.js@v1.2.3/' ./static/hls.es.js && sed -i 's/dashjs/https:\\/\\/cdn.skypack.dev\\/dashjs/' ./static/dash.es.js",
+    "sed": "sed -i 's/@oplayer\\/core/\\/core\\.es\\.js/' ./static/ui.es.js && sed -i 's/@oplayer\\/core/\\/core.es.js/' ./static/danmaku.es.js && sed -i 's/hls.js\\/dist\\/hls.light.min.js/https:\\/\\/cdn.skypack.dev\\/hls.js@v1.2.3/' ./static/hls.es.js && sed -i 's/hls.js\\/dist\\/hls.min.js/https:\\/\\/cdn.skypack.dev\\/hls.js@v1.2.3/' ./static/hls.es.js && sed -i 's/\"dashjs\"/\"https:\\/\\/cdn.skypack.dev\\/dashjs\"/' ./static/dash.es.js",
     "prebuild": "yarn run cp && yarn run sed",
     "build": "docusaurus build",
     "build:ghp": "docusaurus build --config docusaurus.ghp.config.js",
