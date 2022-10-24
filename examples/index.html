@@ -7,21 +7,27 @@
     <title>oplayer</title>
   </head>
   <body style="max-width: 980px; margin: 40px auto">
-    <a href="https://github.com/shiyiya/oplayer/blob/main/examples/index.html">GitHub</a>
+    <a href="https://github.com/shiyiya/oplayer/blob/main/examples/index.html"><h3>GitHub</h3></a>
+
+    <div id="oplayer" />
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.2.4/dist/hls.light.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/dashjs@4.5.0/dist/dash.all.min.js"></script> -->
 
     <script src="../packages/core/dist/index.min.js"></script>
     <script src="../packages/ui/dist/index.min.js"></script>
     <script src="../packages/hls/dist/index.min.js"></script>
-    <script src="../packages/dash/dist/index.min.js"></script>
+    <!-- <script src="../packages/dash/dist/index.min.js"></script> -->
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script> -->
 
     <script>
-      OPlayer.make(document.body, {
+      OPlayer.make(document.getElementById('oplayer'), {
         source: {
-          src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+          // src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
           poster: 'https://media.w3.org/2010/05/sintel/poster.png'
         }
       })
