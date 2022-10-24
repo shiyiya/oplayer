@@ -29,9 +29,7 @@ const babelPlugins = [
   ['@babel/plugin-transform-spread', { loose: true, useBuiltIns: true }],
   '@babel/plugin-transform-parameters',
   // TODO: Remove array destructuring from the source. Requires runtime.
-  // ['@babel/plugin-transform-destructuring', { loose: true, useBuiltIns: true }],
-  '@babel/plugin-syntax-dynamic-import',
-  '@babel/plugin-transform-async-to-generator'
+  ['@babel/plugin-transform-destructuring', { loose: true, useBuiltIns: true }]
 ]
 
 const makeExternalPredicate = (externalArr: string[]) => {
