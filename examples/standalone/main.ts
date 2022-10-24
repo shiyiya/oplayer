@@ -164,7 +164,7 @@ const meta = () => html`
     <h4>Oh-Player v${Player.version}</h4>
     <p>
       STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a> |
-      <a href="./umd.html" target="_blank">UMD DEMO</a>
+      <a href="./script.html" target="_blank">UMD DEMO</a>
     </p>
   </div>
 `
