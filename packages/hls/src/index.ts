@@ -121,11 +121,11 @@ const hlsPlugin = ({
         return false
       }
 
+      hlsInstance?.destroy()
+
       if (!Hls.isSupported()) return false
 
-      hlsInstance?.destroy()
       hlsInstance = new Hls(hlsConfig)
-
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
       if (!player.evil()) generateSetting(player, hlsInstance, pluginOptions)
