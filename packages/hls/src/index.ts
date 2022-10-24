@@ -112,7 +112,7 @@ const hlsPlugin = ({
 
   return {
     name: PLUGIN_NAME,
-    load: async (player, source, options) => {
+    load: (player, source, options) => {
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {

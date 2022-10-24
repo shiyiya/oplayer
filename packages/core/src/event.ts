@@ -1,6 +1,6 @@
 import type { PlayerListener, PlayerEvent } from './types'
 
-export default class E {
+export default class EventEmitter {
   events: Record<string, PlayerListener[]> = Object.create(null)
 
   on(name: string, callback: PlayerListener) {
@@ -40,7 +40,7 @@ export default class E {
 
   emit(name: string, payload: any) {
     if (this.events[name]?.length) {
-      ;[...this.events[name]!].forEach((callback) => {
+      this.events[name]!.forEach((callback) => {
         callback({ type: name, payload })
       })
     }

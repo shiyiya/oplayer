@@ -1,10 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-import type { Plugin } from 'rollup'
 import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
 import { defineConfig } from 'vite'
 import banner from 'vite-plugin-banner'
-// import { getBabelOutputPlugin } from '@rollup/plugin-babel'
+import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 export const globals = {
   '@oplayer/core': 'OPlayer',
@@ -13,11 +12,27 @@ export const globals = {
   'hls.js': 'Hls',
   'hls.js/dist/hls.light.min.js': 'Hls',
   'hls.js/dist/hls.min.js': 'Hls',
+  dashjs: 'dashjs',
   '@oplayer/torrent': 'OTorrent',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
   '@oplayer/danmaku': 'ODanmaku',
   react: 'React'
 }
+
+const babelPlugins = [
+  'syntax-trailing-function-commas',
+  // These use loose mode which avoids embedding a runtime.
+  // TODO: Remove object spread from the source. Prefer Object.assign instead.
+  ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
+  ['@babel/plugin-transform-template-literals', { loose: true }],
+  // TODO: Remove array spread from the source. Prefer .apply instead.
+  ['@babel/plugin-transform-spread', { loose: true, useBuiltIns: true }],
+  '@babel/plugin-transform-parameters',
+  // TODO: Remove array destructuring from the source. Requires runtime.
+  // ['@babel/plugin-transform-destructuring', { loose: true, useBuiltIns: true }],
+  '@babel/plugin-syntax-dynamic-import',
+  '@babel/plugin-transform-async-to-generator'
+]
 
 const makeExternalPredicate = (externalArr: string[]) => {
   if (externalArr.length === 0) {
@@ -27,14 +42,19 @@ const makeExternalPredicate = (externalArr: string[]) => {
   return (id: string) => pattern.test(id)
 }
 
-export const libFileName = (format: string) => `index.${format}.js`
+export const libFileName = (format: string) => `index.${{ es: 'es', umd: 'min' }[format]}.js`
 
-export const rollupPlugins: Plugin[] = [
-  // getBabelOutputPlugin({
-  //   allowAllFormats: true,
-  //   presets: [['@babel/preset-env', { targets: 'ie 11, not ie_mob 11' }]]
-  // })
-]
+function getBabelConfig() {
+  return {
+    allowAllFormats: true,
+    babelrc: false,
+    configFile: false,
+    presets: [],
+    plugins: [...babelPlugins]
+  }
+}
+
+export const rollupPlugins: any[] = [getBabelOutputPlugin(getBabelConfig())]
 
 export const viteBuild = (packageDirName: string, options: BuildOptions = {}): BuildOptions => {
   const pkg = JSON.parse(

@@ -1,5 +1,5 @@
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
-import E from './event'
+import EventEmitter from './event'
 import I18n from './i18n'
 import type {
   PlayerEvent,
@@ -16,7 +16,7 @@ export class Player {
   readonly container: HTMLElement
   readonly options: Required<PlayerOptions>
 
-  readonly #E = new E()
+  readonly eventEmitter = new EventEmitter()
   readonly locales: I18n
   readonly plugins: Set<PlayerPlugin> = new Set()
 
@@ -30,7 +30,7 @@ export class Player {
   evil: () => boolean
 
   //https://developer.chrome.com/blog/play-request-was-interrupted/
-  #playPromise: Promise<void> | undefined
+  _playPromise: Promise<void> | undefined
 
   constructor(el: HTMLElement, options: PlayerOptions | string) {
     this.container = el
@@ -74,34 +74,34 @@ export class Player {
   ) => {
     if (typeof name === 'string') {
       if (options.once) {
-        this.#E.once(name, listener!)
+        this.eventEmitter.once(name, listener!)
       } else {
-        this.#E.on(name, listener!)
+        this.eventEmitter.on(name, listener!)
       }
     } else if (Array.isArray(name)) {
-      this.#E.onAny(name as string[], listener!)
+      this.eventEmitter.onAny(name as string[], listener!)
     } else if (typeof name === 'function') {
-      this.#E.on('*', name!)
+      this.eventEmitter.on('*', name!)
     }
     return this
   }
 
   readonly off = (name: PlayerEventName, listener: PlayerListener) => {
-    this.#E.off(name as string, listener)
+    this.eventEmitter.off(name as string, listener)
   }
 
   readonly offAny = (name: PlayerEventName) => {
-    this.#E.offAny(name as string)
+    this.eventEmitter.offAny(name as string)
   }
 
   readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
-    this.#E.emit(name as any, payload)
+    this.eventEmitter.emit(name as any, payload)
   }
 
   readonly create = () => {
     this.render()
     this.initEvent()
-    this.#applyPlugins()
+    this._applyPlugins()
     if (this.options.source.src) this.load(this.options.source)
     return this
   }
@@ -131,7 +131,8 @@ export class Player {
       })
     })
 
-    const eventHandler = (eventName: string, payload: Event) => this.#E.emit(eventName, payload)
+    const eventHandler = (eventName: string, payload: Event) =>
+      this.eventEmitter.emit(eventName, payload)
     VIDEO_EVENTS.filter((it) => it !== 'error').forEach((eventName) => {
       this.listeners[eventName] = eventHandler
       this.$video.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
@@ -190,18 +191,19 @@ export class Player {
   }
 
   load = async (source: Source) => {
-    for await (const plugin of this.plugins) {
+    this.plugins.forEach((plugin) => {
       if (plugin.load) {
-        const match = await plugin.load(this, source, { loader: this.isCustomLoader })
+        const match = plugin.load(this, source, { loader: this.isCustomLoader })
         if (match && !this.isCustomLoader) this.isCustomLoader = true
       }
-    }
+    })
+
     if (!this.isCustomLoader) {
       this.$video.src = source.src
     }
   }
 
-  #applyPlugins = () => {
+  _applyPlugins = () => {
     this.plugins.forEach((plugin) => {
       if (plugin.apply) {
         plugin.apply(this)
@@ -215,12 +217,12 @@ export class Player {
 
   play = () => {
     if (!this.$video.src) throw Error('The element has no supported sources.')
-    return (this.#playPromise = this.$video.play())
+    return (this._playPromise = this.$video.play())
   }
 
   pause() {
-    if (this.#playPromise?.then) {
-      return this.#playPromise.then(() => this.$video.pause())
+    if (this._playPromise?.then) {
+      return this._playPromise.then(() => this.$video.pause())
     } else {
       return this.$video.pause()
     }
@@ -273,12 +275,12 @@ export class Player {
     if (isIOS) {
       return (this.$video as any).webkitEnterFullscreen()
     } else {
-      return this.#requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+      return this._requestFullscreen.call(this.$root, { navigationUI: 'hide' })
     }
   }
 
   exitFullscreen() {
-    return this.#_exitFullscreen.call(document)
+    return this._exitFullscreen.call(document)
   }
 
   get isFullscreenEnabled() {
@@ -337,7 +339,7 @@ export class Player {
   }
 
   async changeSource(source: Source) {
-    this.#playPromise = undefined
+    this._playPromise = undefined
     this.hasError = false
     this.isCustomLoader = false
     this.$video.poster = source.poster || ''
@@ -353,7 +355,7 @@ export class Player {
     this.$video.src = ''
     this.$video.remove()
     this.container.remove()
-    this.#E.offAll()
+    this.eventEmitter.offAll()
   }
 
   get state() {
@@ -417,7 +419,7 @@ export class Player {
     return this.$video.playbackRate
   }
 
-  get #requestFullscreen(): Element['requestFullscreen'] {
+  get _requestFullscreen(): Element['requestFullscreen'] {
     return (
       HTMLElement.prototype.requestFullscreen ||
       (HTMLElement.prototype as any).webkitRequestFullscreen ||
@@ -426,7 +428,7 @@ export class Player {
     )
   }
 
-  get #_exitFullscreen(): Document['exitFullscreen'] {
+  get _exitFullscreen(): Document['exitFullscreen'] {
     return (
       Document.prototype.exitFullscreen ||
       (Document.prototype as any).webkitExitFullscreen ||
