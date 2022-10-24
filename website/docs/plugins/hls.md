@@ -29,8 +29,8 @@ Player.make(document.getElementById('oplayer'), {
 <TabItem value="html" label="script">
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
 
 <div id="oplayer" />
 

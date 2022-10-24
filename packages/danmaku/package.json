@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/danmaku",
-  "version": "1.0.50",
+  "version": "1.0.51",
   "description": "Danmaku plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
