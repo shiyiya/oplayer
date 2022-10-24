@@ -1,5 +1,6 @@
-import Hls from 'hls.js/dist/hls.min.js'
+// import Hls from 'hls.js/dist/hls.light.min.js'
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import type Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 
 //@ts-ignore
@@ -7,10 +8,17 @@ import qualitySvg from './quality.svg?raw'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
+//@ts-ignore
+let importedHls: typeof import('hls.js/dist/hls.light.min.js') = globalThis.Hls
+
 type hlsPluginOptions = {
   hlsConfig?: Partial<HlsConfig>
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
   options?: {
+    /**
+     * @default: true
+     */
+    light?: boolean
     /**
      * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
      * default: false
@@ -99,20 +107,37 @@ const generateSetting = (
     }
   }
 
-  hlsInstance.once(Hls.Events.MANIFEST_PARSED, settingUpdater)
-  hlsInstance.on(Hls.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
+  hlsInstance.once(importedHls.Events.MANIFEST_PARSED, settingUpdater)
+  hlsInstance.on(importedHls.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
 }
 
 const hlsPlugin = ({
   hlsConfig = {},
   matcher = defaultMatcher,
-  options: pluginOptions
+  options: _pluginOptions
 }: hlsPluginOptions = {}): PlayerPlugin => {
   let hlsInstance: Hls
 
+  const pluginOptions = {
+    light: true,
+    hlsQualityControl: false,
+    hlsQualitySwitch: 'smooth',
+    ..._pluginOptions
+  } as Required<hlsPluginOptions>['options']
+  if (pluginOptions.hlsQualityControl) pluginOptions.light = false
+
+  const getHls = async () => {
+    if (hlsInstance) hlsInstance.destroy()
+
+    importedHls ??= (
+      await import(pluginOptions.light ? 'hls.js/dist/hls.light.min.js' : 'hls.js/dist/hls.min.js')
+    ).default
+    hlsInstance = new importedHls(hlsConfig)
+  }
+
   return {
     name: PLUGIN_NAME,
-    load: (player, source, options) => {
+    load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
@@ -121,16 +146,15 @@ const hlsPlugin = ({
         return false
       }
 
-      hlsInstance?.destroy()
+      await getHls()
 
-      if (!Hls.isSupported()) return false
+      if (!importedHls.isSupported()) return false
 
-      hlsInstance = new Hls(hlsConfig)
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
       if (!player.evil()) generateSetting(player, hlsInstance, pluginOptions)
 
-      hlsInstance.on(Hls.Events.ERROR, function (_, data) {
+      hlsInstance.on(importedHls.Events.ERROR, function (_, data) {
         const { type, details, fatal } = data
 
         if (!fatal) {
@@ -160,7 +184,7 @@ const hlsPlugin = ({
 
       Object.defineProperty(player, 'hls', {
         enumerable: true,
-        get: () => ({ value: hlsInstance, constructor: Hls })
+        get: () => ({ value: hlsInstance, constructor: importedHls })
       })
     }
   }

@@ -191,13 +191,12 @@ export class Player {
   }
 
   load = async (source: Source) => {
-    this.plugins.forEach((plugin) => {
+    for await (const plugin of this.plugins) {
       if (plugin.load) {
-        const match = plugin.load(this, source, { loader: this.isCustomLoader })
+        const match = await plugin.load(this, source, { loader: this.isCustomLoader })
         if (match && !this.isCustomLoader) this.isCustomLoader = true
       }
-    })
-
+    }
     if (!this.isCustomLoader) {
       this.$video.src = source.src
     }

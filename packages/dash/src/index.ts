@@ -1,11 +1,13 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
-import dashjs from 'dashjs'
 
 //@ts-ignore
 import qualitySvg from '../../hls/src/quality.svg?raw'
 
 const PLUGIN_NAME = 'oplayer-plugin-dash'
+
+//@ts-ignore
+let importedDash: typeof import('dashjs') = globalThis.dashjs
 
 type dashPluginOptions = {
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
@@ -93,8 +95,8 @@ const generateSetting = (
     player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
   }
 
-  dashInstance.on(dashjs.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
-  dashInstance.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
+  dashInstance.on(importedDash.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
+  dashInstance.on(importedDash.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
 const dashPlugin = ({
@@ -104,9 +106,14 @@ const dashPlugin = ({
 }: dashPluginOptions = {}): PlayerPlugin => {
   let dashInstance: MediaPlayerClass
 
+  const getDash = async () => {
+    if (dashInstance) dashInstance.reset()
+    importedDash ??= (await import('dashjs')).default
+  }
+
   return {
     name: PLUGIN_NAME,
-    load: (player, source, options) => {
+    load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
@@ -115,16 +122,16 @@ const dashPlugin = ({
         return false
       }
 
-      dashInstance?.reset()
+      await getDash()
 
-      if (!dashjs.supportsMediaSource()) return false
+      if (!importedDash.supportsMediaSource()) return false
 
-      dashInstance = dashjs.MediaPlayer().create()
+      dashInstance = importedDash.MediaPlayer().create()
       if (setting) dashInstance.updateSettings(setting)
       dashInstance.initialize(player.$video, source.src, player.$video.autoplay)
       if (!player.evil()) generateSetting(player, dashInstance, pluginOptions)
 
-      dashInstance.on(dashjs.MediaPlayer.events.ERROR, (event: any) => {
+      dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event: any) => {
         const err = event.event || event.error
         const message = event.event ? event.event.message || event.type : undefined
         player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
@@ -140,7 +147,7 @@ const dashPlugin = ({
 
       Object.defineProperty(player, 'dash', {
         enumerable: true,
-        get: () => ({ value: dashInstance, constructor: dashjs })
+        get: () => ({ value: dashInstance, constructor: importedDash })
       })
     }
   }
