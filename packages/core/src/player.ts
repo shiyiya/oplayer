@@ -443,7 +443,7 @@ export class Player {
 
 console.log(
   `%c Oh Player %c v${Player.version} %c https://github.com/shiyiya/oplayer`,
-  'color: #fff; background: #6668ab',
-  'color: #fff; background: #5f5f5f',
+  'color: #fff; background: #6668ab; padding: 4px 6px; margin: 4px 0;',
+  'color: #fff; background: #5f5f5f; padding: 4px 6px; margin: 4px 0;',
   ''
 )
