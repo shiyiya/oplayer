@@ -36,7 +36,7 @@
     "nx": "latest",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.79.1",
+    "rollup": "^3.2.3",
     "terser": "^5.15.1",
     "tslib": "^2.4.0",
     "typescript": "^4.8.4",
