@@ -156,7 +156,7 @@ function createPanel(
 
   if (!isRoot) {
     // back row
-    const { $row } = createRow({ name: name!, type: 'back' as any, key: key })
+    const { $row } = createRow({ name: name!, type: 'back' as any })
 
     $row.addEventListener('click', () => {
       panel.$ref.classList.remove(activeCls)
@@ -209,11 +209,13 @@ function createPanel(
         }
 
         optionPanel.select = (i: number) => {
-          const childrenElm = optionPanel.$ref.children
-          if (childrenElm[i]!.getAttribute('data-selected') != 'true') {
-            childrenElm[i]!.setAttribute('data-selected', 'true')
-            siblings(<HTMLDivElement>childrenElm[i], (sibling) => {
-              sibling.setAttribute('data-selected', 'false')
+          const $target = optionPanel.$ref.children[i + 1] as HTMLElement
+          if ($target!.getAttribute('data-selected') != 'true') {
+            $target!.setAttribute('data-selected', 'true')
+            siblings($target, (sibling) => {
+              if (sibling.hasAttribute('data-selected')) {
+                sibling.setAttribute('data-selected', 'false')
+              }
             })
             const value = children[i]
             $label.innerText = value!.name
