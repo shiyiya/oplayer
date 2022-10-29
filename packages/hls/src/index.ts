@@ -1,4 +1,3 @@
-// import Hls from 'hls.js/dist/hls.light.min.js'
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
@@ -14,27 +13,33 @@ let importedHls: typeof import('hls.js/dist/hls.light.min.js') = globalThis.Hls
 type hlsPluginOptions = {
   hlsConfig?: Partial<HlsConfig>
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
-  options?: {
-    /**
-     * @default: true
-     */
-    light?: boolean
-    /**
-     * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
-     * default: false
-     */
-    hlsQualityControl?: boolean
-    /**
-     *  control how the stream quality is switched. default: smooth
-     *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
-     *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
-     */
-    hlsQualitySwitch?: 'immediate' | 'smooth'
-    /**
-     * @default: false
-     */
-    withBitrate?: boolean
-  }
+  options?: Options
+}
+
+type Options = {
+  /**
+   * @default: true
+   */
+  light?: boolean
+  /**
+   * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
+   * default: false
+   */
+  hlsQualityControl?: boolean
+  /**
+   *  control how the stream quality is switched. default: smooth
+   *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
+   *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
+   */
+  hlsQualitySwitch?: 'immediate' | 'smooth'
+  /**
+   * @default: false
+   */
+  withBitrate?: boolean
+  /**
+   * @default false
+   */
+  showWarning?: boolean
 }
 
 const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
@@ -46,11 +51,7 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
       /m3u8(#|\?|$)/i.test(source.src)))
 
-const generateSetting = (
-  player: Player,
-  hlsInstance: Hls,
-  options: Required<hlsPluginOptions>['options'] = {}
-) => {
+const generateSetting = (player: Player, hlsInstance: Hls, options: Options = {}) => {
   if (!options.hlsQualityControl) return
 
   const settingUpdater = () => {
@@ -118,12 +119,12 @@ const hlsPlugin = ({
 }: hlsPluginOptions = {}): PlayerPlugin => {
   let hlsInstance: Hls
 
-  const pluginOptions = {
+  const pluginOptions: Options = {
     light: true,
     hlsQualityControl: false,
     hlsQualitySwitch: 'smooth',
     ..._pluginOptions
-  } as Required<hlsPluginOptions>['options']
+  }
   if (pluginOptions.hlsQualityControl) pluginOptions.light = false
 
   const getHls = async () => {
@@ -157,11 +158,13 @@ const hlsPlugin = ({
       hlsInstance.on(importedHls.Events.ERROR, function (_, data) {
         const { type, details, fatal } = data
 
-        if (!fatal) {
-          player.emit('notice', { ...data, pluginName: PLUGIN_NAME, text: type + ': ' + details })
-        } else {
+        if (fatal) {
           player.hasError = true
           player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
+        } else {
+          if (pluginOptions.showWarning) {
+            player.emit('notice', { ...data, pluginName: PLUGIN_NAME, text: type + ': ' + details })
+          }
         }
       })
 
