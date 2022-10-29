@@ -50,6 +50,14 @@ export const nextIcon = $.css(`
   margin: 0 -10px 0 -5px;
 `)
 
+// <
+export const BackIcon = $.css(`
+  width: 30px;
+  height: 30px;
+  transform: rotate(180deg);
+  margin-left: -10px;
+`)
+
 export const switcherCls = $.css({
   position: 'absolute',
   cursor: 'pointer',
@@ -133,3 +141,10 @@ export const settingItemRight = $.css(`
   display: flex;
   align-items: center;
 `)
+
+export const backRow = $.css({
+  width: '100%',
+  display: 'flex',
+  'align-items': 'center',
+  'border-bottom': '1px solid rgb(255 255 255 / 10%)'
+})

@@ -15,8 +15,13 @@ import {
   subPanelCls,
   yesIcon,
   switcherCls,
-  switcherContainer
+  switcherContainer,
+  BackIcon,
+  backRow
 } from './Setting.style'
+
+const arrowSvg = (className = nextIcon) =>
+  `<svg class="${className}"  xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
 
 // Selector Options
 export const selectorOption = (name: string, icon: string = '') =>
@@ -36,9 +41,14 @@ export const nexter = (name: string, icon: string = '') =>
     </div>
     <div class=${settingItemRight}>
       <span role="label" class=${nextLabelText}></span>
-      <svg class=${nextIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
-        <path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path>
-      </svg>
+      ${arrowSvg()}
+    </div>
+`
+
+export const back = (name: string) =>
+  `<div class="${backRow}">
+      ${arrowSvg(BackIcon)}
+      <span>${name}</span>
     </div>
 `
 
@@ -79,6 +89,9 @@ function createRow({
       $item.innerHTML = nexter(name, icon)
       res['$label'] = $item.querySelector('span[role="label"]')!
       break
+    case 'back' as any:
+      $item.innerHTML = back(name)
+      break
     default: // select option 不用 type
       $item.innerHTML = selectorOption(name, icon)
       $item.setAttribute('data-selected', selected || false)
@@ -113,17 +126,17 @@ function createPanel(
      * 全是选项面板的用上一个面板的key
      */
     key?: string
+    name?: string
     target: HTMLElement
     parent?: Panel
     isSelectorOptionsPanel?: boolean
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
-  const { isPatch, key: parentKey, target, parent, isSelectorOptionsPanel } = options
+  const { isPatch, key: parentKey, target, parent, isSelectorOptionsPanel, name } = options
 
   let panel = {} as Panel
   let key: string = parentKey! || 'root'
-  let isRoot = false
 
   if (isPatch) {
     panel = panels[0]! // 将 options 挂在第一个面板
@@ -138,7 +151,20 @@ function createPanel(
   }
 
   panel.parent = parent
-  if (panel.key == 'root') isRoot = true
+
+  const isRoot = panel.key == 'root'
+
+  if (!isRoot) {
+    // back row
+    const { $row } = createRow({ name: name!, type: 'back' as any, key: key })
+
+    $row.addEventListener('click', () => {
+      panel.$ref.classList.remove(activeCls)
+      panel.parent?.$ref.classList.add(activeCls)
+    })
+
+    $.render($row, panel.$ref)
+  }
 
   for (let i = 0; i < setting.length; i++) {
     const { name, type, key, children, icon, default: selected, onChange } = setting[i]!
@@ -167,7 +193,8 @@ function createPanel(
         key,
         target,
         parent: panel,
-        isSelectorOptionsPanel: nextIsSelectorOptionsPanel
+        isSelectorOptionsPanel: nextIsSelectorOptionsPanel,
+        name: type == ('selector' as any) ? name : undefined
       })!
 
       $row.addEventListener('click', () => {
