@@ -4,18 +4,18 @@ importers:
 
   .:
     specifiers:
-      '@babel/core': ^7.11.1
-      '@babel/plugin-proposal-object-rest-spread': ^7.11.0
+      '@babel/core': ^7.19.6
+      '@babel/plugin-proposal-object-rest-spread': ^7.19.4
       '@babel/plugin-syntax-dynamic-import': ^7.8.3
-      '@babel/plugin-transform-destructuring': ^7.10.4
-      '@babel/plugin-transform-parameters': ^7.10.5
-      '@babel/plugin-transform-spread': ^7.11.0
-      '@babel/plugin-transform-template-literals': ^7.10.5
-      '@changesets/cli': ^2.25.0
-      '@rollup/plugin-babel': ^6.0.0
-      '@types/node': ^18.11.4
-      '@vitejs/plugin-react': ^2.1.0
-      babel-plugin-syntax-trailing-function-commas: ^6.5.0
+      '@babel/plugin-transform-destructuring': ^7.20.0
+      '@babel/plugin-transform-parameters': ^7.18.8
+      '@babel/plugin-transform-spread': ^7.19.0
+      '@babel/plugin-transform-template-literals': ^7.18.9
+      '@changesets/cli': ^2.25.1
+      '@rollup/plugin-babel': ^6.0.2
+      '@types/node': ^18.11.7
+      '@vitejs/plugin-react': ^2.2.0
+      babel-plugin-syntax-trailing-function-commas: ^6.22.0
       concurrently: ^7.5.0
       cross-env: ^7.0.3
       lint-staged: ^13.0.3
@@ -25,31 +25,31 @@ importers:
       terser: ^5.15.1
       tslib: ^2.4.0
       typescript: ^4.8.4
-      vite: ^3.1.8
+      vite: ^3.2.1
       vite-plugin-banner: ^0.5.0
     devDependencies:
       '@babel/core': 7.19.6
       '@babel/plugin-proposal-object-rest-spread': 7.19.4_@babel+core@7.19.6
       '@babel/plugin-syntax-dynamic-import': 7.8.3_@babel+core@7.19.6
-      '@babel/plugin-transform-destructuring': 7.19.4_@babel+core@7.19.6
+      '@babel/plugin-transform-destructuring': 7.20.0_@babel+core@7.19.6
       '@babel/plugin-transform-parameters': 7.18.8_@babel+core@7.19.6
       '@babel/plugin-transform-spread': 7.19.0_@babel+core@7.19.6
       '@babel/plugin-transform-template-literals': 7.18.9_@babel+core@7.19.6
-      '@changesets/cli': 2.25.0
+      '@changesets/cli': 2.25.1
       '@rollup/plugin-babel': 6.0.2_@babel+core@7.19.6
-      '@types/node': 18.11.4
-      '@vitejs/plugin-react': 2.1.0_vite@3.1.8
+      '@types/node': 18.11.7
+      '@vitejs/plugin-react': 2.2.0_vite@3.2.1
       babel-plugin-syntax-trailing-function-commas: 6.22.0
       concurrently: 7.5.0
       cross-env: 7.0.3
       lint-staged: 13.0.3
-      nx: 15.0.1
+      nx: 15.0.4
       prettier: 2.7.1
       rimraf: 3.0.2
       terser: 5.15.1
       tslib: 2.4.0
       typescript: 4.8.4
-      vite: 3.1.8_terser@5.15.1
+      vite: 3.2.1_terser@5.15.1
       vite-plugin-banner: 0.5.0
 
   examples/react:
@@ -58,7 +58,7 @@ importers:
       '@oplayer/hls': workspace:*
       '@oplayer/react': workspace:*
       '@oplayer/ui': workspace:*
-      '@types/react': ^18.0.21
+      '@types/react': ^18.0.24
       react: ^18.2.0
       react-dom: ^18.2.0
       sass: ^1.55.0
@@ -67,7 +67,7 @@ importers:
       '@oplayer/hls': link:../../packages/hls
       '@oplayer/react': link:../../packages/react
       '@oplayer/ui': link:../../packages/ui
-      '@types/react': 18.0.21
+      '@types/react': 18.0.24
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
@@ -127,12 +127,12 @@ importers:
   packages/react:
     specifiers:
       '@oplayer/core': workspace:*
-      '@types/react': ^18.0.21
+      '@types/react': ^18.0.24
       react: ^18.2.0
       react-dom: ^18.2.0
     devDependencies:
       '@oplayer/core': link:../core
-      '@types/react': 18.0.21
+      '@types/react': 18.0.24
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
@@ -157,10 +157,10 @@ importers:
   packages/torrent:
     specifiers:
       '@oplayer/core': workspace:*
-      webtorrent: ^1.8.32
+      webtorrent: ^1.9.1
     devDependencies:
       '@oplayer/core': link:../core
-      webtorrent: 1.8.32
+      webtorrent: 1.9.1
 
   packages/ui:
     specifiers:
@@ -396,8 +396,8 @@ packages:
       '@babel/helper-plugin-utils': 7.19.0
     dev: true
 
-  /@babel/plugin-transform-destructuring/7.19.4_@babel+core@7.19.6:
-    resolution: {integrity: sha512-t0j0Hgidqf0aM86dF8U+vXYReUgJnlv4bZLsyoPnwZNrGY+7/38o8YjaELrvHeVfTZao15kjR0PVv0nju2iduA==}
+  /@babel/plugin-transform-destructuring/7.20.0_@babel+core@7.19.6:
+    resolution: {integrity: sha512-1dIhvZfkDVx/zn2S1aFwlruspTt4189j7fEkH0Y0VyuDM6bQt7bD6kLcz3l4IlLG+e5OReaBz9ROAbttRtUHqA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -558,8 +558,8 @@ packages:
       '@changesets/types': 5.2.0
     dev: true
 
-  /@changesets/cli/2.25.0:
-    resolution: {integrity: sha512-Svu5KD2enurVHGEEzCRlaojrHjVYgF9srmMP9VQSy9c1TspX6C9lDPpulsSNIjYY9BuU/oiWpjBgR7RI9eQiAA==}
+  /@changesets/cli/2.25.1:
+    resolution: {integrity: sha512-e65ZJ7QKq7aERV/vAeuG0DTkkuEnTZK8eVNYqnd6wBsc9YTK+5iuuzp8aG0E80AngxeOaI4u77OIfzE9fv2T5Q==}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.19.4
@@ -1189,21 +1189,21 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@nrwl/cli/15.0.1:
-    resolution: {integrity: sha512-ZehVNZOajNG7i5qg4vDeIcf88PuyFZhAwNhT9G7yjG6v+23zFwOVUsweQeQbY0GxIGc9d+jXGzEe6hU+UYovPQ==}
+  /@nrwl/cli/15.0.4:
+    resolution: {integrity: sha512-H3lni8iXUOzWTg1nH4YqOYxpyDz8Bq1Y30bb26r5yRlhdwsNtDBCZCaJQim8yCqYXYJVbxQnU4Ree2WR8xSg/g==}
     dependencies:
-      nx: 15.0.1
+      nx: 15.0.4
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
       - debug
     dev: true
 
-  /@nrwl/tao/15.0.1:
-    resolution: {integrity: sha512-CytTfL7W6xkl1rW5fwO1nGF0Ft/Tk3ilc7/7I9+1NlNGdu/joFMOWub5YEQFIe488BJt2mxZ9m2n6sFJPVD19Q==}
+  /@nrwl/tao/15.0.4:
+    resolution: {integrity: sha512-hBmHI6Zlq/bAyeF+SPa9EJdWEFGAAUB+puz2jQfPWcyvTBTYDwqimLNJCaj8uy+aXBmrRCjmfNSBvgNxRiA0Sg==}
     hasBin: true
     dependencies:
-      nx: 15.0.1
+      nx: 15.0.4
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -1277,8 +1277,8 @@ packages:
     resolution: {integrity: sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==}
     dev: false
 
-  /@types/node/18.11.4:
-    resolution: {integrity: sha512-BxcJpBu8D3kv/GZkx/gSMz6VnTJREBj/4lbzYOQueUOELkt8WrO6zAcSPmp9uRPEW/d+lUO8QK0W2xnS1hEU0A==}
+  /@types/node/18.11.7:
+    resolution: {integrity: sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -1288,8 +1288,8 @@ packages:
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
-  /@types/react/18.0.21:
-    resolution: {integrity: sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==}
+  /@types/react/18.0.24:
+    resolution: {integrity: sha512-wRJWT6ouziGUy+9uX0aW4YOJxAY0bG6/AOk5AW5QSvZqI7dk6VBIbXvcVgIw/W5Jrl24f77df98GEKTJGOLx7Q==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -1306,8 +1306,8 @@ packages:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: false
 
-  /@vitejs/plugin-react/2.1.0_vite@3.1.8:
-    resolution: {integrity: sha512-am6rPyyU3LzUYne3Gd9oj9c4Rzbq5hQnuGXSMT6Gujq45Il/+bunwq3lrB7wghLkiF45ygMwft37vgJ/NE8IAA==}
+  /@vitejs/plugin-react/2.2.0_vite@3.2.1:
+    resolution: {integrity: sha512-FFpefhvExd1toVRlokZgxgy2JtnBOdp4ZDsq7ldCWaqGSGn9UhWMAVm/1lxPL14JfNS5yGz+s9yFrQY6shoStA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^3.0.0
@@ -1319,7 +1319,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.19.6
       magic-string: 0.26.7
       react-refresh: 0.14.0
-      vite: 3.1.8_terser@5.15.1
+      vite: 3.2.1_terser@5.15.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2793,13 +2793,12 @@ packages:
     resolution: {integrity: sha512-Ji7fEnMdZDGbS5oXElpRJsn9jPvBR8h/037D3bzreNmS8809cISq/2D9//JbA/TaZmkkN8cmecXwmQHmM+NHhg==}
     dev: true
 
-  /fs-chunk-store/2.0.5:
-    resolution: {integrity: sha512-z3c2BmyaHdQTtIVXJDQOvwZVWN2gNU//0IYKK2LuPr+cZyGoIrgDwI4iDASaTUyQbOBtyg/k6GuDZepB6jQIPw==}
+  /fs-chunk-store/3.0.1:
+    resolution: {integrity: sha512-YrOFuXtUJQBkOZ2QBXBoIrjLJ/TNTpEaGnxV+TmL1qaW5J4ah6lxMh/X9pb3To+hbaoT/pRuBXLkkqoavQoQFw==}
     dependencies:
       queue-microtask: 1.2.3
       random-access-file: 2.2.1
       randombytes: 2.1.0
-      rimraf: 3.0.2
       run-parallel: 1.2.0
       thunky: 1.1.0
     dev: true
@@ -4033,8 +4032,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nx/15.0.1:
-    resolution: {integrity: sha512-4pGy6f0SMQpg5kr38I95OkzufgkeMf4n/ui9o2Xk65mFdqXcCzRgRXbKdDhABhdZmhbzV33M+BUPJmMrTw3XDg==}
+  /nx/15.0.4:
+    resolution: {integrity: sha512-tCCiVJgCiX/R2zlL73dQsY49AxR/cA0dHX764KvLWIvB0mO8Zb7UWAwb8sdIbop3DqtGCopRTsAdOBcZXbe/9A==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -4046,8 +4045,8 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 15.0.1
-      '@nrwl/tao': 15.0.1
+      '@nrwl/cli': 15.0.4
+      '@nrwl/tao': 15.0.4
       '@parcel/watcher': 2.0.4
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.26
@@ -4652,8 +4651,8 @@ packages:
     dependencies:
       glob: 7.2.3
 
-  /rollup/2.78.1:
-    resolution: {integrity: sha512-VeeCgtGi4P+o9hIg+xz4qQpRl6R401LWEXBmxYKOV4zlF82lyhgh2hTZnheFUbANE8l2A41F458iwj2vEYaXJg==}
+  /rollup/2.79.1:
+    resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -5479,14 +5478,15 @@ packages:
     resolution: {integrity: sha512-GDyecw4mb7uUeE6BFsicFOJ4sL9KWof+QNRvASXehpNNwwQVYCtB9HAjvKt6ixgvwSp6jWR1gM9dKLqNDZaEjQ==}
     dev: true
 
-  /vite/3.1.8_terser@5.15.1:
-    resolution: {integrity: sha512-m7jJe3nufUbuOfotkntGFupinL/fmuTNuQmiVE7cH2IZMuf4UbfbGYMUT3jVWgGYuRVLY9j8NnrRqgw5rr5QTg==}
+  /vite/3.2.1_terser@5.15.1:
+    resolution: {integrity: sha512-ADtMkfHuWq4tskJsri2n2FZkORO8ZyhI+zIz7zTrDAgDEtct1jdxOg3YsZBfHhKjmMoWLOSCr+64qrEDGo/DbQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
       less: '*'
       sass: '*'
       stylus: '*'
+      sugarss: '*'
       terser: ^5.4.0
     peerDependenciesMeta:
       less:
@@ -5495,13 +5495,15 @@ packages:
         optional: true
       stylus:
         optional: true
+      sugarss:
+        optional: true
       terser:
         optional: true
     dependencies:
       esbuild: 0.15.12
       postcss: 8.4.18
       resolve: 1.22.1
-      rollup: 2.78.1
+      rollup: 2.79.1
       terser: 5.15.1
     optionalDependencies:
       fsevents: 2.3.2
@@ -5512,9 +5514,9 @@ packages:
     dependencies:
       defaults: 1.0.4
 
-  /webtorrent/1.8.32:
-    resolution: {integrity: sha512-PjtJn3sY4Uqb1PEuxID+Cps4AshUKZpo3EhkT14y1SySmMVHeSX2crwh1rXIGX3fJUeF0zM5iEg+Ic2mN4CFZw==}
-    engines: {node: '>=12'}
+  /webtorrent/1.9.1:
+    resolution: {integrity: sha512-lFVMY1+GmTJlPAzEuWqQKP3/83c4bGFuJGPjI0lFRgYvUeQqxHv2Qwriz1SOK96MKuhMPKS9y4kf1CddZzoBjQ==}
+    engines: {node: '>=14'}
     dependencies:
       '@webtorrent/http-node': 1.3.0
       addr-to-ip-port: 1.5.4
@@ -5530,7 +5532,7 @@ packages:
       end-of-stream: 1.4.4
       escape-html: 1.0.3
       fast-blob-stream: 1.1.1
-      fs-chunk-store: 2.0.5
+      fs-chunk-store: 3.0.1
       immediate-chunk-store: 2.2.0
       join-async-iterator: 1.1.1
       load-ip-set: 2.2.1

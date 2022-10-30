@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/react",
-  "version": "1.0.51",
+  "version": "1.0.52",
   "description": "React wrapper for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "@types/react": "^18.0.21",
+    "@types/react": "^18.0.24",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
