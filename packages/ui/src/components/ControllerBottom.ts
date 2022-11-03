@@ -120,7 +120,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   player.on('volumechange', () => switcher($volume, player.isMuted))
-  player.on(['durationchange', 'timeupdate'], () => {
+  player.on(['durationchange', 'timeupdate', 'seeking', 'seeked'], () => {
     $time.innerText = `${formatTime(player.currentTime)} ${
       player.options.isLive ? '' : ` / ${formatTime(player.duration)}`
     }`
