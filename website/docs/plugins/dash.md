@@ -3,7 +3,7 @@ title: oplayer-plugin-dash
 ---
 
 ```bash npm2yarn
-npm install --save @oplayer/dash
+npm install --save @oplayer/dash dashjs
 ```
 
 ## 使用
@@ -29,6 +29,9 @@ Player.make(document.getElementById('oplayer'), {
 <TabItem value="html" label="script">
 
 ```html
+<!-- 引入dash.js -->
+<script src="https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script>
 

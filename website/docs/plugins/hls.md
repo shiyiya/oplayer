@@ -3,7 +3,7 @@ title: oplayer-plugin-hls
 ---
 
 ```bash npm2yarn
-npm install --save @oplayer/hls
+npm install --save @oplayer/hls hls.js
 ```
 
 ## 使用
@@ -29,6 +29,9 @@ Player.make(document.getElementById('oplayer'), {
 <TabItem value="html" label="script">
 
 ```html
+<!-- 引入hls.js -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
 
