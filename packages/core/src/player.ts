@@ -337,10 +337,19 @@ export class Player {
     }
   }
 
-  async changeSource(source: Source) {
+  _resetStatus() {
     this._playPromise = undefined
     this.hasError = false
     this.isCustomLoader = false
+  }
+
+  async changeQuality(src: string) {
+    this.emit('videoqualitychange', src)
+    await this.load({ src })
+  }
+
+  async changeSource(source: Source) {
+    this._resetStatus()
     this.$video.poster = source.poster || ''
     this.emit('videosourcechange', source)
     await this.load(source)
