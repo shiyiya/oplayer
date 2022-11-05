@@ -41,7 +41,7 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 ### 1. Use the module manager to import:
 
 ```bash
-npm i @oplayer/core @oplayer/ui @oplayer/hls
+npm i @oplayer/core @oplayer/ui @oplayer/hls hls.js
 ```
 
 ```ts
@@ -62,6 +62,7 @@ Player.make(document.getElementById('oplayer'), {
 ### 2. Use the script tag to introduce:
 
 ```html
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
