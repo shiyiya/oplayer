@@ -11,7 +11,7 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
-[![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](https://paypal.me/ShiYiYa)
+[![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](#support)
 
 ![oplayer](./oplayer.jpg)
 
@@ -97,3 +97,12 @@ Player.make(document.getElementById('oplayer'), {
 
 - [UPV](https://月色真美.life) : free animes no ad
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
+
+## Support
+If you think this is super cool, or useful, and want to donate a little, then you are also super cool!
+
+|  |         |
+|--:|---------|
+| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$1 tip](https://www.paypal.com/paypalme/ShiYiYa/1) |
+| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$5 tip](https://www.paypal.com/paypalme/ShiYiYa/5) |
+| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$10 tip](https://www.paypal.com/paypalme/ShiYiYa/10) |
