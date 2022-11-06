@@ -33,8 +33,6 @@ pnpm install
    ```
 
    - standalone: http://localhost:5173/
-   - react: http://localhost:5174/
-   - ~~react: http://localhost:5174/react~~
 
 3. Make your changes...
 

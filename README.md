@@ -89,7 +89,6 @@ Player.make(document.getElementById('oplayer'), {
 - [@oplayer/torrent](./packages/torrent)
 - [@oplayer/danmaku](./packages/danmaku)
 - [@oplayer/ad](./packages/ad)
-- [@oplayer/react](./packages/react)
 - [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
 - [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
 
