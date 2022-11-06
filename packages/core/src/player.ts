@@ -32,7 +32,7 @@ export class Player {
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   _playPromise: Promise<void> | undefined
 
-  constructor(el: HTMLElement, options: PlayerOptions | string) {
+  constructor(el: HTMLElement, options?: PlayerOptions | string) {
     this.container = el
     this.options = Object.assign(
       {

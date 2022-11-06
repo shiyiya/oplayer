@@ -44,7 +44,7 @@ const player = Player.make(document.getElementById('player')!, {
   muted: true,
   volume: 0.5,
   // isLive: true,
-  source: { src, poster: POSTER },
+  source: { poster: POSTER },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
   .use([
@@ -150,6 +150,10 @@ const player = Player.make(document.getElementById('player')!, {
     // })
   ])
   .create()
+
+setTimeout(() => {
+  player.changeQuality(src)
+}, 3)
 
 player.emit('subtitlechange', [
   {

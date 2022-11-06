@@ -99,9 +99,10 @@ Player.make(document.getElementById('oplayer'), {
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
 
 ## Support
+
 If you think this is super cool, or useful, and want to donate a little, then you are also super cool!
 
-|  |         |
+|   |         |
 |--:|---------|
 | <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$1 tip](https://www.paypal.com/paypalme/ShiYiYa/1) |
 | <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$5 tip](https://www.paypal.com/paypalme/ShiYiYa/5) |

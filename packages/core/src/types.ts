@@ -17,7 +17,7 @@ export type PlayerOptions = {
   preload?: 'auto' | 'metadata' | 'none'
   playbackRate?: number
   playsinline?: boolean
-  source: Source
+  source?: Source
   videoAttr?: Record<string, boolean | string>
   lang?: Lang
   evil?: () => boolean
