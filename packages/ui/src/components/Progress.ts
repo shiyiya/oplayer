@@ -1,5 +1,5 @@
 import type Player from '@oplayer/core'
-import { $ } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions'
 import { UiConfig } from '../types'
 import { DRAG_EVENT_MAP, formatTime } from '../utils'
@@ -70,21 +70,15 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
     function moving(e: MouseEvent | TouchEvent) {
       e.preventDefault()
-      if (isDargMoving) {
-        thumbnailUpdater(sync(e))
-      } else {
-        const rate = getSlidingValue(e)
-        $hit.innerText = formatTime(player.duration * rate)
-        $hit.style.left = `${rate * 100}%`
-      }
+      thumbnailUpdater(sync(e))
     }
 
     document.addEventListener(DRAG_EVENT_MAP.dragMove, moving, { passive: false })
     document.addEventListener(
       DRAG_EVENT_MAP.dragEnd,
       (e) => {
-        isDargMoving = false
         $dom.classList.remove(progressDragging)
+        isDargMoving = false
         document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
         player.seek(getSlidingValue(e) * player.duration)
       },
@@ -92,34 +86,35 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   })
 
-  // moving
-  $dom.addEventListener('mouseenter', () => {
-    if (isDargMoving) return
-    initThumbnail()
-  })
-
-  $dom.addEventListener(
-    'mousemove',
-    (e) => {
+  if (!isMobile) {
+    $dom.addEventListener('mouseenter', () => {
       if (isDargMoving) return
-      $dom.classList.add(progressDragging)
-      if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
-        $hit.style.display = 'none'
-      } else {
-        $hit.removeAttribute('style')
-      }
+      initThumbnail()
+    })
 
-      const rate = getSlidingValue(e)
-      $hit.innerText = formatTime(player.duration * rate)
-      $hit.style.left = `${rate * 100}%`
-      thumbnailUpdater(rate)
-    },
-    { passive: false }
-  )
+    $dom.addEventListener(
+      'mousemove',
+      (e) => {
+        if (isDargMoving) return
+        $dom.classList.add(progressDragging)
+        if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
+          $hit.style.display = 'none'
+        } else {
+          $hit.removeAttribute('style')
+        }
 
-  $dom.addEventListener('mouseleave', () => {
-    if (!isDargMoving) $dom.classList.remove(progressDragging)
-  })
+        const rate = getSlidingValue(e)
+        $hit.innerText = formatTime(player.duration * rate)
+        $hit.style.left = `${rate * 100}%`
+        thumbnailUpdater(rate)
+      },
+      { passive: false }
+    )
+
+    $dom.addEventListener('mouseleave', () => {
+      if (!isDargMoving) $dom.classList.remove(progressDragging)
+    })
+  }
 
   player.on(['timeupdate', 'seeking'], () => {
     if (isDargMoving) return
