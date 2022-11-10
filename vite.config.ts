@@ -15,7 +15,8 @@ export const globals = {
   dashjs: 'dashjs',
   '@oplayer/torrent': 'OTorrent',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
-  '@oplayer/danmaku': 'ODanmaku'
+  '@oplayer/danmaku': 'ODanmaku',
+  react: 'React'
 }
 
 const babelPlugins = [
