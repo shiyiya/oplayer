@@ -41,7 +41,7 @@ importers:
       concurrently: 7.5.0
       cross-env: 7.0.3
       lint-staged: 13.0.3
-      nx: 15.0.10
+      nx: 15.0.13
       prettier: 2.7.1
       rimraf: 3.0.2
       terser: 5.15.1
@@ -100,6 +100,18 @@ importers:
     devDependencies:
       '@oplayer/core': link:../core
       hls.js: 1.2.5
+
+  packages/react:
+    specifiers:
+      '@oplayer/core': workspace:*
+      '@types/react': ^18.0.25
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    devDependencies:
+      '@oplayer/core': link:../core
+      '@types/react': 18.0.25
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
 
   packages/thumbnails-tool:
     specifiers:
@@ -1093,21 +1105,21 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@nrwl/cli/15.0.10:
-    resolution: {integrity: sha512-+HtEyrSMcaNq1SNhOanKXX3oFntC0mdd5UNIkw8qipSv/7cysBch+3RUwqvnqUFRZhJejCZgFRzUp7rAD7SZ2Q==}
+  /@nrwl/cli/15.0.13:
+    resolution: {integrity: sha512-w0oOP4v176CbD34+VytiAItIH3fOeiaccq7T2Un/hhx+/Q9mdO/VWyYZOKmp85uGodx/yZ6LyGW6rX0BjM0Rsg==}
     dependencies:
-      nx: 15.0.10
+      nx: 15.0.13
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
       - debug
     dev: true
 
-  /@nrwl/tao/15.0.10:
-    resolution: {integrity: sha512-8MTx+eNxJSH826IOC0LplvVR2fxFz0+VOOUORk2gq75+3jCxmW7uxcTM5WvzgtCw7lFJCvWVZASoGCVEIns6Fg==}
+  /@nrwl/tao/15.0.13:
+    resolution: {integrity: sha512-z55RKnVOYsiABKFUIj+QBf6I4fUwTlObxJpgUJp0i3E97P3BgbzhTG1EhuBxLH8fGKrbOAPs0ct38Asl+zGZfQ==}
     hasBin: true
     dependencies:
-      nx: 15.0.10
+      nx: 15.0.13
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -1187,6 +1199,22 @@ packages:
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
+    dev: true
+
+  /@types/prop-types/15.7.5:
+    resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+    dev: true
+
+  /@types/react/18.0.25:
+    resolution: {integrity: sha512-xD6c0KDT4m7n9uD4ZHi02lzskaiqcBxf4zi+tXZY98a04wvc0hi/TcCPC2FOESZi51Nd7tlUeOJY8RofL799/g==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.2
+      csstype: 3.1.1
+    dev: true
+
+  /@types/scheduler/0.16.2:
+    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
     dev: true
 
   /@types/semver/6.2.3:
@@ -1992,6 +2020,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+    dev: true
+
+  /csstype/3.1.1:
+    resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: true
 
   /csv-generate/3.4.3:
@@ -3580,6 +3612,13 @@ packages:
       wrap-ansi: 6.2.0
     dev: true
 
+  /loose-envify/1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
+    dependencies:
+      js-tokens: 4.0.0
+    dev: true
+
   /lru-cache/4.1.5:
     resolution: {integrity: sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==}
     dependencies:
@@ -3886,8 +3925,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nx/15.0.10:
-    resolution: {integrity: sha512-Uy6C/lj+gFjdNAKg2RNYEqMO7t2jxz5fYAEm6FnViDZ2Qz28l1L6V70MEvq6wgyDzSSRL0I+OPLb71tiaD9BiA==}
+  /nx/15.0.13:
+    resolution: {integrity: sha512-5mJGWz91B9/sxzLjXdD+pmZTel54NeNNxFDis8OhtGDn6eRZ25qWsZNDgzqIDtwKn3c9gThAMHU4XH2OTgWUnA==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -3899,8 +3938,8 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 15.0.10
-      '@nrwl/tao': 15.0.10
+      '@nrwl/cli': 15.0.13
+      '@nrwl/tao': 15.0.13
       '@parcel/watcher': 2.0.4
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.27
@@ -4317,6 +4356,23 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /react-dom/18.2.0_react@18.2.0:
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      loose-envify: 1.4.0
+      react: 18.2.0
+      scheduler: 0.23.0
+    dev: true
+
+  /react/18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: true
+
   /read-chunk/1.0.1:
     resolution: {integrity: sha512-5NLTTdX45dKFtG8CX5pKmvS9V5u9wBE+gkklN7xhDuhq3pA2I4O7ALfKxosCMcLHOhkxj6GNacZhfXtp5nlCdg==}
     engines: {node: '>=0.10.0'}
@@ -4540,6 +4596,12 @@ packages:
   /sax/1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
     dev: false
+
+  /scheduler/0.23.0:
+    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: true
 
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
