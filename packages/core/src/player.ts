@@ -343,9 +343,10 @@ export class Player {
     this.isCustomLoader = false
   }
 
-  async changeQuality(src: string) {
-    this.emit('videoqualitychange', src)
-    await this.load({ src })
+  async changeQuality(source: Omit<Source, 'poster'>) {
+    this._resetStatus()
+    this.emit('videoqualitychange', source)
+    await this.load(source)
   }
 
   async changeSource(source: Source) {
