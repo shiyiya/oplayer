@@ -95,7 +95,7 @@ Player.make(document.getElementById('oplayer'), {
 
 ## Who use OPlayer?
 
-- [UPV](https://月色真美.life) : free animes no ad
+- [UPV](https://web.月色真美.life) : free animes no ad
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
 
 ## Support

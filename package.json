@@ -29,7 +29,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.2",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-destructuring": "^7.20.2",
-    "@babel/plugin-transform-parameters": "^7.20.1",
+    "@babel/plugin-transform-parameters": "^7.20.3",
     "@babel/plugin-transform-spread": "^7.19.0",
     "@babel/plugin-transform-template-literals": "^7.18.9",
     "@changesets/cli": "^2.25.2",
@@ -46,7 +46,7 @@
     "terser": "^5.15.1",
     "tslib": "^2.4.1",
     "typescript": "^4.8.4",
-    "vite": "^3.2.2",
+    "vite": "^3.2.3",
     "vite-plugin-banner": "^0.6.1"
   }
 }
