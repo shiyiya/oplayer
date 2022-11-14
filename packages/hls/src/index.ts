@@ -12,11 +12,15 @@ let importedHls: typeof import('hls.js/dist/hls.light.min.js') = globalThis.Hls
 
 type hlsPluginOptions = {
   hlsConfig?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, source: Source) => boolean
+  matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
   options?: Options
 }
 
 type Options = {
+  /**
+   * @default: false
+   */
+  forceHLS?: boolean
   /**
    * @default: true
    */
@@ -42,11 +46,12 @@ type Options = {
   showWarning?: boolean
 }
 
-const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
-  !(
-    Boolean(video.canPlayType('application/x-mpegURL')) ||
-    Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
-  ) &&
+const defaultMatcher: hlsPluginOptions['matcher'] = (video, source, force) =>
+  (force ||
+    !(
+      Boolean(video.canPlayType('application/x-mpegURL')) ||
+      Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
+    )) &&
   (source.format === 'm3u8' ||
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
       /m3u8(#|\?|$)/i.test(source.src)))
@@ -139,7 +144,7 @@ const hlsPlugin = ({
   return {
     name: PLUGIN_NAME,
     load: async (player, source, options) => {
-      const isMatch = matcher(player.$video, source)
+      const isMatch = matcher(player.$video, source, pluginOptions.forceHLS)
 
       if (options.loader || !isMatch) {
         hlsInstance?.destroy()
