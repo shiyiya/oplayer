@@ -18,13 +18,14 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
+  'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
+  'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
   MP4,
   'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
   'https://cdn6.hnzycdn.com:65/20220712/xb2EScnz/1672kb/hls/index.m3u8',
   'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
-  'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
   'https://media.w3.org/2010/05/sintel/trailer.mp4'
 ] as const
@@ -152,7 +153,7 @@ const player = Player.make(document.getElementById('player')!, {
   .create()
 
 setTimeout(() => {
-  player.changeQuality(src)
+  player.changeQuality({ src })
 }, 3)
 
 player.emit('subtitlechange', [
