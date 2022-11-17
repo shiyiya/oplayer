@@ -38,8 +38,8 @@ const styles = $.css(
           left: '0',
           right: '0',
           margin: 'auto',
-          width: '2.8em',
-          height: '2.8em'
+          width: '3.2em',
+          height: '3.2em'
         }
       }
     },

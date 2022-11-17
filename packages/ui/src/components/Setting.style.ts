@@ -28,7 +28,7 @@ export const setting = $.css({
   [`& > div.${activeCls}`]: { display: 'block' }
 })
 
-export const panelCls = $.css('min-width: 16em;')
+export const panelCls = $.css('min-width: 15.5em;')
 
 export const subPanelCls = $.css('min-width: 10.5em;')
 
@@ -88,6 +88,7 @@ export const switcherContainer = $.css(`
 export const nextLabelText = $.css(`
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.7);
+  font-size: 80%;
 `)
 
 export const settingItemCls = $.css({
