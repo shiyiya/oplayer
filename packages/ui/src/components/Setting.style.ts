@@ -6,7 +6,6 @@ export const setting = $.css({
   'z-index': '98',
   'max-height': '75%',
   'border-radius': '3px',
-  'font-size': '120%',
   display: 'block',
   position: 'absolute',
   right: '1.25em',
@@ -22,7 +21,7 @@ export const setting = $.css({
   },
 
   // panel
-  '& > div': { display: 'none' },
+  '& > div': { display: 'none', 'font-size': '120%' },
 
   // active panel
   [`& > div.${activeCls}`]: { display: 'block' }
