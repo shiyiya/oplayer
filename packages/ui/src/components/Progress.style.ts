@@ -20,10 +20,10 @@ export const dot = $.css({
     content: "''",
     display: 'block',
     position: 'absolute',
-    width: '1em',
-    height: '1em',
-    top: 'calc(-0.5em + 2px)',
-    left: '-0.5em',
+    width: '1.4em',
+    height: '1.4em',
+    top: 'calc(-0.7em + 2px)',
+    left: '-0.7em',
     bottom: '0',
     transform: 'scale(0)',
     transition: 'transform 0.3s ease',
@@ -31,10 +31,10 @@ export const dot = $.css({
   },
 
   '& > *:not(svg)': {
-    width: '0.7em',
-    height: '0.7em',
-    top: 'calc(-0.35em + 2px)',
-    left: '-0.35em',
+    width: '1em',
+    height: '1em',
+    top: 'calc(-0.5em + 2px)',
+    left: '-0.5em',
     'border-radius': '50%',
     'background-color': '#fff'
   }
@@ -47,7 +47,6 @@ export const hit = $.css({
   padding: '5px 8px',
   'background-color': 'var(--shadow-background-color)',
   color: '#fff',
-  'font-size': '12px',
   'word-wrap': 'nowrap',
   'word-break': 'nowrap',
   'z-index': '2',

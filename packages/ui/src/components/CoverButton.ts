@@ -10,7 +10,7 @@ const styles = $.css(
       '& > button': {
         position: 'absolute',
         right: '40px',
-        bottom: '50px',
+        bottom: '5em',
         fill: '#fff',
         width: '3.5em',
         'z-index': '97',

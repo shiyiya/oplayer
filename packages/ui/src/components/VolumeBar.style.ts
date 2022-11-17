@@ -8,7 +8,6 @@ export const wrap = $.css`
 export const volumeValue = $.css(`
   width: 100%;
   text-align: center;
-  font-size: 12px;
   height: 28px;
   line-height: 28px;
   margin-bottom: 2px;

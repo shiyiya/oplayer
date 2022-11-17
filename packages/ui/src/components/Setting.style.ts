@@ -6,20 +6,16 @@ export const setting = $.css({
   'z-index': '98',
   'max-height': '75%',
   'border-radius': '3px',
-  'font-size': '14px',
+  'font-size': '120%',
   display: 'block',
   position: 'absolute',
-  right: '15px',
-  bottom: '40px',
+  right: '1.25em',
+  bottom: '2.8em',
   overflow: 'auto',
-  '-webkit-backdrop-filter': 'saturate(180%) blur(20px)',
-  'backdrop-filter': 'saturate(180%) blur(20px)',
-  'background-color': 'rgb(0 0 0 / 70%)',
+  'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
 
-  '&::-webkit-scrollbar': {
-    width: '2px'
-  },
+  '&::-webkit-scrollbar': { width: '2px' },
 
   '&::-webkit-scrollbar-thumb': {
     background: 'var(--primary-color)'
@@ -32,9 +28,9 @@ export const setting = $.css({
   [`& > div.${activeCls}`]: { display: 'block' }
 })
 
-export const panelCls = $.css('min-width: 220px;')
+export const panelCls = $.css('min-width: 16em;')
 
-export const subPanelCls = $.css('min-width: 150px;')
+export const subPanelCls = $.css('min-width: 10.5em;')
 
 // √
 export const yesIcon = $.css(`
@@ -92,11 +88,10 @@ export const switcherContainer = $.css(`
 export const nextLabelText = $.css(`
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 12px
 `)
 
 export const settingItemCls = $.css({
-  height: '35px',
+  height: '2.4em',
   cursor: 'pointer',
   color: '#fff',
   'justify-content': 'space-between',

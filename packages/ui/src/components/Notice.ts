@@ -20,7 +20,7 @@ const noticeTextCls = $.css(`
   background-color: var(--shadow-background-color);
   border-radius: 2px;
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: 120%;
 `)
 
 const NOTICE_HIDE_DELAY = 2000
