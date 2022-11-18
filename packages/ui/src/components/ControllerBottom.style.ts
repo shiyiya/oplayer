@@ -32,8 +32,8 @@ export const dropdown = $.css({
 
 export const dropdownHoverable = $.css({
   ['&:hover']: {
-    'padding-top': '10px',
-    'margin-top': '-10px',
+    'padding-top': '0.5em',
+    'margin-top': '-0.5em',
 
     [`& .${expand}`]: {
       visibility: 'visible',
