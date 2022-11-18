@@ -53,7 +53,7 @@ class Subtitle {
         position: 'absolute',
         bottom: `${options.bottom ?? '5%'}`,
         'line-height': '1.2',
-        'font-size': `${options.fontSize || (isMobile ? 14 : 16)}px`,
+        'font-size': `${(options.fontSize || (isMobile ? 14 : 16)) / 0.12}%`,
 
         '& > p': { margin: 0 }
       })}`

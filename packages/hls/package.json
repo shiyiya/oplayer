@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/hls",
-  "version": "1.0.55",
+  "version": "1.0.56-beta.0",
   "description": "Hls plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",

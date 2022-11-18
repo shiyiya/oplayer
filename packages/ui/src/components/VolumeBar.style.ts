@@ -1,17 +1,19 @@
 import { $ } from '@oplayer/core'
 
 export const wrap = $.css`
-  width: 35px;
+  width: 2.5em;
   height: 110px;
+  padding-bottom: 3px;
+  box-sizing: content-box;
 `
 
 export const volumeValue = $.css(`
   width: 100%;
   text-align: center;
-  font-size: 12px;
   height: 28px;
   line-height: 28px;
   margin-bottom: 2px;
+  font-size: 80%;
 `)
 
 export const track = $.css(`

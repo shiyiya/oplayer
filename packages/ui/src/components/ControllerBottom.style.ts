@@ -4,6 +4,7 @@ import { icon } from '../style'
 export const time = $.css`
   padding: ${isMobile ? 0 : '0px 0.5em'};
   font-variant-numeric: tabular-nums;
+  font-size: 120%;
 `
 
 export const expand = $.css(`
@@ -11,12 +12,11 @@ export const expand = $.css(`
     top: 0;
     right: 50%;
     z-index: 10;
-    padding: 4px;
-    border-radius: 4px;
+    border-radius: 3px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
-    font-size: 12px;
     transition: visibility 0s, opacity 0.1s linear;
+    font-size: 120%;
 `)
 
 export const dropdown = $.css({
@@ -32,8 +32,8 @@ export const dropdown = $.css({
 
 export const dropdownHoverable = $.css({
   ['&:hover']: {
-    'padding-top': '4px',
-    'margin-top': '-4px',
+    'padding-top': '0.5em',
+    'margin-top': '-0.5em',
 
     [`& .${expand}`]: {
       visibility: 'visible',
@@ -43,14 +43,12 @@ export const dropdownHoverable = $.css({
 })
 
 export const dropItem = $.css({
+  'min-width': '6em',
   display: 'block',
-  padding: '6px 15px',
+  height: '2.4em',
+  'line-height': '2.4em',
   cursor: 'pointer',
-  'font-size': '14px',
   'text-align': 'center',
-  'border-radius': '4px',
-  'margin-bottom': '2px',
-  transition: 'color .2s',
   'word-break': 'keep-all',
 
   '&:nth-last-child(1)': {
@@ -73,22 +71,22 @@ export const dropItem = $.css({
 export const controllerBottom = $.css({
   display: 'flex',
   'justify-content': 'space-between',
-  'font-size': '14px',
   color: '#fff',
   fill: '#fff',
-  height: '35px',
+  height: 'var(--controller-Bottom-height)',
   padding: isMobile ? 0 : '0px 0px 5px 0px',
   'margin-right': isMobile ? '-8px' : '0px',
   'text-align': 'center',
 
   [`& .${icon}.--text`]: {
     width: 'auto',
-    margin: '0 8px'
+    margin: '0 8px',
+    'font-size': '120%'
   },
 
   [`& .${icon}`]: {
-    width: '36px',
-    height: '22px',
+    width: '3em',
+    height: '1.9em',
 
     ['& svg']: {
       width: '100%',

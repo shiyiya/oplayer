@@ -2,7 +2,7 @@ import { $, isMobile } from '@oplayer/core'
 import { root } from './style'
 
 import { Icons, registerHotKey, registerSpeedSetting } from './functions'
-import { focusListener, initListener, loadingListener, playingListener } from './listeners'
+import startListening from './listeners'
 
 import renderControllerBar from './components/ControllerBar'
 import renderCoverButton from './components/CoverButton'
@@ -23,19 +23,12 @@ const apply = (player: Player, config: UiConfig) => {
     return
   }
 
-  initListener(player)
-  playingListener(player)
-  loadingListener(player)
-
-  if (!isMobile) {
-    focusListener(player, config.autoFocus)
-    registerHotKey(player)
-  }
+  const $root = $.create(`div.${root(config.theme)}`)
+  const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
 
   Icons.setupIcons(player, config.icons)
-
-  const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
-  const $root = $.create(`div.${root(config.theme)}`)
+  startListening(player, config, $root)
+  if (!isMobile) registerHotKey(player)
 
   renderError(player, $frag, config)
   renderNotice(player, $frag)

@@ -3,23 +3,31 @@ import type { UiConfig } from './types'
 
 export const settingShown = $.css('/* settingShown */')
 
+export const fullscreen = $.css('/* fullscreen */')
+
 export const root = (theme: UiConfig['theme']) => {
-  return $.css({
-    '--primary-color': `${theme!.primaryColor}`,
+  return $.css(
+    Object.assign(
+      {
+        '--primary-color': `${theme!.primaryColor}`,
+        '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
+        '--controller-Bottom-height': '3.25em',
 
-    //TODO: more
-    '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
 
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    top: '0',
-    left: '0',
+        'font-size': '12px',
 
-    '&, & > *': {
-      '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
-    }
-  })
+        '&, & > *': {
+          '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
+        }
+      },
+      !isMobile && { [`&.${fullscreen}`]: { 'font-size': '16px' } }
+    )
+  )
 }
 
 export const webFullScreen = $.css`
@@ -90,17 +98,17 @@ export const tooltip = isMobile
         content: 'attr(aria-label)',
         bottom: '100%',
         left: '50%',
-        'margin-bottom': '5px',
+        'margin-bottom': '0.5em',
         'white-space': 'nowrap',
         background: 'var(--shadow-background-color)',
         transform: 'translate(-50%, 10px) scale(.8)',
         'transform-origin': '50% 100%',
         opacity: 0,
-        'font-size': '12px',
         padding: '4px 8px',
         'border-radius': '4px',
         transition: 'transform .2s ease .1s,opacity .2s ease .1s',
-        'pointer-events': 'none'
+        'pointer-events': 'none',
+        'font-size': '120%'
       },
 
       '&[data-tooltip-pos=up-right]::after': {

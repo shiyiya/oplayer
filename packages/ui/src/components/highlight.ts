@@ -10,7 +10,6 @@ export const highlightTextCls = $.css(`
   background-color: var(--shadow-background-color);
   color: #fff;
   border-radius: 4px;
-  font-size: 12px;
   white-space: nowrap;
   word-break: nowrap;
   transform: translateX(-50%);`)
