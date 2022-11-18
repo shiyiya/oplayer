@@ -9,7 +9,7 @@ export const setting = $.css({
   display: 'block',
   position: 'absolute',
   right: '1.25em',
-  bottom: '2.8em',
+  bottom: '3.5em',
   overflow: 'auto',
   'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
