@@ -208,7 +208,7 @@ function createPanel(
           $label.innerText = defaultSelected.name
         }
 
-        optionPanel.select = (i: number) => {
+        optionPanel.select = (i: number, shouldBeCallFn = true) => {
           const $target = optionPanel.$ref.children[i + 1] as HTMLElement
           if ($target!.getAttribute('data-selected') != 'true') {
             $target!.setAttribute('data-selected', 'true')
@@ -219,11 +219,13 @@ function createPanel(
             })
             const value = children[i]
             $label.innerText = value!.name
-            onChange?.(value, { index: i })
+            if (shouldBeCallFn) onChange?.(value, { index: i })
           }
 
-          panel.$ref.classList.add(activeCls)
-          optionPanel.$ref.classList.remove(activeCls)
+          if (shouldBeCallFn) {
+            panel.$ref.classList.add(activeCls)
+            optionPanel.$ref.classList.remove(activeCls)
+          }
         }
 
         optionPanel.$ref.addEventListener('click', (e) => {
@@ -232,11 +234,14 @@ function createPanel(
       }
     } else {
       if (type == 'switcher') {
-        $row.addEventListener('click', function () {
+        //@ts-ignore
+        $row.select = function (shouldBeCallFn = true) {
           const selected = this.getAttribute('data-selected') == 'true'
           this.setAttribute('data-selected', `${!selected}`)
-          onChange?.(!selected)
-        })
+          if (shouldBeCallFn) onChange?.(!selected)
+        }
+        //@ts-ignore
+        $row.addEventListener('click', () => $row.select())
       }
     }
   }
@@ -285,17 +290,19 @@ export default function (player: Player, $el: HTMLElement, options: Setting[] = 
 
   type SelectSettingOptions = { key: string; value: boolean | number; shouldBeCallFn: Boolean }
   player.on('selectsetting', ({ payload }: PlayerEvent<SelectSettingOptions>) => {
-    const { key, value, shouldBeCallFn = true } = payload
+    const { key, value, shouldBeCallFn = false } = payload
     if (typeof value == 'number') {
       for (let i = 0; i < panels.length; i++) {
         const panel = panels[i]!
         if (panel.key == key) {
-          if (shouldBeCallFn) panel.select!(value)
+          panel.select!(value, shouldBeCallFn)
           break
         }
       }
     } else {
-      $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"][data-selected]`)?.click()
+      $dom
+        .querySelector<HTMLSpanElement & { select: Function }>(`[data-key="${key}"][data-selected]`)
+        ?.select(shouldBeCallFn)
     }
   })
 

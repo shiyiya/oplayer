@@ -2,14 +2,15 @@ import type { Player } from '@oplayer/core'
 import { Setting, UiConfig } from '../types'
 import { Icons } from './icons'
 
-// TODO: listen playback change
+const KEY = 'speed'
+
 export default function registerSpeedSetting(player: Player, speeds: UiConfig['speed']) {
-  if (speeds?.length)
+  if (speeds?.length) {
     player.emit('addsetting', <Setting>{
-      name: player.locales.get('Speed'),
+      key: KEY,
       type: 'selector',
+      name: player.locales.get('Speed'),
       icon: Icons.get('playbackRate'),
-      key: 'speed',
       children: speeds.map((speed) => ({
         name: +speed == 1 ? 'Normal' : speed + 'x',
         value: +speed,
@@ -17,4 +18,15 @@ export default function registerSpeedSetting(player: Player, speeds: UiConfig['s
       })),
       onChange: ({ value }) => player.setPlaybackRate(value)
     })
+
+    player.on('ratechange', () => {
+      const rate = player.playbackRate
+      const i = speeds.findIndex((it) => +it == rate)
+      if (i == -1) {
+        player.emit('updatesettinglabel', { key: KEY, name: rate + 'x' })
+      } else {
+        player.emit('selectsetting', { key: KEY, value: i })
+      }
+    })
+  }
 }
