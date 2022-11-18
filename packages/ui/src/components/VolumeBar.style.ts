@@ -4,6 +4,7 @@ export const wrap = $.css`
   width: 35px;
   height: 110px;
   padding: 4px 4px 6px 4px;
+  box-sizing: content-box;
 `
 
 export const volumeValue = $.css(`
@@ -12,6 +13,7 @@ export const volumeValue = $.css(`
   height: 28px;
   line-height: 28px;
   margin-bottom: 2px;
+  font-size: 80%;
 `)
 
 export const track = $.css(`
