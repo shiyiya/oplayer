@@ -12,8 +12,7 @@ export const expand = $.css(`
     top: 0;
     right: 50%;
     z-index: 10;
-    padding: 4px;
-    border-radius: 4px;
+    border-radius: 3px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
     transition: visibility 0s, opacity 0.1s linear;
@@ -33,8 +32,8 @@ export const dropdown = $.css({
 
 export const dropdownHoverable = $.css({
   ['&:hover']: {
-    'padding-top': '4px',
-    'margin-top': '-4px',
+    'padding-top': '10px',
+    'margin-top': '-10px',
 
     [`& .${expand}`]: {
       visibility: 'visible',
@@ -44,13 +43,12 @@ export const dropdownHoverable = $.css({
 })
 
 export const dropItem = $.css({
+  'min-width': '6em',
   display: 'block',
-  padding: '0.45em 1.2em',
+  height: '2.4em',
+  'line-height': '2.4em',
   cursor: 'pointer',
   'text-align': 'center',
-  'border-radius': '4px',
-  'margin-bottom': '2px',
-  transition: 'color .2s',
   'word-break': 'keep-all',
 
   '&:nth-last-child(1)': {
