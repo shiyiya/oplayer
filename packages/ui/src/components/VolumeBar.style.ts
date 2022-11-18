@@ -1,9 +1,9 @@
 import { $ } from '@oplayer/core'
 
 export const wrap = $.css`
-  width: 35px;
+  width: 2.5em;
   height: 110px;
-  padding: 4px 4px 6px 4px;
+  padding-bottom: 3px;
   box-sizing: content-box;
 `
 
