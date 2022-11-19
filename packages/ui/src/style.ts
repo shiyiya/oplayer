@@ -107,8 +107,7 @@ export const tooltip = isMobile
         padding: '4px 8px',
         'border-radius': '4px',
         transition: 'transform .2s ease .1s,opacity .2s ease .1s',
-        'pointer-events': 'none',
-        'font-size': '120%'
+        'pointer-events': 'none'
       },
 
       '&[data-tooltip-pos=up-right]::after': {
