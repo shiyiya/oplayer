@@ -204,6 +204,12 @@ function createPanel(
         }
 
         optionPanel.select = (i: number, shouldBeCallFn = true) => {
+          if (i == -1) {
+            optionPanel
+              .$ref!.querySelector<HTMLDivElement>('[data-selected=true]')
+              ?.setAttribute('data-selected', 'false')
+            return
+          }
           const $target = optionPanel.$ref.children[i + 1] as HTMLElement
           if ($target!.getAttribute('data-selected') != 'true') {
             $target!.setAttribute('data-selected', 'true')

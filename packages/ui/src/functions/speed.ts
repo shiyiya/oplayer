@@ -22,10 +22,9 @@ export default function registerSpeedSetting(player: Player, speeds: UiConfig['s
     player.on('ratechange', () => {
       const rate = player.playbackRate
       const i = speeds.findIndex((it) => +it == rate)
+      player.emit('selectsetting', { key: KEY, value: i })
       if (i == -1) {
         player.emit('updatesettinglabel', { key: KEY, name: rate + 'x' })
-      } else {
-        player.emit('selectsetting', { key: KEY, value: i })
       }
     })
   }
