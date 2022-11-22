@@ -90,7 +90,7 @@ export type UiConfig = {
 
   subtitle?: Subtitle
 
-  settings?: Setting[]
+  settings?: (Setting | 'loop')[]
 
   thumbnails?: Thumbnails
 

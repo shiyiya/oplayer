@@ -1,8 +1,9 @@
 import Player, { $, PlayerEvent } from '@oplayer/core'
 import { Icons } from '../functions/icons'
-import { settingShown } from '../style'
-import type { Setting } from '../types'
+import { icon, settingShown, tooltip } from '../style'
+import type { Setting, UiConfig } from '../types'
 import { siblings } from '../utils'
+import { controllerBottom } from './ControllerBottom.style'
 import {
   activeCls,
   nextIcon,
@@ -107,8 +108,6 @@ function createRow({
 export type Panel = {
   $ref: HTMLElement
   key: string
-  // isSelector: boolean
-  onHide?: Function
   select?: Function // 全是选项才有
   parent?: Panel
 }
@@ -116,12 +115,8 @@ export type Panel = {
 function createPanel(
   player: Player,
   panels: Panel[],
-  setting: Setting[], // 菜单选项 | 选择面板
+  setting: Setting[],
   options: {
-    /**
-     * 合入第一个options
-     */
-    isPatch?: boolean
     /**
      * 全是选项面板的用上一个面板的key
      */
@@ -133,12 +128,12 @@ function createPanel(
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
-  const { isPatch, key: parentKey, target, parent, isSelectorOptionsPanel, name } = options
+  const { key: parentKey, target, parent, isSelectorOptionsPanel, name } = options
 
   let panel = {} as Panel
   let key: string = parentKey! || 'root'
 
-  if (isPatch) {
+  if (panels[0] && key == 'root') {
     panel = panels[0]! // 将 options 挂在第一个面板
     key = panels[0]!.key
   } else {
@@ -249,94 +244,114 @@ function createPanel(
   return panel
 }
 
-export default function (player: Player, $el: HTMLElement, options: Setting[] = []) {
-  const $dom = $.create(`div.${setting}`)
+export default function (player: Player, $el: HTMLElement, options: UiConfig['settings'] = []) {
+  const $dom = $.create(`div.${setting}`, { 'aria-label': 'Setting' })
   let panels: Panel[] = []
   let $trigger: HTMLElement | null = null
   let isShow = false
-
-  const defaultSetting: Setting[] = [
-    {
+  let hasRendered = false
+  const defaultSettingMap = {
+    loop: {
       name: player.locales.get('Loop'),
       type: 'switcher',
       key: 'loop',
       icon: Icons.get('loop'),
       default: player.isLoop,
       onChange: (value: boolean) => player.setLoop(value)
-    },
-    ...options
-  ]
-
-  createPanel(player, panels, defaultSetting, { target: $dom })
-
-  panels[0]!.onHide = () => {
-    isShow = false
-    player.$root.classList.remove(settingShown)
+    }
   }
+
+  bootstrap(options.map((it) => (typeof it == 'string' ? defaultSettingMap[it] : it)) as Setting[])
 
   player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
-    createPanel(player, panels, Array.isArray(payload) ? payload : [payload], {
-      isPatch: true,
-      target: $dom
-    })
+    bootstrap(Array.isArray(payload) ? payload : [payload])
   })
 
-  player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
-    const $item = $dom.querySelector<HTMLSpanElement>(
-      `[data-key="${payload.key}"] span[role="label"]`
-    )
-    if ($item) $item.innerText = payload.name
-  })
+  function bootstrap(settings: Setting[]) {
+    if (settings.length < 1) return
 
-  type SelectSettingOptions = { key: string; value: boolean | number; shouldBeCallFn: Boolean }
-  player.on('selectsetting', ({ payload }: PlayerEvent<SelectSettingOptions>) => {
-    const { key, value, shouldBeCallFn = false } = payload
-    if (typeof value == 'number') {
-      for (let i = 0; i < panels.length; i++) {
-        const panel = panels[i]!
-        if (panel.key == key) {
-          panel.select!(value, shouldBeCallFn)
-          break
+    if (!hasRendered) {
+      hasRendered = true
+      $.render($dom, $el)
+      renderSettingMenu()
+
+      player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
+        const $item = $dom.querySelector<HTMLSpanElement>(
+          `[data-key="${payload.key}"] span[role="label"]`
+        )
+        if ($item) $item.innerText = payload.name
+      })
+
+      type SelectSettingOptions = {
+        key: string
+        value: boolean | number
+        shouldBeCallFn: Boolean
+      }
+      player.on('selectsetting', ({ payload }: PlayerEvent<SelectSettingOptions>) => {
+        const { key, value, shouldBeCallFn = true } = payload
+        if (typeof value == 'number') {
+          for (let i = 0; i < panels.length; i++) {
+            const panel = panels[i]!
+            if (panel.key == key) {
+              panel.select!(value, shouldBeCallFn)
+              break
+            }
+          }
+        } else {
+          $dom
+            .querySelector<HTMLSpanElement & { select: Function }>(
+              `[data-key="${key}"][data-selected]`
+            )
+            ?.select(shouldBeCallFn)
+        }
+      })
+
+      player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
+        panels[0]?.$ref.querySelector(`[data-key=${payload}]`)?.remove()
+        panels = panels.filter((p) =>
+          p.key === payload ? (p.$ref.remove(), (p = null as any), false) : true
+        )
+      })
+
+      function outClickListener(e: Event) {
+        if (
+          $trigger != e.target &&
+          <HTMLElement>e.target != $dom &&
+          !$dom.contains(<HTMLElement>e.target)
+        ) {
+          isShow = false
+          player.$root.classList.remove(settingShown)
+          panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
         }
       }
-    } else {
-      $dom
-        .querySelector<HTMLSpanElement & { select: Function }>(`[data-key="${key}"][data-selected]`)
-        ?.select(shouldBeCallFn)
-    }
-  })
 
-  player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
-    panels[0]!.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-    panels = panels.filter((p) =>
-      p.key === payload ? (p.$ref.remove(), (p = null as any), false) : true
-    )
-  })
-
-  player.on('settingvisibilitychange', ({ payload }: PlayerEvent) => {
-    $trigger = payload.target
-    isShow = player.$root.classList.toggle(settingShown)
-    if (isShow) {
-      panels[0]!.$ref.classList.toggle(activeCls)
-    } else {
-      panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+      document.addEventListener('click', outClickListener)
+      player.on('destroy', () => document.removeEventListener('click', outClickListener))
     }
-  })
 
-  function outClickListener(e: Event) {
-    if (
-      $trigger != e.target &&
-      <HTMLElement>e.target != $dom &&
-      !$dom.contains(<HTMLElement>e.target)
-    ) {
-      isShow = false
-      player.$root.classList.remove(settingShown)
-      panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
-    }
+    createPanel(player, panels, settings, { target: $dom })
   }
 
-  document.addEventListener('click', outClickListener)
-  player.on('destroy', () => document.removeEventListener('click', outClickListener))
+  function renderSettingMenu() {
+    const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)?.children[1]!
+    const settingButton = $.create(
+      'button',
+      {
+        class: `${icon} ${tooltip}`,
+        'aria-label': player.locales.get('Setting')
+      },
+      `${Icons.get('setting')}`
+    )
 
-  $.render($dom, $el)
+    parent!.insertBefore(settingButton, parent.children![parent.children.length - 2]!)
+    settingButton.addEventListener('click', (e) => {
+      $trigger = e.target as HTMLDivElement
+      isShow = player.$root.classList.toggle(settingShown)
+      if (isShow) {
+        panels[0]!.$ref.classList.toggle(activeCls)
+      } else {
+        panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+      }
+    })
+  }
 }

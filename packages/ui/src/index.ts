@@ -23,27 +23,25 @@ const apply = (player: Player, config: UiConfig) => {
     return
   }
 
-  const $root = $.create(`div.${root(config.theme)}`)
-  const $frag = document.createDocumentFragment() as unknown as HTMLDivElement
-
   Icons.setupIcons(player, config.icons)
+
+  const $root = $.create(`div.${root(config.theme)}`)
   startListening(player, config, $root)
-  if (!isMobile) registerHotKey(player)
 
-  renderError(player, $frag, config)
-  renderNotice(player, $frag)
-  renderLoading(player, $frag)
-  renderCoverButton(player, $frag)
-  renderMask(player, $frag, renderControllerBar(player, $frag, config))
+  renderError(player, $root, config)
+  renderNotice(player, $root)
+  renderLoading(player, $root)
+  renderCoverButton(player, $root)
+  renderMask(player, $root, renderControllerBar(player, $root, config))
 
-  renderSetting(player, $frag, config.settings)
-  renderMenubar(player, $frag, config.menu)
+  renderSetting(player, $root, config.settings)
+  renderMenubar(player, $root, config.menu)
 
   registerSpeedSetting(player, config.speed)
-  renderSubtitle(player, $frag, config.subtitle)
+  renderSubtitle(player, $root, config.subtitle)
 
-  $.render($frag, $root)
   $.render($root, player.$root)
+  if (!isMobile) registerHotKey(player)
 }
 
 const defaultConfig: UiConfig = {

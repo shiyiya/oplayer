@@ -16,11 +16,10 @@ import {
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  const [playLabel, pauseLabel, screenshotLabel, settingLabel, pipLabel, fullscreenLabel] = [
+  const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel] = [
     player.locales.get('Play'),
     player.locales.get('Pause'),
     player.locales.get('Screenshot'),
-    player.locales.get('Setting'),
     player.locales.get('Picture in Picture'),
     player.locales.get(player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen')
   ]
@@ -62,9 +61,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         ${!isIOS ? `<div class=${expand}></div>` : ''}
       </div>
 
-      <button class="${icon} ${tooltip}" aria-label="${settingLabel}">
-        ${Icons.get('setting')}
-      </button>
 
       ${
         config.pictureInPicture && player.isPipEnabled
@@ -159,10 +155,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       case screenshotLabel:
         screenShot(player)
         break
-      case settingLabel: {
-        player.emit('settingvisibilitychange', e)
-        break
-      }
       default:
         break
     }

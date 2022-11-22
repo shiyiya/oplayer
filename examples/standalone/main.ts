@@ -18,11 +18,11 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
+  MP4,
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
-  MP4,
   'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
   'https://cdn6.hnzycdn.com:65/20220712/xb2EScnz/1672kb/hls/index.m3u8',
   'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
@@ -50,13 +50,21 @@ const player = Player.make(document.getElementById('player')!, {
 })
   .use([
     ui({
+      // speed: [],
       autoFocus: true,
       screenshot: true,
+      settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
       subtitle: {
         color: 'hotpink',
         fontSize: isMobile ? 16 : 20,
-        source: []
+        source: [
+          {
+            name: 'Default',
+            default: true,
+            src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+          }
+        ]
       },
       thumbnails: {
         src:
@@ -113,11 +121,7 @@ const player = Player.make(document.getElementById('player')!, {
         <path d="M5.561 5.194h10.878a2.2 2.2 0 012.2 2.2v7.211a2.2 2.2 0 01-2.2 2.2H5.561a2.2 2.2 0 01-2.2-2.2V7.394a2.2 2.2 0 012.2-2.2z" fill="#fff"/>
         <path d="M6.967 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1zM15.033 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1z" fill="#333"/>
     </svg>`,
-        loadingIndicator: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width='9em' height='9em' style="opacity: 0.9">
-      <path d="M16.118 3.667h.382a3.667 3.667 0 013.667 3.667v7.333a3.667 3.667 0 01-3.667 3.667h-11a3.667 3.667 0 01-3.667-3.667V7.333A3.667 3.667 0 015.5 3.666h.382L4.95 2.053a1.1 1.1 0 011.906-1.1l1.567 2.714h5.156L15.146.953a1.101 1.101 0 011.906 1.1l-.934 1.614z" fill="#333"/>
-      <path d="M5.561 5.194h10.878a2.2 2.2 0 012.2 2.2v7.211a2.2 2.2 0 01-2.2 2.2H5.561a2.2 2.2 0 01-2.2-2.2V7.394a2.2 2.2 0 012.2-2.2z" fill="#fff"/>
-      <path d="M6.967 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1zM15.033 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1z" fill="#333"/>
-    </svg>`
+        loadingIndicator: `<img src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
     dash(),
@@ -126,7 +130,7 @@ const player = Player.make(document.getElementById('player')!, {
         hlsQualityControl: true,
         hlsQualitySwitch: 'immediate'
       }
-    })
+    }),
     // ad({
     //   autoplay: false,
     //   image:
@@ -144,11 +148,11 @@ const player = Player.make(document.getElementById('player')!, {
     //     })
     //   ]
     // })
-    // danmaku({
-    //   source: DANMAKU,
-    //   opacity: 0.8,
-    //   filter: (d: DanmakuItem) => d.text == '+1s'
-    // })
+    danmaku({
+      source: DANMAKU,
+      opacity: 0.8,
+      filter: (d: DanmakuItem) => d.text == '+1s'
+    })
   ])
   .create()
 
@@ -156,13 +160,14 @@ setTimeout(() => {
   player.changeQuality({ src })
 }, 3)
 
-player.emit('subtitlechange', [
-  {
-    name: 'Default',
-    default: true,
-    src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-  }
-])
+// 动态修改字幕
+// player.emit('subtitlechange', [
+//   {
+//     name: 'Default',
+//     default: true,
+//     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+//   }
+// ])
 
 const meta = () => html`
   <div>
