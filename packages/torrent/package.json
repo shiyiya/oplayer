@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/torrent",
-  "version": "1.0.56-beta.0",
+  "version": "1.0.56-beta.1",
   "description": "Torrent plugin for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "webtorrent": "^1.9.2"
+    "webtorrent": "^1.9.4"
   }
 }

@@ -37,16 +37,16 @@
     "@types/node": "^18.11.9",
     "@vitejs/plugin-react": "^2.2.0",
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
-    "concurrently": "^7.5.0",
+    "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
     "lint-staged": "^13.0.3",
     "nx": "latest",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.0",
     "rimraf": "^3.0.2",
     "terser": "^5.15.1",
     "tslib": "^2.4.1",
-    "typescript": "^4.8.4",
-    "vite": "^3.2.3",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4",
     "vite-plugin-banner": "^0.6.1"
   }
 }
