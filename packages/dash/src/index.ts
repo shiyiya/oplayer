@@ -129,7 +129,7 @@ const dashPlugin = ({
       dashInstance = importedDash.MediaPlayer().create()
       if (setting) dashInstance.updateSettings(setting)
       dashInstance.initialize(player.$video, source.src, player.$video.autoplay)
-      if (!player.evil()) generateSetting(player, dashInstance, pluginOptions)
+      if (!player.isNativeUI) generateSetting(player, dashInstance, pluginOptions)
 
       dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event: any) => {
         const err = event.event || event.error

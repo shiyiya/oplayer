@@ -57,7 +57,7 @@ const styles = $.css(
 )
 
 const render = (player: Player, el: HTMLElement) => {
-  const needPause = !player.evil() && isMobile
+  const needPause = !player.isNativeUI && isMobile
   const $dom = $.create(
     `div.${styles}`,
     {},
@@ -67,7 +67,7 @@ const render = (player: Player, el: HTMLElement) => {
     </button>`
   )
 
-  if (player.evil()) {
+  if (player.isNativeUI) {
     $dom.style.display = 'block'
     $dom.addEventListener('click', () => (player.play(), $dom.remove()), { once: true })
   } else {

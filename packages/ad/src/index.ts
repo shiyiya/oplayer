@@ -121,7 +121,7 @@ export default ({
           loop: true,
           source: { src: video }
         })
-          .use(plugins || [])
+          .use(plugins || ([] as any))
           .create()
 
         $volume!.addEventListener('click', () => {

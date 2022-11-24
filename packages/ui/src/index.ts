@@ -18,7 +18,7 @@ import type { Player, PlayerPlugin } from '@oplayer/core'
 import type { UiConfig } from './types'
 
 const apply = (player: Player, config: UiConfig) => {
-  if (player.evil()) {
+  if (player.isNativeUI) {
     renderCoverButton(player, player.$root)
     return
   }

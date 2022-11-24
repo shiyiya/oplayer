@@ -24,7 +24,7 @@ export type PlayerOptions = {
     poster?: string //视频封面地址
     src: string //视频播放地址
   }
-  autoplay?: boolean // 是否自动播放，关于 autoplay 属性设置问题请参考
+  autoplay?: boolean // 是否自动播放，关于 autoplay 属性设置问题请参考 https://developer.chrome.com/blog/autoplay/
   muted?: boolean //是否静音
   loop?: boolean // 是否循环播放
   volume?: number // 初始化设置视频音量，取值 0 - 1
@@ -33,6 +33,6 @@ export type PlayerOptions = {
   playsinline?: boolean // ??
   videoAttr?: Record<string, boolean | string> //其他属性 附加到 video 标签上
   lang?: Lang // 国际化， 默认用户浏览器首选语言
-  evil?: () => boolean // 被浏览器拦截？
+  isNativeUI?: () => boolean // 被浏览器拦截？
 }
 ```

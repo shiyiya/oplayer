@@ -158,7 +158,7 @@ const hlsPlugin = ({
 
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
-      if (!player.evil()) generateSetting(player, hlsInstance, pluginOptions)
+      if (!player.isNativeUI) generateSetting(player, hlsInstance, pluginOptions)
 
       hlsInstance.on(importedHls.Events.ERROR, function (_, data) {
         const { type, details, fatal } = data

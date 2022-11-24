@@ -20,7 +20,7 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
   const onRefChange = useCallback((node: HTMLDivElement) => {
     if (node !== null) {
       const instance = Player.make(node, rest)
-        .use(plugins || [])
+        .use(plugins || ([] as any))
         .create()
 
       player.current = instance

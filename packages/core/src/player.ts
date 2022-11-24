@@ -1,24 +1,28 @@
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import EventEmitter from './event'
 import I18n from './i18n'
+import $ from './utils/dom'
+import { isIOS, isQQBrowser } from './utils/platform'
+
 import type {
   PlayerEvent,
   PlayerEventName,
   PlayerListener,
   PlayerOptions,
   PlayerPlugin,
+  ReturnTypePlugins,
   Source
 } from './types'
-import { isIOS, isQQBrowser } from './utils/platform'
-import $ from './utils/dom'
 
-export class Player {
+export class Player<Plugins extends PlayerPlugin[] = any> {
   readonly container: HTMLElement
   readonly options: Required<PlayerOptions>
 
-  readonly eventEmitter = new EventEmitter()
   readonly locales: I18n
-  readonly plugins: Set<PlayerPlugin> = new Set()
+  readonly eventEmitter = new EventEmitter()
+
+  readonly pluginsFactory: PlayerPlugin[]
+  readonly plugins: ReturnTypePlugins<Plugins> // TODO: type not work
 
   $root: HTMLElement
   $video: HTMLVideoElement
@@ -26,8 +30,6 @@ export class Player {
 
   hasError: boolean = false
   isCustomLoader: boolean = false
-
-  evil: () => boolean
 
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   _playPromise: Promise<void> | undefined
@@ -47,61 +49,29 @@ export class Player {
         source: {},
         videoAttr: {},
         isLive: false,
-        evil: () => isQQBrowser // QQ浏览器会劫持 video
+        isNativeUI: () => isQQBrowser // 部分浏览器会劫持 video
       },
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
-    this.evil = this.options.evil // QQ浏览器会劫持 video
     this.locales = new I18n(this.options.lang)
   }
 
-  static make(el: HTMLElement, options: PlayerOptions | string): Player {
+  static make(el: HTMLElement, options: PlayerOptions | string) {
     return new Player(el, options)
   }
 
-  readonly use = (plugins: PlayerPlugin | PlayerPlugin[]) => {
-    ;[plugins].flat().forEach((plugin) => {
-      this.plugins.add(plugin)
+  readonly use = (plugins: PlayerPlugin[]) => {
+    plugins.forEach((plugin) => {
+      this.pluginsFactory.push(plugin)
     })
     return this
-  }
-
-  readonly on = (
-    name: PlayerEventName | PlayerListener,
-    listener?: PlayerListener,
-    options = { once: false }
-  ) => {
-    if (typeof name === 'string') {
-      if (options.once) {
-        this.eventEmitter.once(name, listener!)
-      } else {
-        this.eventEmitter.on(name, listener!)
-      }
-    } else if (Array.isArray(name)) {
-      this.eventEmitter.onAny(name as string[], listener!)
-    } else if (typeof name === 'function') {
-      this.eventEmitter.on('*', name!)
-    }
-    return this
-  }
-
-  readonly off = (name: PlayerEventName, listener: PlayerListener) => {
-    this.eventEmitter.off(name as string, listener)
-  }
-
-  readonly offAny = (name: PlayerEventName) => {
-    this.eventEmitter.offAny(name as string)
-  }
-
-  readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
-    this.eventEmitter.emit(name as any, payload)
   }
 
   readonly create = () => {
     this.render()
     this.initEvent()
-    this._applyPlugins()
+    this.applyPlugins()
     if (this.options.source.src) this.load(this.options.source)
     return this
   }
@@ -191,7 +161,7 @@ export class Player {
   }
 
   load = async (source: Source) => {
-    for await (const plugin of this.plugins) {
+    for await (const plugin of this.pluginsFactory) {
       if (plugin.load) {
         const match = await plugin.load(this, source, { loader: this.isCustomLoader })
         if (match && !this.isCustomLoader) this.isCustomLoader = true
@@ -202,12 +172,50 @@ export class Player {
     }
   }
 
-  _applyPlugins = () => {
-    this.plugins.forEach((plugin) => {
-      if (plugin.apply) {
-        plugin.apply(this)
+  applyPlugins = () => {
+    this.pluginsFactory.forEach((factory) => {
+      if (factory.apply) {
+        const returnValues = factory.apply(this)
+        if (returnValues)
+          for (const key in returnValues) {
+            if (Object.prototype.hasOwnProperty.call(returnValues, key)) {
+              //@ts-ignore
+              this.plugins[key] = returnValues[key]
+            }
+          }
       }
     })
+  }
+
+  readonly on = (
+    name: PlayerEventName | PlayerListener,
+    listener?: PlayerListener,
+    options = { once: false }
+  ) => {
+    if (typeof name === 'string') {
+      if (options.once) {
+        this.eventEmitter.once(name, listener!)
+      } else {
+        this.eventEmitter.on(name, listener!)
+      }
+    } else if (Array.isArray(name)) {
+      this.eventEmitter.onAny(name as string[], listener!)
+    } else if (typeof name === 'function') {
+      this.eventEmitter.on('*', name!)
+    }
+    return this
+  }
+
+  readonly off = (name: PlayerEventName, listener: PlayerListener) => {
+    this.eventEmitter.off(name as string, listener)
+  }
+
+  readonly offAny = (name: PlayerEventName) => {
+    this.eventEmitter.offAny(name as string)
+  }
+
+  readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
+    this.eventEmitter.emit(name as any, payload)
   }
 
   setPoster(poster: string) {
@@ -360,11 +368,14 @@ export class Player {
     this.emit('destroy')
     this.pause()
     this.isFullScreen && this.exitFullscreen()
-    this.plugins.clear()
     this.$video.src = ''
     this.$video.remove()
     this.container.remove()
     this.eventEmitter.offAll()
+  }
+
+  get isNativeUI() {
+    return this.options.isNativeUI()
   }
 
   get state() {

@@ -10,24 +10,24 @@ export type Source = {
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
 
 export type PlayerOptions = {
+  source?: Source
   autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
   muted?: boolean
   loop?: boolean
   volume?: number
-  preload?: 'auto' | 'metadata' | 'none'
   playbackRate?: number
   playsinline?: boolean
-  source?: Source
-  videoAttr?: Record<string, boolean | string>
+  preload?: 'auto' | 'metadata' | 'none'
   lang?: Lang
-  evil?: () => boolean
   isLive?: boolean
+  videoAttr?: Record<string, boolean | string>
+  isNativeUI?: () => boolean
 }
 
 export type PlayerPlugin = {
   name: string
   version?: string
-  apply?: (player: Player) => void
+  apply: (player: Player) => Record<string, any> | void
   load?: (player: Player, src: Source, options: { loader: boolean }) => boolean | Promise<boolean>
 }
 
@@ -40,4 +40,55 @@ export type PlayerEvent<T = any> = {
   payload: T
 }
 
-export type PlayerListener = (enevt: PlayerEvent) => void
+export type PlayerListener = (event: PlayerEvent) => void
+
+type FirstElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly [
+  infer First,
+  ...any
+]
+  ? First
+  : unknown
+
+type ExcludeFirstElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly [
+  unknown,
+  ...infer Rest
+]
+  ? Rest
+  : unknown
+
+export type ReturnTypePlugins<
+  P extends readonly PlayerPlugin[],
+  Result extends Record<string, any> = {}
+> = FirstElement<P> extends PlayerPlugin
+  ? ExcludeFirstElement<P> extends PlayerPlugin[]
+    ? ReturnTypePlugins<ExcludeFirstElement<P>, Result & ReturnType<FirstElement<P>['apply']>>
+    : Result & ReturnType<FirstElement<P>['apply']>
+  : Result
+
+// const p: PlayerPlugin = {
+//   name: '11',
+//   apply: () => ({
+//     s: () => {
+//       console.log('hi')
+//     }
+//   })
+// }
+
+// const ps = [p] as const
+
+// let a: ReturnTypePlugins<typeof ps> = 1 as any
+
+// a['c']
+
+// let c: ReturnTypePlugins<
+//   [
+//     {
+//       name: '11'
+//       apply: () => {
+//         s: () => 1
+//       }
+//     }
+//   ]
+// > = 1 as any
+
+// c
