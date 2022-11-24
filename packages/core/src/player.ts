@@ -21,8 +21,8 @@ export class Player<Plugins extends PlayerPlugin[] = any> {
   readonly locales: I18n
   readonly eventEmitter = new EventEmitter()
 
-  readonly pluginsFactory: PlayerPlugin[]
-  readonly plugins: ReturnTypePlugins<Plugins> // TODO: type not work
+  readonly pluginsFactory: PlayerPlugin[] = []
+  readonly plugins: ReturnTypePlugins<Plugins> = {} as any // TODO: type not work
 
   $root: HTMLElement
   $video: HTMLVideoElement
@@ -176,13 +176,10 @@ export class Player<Plugins extends PlayerPlugin[] = any> {
     this.pluginsFactory.forEach((factory) => {
       if (factory.apply) {
         const returnValues = factory.apply(this)
-        if (returnValues)
-          for (const key in returnValues) {
-            if (Object.prototype.hasOwnProperty.call(returnValues, key)) {
-              //@ts-ignore
-              this.plugins[key] = returnValues[key]
-            }
-          }
+        if (returnValues) {
+          //@ts-ignore
+          this.plugins[factory.name] = Object.assign({}, this.plugins[factory.name], returnValues)
+        }
       }
     })
   }

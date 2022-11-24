@@ -76,10 +76,10 @@ export type ReturnTypePlugins<
 
 // const ps = [p] as const
 
+// not work 😭
 // let a: ReturnTypePlugins<typeof ps> = 1 as any
 
-// a['c']
-
+// work 🤔️
 // let c: ReturnTypePlugins<
 //   [
 //     {
@@ -90,5 +90,3 @@ export type ReturnTypePlugins<
 //     }
 //   ]
 // > = 1 as any
-
-// c

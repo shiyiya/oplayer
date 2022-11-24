@@ -131,6 +131,14 @@ const player = Player.make(document.getElementById('player')!, {
         hlsQualitySwitch: 'immediate'
       }
     }),
+    {
+      name: 'custom',
+      apply: () => ({
+        say: () => {
+          console.log('custom plugin')
+        }
+      })
+    }
     // ad({
     //   autoplay: false,
     //   image:
@@ -148,16 +156,17 @@ const player = Player.make(document.getElementById('player')!, {
     //     })
     //   ]
     // })
-    danmaku({
-      source: DANMAKU,
-      opacity: 0.8,
-      filter: (d: DanmakuItem) => d.text == '+1s'
-    })
+    // danmaku({
+    //   source: DANMAKU,
+    //   opacity: 0.8,
+    //   filter: (d: DanmakuItem) => d.text == '+1s'
+    // })
   ])
   .create()
 
 setTimeout(() => {
   player.changeQuality({ src })
+  player.plugins.custom.say()
 }, 3)
 
 // 动态修改字幕
