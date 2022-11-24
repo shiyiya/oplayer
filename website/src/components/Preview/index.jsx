@@ -2,7 +2,7 @@ import React from 'react'
 import Translate from '@docusaurus/Translate'
 import danmaku from '../../../../packages/danmaku/dist/index.es'
 import ui from '../../../../packages/ui/dist/index.es'
-import ReactPlayer, { isMobile } from '../../../../packages/react/dist/index.es'
+import ReactPlayer, { isMobile } from '../Player'
 import styles from './styles.module.css'
 
 const plugins = [
