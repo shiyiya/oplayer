@@ -61,7 +61,7 @@ export type Options = {
   enable?: boolean //default true
 }
 
-export type _Options = Omit<Required<Options>, 'opacity' | 'filter'> & {
+export type _Options = Omit<Required<Options>, 'opacity' | 'filter' | 'enable'> & {
   opacity?: number
   filter?: (danmaku: DanmakuItem) => boolean
 }
