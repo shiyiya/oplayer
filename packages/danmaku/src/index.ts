@@ -2,7 +2,7 @@ import { isIOS, Player, PlayerPlugin } from '@oplayer/core'
 import Danmaku from './danmaku'
 import type { Options } from './types'
 // @ts-ignore
-import subtitleSvg from './danmaku.svg?raw'
+import danmakuSvg from './danmaku.svg?raw'
 
 export * from './types'
 
@@ -12,11 +12,10 @@ export default (option: Options): PlayerPlugin => ({
   apply: (player: Player) => {
     if (player.isNativeUI) return
 
-    let enable = option.enable ?? true // default true
-
+    let isInit = false
     let danmaku: Danmaku | undefined
     let isDanmakuShowing = false
-    let isInit = false
+    let enable = option.enable ?? true // default true
 
     const emitSetting = (enable: boolean) => {
       player.emit('addsetting', {
@@ -24,7 +23,7 @@ export default (option: Options): PlayerPlugin => ({
         type: 'selector',
         default: true,
         key: 'danmaku',
-        icon: subtitleSvg,
+        icon: danmakuSvg,
         children: [
           {
             name: player.locales.get('Display'),
@@ -88,9 +87,15 @@ export default (option: Options): PlayerPlugin => ({
     function bootstrap() {
       danmaku = new Danmaku(player, option)
       if (player.isPlaying) {
-        setTimeout(() => {
-          danmaku?.start()
-        })
+        player.on(
+          'loadeddanmaku',
+          () => {
+            setTimeout(() => {
+              danmaku?.start()
+            })
+          },
+          { once: true }
+        )
       }
 
       if (!isInit) {
@@ -117,18 +122,19 @@ export default (option: Options): PlayerPlugin => ({
         player.on('danmakusourcechange', ({ payload }) => {
           player.emit('removesetting', 'danmaku')
           emitSetting(enable)
-          danmaku = new Danmaku(player, { ...option, ...payload, source: payload.source })
+          option = { ...option, ...payload }
+          danmaku = new Danmaku(player, option)
         })
 
         player.on('videosourcechange', function () {
-          danmaku?.destroy()
-          danmaku = null as any
           player.emit('removesetting', 'danmaku')
+          danmaku?.destroy()
+          danmaku = undefined
         })
       }
     }
 
-    emitSetting(enable ?? true)
+    emitSetting(enable)
 
     if (enable) bootstrap()
 
