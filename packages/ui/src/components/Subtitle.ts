@@ -119,7 +119,7 @@ class Subtitle {
     const { player, $dom, $track, $iosTrack } = this
     $track?.removeEventListener('cuechange', this.update)
     $dom.innerHTML = ''
-    player.emit('removesetting', SETTING_KEY)
+    player.plugins.ui?.setting.unregister(SETTING_KEY)
     if ($track?.src) URL.revokeObjectURL($track.src)
     if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
     $track?.remove()
@@ -200,7 +200,7 @@ class Subtitle {
     const source = this.options.source
 
     if (source.length) {
-      this.player.emit('addsetting', <Setting>{
+      this.player.plugins.ui?.setting.register(<Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
         icon: Icons.get('subtitle'),

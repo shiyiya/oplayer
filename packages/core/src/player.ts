@@ -10,11 +10,10 @@ import type {
   PlayerListener,
   PlayerOptions,
   PlayerPlugin,
-  ReturnTypePlugins,
   Source
 } from './types'
 
-export class Player<Plugins extends PlayerPlugin[] = any> {
+export class Player {
   readonly container: HTMLElement
   readonly options: Required<PlayerOptions>
 
@@ -22,7 +21,7 @@ export class Player<Plugins extends PlayerPlugin[] = any> {
   readonly eventEmitter = new EventEmitter()
 
   readonly pluginsFactory: PlayerPlugin[] = []
-  readonly plugins: ReturnTypePlugins<Plugins> = {} as any // TODO: type not work
+  readonly plugins: /* ReturnTypePlugins<Plugins> &*/ any = {} as any // TODO: type not work
 
   $root: HTMLElement
   $video: HTMLVideoElement

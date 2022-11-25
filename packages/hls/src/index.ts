@@ -84,8 +84,8 @@ const generateSetting = (player: Player, hlsInstance: Hls, options: Options = {}
         return settingOptions.push({ name, default: false, value: i })
       })
 
-    player.emit('removesetting', PLUGIN_NAME)
-    player.emit('addsetting', {
+    player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+    player.plugins.ui?.setting.register({
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -151,7 +151,7 @@ const hlsPlugin = ({
       const isMatch = matcher(player.$video, source, pluginOptions.forceHLS)
 
       if (options.loader || !isMatch) {
-        player.emit('removesetting', PLUGIN_NAME)
+        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
         hlsInstance?.destroy()
         inActive?.()
         return false
