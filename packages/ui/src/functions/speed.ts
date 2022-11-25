@@ -4,9 +4,13 @@ import { Icons } from './icons'
 
 const KEY = 'speed'
 
-export default function registerSpeedSetting(player: Player, speeds: UiConfig['speed']) {
+export default function registerSpeedSetting(
+  player: Player,
+  speeds: UiConfig['speed'],
+  setting: any
+) {
   if (speeds?.length) {
-    player.emit('addsetting', <Setting>{
+    setting.register(<Setting>{
       key: KEY,
       type: 'selector',
       name: player.locales.get('Speed'),
@@ -22,9 +26,9 @@ export default function registerSpeedSetting(player: Player, speeds: UiConfig['s
     player.on('ratechange', () => {
       const rate = player.playbackRate
       const i = speeds.findIndex((it) => +it == rate)
-      player.emit('selectsetting', { key: KEY, value: i })
+      setting.select(KEY, i)
       if (i == -1) {
-        player.emit('updatesettinglabel', { key: KEY, name: rate + 'x' })
+        setting.updateLabel(KEY, rate + 'x')
       }
     })
   }

@@ -38,29 +38,13 @@ const apply = (player: Player, config: UiConfig) => {
   const setting = renderSetting(player, $root, config.settings)
   const menu = renderMenubar(player, $root, config.menu)
 
-  registerSpeedSetting(player, config.speed)
+  registerSpeedSetting(player, config.speed, setting)
   const subtitle = renderSubtitle(player, $root, config.subtitle)
 
   $.render($root, player.$root)
   if (!isMobile) registerHotKey(player)
 
-  console.log({
-    error,
-    notice,
-    setting,
-    menu,
-    subtitle,
-    ...exp
-  })
-
-  return {
-    error,
-    notice,
-    setting,
-    menu,
-    subtitle,
-    ...exp
-  }
+  return { error, notice, setting, menu, subtitle, ...exp }
 }
 
 const defaultConfig: UiConfig = {

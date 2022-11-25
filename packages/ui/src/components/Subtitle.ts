@@ -96,7 +96,7 @@ class Subtitle {
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
   }
 
-  onchange(payload: SubtitleSource[]) {
+  updateSource(payload: SubtitleSource[]) {
     this.destroy()
     this.options.source = payload
     this.processDefault()
@@ -124,6 +124,8 @@ class Subtitle {
     if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
     $track?.remove()
     $iosTrack?.remove()
+    this.$track = undefined
+    this.$iosTrack = undefined
   }
 
   update = (_: Event) => {

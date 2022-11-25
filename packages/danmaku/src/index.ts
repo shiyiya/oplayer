@@ -119,13 +119,6 @@ export default (option: Options): PlayerPlugin => ({
           })
         })
 
-        player.on('danmakusourcechange', ({ payload }) => {
-          player.plugins.ui?.setting.unregister('danmaku')
-          emitSetting(enable)
-          option = { ...option, ...payload }
-          danmaku = new Danmaku(player, option)
-        })
-
         player.on('videosourcechange', function () {
           player.plugins.ui?.setting.unregister('danmaku')
           danmaku?.destroy()
@@ -138,6 +131,16 @@ export default (option: Options): PlayerPlugin => ({
 
     if (enable) bootstrap()
 
-    return () => danmaku
+    return {
+      value() {
+        return danmaku
+      },
+      change(payload: Options) {
+        player.plugins.ui?.setting.unregister('danmaku')
+        emitSetting(enable)
+        option = { ...option, ...payload }
+        danmaku = new Danmaku(player, option)
+      }
+    }
   }
 })

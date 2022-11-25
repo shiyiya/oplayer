@@ -174,16 +174,14 @@ const player = Player.make(document.getElementById('player')!, {
 setTimeout(() => {
   player.changeQuality({ src })
   player.plugins.custom.say()
-}, 3)
-
-// 动态修改字幕
-// player.plugins.ui.subtitle.change([
-//   {
-//     name: 'Default',
-//     default: true,
-//     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-//   }
-// ])
+  player.plugins.ui.subtitle.updateSource([
+    {
+      name: 'updated',
+      default: true,
+      src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+    }
+  ])
+})
 
 console.log(player.plugins)
 
@@ -258,15 +256,15 @@ render(meta(), document.getElementById('meta')!)
 
 window.p = player
 
-console.table({
-  UA: globalThis.navigator?.userAgent,
-  isMobile,
-  isIOS,
-  isiPad,
-  isiPhone,
-  fullscreenEnabled: Boolean(document.fullscreenEnabled),
-  webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
-  mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
-  msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
-  video: Boolean(player.$video.webkitEnterFullscreen)
-})
+// console.table({
+//   UA: globalThis.navigator?.userAgent,
+//   isMobile,
+//   isIOS,
+//   isiPad,
+//   isiPhone,
+//   fullscreenEnabled: Boolean(document.fullscreenEnabled),
+//   webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
+//   mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
+//   msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
+//   video: Boolean(player.$video.webkitEnterFullscreen)
+// })
