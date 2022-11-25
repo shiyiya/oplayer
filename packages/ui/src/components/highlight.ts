@@ -53,18 +53,24 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     $.render($dom, container)
   }
 
-  player.on('videoinitialized', () => {
-    if (active) createHighlights(highlights, player.duration)
-  })
+  function change(highlights: Highlight[]) {
+    active = true
+    $highlights.forEach((it) => it.remove())
+    createHighlights(highlights, player.duration)
+  }
+
+  player.on(
+    'videoinitialized',
+    () => {
+      if (active) createHighlights(highlights, player.duration)
+    },
+    { once: true }
+  )
 
   player.on('videosourcechange', () => {
     active = false
     $highlights.forEach((it) => it.remove())
   })
 
-  player.on('highlightchange', () => {
-    active = true
-    $highlights.forEach((it) => it.remove())
-    createHighlights(highlights, player.duration)
-  })
+  return { change }
 }

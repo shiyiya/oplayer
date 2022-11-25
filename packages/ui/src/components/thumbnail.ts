@@ -42,9 +42,10 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     isActive = false
   })
 
-  player.on('thumbnailssourcechange', ({ payload }) => {
-    src = payload
-  })
+  function change(_src: string) {
+    src = _src
+    $dom.style.backgroundImage = `url(${src})`
+  }
 
   return {
     init,
@@ -52,6 +53,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
       $dom.style.left = (rate < minRate ? minRate : rate > maxRate ? maxRate : rate) * 100 + '%'
       const index = ~~((rate * 100) / chunk) * options.number * chunk
       $dom.style.backgroundPositionX = `${-index}%`
-    }
+    },
+    change
   }
 }

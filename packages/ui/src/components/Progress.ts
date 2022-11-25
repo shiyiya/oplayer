@@ -30,11 +30,15 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   </div>`
   )
   const firstElement = $dom.firstElementChild! as HTMLDivElement
-  const { init: initThumbnail, update: thumbnailUpdater } = config.thumbnails?.isVTT
+  const {
+    init: initThumbnail,
+    update: thumbnailUpdater,
+    change
+  } = config.thumbnails?.isVTT
     ? renderVTTThumbnail(player, firstElement, config.thumbnails)
     : renderThumbnail(player, firstElement, config.thumbnails)
 
-  renderHighlight(player, firstElement, config.highlight)
+  const highlight = renderHighlight(player, firstElement, config.highlight)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
@@ -138,6 +142,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   })
 
   $.render($dom, el)
+
+  return {
+    highlight,
+    thumbnails: {
+      change
+    }
+  }
 }
 
 export default render

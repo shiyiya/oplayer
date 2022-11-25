@@ -21,7 +21,8 @@ const CTRL_HIDE_DELAY = 1500
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.create(`div.${controllerBar}`)
-  if (!player.options.isLive) renderProgress(player, $dom, config)
+  let exp = {}
+  if (!player.options.isLive) exp = renderProgress(player, $dom, config)
   renderControllerBottom(player, $dom, config)
   $.render($dom, el)
 
@@ -72,11 +73,14 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     player.$root.addEventListener('mouseleave', hideCtrl)
   }
 
-  return () => {
-    if (hasClass(player.$root, controllerHidden)) {
-      showCtrl()
-    } else {
-      hideCtrl()
+  return {
+    exp,
+    toggle() {
+      if (hasClass(player.$root, controllerHidden)) {
+        showCtrl()
+      } else {
+        hideCtrl()
+      }
     }
   }
 }

@@ -177,13 +177,15 @@ setTimeout(() => {
 }, 3)
 
 // 动态修改字幕
-// player.emit('subtitlechange', [
+// player.plugins.ui.subtitle.change([
 //   {
 //     name: 'Default',
 //     default: true,
 //     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
 //   }
 // ])
+
+console.log(player.plugins)
 
 const meta = () => html`
   <div>

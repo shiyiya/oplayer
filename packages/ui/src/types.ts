@@ -120,3 +120,10 @@ export type UiConfig = {
 
   airplay?: boolean
 }
+
+export type ErrorPayload =
+  | Event
+  | {
+      message: string
+      code?: number
+    }
