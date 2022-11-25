@@ -7,14 +7,18 @@ import subtitleSvg from './danmaku.svg?raw'
 export * from './types'
 
 export default (option: Options): PlayerPlugin => ({
+  key: 'danmaku',
   name: 'oplayer-plugin-danmaku',
   apply: (player: Player) => {
     if (player.isNativeUI) return
 
-    let danmaku: Danmaku = new Danmaku(player, option)
-    let isDanmakuShowing = false
+    let enable = option.enable ?? true // default true
 
-    const emitSetting = () => {
+    let danmaku: Danmaku | undefined
+    let isDanmakuShowing = false
+    let isInit = false
+
+    const emitSetting = (enable: boolean) => {
       player.emit('addsetting', {
         name: player.locales.get('Danmaku'),
         type: 'selector',
@@ -25,11 +29,16 @@ export default (option: Options): PlayerPlugin => ({
           {
             name: player.locales.get('Display'),
             type: 'switcher',
-            default: true,
+            default: enable,
             key: 'danmaku-switcher',
             onChange: (value: boolean) => {
-              if (value) danmaku?.show()
-              else danmaku?.hide()
+              enable = value
+              if (value) {
+                danmaku?.show()
+                if (!danmaku) bootstrap()
+              } else {
+                danmaku?.hide()
+              }
             }
           },
           {
@@ -37,7 +46,7 @@ export default (option: Options): PlayerPlugin => ({
             type: 'selector',
             key: 'danmaku-font',
             onChange: ({ value }: any) => {
-              danmaku.setSize(value)
+              danmaku?.setSize(value)
             },
             children: [0.5, 0.75, 1, 1.25].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
@@ -51,12 +60,12 @@ export default (option: Options): PlayerPlugin => ({
             type: 'selector',
             key: 'danmaku-opacity',
             onChange: ({ value }: any) => {
-              danmaku.setOpacity(value)
+              danmaku?.setOpacity(value)
             },
             children: [0.3, 0.5, 0.8, 1].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
               value: it,
-              default: it == danmaku.options.opacity
+              default: it == danmaku?.options?.opacity
             }))
           },
           {
@@ -64,7 +73,7 @@ export default (option: Options): PlayerPlugin => ({
             type: 'selector',
             key: 'danmaku-area',
             onChange: ({ value }: any) => {
-              danmaku.setMargin([undefined, 1 - value])
+              danmaku?.setMargin([undefined, 1 - value])
             },
             children: [0.25, 0.5, 0.8, 1].map((it) => ({
               name: player.locales.get(`${it * 100}%`),
@@ -76,36 +85,53 @@ export default (option: Options): PlayerPlugin => ({
       })
     }
 
-    emitSetting()
-    player.on(['play', 'playing'], () => danmaku?.start())
-    player.on(['pause', 'waiting'], () => danmaku?.stop())
-    player.on('seeking', () => danmaku?.reset())
-    player.on('destroy', () => danmaku?.destroy())
-    player.on('fullscreenchange', ({ payload }) => {
-      if (payload.isWeb) return danmaku?.reset()
-      setTimeout(() => {
-        if (isIOS) {
-          if (player.isFullScreen) {
-            danmaku?.hide()
-          } else {
-            if (isDanmakuShowing) danmaku?.show()
-          }
-        } else {
-          danmaku?.reset()
-        }
-      })
-    })
+    function bootstrap() {
+      danmaku = new Danmaku(player, option)
+      if (player.isPlaying) {
+        setTimeout(() => {
+          danmaku?.start()
+        })
+      }
 
-    player.on('danmakusourcechange', ({ payload }) => {
-      player.emit('removesetting', 'danmaku')
-      emitSetting()
-      danmaku = new Danmaku(player, { ...option, ...payload, source: payload.source })
-    })
+      if (!isInit) {
+        isInit = true
+        player.on(['play', 'playing'], () => danmaku?.start())
+        player.on(['pause', 'waiting'], () => danmaku?.stop())
+        player.on('seeking', () => danmaku?.reset())
+        player.on('destroy', () => danmaku?.destroy())
+        player.on('fullscreenchange', ({ payload }) => {
+          if (payload.isWeb) return danmaku?.reset()
+          setTimeout(() => {
+            if (isIOS) {
+              if (player.isFullScreen) {
+                danmaku?.hide()
+              } else {
+                if (isDanmakuShowing) danmaku?.show()
+              }
+            } else {
+              danmaku?.reset()
+            }
+          })
+        })
 
-    player.on('videosourcechange', function () {
-      danmaku?.destroy()
-      danmaku = null as any
-      player.emit('removesetting', 'danmaku')
-    })
+        player.on('danmakusourcechange', ({ payload }) => {
+          player.emit('removesetting', 'danmaku')
+          emitSetting(enable)
+          danmaku = new Danmaku(player, { ...option, ...payload, source: payload.source })
+        })
+
+        player.on('videosourcechange', function () {
+          danmaku?.destroy()
+          danmaku = null as any
+          player.emit('removesetting', 'danmaku')
+        })
+      }
+    }
+
+    emitSetting(enable ?? true)
+
+    if (enable) bootstrap()
+
+    return () => danmaku
   }
 })

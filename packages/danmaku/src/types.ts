@@ -58,6 +58,7 @@ export type Options = {
   fontSize?: number
   margin?: [number, number]
   filter?: (danmaku: DanmakuItem) => boolean
+  enable?: boolean //default true
 }
 
 export type _Options = Omit<Required<Options>, 'opacity' | 'filter'> & {

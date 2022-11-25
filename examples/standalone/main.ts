@@ -128,7 +128,13 @@ const player = Player.make(document.getElementById('player')!, {
     hls({
       options: {
         hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate'
+        hlsQualitySwitch: 'immediate',
+        onActive(i) {
+          console.log(i)
+          return () => {
+            console.log('hls: bye')
+          }
+        }
       }
     }),
     {
@@ -138,7 +144,7 @@ const player = Player.make(document.getElementById('player')!, {
           console.log('custom plugin')
         }
       })
-    }
+    },
     // ad({
     //   autoplay: false,
     //   image:
@@ -156,11 +162,12 @@ const player = Player.make(document.getElementById('player')!, {
     //     })
     //   ]
     // })
-    // danmaku({
-    //   source: DANMAKU,
-    //   opacity: 0.8,
-    //   filter: (d: DanmakuItem) => d.text == '+1s'
-    // })
+    danmaku({
+      enable: false,
+      source: DANMAKU,
+      opacity: 0.8,
+      filter: (d: DanmakuItem) => d.text == '+1s'
+    })
   ])
   .create()
 

@@ -37,7 +37,11 @@ const plugins = [
       }
     ]
   }),
-  danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml', fontSize: isMobile ? 0.6 : 0.8 })
+  danmaku({
+    source: 'https://oplayer.vercel.app/danmaku.xml',
+    fontSize: isMobile ? 0.6 : 0.8,
+    enable: false
+  })
 ]
 
 const Preview = () => {

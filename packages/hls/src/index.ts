@@ -44,6 +44,8 @@ type Options = {
    * @default false
    */
   showWarning?: boolean
+
+  onActive?: (instance: Hls) => void | Function
 }
 
 const defaultMatcher: hlsPluginOptions['matcher'] = (video, source, force) =>
@@ -123,6 +125,7 @@ const hlsPlugin = ({
   options: _pluginOptions
 }: hlsPluginOptions = {}): PlayerPlugin => {
   let hlsInstance: Hls
+  let inActive: Function | void
 
   const pluginOptions: Options = {
     light: true,
@@ -143,12 +146,14 @@ const hlsPlugin = ({
 
   return {
     name: PLUGIN_NAME,
+    key: 'hls',
     load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source, pluginOptions.forceHLS)
 
       if (options.loader || !isMatch) {
-        hlsInstance?.destroy()
         player.emit('removesetting', PLUGIN_NAME)
+        hlsInstance?.destroy()
+        inActive?.()
         return false
       }
 
@@ -173,6 +178,8 @@ const hlsPlugin = ({
         }
       })
 
+      inActive = pluginOptions.onActive?.(hlsInstance)
+
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js
       // hlsInstance.on(
@@ -190,10 +197,10 @@ const hlsPlugin = ({
         hlsInstance = null as any
       })
 
-      Object.defineProperty(player, 'hls', {
-        enumerable: true,
-        get: () => ({ value: hlsInstance, constructor: importedHls })
-      })
+      return {
+        value: () => hlsInstance,
+        constructor: importedHls
+      }
     }
   }
 }

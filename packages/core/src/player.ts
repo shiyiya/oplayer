@@ -177,8 +177,9 @@ export class Player<Plugins extends PlayerPlugin[] = any> {
       if (factory.apply) {
         const returnValues = factory.apply(this)
         if (returnValues) {
+          const key = factory.key || factory.name
           //@ts-ignore
-          this.plugins[factory.name] = Object.assign({}, this.plugins[factory.name], returnValues)
+          this.plugins[key] = Object.assign({}, this.plugins[key], returnValues)
         }
       }
     })

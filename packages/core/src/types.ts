@@ -26,8 +26,9 @@ export type PlayerOptions = {
 
 export type PlayerPlugin = {
   name: string
+  key?: string
   version?: string
-  apply: (player: Player) => Record<string, any> | void
+  apply: (player: Player) => any
   load?: (player: Player, src: Source, options: { loader: boolean }) => boolean | Promise<boolean>
 }
 
