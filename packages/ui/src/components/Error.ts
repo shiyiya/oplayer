@@ -75,7 +75,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   player.on('videosourcechange', clear)
   player.on('error', ({ payload }) => show(payload))
 
-  return { show, clear }
+  return show
 }
 
 export default render

@@ -94,14 +94,14 @@ class Subtitle {
 
   initEvents() {
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
+  }
 
-    this.player.on('subtitlechange', ({ payload }) => {
-      this.destroy()
-      this.options.source = payload
-      this.processDefault()
-      this.loadSetting()
-      this.load()
-    })
+  onchange(payload: SubtitleSource[]) {
+    this.destroy()
+    this.options.source = payload
+    this.processDefault()
+    this.loadSetting()
+    this.load()
   }
 
   load() {

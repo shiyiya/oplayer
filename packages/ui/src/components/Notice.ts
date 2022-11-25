@@ -72,7 +72,7 @@ const render = (player: Player, el: HTMLElement) => {
 
   $.render($dom, el)
 
-  return { show }
+  return show
 }
 
 export default render
