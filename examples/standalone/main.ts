@@ -5,12 +5,14 @@ import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import ad from '@oplayer/ad'
+import mpegts from '@oplayer/mpegts'
 
 import MP4 from '../../website/static/君の名は.mp4'
 import SRT from '../../website/static/君の名は.srt'
 import DANMAKU from '../../website/static/danmaku.xml'
 import THUMB from '../../website/static/thumbnails.jpg'
 import POSTER from '../../website/static/poster.png'
+import flv from '../../website/static/weathering-with-you.flv'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
@@ -18,8 +20,9 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
-  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+  flv,
   MP4,
+  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
@@ -124,17 +127,12 @@ const player = Player.make(document.getElementById('player')!, {
         loadingIndicator: `<img src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
+    mpegts(),
     dash(),
     hls({
       options: {
         hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate',
-        onActive(i) {
-          console.log(i)
-          return () => {
-            console.log('hls: bye')
-          }
-        }
+        hlsQualitySwitch: 'immediate'
       }
     }),
     {

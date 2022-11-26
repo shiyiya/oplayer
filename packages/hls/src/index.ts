@@ -44,8 +44,6 @@ type Options = {
    * @default false
    */
   showWarning?: boolean
-
-  onActive?: (instance: Hls) => void | Function
 }
 
 const defaultMatcher: hlsPluginOptions['matcher'] = (video, source, force) =>
@@ -124,8 +122,7 @@ const hlsPlugin = ({
   matcher = defaultMatcher,
   options: _pluginOptions
 }: hlsPluginOptions = {}): PlayerPlugin => {
-  let hlsInstance: Hls
-  let inActive: Function | void
+  let hlsInstance: Hls | null
 
   const pluginOptions: Options = {
     light: true,
@@ -135,34 +132,29 @@ const hlsPlugin = ({
   }
   if (pluginOptions.hlsQualityControl) pluginOptions.light = false
 
-  const getHls = async () => {
-    if (hlsInstance) hlsInstance.destroy()
-
-    importedHls ??= (
-      await import(pluginOptions.light ? 'hls.js/dist/hls.light.min.js' : 'hls.js/dist/hls.min.js')
-    ).default
-    hlsInstance = new importedHls(hlsConfig)
-  }
-
   return {
     name: PLUGIN_NAME,
     key: 'hls',
     load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source, pluginOptions.forceHLS)
 
-      if (options.loader || !isMatch) {
-        if (hlsInstance) {
-          player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-          hlsInstance.destroy()
-          inActive?.()
-        }
-        return false
+      if (hlsInstance) {
+        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+        hlsInstance.destroy()
+        hlsInstance = null
       }
 
-      await getHls()
+      if (options.loader || !isMatch) return false
+
+      importedHls ??= (
+        await import(
+          pluginOptions.light ? 'hls.js/dist/hls.light.min.js' : 'hls.js/dist/hls.min.js'
+        )
+      ).default
 
       if (!importedHls.isSupported()) return false
 
+      hlsInstance = new importedHls(hlsConfig)
       hlsInstance.loadSource(source.src)
       hlsInstance.attachMedia(player.$video)
       if (!player.isNativeUI) generateSetting(player, hlsInstance, pluginOptions)
@@ -180,8 +172,6 @@ const hlsPlugin = ({
         }
       })
 
-      inActive = pluginOptions.onActive?.(hlsInstance)
-
       //TODO: remove video onReady Listener
       // onReady is handled by hls.js
       // hlsInstance.on(
@@ -196,7 +186,7 @@ const hlsPlugin = ({
     apply: (player) => {
       player.on('destroy', () => {
         hlsInstance?.destroy()
-        hlsInstance = null as any
+        hlsInstance = null
       })
 
       return {

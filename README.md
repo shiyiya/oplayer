@@ -20,9 +20,10 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 ## Feature
 
 - Streaming formats
-  - HLS
-  - MPEG DASH
-  - WebTorrent
+  - [HLS](https://github.com/video-dev/hls.js)
+  - [FLV](https://github.com/xqq/mpegts.js)
+  - [MPEG DASH](https://github.com/Dash-Industry-Forum/dash.js)
+  - [WebTorrent](https://github.com/webtorrent/webtorrent)
   - Any other custom streaming formats
 - Media formats
   - MP4 H.264
@@ -86,6 +87,7 @@ Player.make(document.getElementById('oplayer'), {
 - [@oplayer/ui](./packages/ui)
 - [@oplayer/hls](./packages/hls)
 - [@oplayer/dash](./packages/dash)
+- [@oplayer/mpegts](./packages/mpegts)
 - [@oplayer/torrent](./packages/torrent)
 - [@oplayer/danmaku](./packages/danmaku)
 - [@oplayer/ad](./packages/ad)

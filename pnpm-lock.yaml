@@ -59,6 +59,7 @@ importers:
       '@oplayer/danmaku': workspace:*
       '@oplayer/dash': workspace:*
       '@oplayer/hls': workspace:*
+      '@oplayer/mpegts': workspace:*
       '@oplayer/ui': workspace:*
       hls.js: ^1.2.7
       lit: ^2.4.1
@@ -68,6 +69,7 @@ importers:
       '@oplayer/danmaku': link:../../packages/danmaku
       '@oplayer/dash': link:../../packages/dash
       '@oplayer/hls': link:../../packages/hls
+      '@oplayer/mpegts': link:../../packages/mpegts
       '@oplayer/ui': link:../../packages/ui
       hls.js: 1.2.7
       lit: 2.4.1
@@ -102,6 +104,14 @@ importers:
     devDependencies:
       '@oplayer/core': link:../core
       hls.js: 1.2.7
+
+  packages/mpegts:
+    specifiers:
+      '@oplayer/core': workspace:*
+      mpegts.js: ^1.7.0
+    devDependencies:
+      '@oplayer/core': link:../core
+      mpegts.js: 1.7.0
 
   packages/react:
     specifiers:
@@ -3924,6 +3934,13 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
+  /mpegts.js/1.7.0:
+    resolution: {integrity: sha512-PTiEleibQ3nyMOuMdkwHSeSF+vNFvXFHdZKHncf30UszQQt2eGYKbeYK9vurvGcIsuRctQ9JK9t+vccB1uNhrw==}
+    dependencies:
+      es6-promise: 4.2.8
+      webworkify-webpack: 2.1.5
+    dev: true
+
   /ms/0.7.1:
     resolution: {integrity: sha512-lRLiIR9fSNpnP6TC4v8+4OU7oStC01esuNowdQ34L+Gk8e5Puoc88IqJ+XAY/B3Mn2ZKis8l8HX90oU8ivzUHg==}
     dev: false
@@ -5546,6 +5563,10 @@ packages:
       utp-native: 2.5.3
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /webworkify-webpack/2.1.5:
+    resolution: {integrity: sha512-2akF8FIyUvbiBBdD+RoHpoTbHMQF2HwjcxfDvgztAX5YwbZNyrtfUMgvfgFVsgDhDPVTlkbb5vyasqDHfIDPQw==}
     dev: true
 
   /which-boxed-primitive/1.0.2:

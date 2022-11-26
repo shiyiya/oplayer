@@ -4,7 +4,7 @@ import type { Player } from './player'
 export type Source = {
   src: string
   poster?: string
-  format?: 'auto' | string
+  format?: 'auto' | 'hls' | 'flv' | 'm2ts' | 'mpegts' | string
 }
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'

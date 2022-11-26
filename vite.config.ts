@@ -14,6 +14,8 @@ export const globals = {
   'hls.js/dist/hls.min.js': 'Hls',
   dashjs: 'dashjs',
   '@oplayer/torrent': 'OTorrent',
+  '@oplayer/mpegts': 'OMpegts',
+  'mpegts.js/dist/mpegts.js':'mpegts',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
   '@oplayer/danmaku': 'ODanmaku',
   react: 'React'

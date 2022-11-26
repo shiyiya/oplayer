@@ -17,7 +17,6 @@ type dashPluginOptions = {
      * @default: false
      */
     withBitrate?: boolean
-    onActive?: (instance: MediaPlayerClass) => void | Function
   }
 }
 
@@ -104,13 +103,7 @@ const dashPlugin = ({
   setting,
   options: pluginOptions
 }: dashPluginOptions = {}): PlayerPlugin => {
-  let dashInstance: MediaPlayerClass
-  let inActive: Function | void
-
-  const getDash = async () => {
-    if (dashInstance) dashInstance.reset()
-    importedDash ??= (await import('dashjs')).default
-  }
+  let dashInstance: MediaPlayerClass | null
 
   return {
     name: PLUGIN_NAME,
@@ -118,16 +111,17 @@ const dashPlugin = ({
     load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source)
 
+      if (dashInstance) {
+        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+        dashInstance.reset()
+        dashInstance = null
+      }
+
       if (options.loader || !isMatch) {
-        if (dashInstance) {
-          player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-          dashInstance.reset()
-          inActive?.()
-        }
         return false
       }
 
-      await getDash()
+      importedDash ??= (await import('dashjs')).default
 
       if (!importedDash.supportsMediaSource()) return false
 
@@ -142,14 +136,12 @@ const dashPlugin = ({
         player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
       })
 
-      inActive = pluginOptions?.onActive?.(dashInstance)
-
       return true
     },
     apply: (player) => {
       player.on('destroy', () => {
         dashInstance?.reset()
-        dashInstance = null as any
+        dashInstance = null
       })
 
       return {
