@@ -20,8 +20,8 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
-  flv,
   MP4,
+  flv,
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
@@ -42,13 +42,11 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
 
-let logs: HTMLTextAreaElement
-
 const player = Player.make(document.getElementById('player')!, {
   muted: true,
   volume: 0.5,
   // isLive: true,
-  source: { poster: POSTER },
+  source: { poster: POSTER, src },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
   .use([
@@ -59,7 +57,7 @@ const player = Player.make(document.getElementById('player')!, {
       settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
       subtitle: {
-        color: 'hotpink',
+        color: '#00b2ff',
         fontSize: isMobile ? 16 : 20,
         source: [
           {
@@ -102,7 +100,7 @@ const player = Player.make(document.getElementById('player')!, {
             {
               name: 'mp4',
               default: true,
-              value: 'https://oplayer.vercel.app/君の名は.mp4'
+              value: MP4
             },
             {
               name: 'hls',
@@ -111,6 +109,10 @@ const player = Player.make(document.getElementById('player')!, {
             {
               name: 'dash',
               value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
+            },
+            {
+              name: 'flv',
+              value: flv
             }
           ],
           onChange({ value }) {
@@ -169,22 +171,9 @@ const player = Player.make(document.getElementById('player')!, {
   ])
   .create()
 
-setTimeout(() => {
-  player.changeQuality({ src })
-  player.plugins.custom.say()
-  player.plugins.ui.subtitle.updateSource([
-    {
-      name: 'updated',
-      default: true,
-      src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-    }
-  ])
-  player.plugins.ui.thumbnails(
-    'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
-  )
-})
-
 console.log(player.plugins)
+
+player.plugins.custom.say()
 
 const meta = () => html`
   <div>
@@ -195,6 +184,7 @@ const meta = () => html`
     </p>
   </div>
 `
+let logs: HTMLTextAreaElement
 
 const actions = () => html`<p style="display:flex;">
     <input
