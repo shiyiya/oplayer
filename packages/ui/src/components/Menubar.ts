@@ -1,26 +1,26 @@
-import Player, { PlayerEvent } from '@oplayer/core'
-import { icon as iconCls } from '../style'
+import type Player from '@oplayer/core'
 import {
+  controllerBottom,
   dropdown,
   dropdownHoverable,
-  expand,
   dropItem,
-  controllerBottom
+  expand
 } from '../components/ControllerBottom.style'
+import { icon as iconCls } from '../style'
 import type { MenuBar } from '../types'
 import { siblings } from '../utils'
 
-const select = (elm: HTMLElement) => {
+const _select = (elm: HTMLElement) => {
   const selected = elm.getAttribute('data-selected') == 'true'
   elm.setAttribute('data-selected', `${!selected}`)
   siblings(elm, (it) => it.setAttribute('data-selected', `${selected}`))
 }
 
-export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
+export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
   const menus: MenuBar[] = []
   const $bar = elm.querySelector(`.${controllerBottom}`)!.children[1]! as HTMLDivElement
 
-  if (initialState) initialState.forEach((it) => create(it))
+  if (initialState) initialState.forEach((it) => register(it))
 
   $bar.addEventListener('click', (e) => {
     const elm: HTMLElement = e.target as HTMLElement
@@ -30,29 +30,14 @@ export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     if (!target || elm.getAttribute('data-selected') == 'true') return
 
     if (elm.tagName.toUpperCase() == 'SPAN') {
-      select(elm)
+      _select(elm)
       target.onChange?.(target.children[+elm.getAttribute('data-index')!]!)
     } else if (elm.tagName.toUpperCase() == 'BUTTON') {
       target.onClick?.(elm as any)
     }
   })
 
-  player.on('menubar:register', ({ payload }) => create(payload))
-
-  player.on('menubar:unregister', ({ payload }) => {
-    $bar.querySelector(`button[aria-label=${payload.name}]`)?.remove()
-    $bar.querySelector(`div[aria-label=${payload.name}]`)?.remove()
-  })
-
-  player.on('menubar:select', ({ payload }: PlayerEvent<{ name: string; index: number }>) => {
-    select(
-      $bar.querySelector(
-        `.${expand} > span[aria-label=${payload.name}]:nth-child(${payload.index + 1})`
-      )!
-    )
-  })
-
-  function create(menu: MenuBar) {
+  function register(menu: MenuBar) {
     const { name, icon, children } = menu
     let $menu: string = ''
     const $button = `
@@ -87,4 +72,15 @@ export default (player: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     menus.push(menu)
     $bar.insertAdjacentHTML('afterbegin', $menu)
   }
+
+  function unregister(name: string) {
+    $bar.querySelector(`button[aria-label=${name}]`)?.remove()
+    $bar.querySelector(`div[aria-label=${name}]`)?.remove()
+  }
+
+  function select(name: string, index: number) {
+    _select($bar.querySelector(`.${expand} > span[aria-label=${name}]:nth-child(${index + 1})`)!)
+  }
+
+  return { register, unregister, select }
 }

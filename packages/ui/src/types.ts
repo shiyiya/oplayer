@@ -120,3 +120,20 @@ export type UiConfig = {
 
   airplay?: boolean
 }
+
+export type ErrorPayload =
+  | Event
+  | {
+      message: string
+      code?: number
+    }
+
+export type UIMethods = {
+  error: (text: string) => void
+  notice: (text: string) => void
+  setting: {}
+  menu: {}
+  subtitle: {}
+  highlight: {}
+  thumbnails: {}
+}

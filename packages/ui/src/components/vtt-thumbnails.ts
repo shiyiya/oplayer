@@ -46,10 +46,6 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     cache = {}
   })
 
-  player.on('thumbnailssourcechange', ({ payload }) => {
-    bootstrap(payload)
-  })
-
   const processVtt = (data: string) => {
     const processedVtts = [] as Def[]
     const vttDefinitions = data.split(/[\r\n][\r\n]/i)
@@ -229,6 +225,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
 
   return {
     init: () => {},
-    update: updateThumbnailStyle
+    update: updateThumbnailStyle,
+    change: bootstrap
   }
 }

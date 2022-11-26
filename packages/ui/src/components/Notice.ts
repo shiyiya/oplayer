@@ -1,4 +1,4 @@
-import type { Player, PlayerEvent } from '@oplayer/core'
+import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import { addClass, debounce, removeClass } from '../utils'
 
@@ -62,14 +62,17 @@ const render = (player: Player, el: HTMLElement) => {
     }
   )
 
-  player.on(
-    'notice',
-    toggle((e: PlayerEvent) => {
-      $text.innerText = e.payload.text
-    })
-  )
+  function show(text: string) {
+    toggle((text: string) => {
+      $text.innerText = text
+    })(text)
+  }
+
+  player.on('notice', ({ payload }) => show(payload.text))
 
   $.render($dom, el)
+
+  return show
 }
 
 export default render

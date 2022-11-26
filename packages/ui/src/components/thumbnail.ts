@@ -18,7 +18,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
   let minRate = 0,
     maxRate = 0,
-    src = options.src,
+    thumbnails = options.src,
     isActive = false,
     chunk = 100 / options.number
 
@@ -34,7 +34,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
   const init = () => {
     if (!isActive) {
       isActive = true
-      $dom.style.backgroundImage = `url(${src})`
+      $dom.style.backgroundImage = `url(${thumbnails})`
     }
   }
 
@@ -42,9 +42,10 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     isActive = false
   })
 
-  player.on('thumbnailssourcechange', ({ payload }) => {
-    src = payload
-  })
+  function change(src: string) {
+    isActive = false
+    thumbnails = src
+  }
 
   return {
     init,
@@ -52,6 +53,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
       $dom.style.left = (rate < minRate ? minRate : rate > maxRate ? maxRate : rate) * 100 + '%'
       const index = ~~((rate * 100) / chunk) * options.number * chunk
       $dom.style.backgroundPositionX = `${-index}%`
-    }
+    },
+    change
   }
 }

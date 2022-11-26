@@ -5,7 +5,7 @@ import type { Setting, Subtitle as SubtitleConfig, SubtitleSource } from '../typ
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
 export default function (player: Player, el: HTMLElement, options?: SubtitleConfig) {
-  new Subtitle(player, el, options)
+  return new Subtitle(player, el, options)
 }
 
 class Subtitle {
@@ -94,14 +94,14 @@ class Subtitle {
 
   initEvents() {
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
+  }
 
-    this.player.on('subtitlechange', ({ payload }) => {
-      this.destroy()
-      this.options.source = payload
-      this.processDefault()
-      this.loadSetting()
-      this.load()
-    })
+  updateSource(payload: SubtitleSource[]) {
+    this.destroy()
+    this.options.source = payload
+    this.processDefault()
+    this.loadSetting()
+    this.load()
   }
 
   load() {
@@ -119,11 +119,13 @@ class Subtitle {
     const { player, $dom, $track, $iosTrack } = this
     $track?.removeEventListener('cuechange', this.update)
     $dom.innerHTML = ''
-    player.emit('removesetting', SETTING_KEY)
+    player.plugins.ui?.setting.unregister(SETTING_KEY)
     if ($track?.src) URL.revokeObjectURL($track.src)
     if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
     $track?.remove()
     $iosTrack?.remove()
+    this.$track = undefined
+    this.$iosTrack = undefined
   }
 
   update = (_: Event) => {
@@ -200,7 +202,7 @@ class Subtitle {
     const source = this.options.source
 
     if (source.length) {
-      this.player.emit('addsetting', <Setting>{
+      this.player.plugins.ui?.setting.register(<Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
         icon: Icons.get('subtitle'),

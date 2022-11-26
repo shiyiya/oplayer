@@ -18,10 +18,10 @@ import { ref } from 'lit/directives/ref.js'
 import { played } from '@oplayer/ui/src/components/Progress.style'
 
 const dataSrcs = [
+  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   MP4,
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
-  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
   'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
   'https://cdn6.hnzycdn.com:65/20220712/xb2EScnz/1672kb/hls/index.m3u8',
@@ -174,16 +174,19 @@ const player = Player.make(document.getElementById('player')!, {
 setTimeout(() => {
   player.changeQuality({ src })
   player.plugins.custom.say()
-}, 3)
+  player.plugins.ui.subtitle.updateSource([
+    {
+      name: 'updated',
+      default: true,
+      src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+    }
+  ])
+  player.plugins.ui.thumbnails(
+    'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
+  )
+})
 
-// 动态修改字幕
-// player.emit('subtitlechange', [
-//   {
-//     name: 'Default',
-//     default: true,
-//     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-//   }
-// ])
+console.log(player.plugins)
 
 const meta = () => html`
   <div>
@@ -256,15 +259,15 @@ render(meta(), document.getElementById('meta')!)
 
 window.p = player
 
-console.table({
-  UA: globalThis.navigator?.userAgent,
-  isMobile,
-  isIOS,
-  isiPad,
-  isiPhone,
-  fullscreenEnabled: Boolean(document.fullscreenEnabled),
-  webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
-  mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
-  msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
-  video: Boolean(player.$video.webkitEnterFullscreen)
-})
+// console.table({
+//   UA: globalThis.navigator?.userAgent,
+//   isMobile,
+//   isIOS,
+//   isiPad,
+//   isiPhone,
+//   fullscreenEnabled: Boolean(document.fullscreenEnabled),
+//   webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
+//   mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
+//   msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
+//   video: Boolean(player.$video.webkitEnterFullscreen)
+// })
