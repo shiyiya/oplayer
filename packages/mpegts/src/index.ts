@@ -1,12 +1,10 @@
 import type { PlayerPlugin, Source } from '@oplayer/core'
 import type Mpegts from 'mpegts.js'
 
-//@ts-ignore
-import qualitySvg from './quality.svg?raw'
-
 const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 
-let importedMpegts: typeof Mpegts
+//@ts-ignore
+let importedMpegts: typeof Mpegts = globalThis.mpegts
 
 type pluginOptions = {
   mpegtsConfig?: Partial<Mpegts.Config>
@@ -35,16 +33,15 @@ const plugin = (options: pluginOptions): PlayerPlugin => {
     load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source)
 
-      if (options.loader || !isMatch) {
-        if (instance) {
-          instance.pause()
-          instance.unload()
-          instance.detachMediaElement()
-          instance.destroy()
-          instance = null as any
-        }
-        return false
+      if (instance) {
+        instance.pause()
+        instance.unload()
+        instance.detachMediaElement()
+        instance.destroy()
+        instance = null as any
       }
+
+      if (options.loader || !isMatch) return false
 
       //@ts-ignore
       importedMpegts ??= (await import('mpegts.js/dist/mpegts.js')).default
@@ -53,9 +50,9 @@ const plugin = (options: pluginOptions): PlayerPlugin => {
 
       instance = importedMpegts.createPlayer(
         {
-          type: /flv|ts(#|\?|$)/i.exec(source.src)?.[0]!, // could also be mpegts, m2ts, flv
+          url: source.src,
           isLive: player.options.isLive,
-          url: source.src
+          type: source.format || /flv|ts(#|\?|$)/i.exec(source.src)?.[0]! // could also be mpegts, m2ts, flv
         },
         mpegtsConfig
       )

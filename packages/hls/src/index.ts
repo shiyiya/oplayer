@@ -1,8 +1,6 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
-
-//@ts-ignore
 import qualitySvg from './quality.svg?raw'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
