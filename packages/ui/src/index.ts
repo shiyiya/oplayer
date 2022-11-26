@@ -28,20 +28,23 @@ const apply = (player: Player, config: UiConfig) => {
   const $root = $.create(`div.${root(config.theme)}`)
   startListening(player, config, $root)
 
-  renderError(player, $root, config)
-  renderNotice(player, $root)
+  const error = renderError(player, $root, config)
+  const notice = renderNotice(player, $root)
   renderLoading(player, $root)
   renderCoverButton(player, $root)
-  renderMask(player, $root, renderControllerBar(player, $root, config))
+  const { exp, toggle } = renderControllerBar(player, $root, config)
+  renderMask(player, $root, toggle)
 
-  renderSetting(player, $root, config.settings)
-  renderMenubar(player, $root, config.menu)
+  const setting = renderSetting(player, $root, config.settings)
+  const menu = renderMenubar(player, $root, config.menu)
 
-  registerSpeedSetting(player, config.speed)
-  renderSubtitle(player, $root, config.subtitle)
+  registerSpeedSetting(player, config.speed, setting)
+  const subtitle = renderSubtitle(player, $root, config.subtitle)
 
   $.render($root, player.$root)
   if (!isMobile) registerHotKey(player)
+
+  return { error, notice, setting, menu, subtitle, ...exp }
 }
 
 const defaultConfig: UiConfig = {
@@ -58,6 +61,7 @@ const defaultConfig: UiConfig = {
 
 const snow = (config?: UiConfig): PlayerPlugin => ({
   name: 'oplayer-theme-ui',
+  key: 'ui',
   apply: (player) => apply(player, Object.assign(defaultConfig, config))
 })
 

@@ -65,9 +65,8 @@ const generateSetting = (
         })
       })
     }
-
-    player.emit('removesetting', PLUGIN_NAME)
-    player.emit('addsetting', {
+    player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+    player.plugins.ui?.setting.register({
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -120,9 +119,11 @@ const dashPlugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
-        player.emit('removesetting', PLUGIN_NAME)
-        dashInstance?.reset()
-        inActive?.()
+        if (dashInstance) {
+          player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+          dashInstance.reset()
+          inActive?.()
+        }
         return false
       }
 
@@ -153,7 +154,7 @@ const dashPlugin = ({
 
       return {
         value: () => dashInstance,
-        constructor: importedDash
+        constructor: () => importedDash
       }
     }
   }

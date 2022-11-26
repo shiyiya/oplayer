@@ -1,4 +1,4 @@
-import Player, { $, PlayerEvent } from '@oplayer/core'
+import Player, { $ } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
 import type { Setting, UiConfig } from '../types'
@@ -269,9 +269,42 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
 
   bootstrap(options.map((it) => (typeof it == 'string' ? defaultSettingMap[it] : it)) as Setting[])
 
-  player.on('addsetting', ({ payload }: PlayerEvent<Setting | Setting[]>) => {
+  function register(payload: Setting | Setting[]) {
     bootstrap(Array.isArray(payload) ? payload : [payload])
-  })
+  }
+
+  function unregister(key: string) {
+    if (!hasRendered) return
+    panels[0]?.$ref.querySelector(`[data-key=${key}]`)?.remove()
+    panels = panels.filter((p) =>
+      p.key === key ? (p.$ref.remove(), (p = null as any), false) : true
+    )
+  }
+
+  function updateLabel(key: string, text: string) {
+    console.log(key, text)
+
+    if (!hasRendered) return
+    const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
+    if ($item) $item.innerText = text
+  }
+
+  function select(key: string, value: boolean | number, shouldBeCallFn: Boolean = true) {
+    if (!hasRendered) return
+    if (typeof value == 'number') {
+      for (let i = 0; i < panels.length; i++) {
+        const panel = panels[i]!
+        if (panel.key == key) {
+          panel.select!(value, shouldBeCallFn)
+          break
+        }
+      }
+    } else {
+      $dom
+        .querySelector<HTMLSpanElement & { select: Function }>(`[data-key="${key}"][data-selected]`)
+        ?.select(shouldBeCallFn)
+    }
+  }
 
   function bootstrap(settings: Setting[]) {
     if (settings.length < 1) return
@@ -280,44 +313,6 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       hasRendered = true
       $.render($dom, $el)
       renderSettingMenu()
-
-      player.on('updatesettinglabel', ({ payload }: PlayerEvent<Setting>) => {
-        const $item = $dom.querySelector<HTMLSpanElement>(
-          `[data-key="${payload.key}"] span[role="label"]`
-        )
-        if ($item) $item.innerText = payload.name
-      })
-
-      type SelectSettingOptions = {
-        key: string
-        value: boolean | number
-        shouldBeCallFn: Boolean
-      }
-      player.on('selectsetting', ({ payload }: PlayerEvent<SelectSettingOptions>) => {
-        const { key, value, shouldBeCallFn = true } = payload
-        if (typeof value == 'number') {
-          for (let i = 0; i < panels.length; i++) {
-            const panel = panels[i]!
-            if (panel.key == key) {
-              panel.select!(value, shouldBeCallFn)
-              break
-            }
-          }
-        } else {
-          $dom
-            .querySelector<HTMLSpanElement & { select: Function }>(
-              `[data-key="${key}"][data-selected]`
-            )
-            ?.select(shouldBeCallFn)
-        }
-      })
-
-      player.on('removesetting', ({ payload }: PlayerEvent<string>) => {
-        panels[0]?.$ref.querySelector(`[data-key=${payload}]`)?.remove()
-        panels = panels.filter((p) =>
-          p.key === payload ? (p.$ref.remove(), (p = null as any), false) : true
-        )
-      })
 
       function outClickListener(e: Event) {
         if (
@@ -360,4 +355,6 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       }
     })
   }
+
+  return { register, unregister, updateLabel, select }
 }

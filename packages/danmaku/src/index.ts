@@ -18,7 +18,7 @@ export default (option: Options): PlayerPlugin => ({
     let enable = option.enable ?? true // default true
 
     const emitSetting = (enable: boolean) => {
-      player.emit('addsetting', {
+      player.plugins.ui?.setting.register({
         name: player.locales.get('Danmaku'),
         type: 'selector',
         default: true,
@@ -119,15 +119,8 @@ export default (option: Options): PlayerPlugin => ({
           })
         })
 
-        player.on('danmakusourcechange', ({ payload }) => {
-          player.emit('removesetting', 'danmaku')
-          emitSetting(enable)
-          option = { ...option, ...payload }
-          danmaku = new Danmaku(player, option)
-        })
-
         player.on('videosourcechange', function () {
-          player.emit('removesetting', 'danmaku')
+          player.plugins.ui?.setting.unregister('danmaku')
           danmaku?.destroy()
           danmaku = undefined
         })
@@ -138,6 +131,16 @@ export default (option: Options): PlayerPlugin => ({
 
     if (enable) bootstrap()
 
-    return () => danmaku
+    return {
+      value() {
+        return danmaku
+      },
+      change(payload: Options) {
+        player.plugins.ui?.setting.unregister('danmaku')
+        emitSetting(enable)
+        option = { ...option, ...payload }
+        danmaku = new Danmaku(player, option)
+      }
+    }
   }
 })

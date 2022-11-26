@@ -1,6 +1,6 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { UiConfig } from '../types'
+import { ErrorPayload, UiConfig } from '../types'
 import { addClass, removeClass } from '../utils'
 
 const errorCls = $.css(`
@@ -41,10 +41,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     return
   }
 
-  const $dom = $.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' })
+  const $dom = $.render($.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' }), el)
 
-  player.on('error', ({ payload }: PlayerEvent) => {
-    let message: string = payload.message
+  function show(payload: ErrorPayload) {
+    let message = ''
 
     if (payload instanceof Event) {
       //@ts-ignore
@@ -60,20 +60,22 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
       message = error.message || VIDEO_ERROR_MAP[error.code]
     } else {
-      // object { message:'...' }
       message = payload.message
     }
 
     $dom.innerText = message || 'UNKNOWN_ERROR'
     addClass($dom, showCls)
-  })
+  }
 
-  player.on('videosourcechange', () => {
+  function clear() {
     removeClass($dom, showCls)
     $dom.innerText = ''
-  })
+  }
 
-  $.render($dom, el)
+  player.on('videosourcechange', clear)
+  player.on('error', ({ payload }) => show(payload))
+
+  return show
 }
 
 export default render
