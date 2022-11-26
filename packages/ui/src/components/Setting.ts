@@ -282,8 +282,6 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
   }
 
   function updateLabel(key: string, text: string) {
-    console.log(key, text)
-
     if (!hasRendered) return
     const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
     if ($item) $item.innerText = text
