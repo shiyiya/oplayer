@@ -145,9 +145,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   return {
     highlight,
-    thumbnails: {
-      change
-    }
+    thumbnails: change
   }
 }
 

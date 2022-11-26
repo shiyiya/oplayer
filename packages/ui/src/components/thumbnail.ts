@@ -18,7 +18,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
   let minRate = 0,
     maxRate = 0,
-    src = options.src,
+    thumbnails = options.src,
     isActive = false,
     chunk = 100 / options.number
 
@@ -34,7 +34,7 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
   const init = () => {
     if (!isActive) {
       isActive = true
-      $dom.style.backgroundImage = `url(${src})`
+      $dom.style.backgroundImage = `url(${thumbnails})`
     }
   }
 
@@ -42,9 +42,9 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     isActive = false
   })
 
-  function change(_src: string) {
-    src = _src
-    $dom.style.backgroundImage = `url(${src})`
+  function change(src: string) {
+    isActive = false
+    thumbnails = src
   }
 
   return {

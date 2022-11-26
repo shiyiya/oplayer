@@ -72,5 +72,5 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     $highlights.forEach((it) => it.remove())
   })
 
-  return { change }
+  return change
 }

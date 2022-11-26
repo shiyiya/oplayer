@@ -119,9 +119,11 @@ const dashPlugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (options.loader || !isMatch) {
-        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-        dashInstance?.reset()
-        inActive?.()
+        if (dashInstance) {
+          player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+          dashInstance.reset()
+          inActive?.()
+        }
         return false
       }
 
@@ -152,7 +154,7 @@ const dashPlugin = ({
 
       return {
         value: () => dashInstance,
-        constructor: importedDash
+        constructor: () => importedDash
       }
     }
   }

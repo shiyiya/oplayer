@@ -109,9 +109,9 @@ const generateSetting = (player: Player, hlsInstance: Hls, options: Options = {}
     if (hlsInstance.autoLevelEnabled) {
       const height = hlsInstance.levels[level]!.height
       const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-      player.emit('updatesettinglabel', { key: PLUGIN_NAME, name: levelName })
+      player.plugins.ui?.setting.updateLabel(PLUGIN_NAME, levelName)
     } else {
-      player.emit('selectsetting', { key: PLUGIN_NAME, value: level + 1, shouldBeCallFn: false })
+      player.plugins.ui?.setting.select(PLUGIN_NAME, level + 1, false)
     }
   }
 
@@ -151,9 +151,11 @@ const hlsPlugin = ({
       const isMatch = matcher(player.$video, source, pluginOptions.forceHLS)
 
       if (options.loader || !isMatch) {
-        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-        hlsInstance?.destroy()
-        inActive?.()
+        if (hlsInstance) {
+          player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+          hlsInstance.destroy()
+          inActive?.()
+        }
         return false
       }
 
@@ -199,7 +201,7 @@ const hlsPlugin = ({
 
       return {
         value: () => hlsInstance,
-        constructor: importedHls
+        constructor: () => importedHls
       }
     }
   }
