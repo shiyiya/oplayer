@@ -45,14 +45,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
     <!-- right -->
     <div>
-      ${
-        config.screenshot
-          ? `<button class="${icon} ${tooltip}" aria-label="${screenshotLabel}">
-              ${Icons.get('screenshot')}
-            </button>`
-          : ''
-      }
-
       <div class="${dropdown} ${dropdownHoverable}">
         <button class="${icon} ${player.isMuted ? on : off}" aria-label="Volume">
             ${Icons.get('volume')[0]}
@@ -61,11 +53,21 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         ${!isIOS ? `<div class=${expand}></div>` : ''}
       </div>
 
+      ${
+        config.screenshot
+          ? `<button class="${icon} ${tooltip}" aria-label="${screenshotLabel}">
+              ${Icons.get('screenshot')}
+            </button>`
+          : ''
+      }
 
       ${
         config.pictureInPicture && player.isPipEnabled
-          ? `<button class="${icon} ${tooltip}" aria-label="${pipLabel}">
-                ${Icons.get('pip')}
+          ? `<button
+              class="${icon} ${tooltip} ${player.isInPip ? on : off}"
+              aria-label="${pipLabel}">
+                ${Icons.get('pip')[0]}
+                ${Icons.get('pip')[1]}
             </button>`
           : ''
       }
@@ -90,6 +92,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $fullscreen = $dom.querySelector<HTMLButtonElement>(
     `button[aria-label="${fullscreenLabel}"]`
   )!
+  const $pip = $dom.querySelector<HTMLButtonElement>(`button[aria-label="${pipLabel}"]`)!
 
   const switcher = (el: HTMLElement, display: boolean) => {
     el.classList.add(display ? on : off)
@@ -144,6 +147,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         }
         break
       case pipLabel:
+        switcher($pip, !player.isInPip)
         return player.togglePip()
       case fullscreenLabel:
         if (player.isFullscreenEnabled) {

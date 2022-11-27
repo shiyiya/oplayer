@@ -1,9 +1,19 @@
 import { $, isMobile } from '@oplayer/core'
 import type { UiConfig } from './types'
 
-export const settingShown = $.css('/* settingShown */')
+export const settingShown = $.cls('settingShown')
 
-export const fullscreen = $.css('/* fullscreen */')
+export const fullscreen = $.cls('fullscreen')
+
+export const controllerHidden = $.cls('controllerHidden')
+
+export const loading = $.cls('loading')
+
+export const initialized = $.cls('isInitialized')
+
+export const playing = $.cls('playing')
+
+export const focused = $.cls('focused')
 
 export const root = (theme: UiConfig['theme']) => {
   return $.css(
@@ -51,8 +61,6 @@ export const icon = $.css({
   width: '100%'
 })
 
-export const controllerHidden = $.css('/* controllerHidden */')
-
 export const on = $.css({
   '& > svg:nth-child(1)': {
     display: 'none'
@@ -64,14 +72,6 @@ export const off = $.css({
     display: 'none'
   }
 })
-
-export const loading = $.cls('/* loading */')
-
-export const initialized = $.cls('/* isInitialized */')
-
-export const playing = $.cls('/* playing */')
-
-export const focused = $.cls('/* focused */')
 
 export const tooltip = isMobile
   ? ''

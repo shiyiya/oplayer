@@ -19,7 +19,7 @@ const ICONS_MAP = {
   pause: pauseSvg,
   volume: [volumeSvg, volumeOffSvg],
   fullscreen: [expandSvg, compressSvg],
-  pip: pipSvg,
+  pip: [pipSvg, pipSvg],
   setting: settingsSvg,
   screenshot: screenshotSvg,
   playbackRate: speedSvg,
@@ -30,14 +30,14 @@ const ICONS_MAP = {
 }
 
 export namespace Icons {
-  export const setupIcons = (player: Player, icons: UiConfig['icons']) => {
+  export const setupIcons = (_: Player, icons: UiConfig['icons']) => {
     for (const key in icons) {
       if (Object.prototype.hasOwnProperty.call(icons, key)) {
         ICONS_MAP[key as keyof UiConfig['icons']] = icons[key as keyof UiConfig['icons']]
       }
     }
-    //@ts-ignore
-    player.icons = ICONS_MAP
+
+    return ICONS_MAP
   }
 
   export const get = <K extends keyof typeof ICONS_MAP>(name: K): typeof ICONS_MAP[K] =>

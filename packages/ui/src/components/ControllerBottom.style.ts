@@ -80,13 +80,14 @@ export const controllerBottom = $.css({
 
   [`& .${icon}.--text`]: {
     width: 'auto',
-    margin: '0 8px',
     'font-size': '120%'
   },
 
   [`& .${icon}`]: {
-    width: '3em',
-    height: '1.9em',
+    padding: '0 0.5em',
+    width: '2em',
+    height: '2em',
+    'box-sizing': 'content-box',
 
     ['& svg']: {
       width: '100%',

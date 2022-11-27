@@ -127,8 +127,9 @@ export const settingItemLeft = $.css({
   'margin-right': '10px',
 
   '& > svg': {
-    width: '22px',
-    'margin-right': '6px'
+    width: '1.8em',
+    height: '1.7em',
+    'margin-right': '0.5em'
   }
 })
 

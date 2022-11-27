@@ -29,8 +29,11 @@ class Subtitle {
     this.processDefault()
     this.createContainer()
     this.initEvents()
-    this.loadSetting()
+
     this.load()
+    setTimeout(() => {
+      this.loadSetting()
+    })
   }
 
   processDefault() {

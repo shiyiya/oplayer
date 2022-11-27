@@ -14,7 +14,7 @@ const controllerBar = $.css({
   'z-index': '97',
   padding: '0 1.25em',
   transition: 'transform 0.3s ease, padding 0.3s ease',
-  'background-image': 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3))'
+  'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .2),rgba(0, 0, 0, .4))'
 })
 
 const CTRL_HIDE_DELAY = 1500

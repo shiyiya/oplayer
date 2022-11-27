@@ -23,7 +23,7 @@ const apply = (player: Player, config: UiConfig) => {
     return
   }
 
-  Icons.setupIcons(player, config.icons)
+  const icons = Icons.setupIcons(player, config.icons)
 
   const $root = $.create(`div.${root(config.theme)}`)
   startListening(player, config, $root)
@@ -44,7 +44,7 @@ const apply = (player: Player, config: UiConfig) => {
   $.render($root, player.$root)
   if (!isMobile) registerHotKey(player)
 
-  return { error, notice, setting, menu, subtitle, ...exp }
+  return { icons, error, notice, setting, menu, subtitle, ...exp }
 }
 
 const defaultConfig: UiConfig = {
