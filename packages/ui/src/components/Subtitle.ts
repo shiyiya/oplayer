@@ -4,8 +4,10 @@ import { Icons } from '../functions/icons'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
-export default function (player: Player, el: HTMLElement, options?: SubtitleConfig) {
-  return new Subtitle(player, el, options)
+const SETTING_KEY = 'Subtitle'
+
+export default function (player: Player, setting: any, el: HTMLElement, options?: SubtitleConfig) {
+  return new Subtitle(player, setting, el, options)
 }
 
 class Subtitle {
@@ -18,12 +20,18 @@ class Subtitle {
   isShow = false
   currentSubtitle?: SubtitleSource
 
-  constructor(public player: Player, public el: HTMLElement, options?: SubtitleConfig) {
+  constructor(
+    public player: Player,
+    public setting: any,
+    public el: HTMLElement,
+    options?: SubtitleConfig
+  ) {
     if (!window.TextDecoder) {
       player.emit('notice', { text: player.locales.get('TextDecoder not supported') })
       return
     }
 
+    this.setting = setting
     this.options = options || { source: [] }
 
     this.processDefault()
@@ -31,9 +39,7 @@ class Subtitle {
     this.initEvents()
 
     this.load()
-    setTimeout(() => {
-      this.loadSetting()
-    })
+    this.loadSetting()
   }
 
   processDefault() {
@@ -119,10 +125,10 @@ class Subtitle {
   }
 
   destroy() {
-    const { player, $dom, $track, $iosTrack } = this
+    const { $dom, $track, $iosTrack } = this
     $track?.removeEventListener('cuechange', this.update)
     $dom.innerHTML = ''
-    player.plugins.ui?.setting.unregister(SETTING_KEY)
+    this.setting.unregister(SETTING_KEY)
     if ($track?.src) URL.revokeObjectURL($track.src)
     if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
     $track?.remove()
@@ -205,7 +211,7 @@ class Subtitle {
     const source = this.options.source
 
     if (source.length) {
-      this.player.plugins.ui?.setting.register(<Setting>{
+      this.setting.register(<Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
         icon: Icons.get('subtitle'),
@@ -233,8 +239,6 @@ class Subtitle {
     }
   }
 }
-
-const SETTING_KEY = 'Subtitle'
 
 function findDefault(o: SubtitleSource[]) {
   return o.find((st) => st.default)

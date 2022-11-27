@@ -2,7 +2,7 @@ import { $ } from '@oplayer/core'
 
 export const wrap = $.css`
   width: 2.5em;
-  height: 110px;
+  height: 7.5em;
   padding-bottom: 3px;
   box-sizing: content-box;
 `
@@ -20,7 +20,7 @@ export const track = $.css(`
   position:relative;
   display: flex;
   justify-content: center;
-  height: 70px;
+  height: 4.8em;
   cursor: pointer;
 `)
 

@@ -43,6 +43,8 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
     }
   },
 
+  f: (player: Player) => player.toggleFullScreen(),
+
   's+s': screenShot
 }
 

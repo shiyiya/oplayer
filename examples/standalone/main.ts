@@ -116,6 +116,7 @@ const player = Player.make(document.getElementById('player')!, {
             }
           ],
           onChange({ value }) {
+            src = value
             player.changeSource({ src: value })
           }
         }

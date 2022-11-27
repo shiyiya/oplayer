@@ -39,7 +39,7 @@ const apply = (player: Player, config: UiConfig) => {
   const menu = renderMenubar(player, $root, config.menu)
 
   registerSpeedSetting(player, config.speed, setting)
-  const subtitle = renderSubtitle(player, $root, config.subtitle)
+  const subtitle = renderSubtitle(player, setting, $root, config.subtitle)
 
   $.render($root, player.$root)
   if (!isMobile) registerHotKey(player)

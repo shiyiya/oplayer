@@ -342,7 +342,10 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       `${Icons.get('setting')}`
     )
 
-    parent!.insertBefore(settingButton, parent.children![parent.children.length - 2]!)
+    parent!.insertBefore(
+      settingButton,
+      parent.children![parent.children.length - (player.isPipEnabled ? 2 : 1)]!
+    )
     settingButton.addEventListener('click', (e) => {
       $trigger = e.target as HTMLDivElement
       isShow = player.$root.classList.toggle(settingShown)
