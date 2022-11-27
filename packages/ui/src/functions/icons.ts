@@ -2,7 +2,8 @@ import expandSvg from '../icons/fullscreen-enter.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
 import loopSvg from '../icons/loop.svg?raw'
 import pauseSvg from '../icons/pause.svg?raw'
-import pipSvg from '../icons/pip.svg?raw'
+import pipEnterSvg from '../icons/pip-enter.svg?raw'
+import pipExitSvg from '../icons/pip-exit.svg?raw'
 import playSvg from '../icons/play.svg?raw'
 import screenshotSvg from '../icons/screenshot.svg?raw'
 import settingsSvg from '../icons/settings.svg?raw'
@@ -19,7 +20,7 @@ const ICONS_MAP = {
   pause: pauseSvg,
   volume: [volumeSvg, volumeOffSvg],
   fullscreen: [expandSvg, compressSvg],
-  pip: [pipSvg, pipSvg],
+  pip: [pipEnterSvg, pipExitSvg],
   setting: settingsSvg,
   screenshot: screenshotSvg,
   playbackRate: speedSvg,
