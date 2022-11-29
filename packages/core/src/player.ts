@@ -59,7 +59,7 @@ export class Player {
     this.locales = new I18n(this.options.lang)
   }
 
-  static make(el: HTMLElement, options: PlayerOptions | string) {
+  static make(el: HTMLElement | string, options?: PlayerOptions | string) {
     return new Player(el, options)
   }
 
