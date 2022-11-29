@@ -43,7 +43,7 @@ const quailitySrcs = [
   'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
 ] as const
 
-const player = Player.make(document.getElementById('player')!, {
+const player = Player.make('#player', {
   muted: true,
   volume: 0.5,
   // isLive: true,
@@ -58,8 +58,10 @@ const player = Player.make(document.getElementById('player')!, {
       settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
       subtitle: {
-        color: '#00b2ff',
-        fontSize: isMobile ? 16 : 20,
+        shadow:
+          '0px -6px 0 #212121, 0px -6px 0 #212121, 0px 6px 0 #212121, 0px 6px 0 #212121, -6px 0px 0 #212121, 6px 0px 0 #212121, -6px 0px 0 #212121, 6px 0px 0 #212121, -6px -6px 0 #212121, 6px -6px 0 #212121, -6px 6px 0 #212121, 6px 6px 0 #212121, -6px 18px 0 #212121, 0px 18px 0 #212121, 6px 18px 0 #212121, 0 19px 1px rgb(0 0 0 / 10%), 0 0 6px rgb(0 0 0 / 10%), 0 6px 3px rgb(0 0 0 / 30%), 0 12px 6px rgb(0 0 0 / 20%), 0 18px 18px rgb(0 0 0 / 25%), 0 24px 24px rgb(0 0 0 / 20%), 0 36px 36px rgb(0 0 0 / 15%)',
+        fontSize: !isMobile ? '40pt' : '16pt',
+        fontFamily: 'Luckiest Guy',
         source: [
           {
             name: 'Default',
@@ -96,7 +98,7 @@ const player = Player.make(document.getElementById('player')!, {
       ],
       menu: [
         {
-          name: 'airplay',
+          name: 'Airplay',
           icon: `<svg style='scale:0.9' viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M662.186667 981.333333H361.813333c-17.194667 0-32.853333-9.386667-40.661333-23.552a50.176 50.176 0 0 1 0-47.104l150.186667-260.565333c7.808-14.08 23.466667-23.509333 40.661333-23.509333 17.194667 0 32.853333 9.386667 40.661333 23.552l150.186667 260.565333c7.850667 14.08 7.850667 32.938667 0 47.061333-7.808 14.122667-23.466667 23.552-40.661333 23.552z m-219.008-94.165333h137.642666L512 767.872l-68.821333 119.296z"></path><path d="M821.76 841.642667h-100.138667c-26.581333 0-46.933333-20.437333-46.933333-47.104 0-26.666667 20.352-47.104 46.933333-47.104h100.138667c37.546667 0 67.285333-29.824 67.285333-67.498667V204.373333c-1.578667-37.674667-31.317333-67.498667-67.285333-67.498666H203.818667c-37.546667 0-67.285333 29.866667-67.285334 67.498666v477.184c0 37.674667 29.738667 67.498667 67.285334 67.498667h100.096c26.624 0 46.933333 20.394667 46.933333 47.104 0 26.666667-20.309333 47.104-46.933333 47.104H203.818667A163.541333 163.541333 0 0 1 42.666667 679.893333V204.373333A161.194667 161.194667 0 0 1 203.818667 42.666667H821.76C909.354667 42.666667 981.333333 114.858667 981.333333 204.373333v477.141334c0 87.893333-71.978667 160.128-159.573333 160.128z"></path></svg>`,
           onClick: () => {
             if (window.WebKitPlaybackTargetAvailabilityEvent) {
@@ -231,7 +233,7 @@ const player = Player.make(document.getElementById('player')!, {
         }
 
         player.plugins.ui.menu.register({
-          name: 'chromecast',
+          name: 'Chromecast',
           icon: `<svg style='scale:0.9' viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2081" width="200" height="200"><path d="M895.66 128H128a85.44 85.44 0 0 0-85.44 85.44v127.84H128v-127.84h767.66v597.12H597.28V896H896a85.44 85.44 0 0 0 85.44-85.44V213.44A85.44 85.44 0 0 0 896 128zM42.56 767.16v127.84h127.82a127.82 127.82 0 0 0-127.82-127.84z m0-170.56V682a213.26 213.26 0 0 1 213.28 213.32v0.68h85.44a298.38 298.38 0 0 0-298-298.72h-0.66z m0-170.54v85.44c212-0.2 384 171.5 384.16 383.5v1h85.44c-0.92-258.92-210.68-468.54-469.6-469.28z"></path></svg>`,
           onClick() {
             let promis = Promise.resolve()

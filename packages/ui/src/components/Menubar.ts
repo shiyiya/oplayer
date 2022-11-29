@@ -4,9 +4,10 @@ import {
   dropdown,
   dropdownHoverable,
   dropItem,
-  expand
+  expand,
+  textIcon
 } from '../components/ControllerBottom.style'
-import { icon as iconCls } from '../style'
+import { icon as iconCls, tooltip } from '../style'
 import type { MenuBar } from '../types'
 import { siblings } from '../utils'
 
@@ -43,7 +44,7 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     const $button = `
     <button
       aria-label="${name}"
-      class="${iconCls} ${!icon ? '--text' : ''}"
+      class="${iconCls} ${!icon ? textIcon : ''} ${!menu.children ? tooltip : ''}"
       type="button"
     >${icon || name}</button>`
 

@@ -47,25 +47,34 @@ class Subtitle {
   }
 
   createContainer() {
-    const { el, options } = this
+    const {
+      el,
+      options: { color, shadow, fontSize, bottom, fontFamily }
+    } = this
 
     this.$dom = $.create(
       `div.${$.css({
-        color: options.color ?? '#fff',
         left: '2%',
         right: '2%',
         'text-align': 'center',
         'pointer-events': 'none',
-        'text-shadow':
-          '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
-
         position: 'absolute',
-        bottom: `${options.bottom ?? '5%'}`,
         'line-height': '1.2',
-        'font-size': `${(options.fontSize || (isMobile ? 14 : 16)) / 0.12}%`,
+
+        'font-family': fontFamily || 'inherit',
+        color: color || '#fff',
+        'text-shadow':
+          shadow ||
+          '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
+        bottom: `${bottom || '5%'}`,
+        'font-size':
+          typeof fontSize == 'string' ? fontSize : `${(fontSize || (isMobile ? 14 : 16)) / 0.12}%`,
 
         '& > p': { margin: 0 }
-      })}`
+      })}`,
+      {
+        'aria-label': 'Subtitle'
+      }
     )
 
     $.render(this.$dom, el)

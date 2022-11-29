@@ -8,9 +8,11 @@ export type SubtitleSource = {
 
 export type Subtitle = {
   source: SubtitleSource[]
-  fontSize?: number
+  fontSize?: number | string
   bottom?: string
   color?: string
+  shadow?: string
+  fontFamily?: string
 }
 
 export type MenuBar<

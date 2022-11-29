@@ -68,6 +68,8 @@ export const dropItem = $.css({
   }
 })
 
+export const textIcon = $.cls('textIcon')
+
 export const controllerBottom = $.css({
   display: 'flex',
   'justify-content': 'space-between',
@@ -78,7 +80,7 @@ export const controllerBottom = $.css({
   'margin-right': isMobile ? '-8px' : '0px',
   'text-align': 'center',
 
-  [`& .${icon}.--text`]: {
+  [`& .${icon}.${textIcon}`]: {
     width: 'auto',
     'font-size': '120%'
   },

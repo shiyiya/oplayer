@@ -33,8 +33,11 @@ export class Player {
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   _playPromise: Promise<void> | undefined
 
-  constructor(el: HTMLElement, options?: PlayerOptions | string) {
-    this.container = el
+  constructor(el: HTMLElement | string, options?: PlayerOptions | string) {
+    this.container = typeof el == 'string' ? document.querySelector(el)! : el
+    if (!this.container)
+      throw new Error((typeof el == 'string' ? el : 'Element') + 'does not exist')
+
     this.options = Object.assign(
       {
         autoplay: false,
