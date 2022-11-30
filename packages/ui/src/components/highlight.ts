@@ -59,7 +59,11 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     createHighlights(highlights, player.duration)
   }
 
-  if (active) createHighlights(highlights, player.duration)
+  player.on('loadedmetadata', function durationchange() {
+    if (player.duration !== Infinity && player.duration > 0) {
+      if (active) createHighlights(highlights, player.duration)
+    }
+  })
 
   player.on('videosourcechange', () => {
     active = false
