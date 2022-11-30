@@ -34,9 +34,6 @@ const plugin = (options: pluginOptions): PlayerPlugin => {
       const isMatch = matcher(player.$video, source)
 
       if (instance) {
-        instance.pause()
-        instance.unload()
-        instance.detachMediaElement()
         instance.destroy()
         instance = null as any
       }

@@ -59,13 +59,7 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     createHighlights(highlights, player.duration)
   }
 
-  player.on(
-    'videoinitialized',
-    () => {
-      if (active) createHighlights(highlights, player.duration)
-    },
-    { once: true }
-  )
+  if (active) createHighlights(highlights, player.duration)
 
   player.on('videosourcechange', () => {
     active = false

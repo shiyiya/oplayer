@@ -1,6 +1,5 @@
 import type Player from '@oplayer/core'
 import { loading } from '../style'
-import { isInitialized } from './init'
 
 const loadingListener = (player: Player) => {
   let lastTime = 0
@@ -13,18 +12,7 @@ const loadingListener = (player: Player) => {
 
   if (player.$video.preload != 'none') {
     add()
-  } else {
-    player.on(
-      'play',
-      () => {
-        add()
-        player.on('canplaythrough', remove, { once: true })
-      },
-      { once: true }
-    )
   }
-
-  player.on('videoinitialized', remove)
 
   player.on('seeking', () => {
     if (!player.isPlaying) {
@@ -34,8 +22,9 @@ const loadingListener = (player: Player) => {
   })
 
   player.on('play', () => (enable = true))
-
   player.on('pause', () => ((enable = false), remove()))
+
+  player.on('loadedmetadata', remove)
 
   player.on('videosourcechange', () => {
     add()
@@ -44,7 +33,7 @@ const loadingListener = (player: Player) => {
   })
 
   setInterval(() => {
-    if (enable && isInitialized(player)) {
+    if (enable) {
       currentTime = player.currentTime
 
       // loading

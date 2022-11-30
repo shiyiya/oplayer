@@ -313,11 +313,7 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       renderSettingMenu()
 
       function outClickListener(e: Event) {
-        if (
-          $trigger != e.target &&
-          <HTMLElement>e.target != $dom &&
-          !$dom.contains(<HTMLElement>e.target)
-        ) {
+        if ($trigger != e.target && !$dom.contains(<HTMLElement>e.target)) {
           isShow = false
           player.$root.classList.remove(settingShown)
           panels.forEach(($p) => $p.$ref.classList.remove(activeCls))

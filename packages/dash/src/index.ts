@@ -113,7 +113,7 @@ const dashPlugin = ({
 
       if (dashInstance) {
         player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-        dashInstance.reset()
+        dashInstance.destroy()
         dashInstance = null
       }
 
@@ -140,7 +140,7 @@ const dashPlugin = ({
     },
     apply: (player) => {
       player.on('destroy', () => {
-        dashInstance?.reset()
+        dashInstance?.destroy()
         dashInstance = null
       })
 

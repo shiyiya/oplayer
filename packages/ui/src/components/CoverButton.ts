@@ -2,7 +2,7 @@ import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 
-import { icon, playing, loading, controllerHidden, initialized } from '../style'
+import { icon, playing, loading, controllerHidden } from '../style'
 
 const styles = $.css(
   Object.assign(
@@ -45,8 +45,6 @@ const styles = $.css(
     },
     isMobile
       ? {
-          display: 'none',
-          [`@global .${initialized} &`]: { display: 'block' },
           [`@global .${controllerHidden} &`]: { display: 'none' }
         }
       : {

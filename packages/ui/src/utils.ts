@@ -1,6 +1,6 @@
 import type Player from '@oplayer/core'
 import { isMobile } from '@oplayer/core'
-import { isInitialized, isLoading } from './listeners'
+import { isLoading } from './listeners'
 
 export function padZero(time: number): string {
   return time < 10 ? `0${time}` : `${time}`
@@ -35,7 +35,7 @@ export const resolveVideoDataURL = ($video: HTMLVideoElement): string | Error =>
 }
 
 export const screenShot = (player: Player) => {
-  if (isLoading(player) || !isInitialized(player)) {
+  if (isLoading(player)) {
     player.emit('notice', { text: player.locales.get('Please wait for loading to complete') })
     return
   }

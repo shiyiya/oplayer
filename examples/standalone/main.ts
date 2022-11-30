@@ -47,7 +47,7 @@ const player = Player.make('#player', {
   muted: true,
   volume: 0.5,
   // isLive: true,
-  preload: 'none',
+  // preload: 'none',
   source: { poster: POSTER, src },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
@@ -59,10 +59,6 @@ const player = Player.make('#player', {
       settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
       subtitle: {
-        shadow:
-          '0px -6px 0 #212121, 0px -6px 0 #212121, 0px 6px 0 #212121, 0px 6px 0 #212121, -6px 0px 0 #212121, 6px 0px 0 #212121, -6px 0px 0 #212121, 6px 0px 0 #212121, -6px -6px 0 #212121, 6px -6px 0 #212121, -6px 6px 0 #212121, 6px 6px 0 #212121, -6px 18px 0 #212121, 0px 18px 0 #212121, 6px 18px 0 #212121, 0 19px 1px rgb(0 0 0 / 10%), 0 0 6px rgb(0 0 0 / 10%), 0 6px 3px rgb(0 0 0 / 30%), 0 12px 6px rgb(0 0 0 / 20%), 0 18px 18px rgb(0 0 0 / 25%), 0 24px 24px rgb(0 0 0 / 20%), 0 36px 36px rgb(0 0 0 / 15%)',
-        fontSize: !isMobile ? '40pt' : '16pt',
-        fontFamily: 'Luckiest Guy',
         source: [
           {
             name: 'Default',
@@ -143,7 +139,7 @@ const player = Player.make('#player', {
         <path d="M5.561 5.194h10.878a2.2 2.2 0 012.2 2.2v7.211a2.2 2.2 0 01-2.2 2.2H5.561a2.2 2.2 0 01-2.2-2.2V7.394a2.2 2.2 0 012.2-2.2z" fill="#fff"/>
         <path d="M6.967 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1zM15.033 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1z"/>
     </svg>`,
-        loadingIndicator: `<img style='max-height: 30%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
+        loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
     mpegts(),
@@ -347,7 +343,7 @@ player.on((e: PlayerEvent) => {
       logs.value.split('==>').slice(0, 20).join('==>')
   }
 
-  // console.info(e)
+  // if (e.type != 'progress') console.info(e)
 })
 
 // p.$root.addEventListener('click', p.unmute.bind(p), { once: true })

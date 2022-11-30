@@ -9,8 +9,6 @@ export const controllerHidden = $.cls('controllerHidden')
 
 export const loading = $.cls('loading')
 
-export const initialized = $.cls('isInitialized')
-
 export const playing = $.cls('playing')
 
 export const focused = $.cls('focused')
