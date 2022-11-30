@@ -8,6 +8,7 @@ import Player from '/core.es.js'
 import ui from '/ui.es.js'
 import hls from '/hls.es.js'
 import dash from '/dash.es.js'
+import mpegts from '/mpegts.es.js'
 import danmaku from '/danmaku.es.js'
 
 const player =Player.make(document.getElementById('oplayer'), {
@@ -46,6 +47,10 @@ const player =Player.make(document.getElementById('oplayer'), {
             {
               name: 'dash',
               value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
+            },
+            {
+              name: 'flv',
+              value: 'https://oplayer.vercel.app/op.flv'
             }
           ],
           onChange({ value }) {
