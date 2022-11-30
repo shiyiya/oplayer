@@ -17,7 +17,7 @@ const loadingListener = (player: Player) => {
   player.on('seeking', () => {
     if (!player.isPlaying) {
       add()
-      player.on('canplaythrough', remove, { once: true })
+      player.on('seeked', remove, { once: true })
     }
   })
 
