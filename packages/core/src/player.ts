@@ -388,7 +388,7 @@ export class Player {
      * @HAVE_FUTURE_DATA canplay: fired when video ready to play but buffering not complete
      * @HAVE_ENOUGH_DATA canplaythrough : fired when video ready to play and buffering complete
      */
-    return this.$video.readyState < this.$video.HAVE_ENOUGH_DATA && !this.hasError
+    return this.$video.readyState < this.$video.HAVE_FUTURE_DATA && !this.hasError
   }
 
   get isLoaded() {

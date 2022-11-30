@@ -40,7 +40,9 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
           : ''
       }
 
-      <span class=${time}>${player.options.isLive ? '00:00' : '00:00 / --:--'}</span>
+      <span class=${time}>${
+      player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
+    }</span>
     </div>
 
     <!-- right -->

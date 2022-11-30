@@ -12,7 +12,7 @@ import SRT from '../../website/static/君の名は.srt'
 import DANMAKU from '../../website/static/danmaku.xml'
 import THUMB from '../../website/static/thumbnails.jpg'
 import POSTER from '../../website/static/poster.png'
-import op from '../../website/static/op.flv'
+import flv from '../../website/static/op.flv'
 
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
@@ -22,7 +22,7 @@ import { $ } from '@oplayer/core'
 
 const dataSrcs = [
   MP4,
-  op,
+  flv,
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
@@ -47,6 +47,7 @@ const player = Player.make('#player', {
   muted: true,
   volume: 0.5,
   // isLive: true,
+  preload: 'none',
   source: { poster: POSTER, src },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
@@ -127,7 +128,7 @@ const player = Player.make('#player', {
             },
             {
               name: 'flv',
-              value: op
+              value: flv
             }
           ],
           onChange({ value }) {
@@ -142,7 +143,7 @@ const player = Player.make('#player', {
         <path d="M5.561 5.194h10.878a2.2 2.2 0 012.2 2.2v7.211a2.2 2.2 0 01-2.2 2.2H5.561a2.2 2.2 0 01-2.2-2.2V7.394a2.2 2.2 0 012.2-2.2z" fill="#fff"/>
         <path d="M6.967 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1zM15.033 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1z"/>
     </svg>`,
-        loadingIndicator: `<img src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
+        loadingIndicator: `<img style='max-height: 30%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
     mpegts(),

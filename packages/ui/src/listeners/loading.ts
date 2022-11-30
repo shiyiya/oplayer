@@ -11,7 +11,19 @@ const loadingListener = (player: Player) => {
   const add = () => player.$root.classList.add(loading)
   const remove = () => player.$root.classList.remove(loading)
 
-  add()
+  if (player.$video.preload != 'none') {
+    add()
+  } else {
+    player.on(
+      'play',
+      () => {
+        add()
+        player.on('canplaythrough', remove, { once: true })
+      },
+      { once: true }
+    )
+  }
+
   player.on('videoinitialized', remove)
 
   player.on('seeking', () => {
