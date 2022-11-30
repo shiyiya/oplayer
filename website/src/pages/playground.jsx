@@ -11,7 +11,7 @@ import dash from '/dash.es.js'
 import mpegts from '/mpegts.es.js'
 import danmaku from '/danmaku.es.js'
 
-const player =Player.make('#oplayer', {
+const player = Player.make('#oplayer', {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',
     poster: 'https://oplayer.vercel.app/poster.png'
@@ -38,7 +38,7 @@ const player =Player.make('#oplayer', {
         <path d="M5.561 5.194h10.878a2.2 2.2 0 012.2 2.2v7.211a2.2 2.2 0 01-2.2 2.2H5.561a2.2 2.2 0 01-2.2-2.2V7.394a2.2 2.2 0 012.2-2.2z" fill="#fff"/>
         <path d="M6.967 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1zM15.033 8.556a1.1 1.1 0 011.1 1.1v2.689a1.1 1.1 0 11-2.2 0V9.656a1.1 1.1 0 011.1-1.1z"/>
     </svg>\`,
-        loadingIndicator: \`<img src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>\`,
+        loadingIndicator: \`<img src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>\`
       }
     }),
     hls({
@@ -48,6 +48,7 @@ const player =Player.make('#oplayer', {
       }
     }),
     dash(),
+    mpegts(),
     {
       name: 'oplayer-plugin-chromecast',
       apply(player) {
@@ -66,9 +67,7 @@ const player =Player.make('#oplayer', {
             window.__onGCastApiAvailable = (isAvailable) => {
               if (isAvailable) {
                 cast = window.chrome.cast
-                const sessionRequest = new cast.SessionRequest(
-                  cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
-                )
+                const sessionRequest = new cast.SessionRequest(cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID)
                 const apiConfig = new cast.ApiConfig(
                   sessionRequest,
                   () => {},
@@ -139,38 +138,35 @@ const player =Player.make('#oplayer', {
           }
         })
       }
-    },
-  ])
-  .create();
-
-player.plugins.ui.menu.register({
-  name: 'List',
-  icon: \`<svg style='scale:1.2' viewBox="0 0 1032 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M192.031 452c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 212c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 698.75c-29.625 0-53.156 24-53.156 53.156s24 53.156 53.156 53.156 53.156-24 53.156-53.156c0-29.156-23.625-53.156-53.156-53.156zM312.031 791.938h559.969v-79.969h-559.969v79.969zM312.031 552.031h559.969v-79.969h-559.969v79.969zM312.031 231.969v79.969h559.969v-79.969h-559.969z"></path></svg>\`,
-  children: [
-    {
-      name: 'mp4',
-      default: true,
-      value: MP4
-    },
-    {
-      name: 'hls',
-      value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
-    },
-    {
-      name: 'dash',
-      value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
-    },
-    {
-      name: 'flv',
-      value: flv
     }
-  ],
-  onChange({ value }) {
-    src = value
-    player.changeSource({ src: value })
-  }
-})
-
+  ])
+  .create()
+  .plugins.ui.menu.register({
+    name: 'List',
+    icon: \`<svg style='scale:1.2' viewBox="0 0 1032 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6368" width="200" height="200"><path d="M192.031 452c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 212c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 698.75c-29.625 0-53.156 24-53.156 53.156s24 53.156 53.156 53.156 53.156-24 53.156-53.156c0-29.156-23.625-53.156-53.156-53.156zM312.031 791.938h559.969v-79.969h-559.969v79.969zM312.031 552.031h559.969v-79.969h-559.969v79.969zM312.031 231.969v79.969h559.969v-79.969h-559.969z" fill="#ffffff" p-id="6369"></path></svg>\`,
+    children: [
+      {
+        name: 'mp4',
+        default: true,
+        value: 'https://oplayer.vercel.app/君の名は.mp4'
+      },
+      {
+        name: 'hls',
+        value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+      },
+      {
+        name: 'dash',
+        value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
+      },
+      {
+        name: 'flv',
+        value: 'https://oplayer.vercel.app/op.flv'
+      }
+    ],
+    onChange({ value }) {
+      player.changeSource({ src: value })
+    }
+  })
   `
 
 export default () => {
