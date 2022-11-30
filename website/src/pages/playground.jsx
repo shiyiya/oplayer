@@ -1,4 +1,4 @@
-import React from 'react'
+import Player, { $ } from '/core.es.js'
 import Playground from '@agney/playground'
 import Layout from '@theme/Layout'
 import '@reach/tabs/styles.css'
