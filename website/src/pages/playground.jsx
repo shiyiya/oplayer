@@ -1,10 +1,10 @@
-import Player, { $ } from '/core.es.js'
+import React from 'react'
 import Playground from '@agney/playground'
 import Layout from '@theme/Layout'
 import '@reach/tabs/styles.css'
 
 const code = `
-import Player from '/core.es.js'
+import Player, { $ } from '/core.es.js'
 import ui from '/ui.es.js'
 import hls from '/hls.es.js'
 import dash from '/dash.es.js'
