@@ -35,7 +35,7 @@ export const resolveVideoDataURL = ($video: HTMLVideoElement): string | Error =>
 }
 
 export const screenShot = (player: Player) => {
-  if (isLoading(player)) {
+  if (isLoading(player) || isNaN(player.duration)) {
     player.emit('notice', { text: player.locales.get('Please wait for loading to complete') })
     return
   }

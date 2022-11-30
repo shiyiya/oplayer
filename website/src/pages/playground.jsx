@@ -11,7 +11,7 @@ import dash from '/dash.es.js'
 import mpegts from '/mpegts.es.js'
 import danmaku from '/danmaku.es.js'
 
-const player =Player.make(document.getElementById('oplayer'), {
+const player =Player.make('#oplayer', {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',
     poster: 'https://oplayer.vercel.app/poster.png'
@@ -29,32 +29,6 @@ const player =Player.make(document.getElementById('oplayer'), {
             } else {
               player.plugins.ui.notice('Airplay not available')
             }
-          }
-        },
-        {
-          name: 'SOURCE LIST',
-          icon: \`<svg style='scale:1.2' viewBox="0 0 1032 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6368" width="200" height="200"><path d="M192.031 452c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 212c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 698.75c-29.625 0-53.156 24-53.156 53.156s24 53.156 53.156 53.156 53.156-24 53.156-53.156c0-29.156-23.625-53.156-53.156-53.156zM312.031 791.938h559.969v-79.969h-559.969v79.969zM312.031 552.031h559.969v-79.969h-559.969v79.969zM312.031 231.969v79.969h559.969v-79.969h-559.969z" fill="#ffffff" p-id="6369"></path></svg>\`,
-          children: [
-            {
-              name: 'mp4',
-              default: true,
-              value: 'https://oplayer.vercel.app/君の名は.mp4'
-            },
-            {
-              name: 'hls',
-              value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
-            },
-            {
-              name: 'dash',
-              value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
-            },
-            {
-              name: 'flv',
-              value: 'https://oplayer.vercel.app/op.flv'
-            }
-          ],
-          onChange({ value }) {
-            player.changeSource({ src: value })
           }
         }
       ],
@@ -168,6 +142,34 @@ const player =Player.make(document.getElementById('oplayer'), {
     },
   ])
   .create();
+
+player.plugins.ui.menu.register({
+  name: 'List',
+  icon: \`<svg style='scale:1.2' viewBox="0 0 1032 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M192.031 452c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 212c-33.188 0-60 26.813-60 60s26.813 60 60 60 60-26.813 60-60-26.813-60-60-60zM192.031 698.75c-29.625 0-53.156 24-53.156 53.156s24 53.156 53.156 53.156 53.156-24 53.156-53.156c0-29.156-23.625-53.156-53.156-53.156zM312.031 791.938h559.969v-79.969h-559.969v79.969zM312.031 552.031h559.969v-79.969h-559.969v79.969zM312.031 231.969v79.969h559.969v-79.969h-559.969z"></path></svg>\`,
+  children: [
+    {
+      name: 'mp4',
+      default: true,
+      value: MP4
+    },
+    {
+      name: 'hls',
+      value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+    },
+    {
+      name: 'dash',
+      value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
+    },
+    {
+      name: 'flv',
+      value: flv
+    }
+  ],
+  onChange({ value }) {
+    src = value
+    player.changeSource({ src: value })
+  }
+})
 
   `
 

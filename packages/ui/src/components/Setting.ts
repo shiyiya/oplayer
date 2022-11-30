@@ -253,7 +253,6 @@ function createPanel(
 export default function (player: Player, $el: HTMLElement, options: UiConfig['settings'] = []) {
   const $dom = $.create(`div.${setting}`, { 'aria-label': 'Setting' })
   let panels: Panel[] = []
-  let $trigger: HTMLElement | null = null
   let isShow = false
   let hasRendered = false
   const defaultSettingMap = {
@@ -313,7 +312,7 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       renderSettingMenu()
 
       function outClickListener(e: Event) {
-        if ($trigger != e.target && !$dom.contains(<HTMLElement>e.target)) {
+        if (!$dom.contains(<HTMLElement>e.target)) {
           isShow = false
           player.$root.classList.remove(settingShown)
           panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
@@ -342,8 +341,7 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       settingButton,
       parent.children![parent.children.length - (player.isPipEnabled ? 2 : 1)]!
     )
-    settingButton.addEventListener('click', (e) => {
-      $trigger = e.target as HTMLDivElement
+    settingButton.addEventListener('click', () => {
       isShow = player.$root.classList.toggle(settingShown)
       if (isShow) {
         panels[0]!.$ref.classList.toggle(activeCls)

@@ -7,7 +7,7 @@ const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 let importedMpegts: typeof Mpegts = globalThis.mpegts
 
 type pluginOptions = {
-  mpegtsConfig?: Partial<Mpegts.Config>
+  mpegtsConfig?: Partial<Mpegts.Config> & { debug: boolean }
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
@@ -24,7 +24,7 @@ const defaultMatcher: pluginOptions['matcher'] = (_, source) => {
 }
 
 const plugin = (options: pluginOptions): PlayerPlugin => {
-  const { mpegtsConfig = {}, matcher = defaultMatcher } = options || {}
+  const { mpegtsConfig, matcher = defaultMatcher } = options || {}
   let instance: Mpegts.Player | null
 
   return {
@@ -40,8 +40,11 @@ const plugin = (options: pluginOptions): PlayerPlugin => {
 
       if (options.loader || !isMatch) return false
 
-      //@ts-ignore
-      importedMpegts ??= (await import('mpegts.js/dist/mpegts.js')).default
+      if (!importedMpegts) {
+        //@ts-ignore
+        importedMpegts = (await import('mpegts.js/dist/mpegts.js')).default
+        importedMpegts.LoggingControl.enableAll = Boolean(mpegtsConfig?.debug)
+      }
 
       if (!importedMpegts.isSupported()) return false
 
