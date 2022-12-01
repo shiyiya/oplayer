@@ -349,6 +349,7 @@ export class Player {
     this._playPromise = undefined
     this.hasError = false
     this.isCustomLoader = false
+    this.$video.pause()
   }
 
   changeQuality(source: Omit<Source, 'poster'>): Promise<void> {
