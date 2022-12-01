@@ -253,7 +253,6 @@ function createPanel(
 export default function (player: Player, $el: HTMLElement, options: UiConfig['settings'] = []) {
   const $dom = $.create(`div.${setting}`, { 'aria-label': 'Setting' })
   let panels: Panel[] = []
-  let isShow = false
   let hasRendered = false
   const defaultSettingMap = {
     loop: {
@@ -310,24 +309,12 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       hasRendered = true
       $.render($dom, $el)
       renderSettingMenu()
-
-      function outClickListener(e: Event) {
-        if (!$dom.contains(<HTMLElement>e.target)) {
-          isShow = false
-          player.$root.classList.remove(settingShown)
-          panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
-        }
-      }
-
-      document.addEventListener('click', outClickListener)
-      player.on('destroy', () => document.removeEventListener('click', outClickListener))
     }
 
     createPanel(player, panels, settings, { target: $dom })
   }
 
   function renderSettingMenu() {
-    const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)?.children[1]!
     const settingButton = $.create(
       'button',
       {
@@ -337,18 +324,26 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       `${Icons.get('setting')}`
     )
 
-    parent!.insertBefore(
-      settingButton,
-      parent.children![parent.children.length - (player.isPipEnabled ? 2 : 1)]!
-    )
     settingButton.addEventListener('click', () => {
-      isShow = player.$root.classList.toggle(settingShown)
-      if (isShow) {
-        panels[0]!.$ref.classList.toggle(activeCls)
-      } else {
-        panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+      player.$root.classList.add(settingShown)
+      panels[0]!.$ref.classList.add(activeCls)
+
+      function outClickListener(e: Event) {
+        if (!$dom.contains(<HTMLElement>e.target)) {
+          player.$root.classList.remove(settingShown)
+          panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+          document.removeEventListener('click', outClickListener)
+        }
       }
+
+      document.addEventListener('click', outClickListener)
     })
+
+    const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
+    parent.insertBefore(
+      settingButton,
+      parent.children[parent.children.length - (player.isPipEnabled ? 2 : 1)]!
+    )
   }
 
   return { register, unregister, updateLabel, select }
