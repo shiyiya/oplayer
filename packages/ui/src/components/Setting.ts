@@ -324,7 +324,8 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       `${Icons.get('setting')}`
     )
 
-    settingButton.addEventListener('click', () => {
+    settingButton.addEventListener('click', (e) => {
+      e.stopPropagation()
       player.$root.classList.add(settingShown)
       panels[0]!.$ref.classList.add(activeCls)
 
@@ -336,7 +337,9 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
         }
       }
 
-      document.addEventListener('click', outClickListener)
+      setTimeout(() => {
+        document.addEventListener('click', outClickListener)
+      })
     })
 
     const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
