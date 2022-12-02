@@ -11,7 +11,9 @@ import dash from '/dash.es.js'
 import mpegts from '/mpegts.es.js'
 import danmaku from '/danmaku.es.js'
 
-// html script example: https://github.com/shiyiya/oplayer/blob/main/examples/script.html
+// html script example:
+// preview: https://oplayer.vercel.app/script.html
+// code: https://github.com/shiyiya/oplayer/blob/main/examples/script.html
 
 const player = Player.make('#oplayer', {
   source: {
@@ -178,7 +180,13 @@ export default () => {
       <Playground
         id="oplayer-playground"
         initialSnippet={{
-          markup: `<div id=oplayer />`,
+          markup: `
+            html script example: <br />
+            <a href="https://oplayer.vercel.app/script.html">preview</a> |
+            <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html">source code</a>
+            <br />
+            <div id=oplayer />
+          `,
           javascript:
             (globalThis?.window && new URL(window.location).searchParams.get('code')) || code
         }}

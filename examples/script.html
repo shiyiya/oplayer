@@ -5,25 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>oplayer</title>
+    <style>
+      body {
+        width: 980px;
+        padding: 0 20px;
+        margin: 40px auto;
+        box-sizing: border-box;
+      }
+      #oplayer {
+        aspect-ratio: 16/9;
+      }
+    </style>
   </head>
-  <body style="max-width: 980px; margin: 40px auto">
+  <body>
     <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html" target="_blank"
-      ><h3>GitHub</h3></a
+      ><h3>source code</h3></a
     >
 
     <div id="oplayer" />
 
-    <script src="../packages/core/dist/index.min.js"></script>
-    <script src="../packages/ui/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
+    <!-- <script src="../packages/core/dist/index.min.js"></script>
+    <script src="../packages/ui/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
-    <script src="../packages/hls/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
+    <!-- <script src="../packages/hls/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.min.js"></script>
-    <script src="../packages/dash/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script>
+    <!-- <script src="../packages/dash/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.js"></script>
-    <script src="../packages/mpegts/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@latest/dist/index.min.js"></script>
+    <!-- <script src="../packages/mpegts/dist/index.min.js"></script> -->
 
     <script>
       var $ = OPlayer.$
