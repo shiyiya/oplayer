@@ -29,6 +29,9 @@ const config = {
   //     }
   //   }
   // },
+
+  scripts: [{ src: 'https://oplayer.vercel.app/_vercel/insights/script.js', defer: true }],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
