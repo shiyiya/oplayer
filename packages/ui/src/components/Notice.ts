@@ -1,13 +1,13 @@
 import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { addClass, debounce, removeClass } from '../utils'
+import { debounce, removeClass } from '../utils'
 
 const noticeCls = $.css`
   position: absolute;
   display: none;
-  top: 10px;
-  left: 10px;
-  right: 10px;
+  top: 1em;
+  left: 1em;
+  right: 1em;
   z-index: 99;
 `
 
@@ -23,6 +23,37 @@ const noticeTextCls = $.css(`
   font-size: 120%;
 `)
 
+const topCenter = $.css`
+  text-align: center;
+`
+
+const topRight = $.css`
+  text-align: right;
+`
+
+const leftBottom = $.css`
+  bottom: 6em;
+  top: initial;
+`
+
+const center = $.css`
+  top: 50%;
+  text-align: center;
+  transform: translateY(-50%);
+`
+
+const POS_CLS = {
+  center: center,
+  left: '',
+  'top-left': '',
+  top: topCenter,
+  'top-center': topCenter,
+  'top-right': topRight,
+  right: topRight,
+  bottom: leftBottom,
+  'left-bottom': leftBottom
+}
+
 const NOTICE_HIDE_DELAY = 2000
 
 const noticeShowCls = $.css('display:block;')
@@ -34,12 +65,8 @@ const render = (player: Player, el: HTMLElement) => {
     `<span class="${noticeTextCls}"></span>`
   )
 
-  const $text: HTMLDivElement = $dom.querySelector(`.${noticeTextCls}`)!
+  const $text: HTMLSpanElement = $dom.querySelector(`.${noticeTextCls}`)!
   const { callee: delayHide } = debounce(() => removeClass($dom, noticeShowCls), NOTICE_HIDE_DELAY)
-
-  function toggle(fn: Function) {
-    return (...arg: any[]) => (fn(...arg), addClass($dom, noticeShowCls), delayHide())
-  }
 
   ;(['play', 'pause', 'enterFullscreen', 'exitFullscreen', 'enterPip', 'exitPip'] as const).forEach(
     (key) => {
@@ -51,7 +78,7 @@ const render = (player: Player, el: HTMLElement) => {
             const returnValue = fn(...arg)
             if ((<Promise<any>>returnValue)?.catch) {
               return (<Promise<any>>returnValue).catch((error) => {
-                toggle(() => ($text.innerText = (<Error>error).message))()
+                show((<Error>error).message)
                 return error
               })
             } else {
@@ -62,10 +89,10 @@ const render = (player: Player, el: HTMLElement) => {
     }
   )
 
-  function show(text: string) {
-    toggle((text: string) => {
-      $text.innerText = text
-    })(text)
+  function show(text: string, pos?: keyof typeof POS_CLS) {
+    $text.innerHTML = text
+    $dom.className = `${noticeCls} ${noticeShowCls} ${POS_CLS[pos || 'left']}`
+    delayHide()
   }
 
   player.on('notice', ({ payload }) => show(payload.text))
