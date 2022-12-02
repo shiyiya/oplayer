@@ -182,8 +182,8 @@ export default () => {
         initialSnippet={{
           markup: `
             html script example: <br />
-            <a href="https://oplayer.vercel.app/script.html">preview</a> |
-            <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html">source code</a>
+            <a href="https://oplayer.vercel.app/script.html" target="_blank">preview</a> |
+            <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html" target="_blank">source code</a>
             <br />
             <div id=oplayer />
           `,
