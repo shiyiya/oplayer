@@ -2,14 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { build } from 'vite'
 import glob from 'glob'
-import autoExternal from 'rollup-plugin-auto-external'
 import chokidar from 'chokidar'
-
-const rollupPlugins = [autoExternal()]
 
 export const external = ['@oplayer/core', 'hls.js']
 
-async function buildPugin(name) {
+async function buildPlugin(name) {
   const { version } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
   const pluginName = name.split('.').shift()
   const now = Date.now()
@@ -27,18 +24,15 @@ async function buildPugin(name) {
         formats: ['es', 'umd']
       },
       rollupOptions: {
-        external,
         output: {
           dir: 'dist/plugins',
           globals: {
             'hls.js/dist/hls.light.min': 'Hls',
             'webtorrent/webtorrent.min': 'WebTorrent'
           }
-        },
-        plugins: rollupPlugins
+        }
       }
-    },
-    plugins: rollupPlugins
+    }
   })
 
   console.log(`✨ Built ${name}@${version} - ${Date.now() - now}ms!`)
@@ -55,7 +49,8 @@ const plugins = glob.sync(path.join(process.cwd(), 'plugins/*')).reduce((result,
   return result
 }, {})
 
-const bundles = Object.keys(plugins).map((name) => () => buildPugin(name))
+const bundles = Object.keys(plugins).map((name) => () => buildPlugin(name))
+
 runInQueue(bundles).then(() => {
   console.log(`✨ Finished building all plugins!`)
 })
@@ -69,6 +64,6 @@ if (process.argv.pop() == '--watch') {
     })
     .on('change', (file) => {
       const fileName = file.split('plugins/').pop()
-      buildPugin(fileName)
+      buildPlugin(fileName)
     })
 }

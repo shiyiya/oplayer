@@ -11,6 +11,8 @@ import dash from '/dash.es.js'
 import mpegts from '/mpegts.es.js'
 import danmaku from '/danmaku.es.js'
 
+// html script example: https://github.com/shiyiya/oplayer/blob/main/examples/script.html
+
 const player = Player.make('#oplayer', {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',

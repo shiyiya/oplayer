@@ -11,13 +11,15 @@ type pluginOptions = {
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
+const REG = /flv|ts|m2ts(#|\?|$)/i
+
 const defaultMatcher: pluginOptions['matcher'] = (_, source) => {
   if (source.format && ['flv', 'm2ts', 'mpegts'].includes(source.format)) {
     return true
   }
 
   if (source.format === 'auto' || typeof source.format === 'undefined') {
-    return /flv|ts(#|\?|$)/i.test(source.src)
+    return REG.test(source.src)
   }
 
   return false
@@ -52,7 +54,7 @@ const plugin = (options: pluginOptions): PlayerPlugin => {
         {
           url: source.src,
           isLive: player.options.isLive,
-          type: source.format || /flv|ts(#|\?|$)/i.exec(source.src)?.[0]! // could also be mpegts, m2ts, flv
+          type: source.format || REG.exec(source.src)?.[0]! // could also be mpegts, m2ts, flv
         },
         mpegtsConfig
       )
