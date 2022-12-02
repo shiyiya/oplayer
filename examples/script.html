@@ -19,7 +19,7 @@
 
       @media only screen and (max-width: 991px) {
         body {
-          padding: 1em;
+          padding: 10px;
           width: 100%;
           margin: 0;
         }
@@ -86,7 +86,12 @@
               loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
             }
           }),
-          OHls(),
+          OHls({
+            options: {
+              hlsQualityControl: true,
+              hlsQualitySwitch: 'immediate'
+            }
+          }),
           ODash(),
           OMpegts(),
           {
