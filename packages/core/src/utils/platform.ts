@@ -10,9 +10,7 @@ export const isiPhone = /iPhone/gi.test(globalThis.navigator?.userAgent)
 
 export const isIOS = isiPhone || isiPad
 
-export const isSafari = /version\/(\d+).+?safari/.test(
-  (globalThis.navigator && globalThis.navigator?.userAgent).toLowerCase()
-)
+export const isSafari = /^((?!chrome|android).)*safari/i.test(globalThis.navigator?.userAgent)
 
 export const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(

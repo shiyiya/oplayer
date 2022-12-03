@@ -14,14 +14,14 @@ import type {
 } from './types'
 
 export class Player {
-  readonly container: HTMLElement
-  readonly options: Required<PlayerOptions>
+  container: HTMLElement
+  options: Required<PlayerOptions>
 
-  readonly locales: I18n
-  readonly eventEmitter = new EventEmitter()
+  locales: I18n
+  eventEmitter = new EventEmitter()
 
-  readonly pluginsFactory: PlayerPlugin[] = []
-  readonly plugins: /* ReturnTypePlugins<Plugins> &*/ any = {} as any // TODO: type not work
+  pluginsFactory: PlayerPlugin[] = []
+  plugins: /* ReturnTypePlugins<Plugins> &*/ any = {} as any // TODO: type not work
 
   $root: HTMLElement
   $video: HTMLVideoElement
@@ -63,14 +63,14 @@ export class Player {
     return new Player(el, options)
   }
 
-  readonly use = (plugins: PlayerPlugin[]) => {
+  use(plugins: PlayerPlugin[]) {
     plugins.forEach((plugin) => {
       this.pluginsFactory.push(plugin)
     })
     return this
   }
 
-  readonly create = () => {
+  create() {
     this.render()
     this.initEvent()
     this.applyPlugins()
@@ -78,7 +78,7 @@ export class Player {
     return this
   }
 
-  initEvent = () => {
+  initEvent() {
     const errorHandler = (payload: ErrorEvent) => {
       this.hasError = true
       this.emit('error', payload)
@@ -120,7 +120,7 @@ export class Player {
     })
   }
 
-  readonly render = () => {
+  render() {
     this.$video = $.create(
       `video.${$.css(`
         width: 100%;
@@ -162,7 +162,7 @@ export class Player {
     $.render(this.$root, this.container)
   }
 
-  load = async (source: Source) => {
+  async load(source: Source) {
     for await (const plugin of this.pluginsFactory) {
       if (plugin.load) {
         const match = await plugin.load(this, source, { loader: this.isCustomLoader })
@@ -174,7 +174,7 @@ export class Player {
     }
   }
 
-  applyPlugins = () => {
+  applyPlugins() {
     this.pluginsFactory.forEach((factory) => {
       if (factory.apply) {
         const returnValues = factory.apply(this)
@@ -187,11 +187,7 @@ export class Player {
     })
   }
 
-  readonly on = (
-    name: PlayerEventName | PlayerListener,
-    listener?: PlayerListener,
-    options = { once: false }
-  ) => {
+  on(name: PlayerEventName | PlayerListener, listener?: PlayerListener, options = { once: false }) {
     if (typeof name === 'string') {
       if (options.once) {
         this.eventEmitter.once(name, listener!)
@@ -206,15 +202,15 @@ export class Player {
     return this
   }
 
-  readonly off = (name: PlayerEventName, listener: PlayerListener) => {
+  off(name: PlayerEventName, listener: PlayerListener) {
     this.eventEmitter.off(name as string, listener)
   }
 
-  readonly offAny = (name: PlayerEventName) => {
+  offAny(name: PlayerEventName) {
     this.eventEmitter.offAny(name as string)
   }
 
-  readonly emit = (name: PlayerEventName, payload?: PlayerEvent['payload']) => {
+  emit(name: PlayerEventName, payload?: PlayerEvent['payload']) {
     this.eventEmitter.emit(name as any, payload)
   }
 
@@ -222,7 +218,7 @@ export class Player {
     this.$video.poster = poster
   }
 
-  play = () => {
+  play() {
     if (!this.$video.src) throw Error('The element has no supported sources.')
     return (this._playPromise = this.$video.play())
   }
