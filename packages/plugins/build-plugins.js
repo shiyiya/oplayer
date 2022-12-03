@@ -4,7 +4,7 @@ import { build } from 'vite'
 import glob from 'glob'
 import chokidar from 'chokidar'
 
-export const external = ['@oplayer/core', 'hls.js']
+const external = ['@oplayer/core']
 
 async function buildPlugin(name) {
   const { version } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
@@ -19,17 +19,15 @@ async function buildPlugin(name) {
       sourcemap: true,
       lib: {
         entry: plugins[name],
-        name: `oplayer-plugin-${pluginName}`,
-        fileName: (format) => `${pluginName}.${format}.js`,
-        formats: ['es', 'umd']
+        formats: ['es', 'umd'],
+        name: 'O' + pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
+        fileName: (format) => `${pluginName}.${{ es: 'es', umd: 'min' }[format]}.js`
       },
       rollupOptions: {
+        external: external,
         output: {
-          dir: 'dist/plugins',
-          globals: {
-            'hls.js/dist/hls.light.min': 'Hls',
-            'webtorrent/webtorrent.min': 'WebTorrent'
-          }
+          dir: 'dist',
+          globals: {}
         }
       }
     }

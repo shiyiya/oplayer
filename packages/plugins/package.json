@@ -1,0 +1,17 @@
+{
+  "name": "@oplayer/plugins",
+  "version": "0.0.0",
+  "private": "true",
+  "description": "oplayer's plugin",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Error: no test specified\"",
+    "build": "echo \"Error: no build specified\""
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
