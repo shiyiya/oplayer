@@ -18,32 +18,32 @@ type PluginOptions = {
 }
 
 const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
-  source.format === 'dash' ||
+  source.format === 'mpd' ||
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
     /.mpd(#|\?|$)/i.test(source.src))
 
 const generateSetting = (
   player: Player,
-  dashInstance: MediaPlayerClass,
+  instance: MediaPlayerClass,
   options: PluginOptions['options']
 ) => {
   const settingUpdater = () => {
-    const isAutoSwitch = dashInstance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
+    const isAutoSwitch = instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
 
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
         default: isAutoSwitch,
         value: () => {
-          dashInstance.updateSettings({
+          instance.updateSettings({
             streaming: { abr: { autoSwitchBitrate: { video: true } } }
           })
         }
       }
     ]
 
-    if (dashInstance.getBitrateInfoListFor('video').length > 1) {
-      dashInstance.getBitrateInfoListFor('video').forEach((bitrate) => {
+    if (instance.getBitrateInfoListFor('video').length > 1) {
+      instance.getBitrateInfoListFor('video').forEach((bitrate) => {
         let name = bitrate.height + 'p'
         if (options?.withBitrate) {
           const kb = bitrate.bitrate / 1000
@@ -54,9 +54,7 @@ const generateSetting = (
 
         settingOptions.push({
           name,
-          default: isAutoSwitch
-            ? false
-            : bitrate.qualityIndex == dashInstance.getQualityFor('video'),
+          default: isAutoSwitch ? false : bitrate.qualityIndex == instance.getQualityFor('video'),
           value: bitrate.qualityIndex as any
         })
       })
@@ -71,10 +69,10 @@ const generateSetting = (
         if (typeof value == 'function') {
           value()
         } else {
-          dashInstance.updateSettings({
+          instance.updateSettings({
             streaming: { abr: { autoSwitchBitrate: { video: false } } }
           })
-          dashInstance.setQualityFor('video', value)
+          instance.setQualityFor('video', value)
         }
       },
       children: settingOptions
@@ -82,17 +80,17 @@ const generateSetting = (
   }
 
   const menuUpdater = (data: QualityChangeRenderedEvent) => {
-    const settings = dashInstance.getSettings()
+    const settings = instance.getSettings()
     if (data.mediaType !== 'video' && !settings.streaming?.abr?.autoSwitchBitrate?.video) return
 
-    const level = dashInstance.getQualityFor('video')
-    const height = dashInstance.getBitrateInfoListFor('video')[level]?.height
+    const level = instance.getQualityFor('video')
+    const height = instance.getBitrateInfoListFor('video')[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
     player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
   }
 
-  dashInstance.on(imported.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
-  dashInstance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
+  instance.on(imported.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
+  instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
 const dashPlugin = ({

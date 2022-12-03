@@ -1,3 +1,0 @@
-## Gesture
-
-Mobile gestures

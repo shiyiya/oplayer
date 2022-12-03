@@ -4,11 +4,9 @@ import type Shaka from 'shaka-player'
 
 const PLUGIN_NAME = 'oplayer-plugin-shaka'
 
-//@ts-ignore
 let imported: typeof Shaka = globalThis.shaka
 
 type PluginOptions = {
-  // shakaConfig?: any
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
