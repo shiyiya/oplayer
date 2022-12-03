@@ -203,7 +203,7 @@ function createPanel(
           $label.innerText = defaultSelected.name
         }
 
-        optionPanel.select = (i: number, shouldBeCallFn = true) => {
+        optionPanel.select = (i: number, shouldBeCallFn: boolean) => {
           if (i == -1) {
             optionPanel
               .$ref!.querySelector<HTMLDivElement>('[data-selected=true]')
@@ -222,15 +222,12 @@ function createPanel(
             $label.innerText = value!.name
             if (shouldBeCallFn) onChange?.(value, { index: i })
           }
-
-          if (shouldBeCallFn) {
-            panel.$ref.classList.add(activeCls)
-            optionPanel.$ref.classList.remove(activeCls)
-          }
         }
 
         optionPanel.$ref.addEventListener('click', (e) => {
-          optionPanel.select!(+(e.target as HTMLDivElement).getAttribute('data-index')!)
+          optionPanel.select!(+(e.target as HTMLDivElement).getAttribute('data-index')!, true)
+          panel.$ref.classList.add(activeCls)
+          optionPanel.$ref.classList.remove(activeCls)
         })
       }
     } else {

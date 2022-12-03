@@ -30,6 +30,7 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
   - WebM
   - Ogg Theora Vorbis
 - Features
+  - [DRM](https://github.com/shaka-project/shaka-player) fairplay | widevine
   - Danmaku
   - Screenshot
   - Hotkeys
@@ -104,11 +105,10 @@ Player.make(document.getElementById('oplayer'), {
 
 If you think this is super cool, or useful, and want to donate a little, then you are also super cool!
 
-|   |         |
-|--:|---------|
-| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$1 tip](https://www.paypal.com/paypalme/ShiYiYa/1) |
-| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$5 tip](https://www.paypal.com/paypalme/ShiYiYa/5) |
+|                                                                                                                           |                                                       |
+| ------------------------------------------------------------------------------------------------------------------------: | ----------------------------------------------------- |
+| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$1 tip](https://www.paypal.com/paypalme/ShiYiYa/1)   |
+| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$5 tip](https://www.paypal.com/paypalme/ShiYiYa/5)   |
 | <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$10 tip](https://www.paypal.com/paypalme/ShiYiYa/10) |
 
-<img src="https://www.oaii.me/wechat_donate.png" width=30% style='float:left'> 
-
+<img src="https://www.oaii.me/wechat_donate.png" width=30% style='float:left'>

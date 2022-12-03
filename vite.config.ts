@@ -15,7 +15,8 @@ export const globals = {
   dashjs: 'dashjs',
   '@oplayer/torrent': 'OTorrent',
   '@oplayer/mpegts': 'OMpegts',
-  'mpegts.js/dist/mpegts.js':'mpegts',
+  'mpegts.js/dist/mpegts.js': 'mpegts',
+  'shaka-player/dist/shaka-player.compiled': 'shaka',
   'webtorrent/webtorrent.min.js': 'WebTorrent',
   '@oplayer/danmaku': 'ODanmaku',
   react: 'React'

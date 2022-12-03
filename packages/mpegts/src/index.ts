@@ -6,14 +6,14 @@ const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 //@ts-ignore
 let importedMpegts: typeof Mpegts = globalThis.mpegts
 
-type pluginOptions = {
+type PluginOptions = {
   mpegtsConfig?: Partial<Mpegts.Config> & { debug: boolean }
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
 const REG = /flv|ts|m2ts(#|\?|$)/i
 
-const defaultMatcher: pluginOptions['matcher'] = (_, source) => {
+const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
   if (source.format && ['flv', 'm2ts', 'mpegts'].includes(source.format)) {
     return true
   }
@@ -25,7 +25,7 @@ const defaultMatcher: pluginOptions['matcher'] = (_, source) => {
   return false
 }
 
-const plugin = (options: pluginOptions): PlayerPlugin => {
+const plugin = (options: PluginOptions): PlayerPlugin => {
   const { mpegtsConfig, matcher = defaultMatcher } = options || {}
   let instance: Mpegts.Player | null
 

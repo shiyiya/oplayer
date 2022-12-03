@@ -60,6 +60,7 @@ importers:
       '@oplayer/dash': workspace:*
       '@oplayer/hls': workspace:*
       '@oplayer/mpegts': workspace:*
+      '@oplayer/shaka': workspace:*
       '@oplayer/ui': workspace:*
       hls.js: ^1.2.8
       lit: ^2.4.1
@@ -70,6 +71,7 @@ importers:
       '@oplayer/dash': link:../../packages/dash
       '@oplayer/hls': link:../../packages/hls
       '@oplayer/mpegts': link:../../packages/mpegts
+      '@oplayer/shaka': link:../../packages/shaka
       '@oplayer/ui': link:../../packages/ui
       hls.js: 1.2.8
       lit: 2.4.1
@@ -130,6 +132,14 @@ importers:
       '@types/react': 18.0.26
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+
+  packages/shaka:
+    specifiers:
+      '@oplayer/core': workspace:*
+      shaka-player: ^4.3.0
+    devDependencies:
+      '@oplayer/core': link:../core
+      shaka-player: 4.3.0
 
   packages/thumbnails-tool:
     specifiers:
@@ -2286,6 +2296,10 @@ packages:
 
   /electron-to-chromium/1.4.284:
     resolution: {integrity: sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==}
+    dev: true
+
+  /eme-encryption-scheme-polyfill/2.1.1:
+    resolution: {integrity: sha512-njD17wcUrbqCj0ArpLu5zWXtaiupHb/2fIUQGdInf83GlI+Q6mmqaPGLdrke4savKAu15J/z1Tg/ivDgl14g0g==}
     dev: true
 
   /emoji-regex/8.0.0:
@@ -4750,6 +4764,13 @@ packages:
 
   /set-blocking/2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
+    dev: true
+
+  /shaka-player/4.3.0:
+    resolution: {integrity: sha512-3obEhekQc6UZJFKWWlPkF6AHO4uA7vQpYDm23LXwuau3+UVlulkYyoZLbAvs1/WJ89h/PA0wk5W97FYPTzgNAw==}
+    engines: {node: '>=14'}
+    dependencies:
+      eme-encryption-scheme-polyfill: 2.1.1
     dev: true
 
   /shebang-command/1.2.0:

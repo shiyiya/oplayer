@@ -1,7 +1,6 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
-import qualitySvg from './quality.svg?raw'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
@@ -85,7 +84,7 @@ const generateSetting = (player: Player, hlsInstance: Hls, options: Options = {}
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
-      icon: qualitySvg,
+      icon: player.plugins.ui.icons.quality,
       onChange: (level: typeof settingOptions[number]) => {
         if (options.hlsQualitySwitch == 'immediate') {
           hlsInstance.currentLevel = level.value

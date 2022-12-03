@@ -5,6 +5,11 @@ export type Source = {
   src: string
   poster?: string
   format?: 'auto' | 'hls' | 'flv' | 'm2ts' | 'mpegts' | string
+  drm?: {
+    drmType: 'widevine' | 'fairplay'
+    certificateUri: string
+    license: string
+  }
 }
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'

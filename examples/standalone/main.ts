@@ -6,6 +6,7 @@ import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import ad from '@oplayer/ad'
 import mpegts from '@oplayer/mpegts'
+import shaka from '@oplayer/shaka'
 
 import MP4 from '../../website/static/君の名は.mp4'
 import SRT from '../../website/static/君の名は.srt'
@@ -123,6 +124,7 @@ const player = Player.make('#player', {
         hlsQualitySwitch: 'immediate'
       }
     }),
+    shaka(),
     {
       name: 'custom',
       apply: () => ({

@@ -1,15 +1,12 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
 
-//@ts-ignore
-import qualitySvg from '../../hls/src/quality.svg?raw'
-
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 //@ts-ignore
-let importedDash: typeof import('dashjs') = globalThis.dashjs
+let imported: typeof import('dashjs') = globalThis.dashjs
 
-type dashPluginOptions = {
+type PluginOptions = {
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
   setting?: MediaPlayerSettingClass
   options?: {
@@ -20,7 +17,7 @@ type dashPluginOptions = {
   }
 }
 
-const defaultMatcher: dashPluginOptions['matcher'] = (_, source) =>
+const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
   source.format === 'dash' ||
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
     /.mpd(#|\?|$)/i.test(source.src))
@@ -28,7 +25,7 @@ const defaultMatcher: dashPluginOptions['matcher'] = (_, source) =>
 const generateSetting = (
   player: Player,
   dashInstance: MediaPlayerClass,
-  options: dashPluginOptions['options']
+  options: PluginOptions['options']
 ) => {
   const settingUpdater = () => {
     const isAutoSwitch = dashInstance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
@@ -69,7 +66,7 @@ const generateSetting = (
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
-      icon: qualitySvg,
+      icon: player.plugins.ui.icons.quality,
       onChange: ({ value }: typeof settingOptions[number]) => {
         if (typeof value == 'function') {
           value()
@@ -94,16 +91,16 @@ const generateSetting = (
     player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
   }
 
-  dashInstance.on(importedDash.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
-  dashInstance.on(importedDash.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
+  dashInstance.on(imported.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
+  dashInstance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
 const dashPlugin = ({
   matcher = defaultMatcher,
   setting,
   options: pluginOptions
-}: dashPluginOptions = {}): PlayerPlugin => {
-  let dashInstance: MediaPlayerClass | null
+}: PluginOptions = {}): PlayerPlugin => {
+  let instance: MediaPlayerClass | null
 
   return {
     name: PLUGIN_NAME,
@@ -111,26 +108,37 @@ const dashPlugin = ({
     load: async (player, source, options) => {
       const isMatch = matcher(player.$video, source)
 
-      if (dashInstance) {
+      if (instance) {
         player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-        dashInstance.destroy()
-        dashInstance = null
+        instance.destroy()
+        instance = null
       }
 
       if (options.loader || !isMatch) {
         return false
       }
 
-      importedDash ??= (await import('dashjs')).default
+      imported ??= (await import('dashjs')).default
 
-      if (!importedDash.supportsMediaSource()) return false
+      if (!imported.supportsMediaSource()) return false
 
-      dashInstance = importedDash.MediaPlayer().create()
-      if (setting) dashInstance.updateSettings(setting)
-      dashInstance.initialize(player.$video, source.src, player.$video.autoplay)
-      if (!player.isNativeUI) generateSetting(player, dashInstance, pluginOptions)
+      instance = imported.MediaPlayer().create()
 
-      dashInstance.on(importedDash.MediaPlayer.events.ERROR, (event: any) => {
+      if (source.drm?.drmType == 'widevine') {
+        instance.setProtectionData({
+          'com.widevine.alpha': {
+            serverURL: source.drm!.license,
+            priority: 0
+          }
+        })
+        instance.getProtectionController().setRobustnessLevel('SW_SECURE_CRYPTO')
+      }
+
+      if (setting) instance.updateSettings(setting)
+      instance.initialize(player.$video, source.src, player.$video.autoplay)
+      if (!player.isNativeUI) generateSetting(player, instance, pluginOptions)
+
+      instance.on(imported.MediaPlayer.events.ERROR, (event: any) => {
         const err = event.event || event.error
         const message = event.event ? event.event.message || event.type : undefined
         player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
@@ -140,13 +148,13 @@ const dashPlugin = ({
     },
     apply: (player) => {
       player.on('destroy', () => {
-        dashInstance?.destroy()
-        dashInstance = null
+        instance?.destroy()
+        instance = null
       })
 
       return {
-        value: () => dashInstance,
-        constructor: () => importedDash
+        value: () => instance,
+        constructor: () => imported
       }
     }
   }
