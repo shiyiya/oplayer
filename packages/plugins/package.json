@@ -3,13 +3,19 @@
   "version": "0.0.0",
   "private": "true",
   "description": "oplayer's plugin",
-  "main": "index.js",
+  "type": "module",
+  "main": "dist/index.es.js",
   "scripts": {
-    "start": "echo \"Error: no test specified\"",
-    "build": "echo \"Error: no build specified\""
+    "start": "node build-plugins.js --watch",
+    "build": "node build-plugins.js"
+  },
+  "peerDependencies": {
+    "@oplayer/core": ">=1.0.0"
   },
   "devDependencies": {
-    "chokidar": "^3.5.3"
+    "chokidar": "^3.5.3",
+    "glob": "^8.0.3",
+    "@oplayer/core": "workspace:*"
   },
   "keywords": [],
   "author": "",

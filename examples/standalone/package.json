@@ -20,6 +20,7 @@
     "@oplayer/mpegts": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "@oplayer/shaka": "workspace:*",
+    "@oplayer/plugins": "workspace:*",
     "hls.js": "^1.2.8",
     "lit": "^2.4.1"
   }

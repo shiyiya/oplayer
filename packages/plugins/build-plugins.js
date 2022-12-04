@@ -6,7 +6,11 @@ import chokidar from 'chokidar'
 
 const external = ['@oplayer/core']
 
-async function buildPlugin(name) {
+const globals = {
+  '@oplayer/core': 'OPlayer'
+}
+
+async function buildPlugin(name, dev) {
   const { version } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
   const pluginName = name.split('.').shift()
   const now = Date.now()
@@ -19,17 +23,11 @@ async function buildPlugin(name) {
       sourcemap: true,
       lib: {
         entry: plugins[name],
-        formats: ['es', 'umd'],
-        name: 'O' + pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
+        formats: dev ? ['es'] : ['es', 'umd'],
+        name: dev ? undefined : 'O' + pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
         fileName: (format) => `${pluginName}.${{ es: 'es', umd: 'min' }[format]}.js`
       },
-      rollupOptions: {
-        external: external,
-        output: {
-          dir: 'dist',
-          globals: {}
-        }
-      }
+      rollupOptions: { external, output: { dir: 'dist', globals } }
     }
   })
 
@@ -40,28 +38,32 @@ function runInQueue(ps) {
   return ps.reduce((p, next) => p.then(next), Promise.resolve())
 }
 
-const plugins = glob.sync(path.join(process.cwd(), 'plugins/*')).reduce((result, item) => {
-  const name = item.split('/').pop()
-  // @ts-ignore
-  result[name] = item
-  return result
-}, {})
-
-const bundles = Object.keys(plugins).map((name) => () => buildPlugin(name))
-
-runInQueue(bundles).then(() => {
-  console.log(`✨ Finished building all plugins!`)
-})
+const plugins = glob.sync('src/*').reduce(
+  (result, item) => {
+    result[path.basename(item, path.extname(item))] = item
+    return result
+  },
+  { index: 'index.ts' }
+)
 
 if (process.argv.pop() == '--watch') {
+  buildPlugin('index', true)
   chokidar
-    .watch('plugins', {
+    .watch('src', {
       ignored: /(^|[\/\\])\../,
       ignorePermissionErrors: true,
-      disableGlobbing: true
+      disableGlobbing: true,
+      ignoreInitial: true
     })
     .on('change', (file) => {
-      const fileName = file.split('plugins/').pop()
-      buildPlugin(fileName)
+      buildPlugin('index')
     })
+} else {
+  const bundles = Object.keys(plugins).map((name) => () => buildPlugin(name))
+
+  runInQueue(bundles).then(() => {
+    console.log(`✨ Finished building all plugins!`)
+  })
+
+  buildPlugin('index', true)
 }
