@@ -53,7 +53,8 @@ const player = Player.make('#oplayer', {
       }
     }),
     dash(),
-    mpegts()
+    mpegts(),
+    chromecast
   ])
   .create()
 
