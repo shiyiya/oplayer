@@ -7,7 +7,7 @@ Glad to see you here! This project is open to anyone who wishes to contribute in
 This project uses [pnpm](https://pnpm.io/) as package manager, please [install](https://pnpm.io/installation) it before continuing.
 
 ```bash
-npm install -g pnpm
+npm i -g pnpm
 ```
 
 ## Clone & Install
@@ -15,7 +15,7 @@ npm install -g pnpm
 ```bash
 git clonegit@github.com:shiyiya/oplayer.git
 cd oplayer
-pnpm install
+pnpm i
 ```
 
 ## Development workflow

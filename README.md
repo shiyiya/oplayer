@@ -13,7 +13,7 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](#support)
 
-![oplayer](./oplayer.jpg)
+![oplayer](./oplayer.png)
 
 [Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
