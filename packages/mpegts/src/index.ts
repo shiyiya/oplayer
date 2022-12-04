@@ -4,7 +4,7 @@ import type Mpegts from 'mpegts.js'
 const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 
 //@ts-ignore
-let importedMpegts: typeof Mpegts = globalThis.mpegts
+let imported: typeof Mpegts = globalThis.mpegts
 
 type PluginOptions = {
   mpegtsConfig?: Partial<Mpegts.Config> & { debug: boolean }
@@ -42,15 +42,15 @@ const plugin = (options: PluginOptions): PlayerPlugin => {
 
       if (options.loader || !isMatch) return false
 
-      if (!importedMpegts) {
+      if (!imported) {
         //@ts-ignore
-        importedMpegts = (await import('mpegts.js/dist/mpegts.js')).default
-        importedMpegts.LoggingControl.enableAll = Boolean(mpegtsConfig?.debug)
+        imported = (await import('mpegts.js/dist/mpegts.js')).default
+        imported.LoggingControl.enableAll = Boolean(mpegtsConfig?.debug)
       }
 
-      if (!importedMpegts.isSupported()) return false
+      if (!imported.isSupported()) return false
 
-      instance = importedMpegts.createPlayer(
+      instance = imported.createPlayer(
         {
           url: source.src,
           isLive: player.options.isLive,
@@ -72,7 +72,7 @@ const plugin = (options: PluginOptions): PlayerPlugin => {
 
       return {
         value: () => instance,
-        constructor: () => importedMpegts
+        constructor: () => imported
       }
     }
   }

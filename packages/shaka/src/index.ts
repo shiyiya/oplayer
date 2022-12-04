@@ -1,5 +1,5 @@
 import type Player from '@oplayer/core'
-import { isSafari, PlayerPlugin, Source } from '@oplayer/core'
+import { PlayerPlugin, Source } from '@oplayer/core'
 import type Shaka from 'shaka-player'
 
 const PLUGIN_NAME = 'oplayer-plugin-shaka'
@@ -7,6 +7,7 @@ const PLUGIN_NAME = 'oplayer-plugin-shaka'
 let imported: typeof Shaka = globalThis.shaka
 
 type PluginOptions = {
+  shakaConfig: object
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
@@ -15,7 +16,7 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
 }
 
 const plugin = (options: PluginOptions): PlayerPlugin => {
-  const { matcher = defaultMatcher } = options || {}
+  const { shakaConfig, matcher = defaultMatcher } = options || {}
   let instance: Shaka.Player | null
 
   return {
@@ -41,34 +42,10 @@ const plugin = (options: PluginOptions): PlayerPlugin => {
       if (!imported.Player.isBrowserSupported()) return false
 
       instance = new imported.Player(player.$video)
-
-      let drmConfig = {}
-      if (isSafari && source.drm?.drmType === 'fairplay') {
-        drmConfig = {
-          drm: {
-            servers: { 'com.apple.fps.1_0': source.drm?.license },
-            advanced: {
-              'com.apple.fps.1_0': {
-                serverCertificateUri: source.drm?.certificateUri
-              }
-            }
-          }
-        }
-      }
-
-      if (source.drm?.drmType === 'widevine') {
-        drmConfig = {
-          drm: {
-            servers: {
-              'com.widevine.alpha': source.drm?.license
-            }
-          }
-        }
-      }
-
-      instance.configure(drmConfig)
-      instance.load(source.src)
-      registerSetting(player, instance)
+      instance.configure(shakaConfig)
+      instance.load(source.src).then((_) => {
+        registerSetting(player, instance!)
+      })
 
       return true
     },

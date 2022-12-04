@@ -4,12 +4,7 @@ import type { Player } from './player'
 export type Source = {
   src: string
   poster?: string
-  format?: 'auto' | 'hls' | 'flv' | 'm2ts' | 'mpegts' | string
-  drm?: {
-    drmType: 'widevine' | 'fairplay'
-    certificateUri: string
-    license: string
-  }
+  format?: 'auto' | 'm3u8' | 'mpd' | 'flv' | 'm2ts' | 'mpegts' | string
 }
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'

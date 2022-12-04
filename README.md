@@ -30,7 +30,6 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
   - WebM
   - Ogg Theora Vorbis
 - Features
-  - [DRM](https://github.com/shaka-project/shaka-player) fairplay | widevine
   - Danmaku
   - Screenshot
   - Hotkeys
@@ -89,6 +88,7 @@ Player.make(document.getElementById('oplayer'), {
 - [@oplayer/hls](./packages/hls)
 - [@oplayer/dash](./packages/dash)
 - [@oplayer/mpegts](./packages/mpegts)
+- [@oplayer/shaka](./packages/shaka)
 - [@oplayer/torrent](./packages/torrent)
 - [@oplayer/danmaku](./packages/danmaku)
 - [@oplayer/ad](./packages/ad)

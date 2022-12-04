@@ -3,7 +3,6 @@ import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEv
 
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
-//@ts-ignore
 let imported: typeof import('dashjs') = globalThis.dashjs
 
 type PluginOptions = {
@@ -93,7 +92,7 @@ const generateSetting = (
   instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
-const dashPlugin = ({
+const plugin = ({
   matcher = defaultMatcher,
   setting,
   options: pluginOptions
@@ -122,16 +121,6 @@ const dashPlugin = ({
 
       instance = imported.MediaPlayer().create()
 
-      if (source.drm?.drmType == 'widevine') {
-        instance.setProtectionData({
-          'com.widevine.alpha': {
-            serverURL: source.drm!.license,
-            priority: 0
-          }
-        })
-        instance.getProtectionController().setRobustnessLevel('SW_SECURE_CRYPTO')
-      }
-
       if (setting) instance.updateSettings(setting)
       instance.initialize(player.$video, source.src, player.$video.autoplay)
       if (!player.isNativeUI) generateSetting(player, instance, pluginOptions)
@@ -158,4 +147,4 @@ const dashPlugin = ({
   }
 }
 
-export default dashPlugin
+export default plugin
