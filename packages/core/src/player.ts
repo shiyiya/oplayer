@@ -1,6 +1,7 @@
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import EventEmitter from './event'
 import I18n from './i18n'
+import { isPlainObject } from './utils'
 import $ from './utils/dom'
 import { isIOS, isQQBrowser } from './utils/platform'
 
@@ -180,8 +181,11 @@ export class Player {
         const returnValues = factory.apply(this)
         if (returnValues) {
           const key = factory.key || factory.name
-          //@ts-ignore
-          this.plugins[key] = Object.assign({}, this.plugins[key], returnValues)
+          if (isPlainObject(returnValues)) {
+            this.plugins[key] = Object.assign({}, this.plugins[key], returnValues)
+          } else {
+            this.plugins[key] = returnValues
+          }
         }
       }
     })
