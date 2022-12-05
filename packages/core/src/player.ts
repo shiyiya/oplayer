@@ -467,8 +467,9 @@ export class Player {
 }
 
 console.log(
-  `%c Oh Player %c v${Player.version} %c https://github.com/shiyiya/oplayer`,
-  'color: #fff; background: #6668ab; padding: 4px 6px; margin: 4px 0;',
-  'color: #fff; background: #5f5f5f; padding: 4px 6px; margin: 4px 0;',
-  ''
+  '%cOPlayer%c v%s\n %c\nOh! Another HTML5 video player.\nhttps://github.com/shiyiya/oplayer\n',
+  'font-size:32px;',
+  'font-size:12px;color:#999999;',
+  Player.version,
+  'font-size:14px;'
 )
