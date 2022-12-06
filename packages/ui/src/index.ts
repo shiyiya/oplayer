@@ -25,7 +25,7 @@ const apply = (player: Player, config: UiConfig) => {
 
   const icons = Icons.setupIcons(player, config.icons)
 
-  const $root = $.create(`div.${root(config.theme)}`)
+  const $root = $.create(`div.${root(config)}`)
   startListening(player, config, $root)
 
   const error = renderError(player, $root, config)

@@ -1,15 +1,19 @@
 import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
+import { controllerHidden } from '../style'
 import { debounce, removeClass } from '../utils'
 
-const noticeCls = $.css`
-  position: absolute;
-  display: none;
-  top: 1em;
-  left: 1em;
-  right: 1em;
-  z-index: 99;
-`
+const noticeCls = $.css({
+  position: 'absolute',
+  display: 'none',
+  top: '1em',
+  left: '1em',
+  right: '1em',
+  'z-index': 99,
+  'margin-top': 'var(--controller-top-height)',
+
+  [`@global .${controllerHidden} &`]: { 'margin-top': 0 }
+})
 
 const noticeTextCls = $.css(`
   -moz-user-select: all;

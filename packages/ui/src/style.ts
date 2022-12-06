@@ -13,13 +13,13 @@ export const playing = $.cls('playing')
 
 export const focused = $.cls('focused')
 
-export const root = (theme: UiConfig['theme']) => {
+export const root = ({ theme, appBar }: UiConfig) => {
   return $.css(
     Object.assign(
       {
         '--primary-color': `${theme!.primaryColor}`,
         '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
-        '--controller-top-height': '4.25em',
+        '--controller-top-height': appBar ? '4.25em' : 0,
 
         position: 'absolute',
         top: '0',
