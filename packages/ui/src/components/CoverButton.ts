@@ -23,16 +23,15 @@ const styles = $.css(
 
         '& > svg': Object.assign(
           {
-            transition: 'opacity 100ms linear',
             filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
           },
           isMobile && {
-            '&:nth-child(1)': { opacity: 1 },
-            '&:nth-child(2)': { opacity: 0 },
+            '&:nth-child(1)': { display: 'block' },
+            '&:nth-child(2)': { display: 'none' },
 
             [`@global .${playing} &`]: {
-              '&:nth-child(1)': { opacity: 0 },
-              '&:nth-child(2)': { opacity: 1 }
+              '&:nth-child(1)': { display: 'none' },
+              '&:nth-child(2)': { display: 'block' }
             }
           }
         )
