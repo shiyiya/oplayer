@@ -4,9 +4,15 @@ import { Icons } from '../functions/icons'
 
 import { icon, playing, loading, controllerHidden } from '../style'
 
+const hidden = {
+  opacity: 0,
+  'pointer-events': 'none'
+}
+
 const styles = $.css(
   Object.assign(
     {
+      transition: 'opacity 100ms linear',
       '& > button': {
         position: 'absolute',
         right: '40px',
@@ -17,15 +23,16 @@ const styles = $.css(
 
         '& > svg': Object.assign(
           {
+            transition: 'opacity 100ms linear',
             filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
           },
           isMobile && {
-            '&:nth-child(1)': { display: 'block' },
-            '&:nth-child(2)': { display: 'none' },
+            '&:nth-child(1)': { opacity: 1 },
+            '&:nth-child(2)': { opacity: 0 },
 
             [`@global .${playing} &`]: {
-              '&:nth-child(1)': { display: 'none' },
-              '&:nth-child(2)': { display: 'block' }
+              '&:nth-child(1)': { opacity: 0 },
+              '&:nth-child(2)': { opacity: 1 }
             }
           }
         )
@@ -45,11 +52,11 @@ const styles = $.css(
     },
     isMobile
       ? {
-          [`@global .${controllerHidden} &`]: { display: 'none' }
+          [`@global .${controllerHidden} &`]: hidden
         }
       : {
-          [`@global .${loading} &`]: { display: 'none' },
-          [`@global .${playing} &`]: { display: 'none' }
+          [`@global .${loading} &`]: hidden,
+          [`@global .${playing} &`]: hidden
         }
   )
 )
