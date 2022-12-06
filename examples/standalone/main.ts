@@ -50,11 +50,12 @@ const player = Player.make('#player', {
   volume: 0.5,
   // isLive: true,
   preload: 'none',
-  source: { poster: POSTER, src },
+  source: { poster: POSTER, src, title: '君の名は' },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
   .use([
     ui({
+      appBar: true,
       // speed: [],
       autoFocus: true,
       screenshot: true,

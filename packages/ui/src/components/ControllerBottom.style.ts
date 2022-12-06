@@ -75,7 +75,7 @@ export const controllerBottom = $.css({
   'justify-content': 'space-between',
   color: '#fff',
   fill: '#fff',
-  height: 'var(--controller-Bottom-height)',
+  height: '3.25em',
   padding: isMobile ? 0 : '0px 0px 5px 0px',
   'margin-right': isMobile ? '-8px' : '0px',
   'text-align': 'center',

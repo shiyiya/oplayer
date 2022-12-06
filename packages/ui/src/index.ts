@@ -4,7 +4,7 @@ import { root } from './style'
 import { Icons, registerHotKey, registerSpeedSetting } from './functions'
 import startListening from './listeners'
 
-import renderControllerBar from './components/ControllerBar'
+import renderController from './components/Controller'
 import renderCoverButton from './components/CoverButton'
 import renderError from './components/Error'
 import renderLoading from './components/Loading'
@@ -32,7 +32,7 @@ const apply = (player: Player, config: UiConfig) => {
   const notice = renderNotice(player, $root)
   renderLoading(player, $root)
   renderCoverButton(player, $root)
-  const { exp, toggle } = renderControllerBar(player, $root, config)
+  const { exp, toggle } = renderController(player, $root, config)
   renderMask(player, $root, toggle)
 
   const setting = renderSetting(player, $root, config.settings)

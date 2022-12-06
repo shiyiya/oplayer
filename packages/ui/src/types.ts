@@ -89,9 +89,15 @@ export type UiConfig = {
    * default: true
    */
   miniProgressBar?: boolean
+  /**
+   * default: false
+   */
+  appBar?: boolean
 
   subtitle?: Subtitle
-
+  /**
+   * default: ['loop']
+   */
   settings?: (Setting | 'loop')[]
 
   thumbnails?: Thumbnails
@@ -119,8 +125,6 @@ export type UiConfig = {
   /*  --- WIP ---  */
 
   contextmenu?: []
-
-  airplay?: boolean
 }
 
 export type ErrorPayload =

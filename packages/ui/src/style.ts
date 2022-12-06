@@ -19,7 +19,7 @@ export const root = (theme: UiConfig['theme']) => {
       {
         '--primary-color': `${theme!.primaryColor}`,
         '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
-        '--controller-Bottom-height': '3.25em',
+        '--controller-top-height': '4.25em',
 
         position: 'absolute',
         top: '0',
