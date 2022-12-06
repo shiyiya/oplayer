@@ -55,7 +55,6 @@ const player = Player.make('#player', {
 })
   .use([
     ui({
-      appBar: true,
       // speed: [],
       autoFocus: true,
       screenshot: true,

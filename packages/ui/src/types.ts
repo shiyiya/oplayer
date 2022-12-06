@@ -89,10 +89,6 @@ export type UiConfig = {
    * default: true
    */
   miniProgressBar?: boolean
-  /**
-   * default: false
-   */
-  appBar?: boolean
 
   subtitle?: Subtitle
   /**

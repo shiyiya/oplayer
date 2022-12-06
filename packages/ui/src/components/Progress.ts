@@ -17,6 +17,8 @@ import {
 } from './Progress.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
+  if (player.options.isLive) return {}
+
   const $dom = $.create(
     `div.${progress}`,
     {},
@@ -143,10 +145,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   $.render($dom, el)
 
-  return {
-    highlight,
-    thumbnails: change
-  }
+  return { highlight, thumbnails: change }
 }
 
 export default render
