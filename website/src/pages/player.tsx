@@ -5,9 +5,8 @@ import hls from '../../../packages/hls/dist/index.es'
 
 export default () => {
   useEffect(() => {
-    const url = new URL(document.location.href).searchParams.get('url')
     Player.make(document.getElementById('oplayer'), {
-      source: { src: url }
+      source: { src: document.location.search.substring(1) }
     })
       .use([
         ui(),
