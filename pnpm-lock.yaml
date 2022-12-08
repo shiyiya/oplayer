@@ -20,11 +20,11 @@ importers:
       jsdom: ^20.0.3
       lint-staged: ^13.1.0
       nx: latest
-      prettier: ^2.8.0
+      prettier: ^2.8.1
       rimraf: ^3.0.2
       terser: ^5.16.1
       tslib: ^2.4.1
-      typescript: ^4.9.3
+      typescript: ^4.9.4
       vite: ^3.2.5
       vite-plugin-banner: ^0.6.1
       vitest: ^0.25.5
@@ -46,11 +46,11 @@ importers:
       jsdom: 20.0.3
       lint-staged: 13.1.0
       nx: 15.3.0
-      prettier: 2.8.0
+      prettier: 2.8.1
       rimraf: 3.0.2
       terser: 5.16.1
       tslib: 2.4.1
-      typescript: 4.9.3
+      typescript: 4.9.4
       vite: 3.2.5_eca2p37uyqn4knxdvmruaqjjjq
       vite-plugin-banner: 0.6.1
       vitest: 0.25.5_jsdom@20.0.3+terser@5.16.1
@@ -649,7 +649,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 2.8.0
+      prettier: 2.8.1
       resolve-from: 5.0.0
       semver: 5.7.1
     dev: true
@@ -864,7 +864,7 @@ packages:
       '@changesets/types': 5.2.0
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 2.8.0
+      prettier: 2.8.1
     dev: true
 
   /@esbuild/android-arm/0.15.18:
@@ -1440,7 +1440,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.4
-      es-abstract: 1.20.4
+      es-abstract: 1.20.5
       es-shim-unscopables: 1.0.0
     dev: true
 
@@ -2622,10 +2622,10 @@ packages:
       is-arrayish: 0.2.1
     dev: true
 
-  /es-abstract/1.20.4:
+  /es-abstract/1.20.5:
     resolution:
       {
-        integrity: sha512-0UtvRN79eMe2L+UNEF1BwRe364sj/DXhQ/k5FmivgoSdpM90b8Jc0mDzKMGo7QS0BVbOP/bTwBKNnDc9rNzaPA==
+        integrity: sha512-7h8MM2EQhsCA7pU/Nv78qOXFpD8Rhqd12gYiSJVkrH9+e8VuA8JlPJK/hQjjlLv6pJvx/z1iRFKzYb0XT/RuAQ==
       }
     engines: { node: '>= 0.4' }
     dependencies:
@@ -2635,6 +2635,7 @@ packages:
       function.prototype.name: 1.1.5
       get-intrinsic: 1.1.3
       get-symbol-description: 1.0.0
+      gopd: 1.0.1
       has: 1.0.3
       has-property-descriptors: 1.0.0
       has-symbols: 1.0.3
@@ -3329,7 +3330,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.4
-      es-abstract: 1.20.4
+      es-abstract: 1.20.5
       functions-have-names: 1.2.3
     dev: true
 
@@ -3481,6 +3482,15 @@ packages:
       ignore: 5.2.1
       merge2: 1.4.1
       slash: 3.0.0
+    dev: true
+
+  /gopd/1.0.1:
+    resolution:
+      {
+        integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==
+      }
+    dependencies:
+      get-intrinsic: 1.1.3
     dev: true
 
   /graceful-fs/4.2.10:
@@ -5310,10 +5320,10 @@ packages:
     engines: { node: '>= 0.8.0' }
     dev: true
 
-  /prettier/2.8.0:
+  /prettier/2.8.1:
     resolution:
       {
-        integrity: sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==
+        integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==
       }
     engines: { node: '>=10.13.0' }
     hasBin: true
@@ -6223,7 +6233,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.4
-      es-abstract: 1.20.4
+      es-abstract: 1.20.5
     dev: true
 
   /string.prototype.trimstart/1.0.6:
@@ -6234,7 +6244,7 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.4
-      es-abstract: 1.20.4
+      es-abstract: 1.20.5
     dev: true
 
   /string2compact/1.3.2:
@@ -6657,10 +6667,10 @@ packages:
     engines: { node: '>=8' }
     dev: true
 
-  /typescript/4.9.3:
+  /typescript/4.9.4:
     resolution:
       {
-        integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==
+        integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
       }
     engines: { node: '>=4.2.0' }
     hasBin: true
