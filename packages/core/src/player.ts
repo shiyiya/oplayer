@@ -26,7 +26,8 @@ export class Player {
 
   $root: HTMLElement
   $video: HTMLVideoElement
-  listeners: Record<typeof EVENTS[number], Function> = Object.create(null)
+  listeners: Record<typeof EVENTS[number] | 'fullscreenchange' | 'fullscreenerror', Function> =
+    Object.create(null)
 
   hasError: boolean = false
   isCustomLoader: boolean = false
@@ -87,36 +88,43 @@ export class Player {
     this.listeners['error'] = errorHandler
     this.$video.addEventListener('error', (e) => this.listeners['error'](e))
 
-    const fullscreenchangeHandler = (payload: ErrorEvent) => this.emit('fullscreenchange', payload)
+    const eventHandler = (eventName: string, payload: Event) =>
+      this.eventEmitter.emit(eventName, payload)
+
     ;(
       [
-        [this.$video, 'webkitbeginfullscreen', 'webkitendfullscreen'], //only iphone
-        [this.$root, 'fullscreenchange', 'webkitfullscreenchange'] // others
+        [
+          this.$video,
+          ['fullscreenchange', 'webkitbeginfullscreen', 'webkitendfullscreen'],
+          ['fullscreenerror', 'webkitfullscreenerror']
+        ],
+        [
+          this.$root,
+          ['fullscreenchange', 'webkitfullscreenchange'],
+          ['fullscreenerror', 'webkitfullscreenerror', 'mozfullscreenerror']
+        ]
       ] as const
     ).forEach((it) => {
       const [target, ...eventNames] = it
-      // listener all.
-      // `webkitfullscreenchange in Document` is false
-      // TODO: check
-      ;(eventNames as typeof EVENTS[number][]).forEach((eventName) => {
-        this.listeners[eventName] = fullscreenchangeHandler
-        target.addEventListener(eventName, (e) => this.listeners[eventName](e))
+      eventNames.forEach((eventName) => {
+        const polyfillName = eventName[0]
+        this.listeners[polyfillName] = eventHandler
+        eventName.forEach((name) => {
+          target.addEventListener(name, (e) => this.listeners[polyfillName](polyfillName, e))
+        })
       })
     })
-
-    const eventHandler = (eventName: string, payload: Event) =>
-      this.eventEmitter.emit(eventName, payload)
-    VIDEO_EVENTS.filter((it) => it !== 'error').forEach((eventName) => {
-      this.listeners[eventName] = eventHandler
-      this.$video.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
-        passive: true
-      })
-    })
-
-    PLAYER_EVENTS.filter((it) => it !== 'fullscreenchange').forEach((eventName) => {
-      this.listeners[eventName] = eventHandler
-      this.$root.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
-        passive: true
+    ;(
+      [
+        [this.$video, VIDEO_EVENTS],
+        [this.$root, PLAYER_EVENTS]
+      ] as const
+    ).forEach(([target, events]) => {
+      events.forEach((eventName) => {
+        this.listeners[eventName] = eventHandler
+        target.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
+          passive: true
+        })
       })
     })
   }

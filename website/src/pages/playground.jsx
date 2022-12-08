@@ -1,6 +1,6 @@
 import React from 'react'
-import Playground from '@agney/playground'
 import Layout from '@theme/Layout'
+import Playground from '@agney/playground'
 import '@reach/tabs/styles.css'
 
 const code = `
@@ -90,20 +90,20 @@ export default () => {
   return (
     <Layout title="Oh! Another HTML5 video player" description="Oh! Another HTML5 video player">
       <Playground
-        id="oplayer-playground"
         initialSnippet={{
           markup: `
             html script example: <br />
-            <a href="https://oplayer.vercel.app/script.html" target="_blank">preview</a> |
-            <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html" target="_blank">source code</a>
+            <a href="https://oplayer.vercel.app/script.html" target="_blank">https://oplayer.vercel.app/script.html</a> <br />
+            <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html" target="_blank">https://github.com/shiyiya/oplayer/blob/main/examples/script.html</a>
+            <br />
             <br />
             <div id=oplayer />
-          `,
-          javascript:
-            (globalThis?.window && new URL(window.location).searchParams.get('code')) || code
+        `,
+          javascript: window?.location?.search || code
         }}
         defaultEditorTab="javascript"
         transformJs
+        mode="light"
       />
     </Layout>
   )

@@ -27,7 +27,7 @@ export const VIDEO_EVENTS = [
   'leavepictureinpicture'
 ] as const
 
-export const PLAYER_EVENTS = ['contextmenu', 'fullscreenchange', 'fullscreenerror'] as const
+export const PLAYER_EVENTS = ['contextmenu'] as const
 
 export const OH_EVENTS = [
   'loadedplugin',

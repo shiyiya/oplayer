@@ -47,17 +47,25 @@ const plugins = glob.sync('src/*').reduce(
 )
 
 if (process.argv.pop() == '--watch') {
-  buildPlugin('index', true)
-  chokidar
+  await buildPlugin('index', true)
+
+  const watcher = chokidar
     .watch('src', {
       ignored: /(^|[\/\\])\../,
       ignorePermissionErrors: true,
-      disableGlobbing: true,
-      ignoreInitial: true
+      disableGlobbing: true
     })
-    .on('change', (file) => {
+    .on('change', () => {
       buildPlugin('index')
     })
+
+  async function close() {
+    await watcher.close()
+    process.exit(0)
+  }
+
+  process.on('SIGINT', close)
+  process.on('SIGTERM', close)
 } else {
   const bundles = Object.keys(plugins).map((name) => () => buildPlugin(name))
 

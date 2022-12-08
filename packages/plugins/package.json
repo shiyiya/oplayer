@@ -13,9 +13,9 @@
     "@oplayer/core": ">=1.0.0"
   },
   "devDependencies": {
+    "@oplayer/core": "workspace:*",
     "chokidar": "^3.5.3",
-    "glob": "^8.0.3",
-    "@oplayer/core": "workspace:*"
+    "glob": "^8.0.3"
   },
   "keywords": [],
   "author": "",
