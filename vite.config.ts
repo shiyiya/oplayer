@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import type { BuildOptions, UserConfig as ViteUserConfig } from 'vite'
+import type { BuildOptions, UserConfig as ViteUserConfig, UserConfigExport } from 'vite'
 import { defineConfig } from 'vite'
 import banner from 'vite-plugin-banner'
 import { getBabelOutputPlugin } from '@rollup/plugin-babel'
@@ -108,7 +108,14 @@ export const viteConfig = (packageDirName: string, options: ViteUserConfig = {})
   })
 }
 
-export default defineConfig({})
+export default defineConfig({
+  test: {
+    include: ['test/*', 'packages/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    environment: 'jsdom',
+    minThreads: 0,
+    maxThreads: 1
+  }
+} as UserConfigExport)
 
 const resolvePath = (str: string) => path.resolve(__dirname, str)
 
