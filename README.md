@@ -110,8 +110,7 @@ If you think this is super cool, or useful, and want to donate a little, then yo
 | <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$1 tip](https://www.paypal.com/paypalme/ShiYiYa/1)   |
 | <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$5 tip](https://www.paypal.com/paypalme/ShiYiYa/5)   |
 | <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$10 tip](https://www.paypal.com/paypalme/ShiYiYa/10) |
-
-<img src="https://www.oaii.me/wechat_donate.png" width=30% style='float:left'>
+| [微信](https://www.oaii.me/wechat_donate.png) | [WeChat Pay](https://www.oaii.me/wechat_donate.png)
 
 ## Jetbrains <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="35" height="35">
 This project is helped by [Jetbrains](https://www.jetbrains.com/) with their open source program. 
