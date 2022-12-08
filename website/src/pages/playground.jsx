@@ -99,7 +99,7 @@ export default () => {
             <br />
             <div id=oplayer />
         `,
-          javascript: window?.location?.search || code
+          javascript: globalThis?.location?.search || code
         }}
         defaultEditorTab="javascript"
         transformJs
