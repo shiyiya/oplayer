@@ -19,12 +19,14 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
   },
 
   ArrowLeft: (player: Player) => {
+    if (player.options.isLive) return
     player.seek(player.currentTime - SEEK_SETUP)
     player.emit('notice', {
       text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
     })
   },
   ArrowRight: (player: Player) => {
+    if (player.options.isLive) return
     player.seek(player.currentTime + SEEK_SETUP)
     player.emit('notice', {
       text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
