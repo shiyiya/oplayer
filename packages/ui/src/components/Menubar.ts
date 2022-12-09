@@ -32,7 +32,10 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
 
     if (elm.tagName.toUpperCase() == 'SPAN') {
       _select(elm)
-      target.onChange?.(target.children[+elm.getAttribute('data-index')!]!)
+      target.onChange?.(
+        target.children[+elm.getAttribute('data-index')!]!,
+        elm.parentElement!.previousElementSibling as HTMLButtonElement
+      )
     } else if (elm.tagName.toUpperCase() == 'BUTTON') {
       target.onClick?.(elm as any)
     }

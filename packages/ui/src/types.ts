@@ -25,7 +25,7 @@ export type MenuBar<
   name: string
   icon?: string
   children: T[]
-  onChange: (arg: T) => void
+  onChange: (arg: T, elm: HTMLButtonElement) => void
   onClick?: (elm: HTMLButtonElement) => void
 }
 

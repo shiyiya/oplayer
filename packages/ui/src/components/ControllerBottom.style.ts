@@ -82,6 +82,7 @@ export const controllerBottom = $.css({
 
   [`& .${icon}.${textIcon}`]: {
     width: 'auto',
+    'min-width': '2em',
     'font-size': '120%'
   },
 
