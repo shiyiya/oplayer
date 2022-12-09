@@ -13,6 +13,8 @@ export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
 export type PlayerOptions = {
   source?: Source
   autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
+  autopause: boolean //Only allow one player playing at once.
+  // ratio?: boolean //Force an aspect ratio for all videos. The format is 'w:h' - e.g. '16:9' or '4:3'. If this is not specified then the default for HTML5 and Vimeo is to use the native resolution of the video. As dimensions are not available from YouTube via SDK, 16:9 is forced as a sensible default.
   muted?: boolean
   loop?: boolean
   volume?: number

@@ -14,6 +14,8 @@ import type {
   Source
 } from './types'
 
+const players: Player[] = []
+
 export class Player {
   container: HTMLElement
   options: Required<PlayerOptions>
@@ -53,8 +55,9 @@ export class Player {
         source: {},
         videoAttr: {},
         isLive: false,
+        autopause: true,
         isNativeUI: () => isQQBrowser // 部分浏览器会劫持 video
-      },
+      } as const,
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
@@ -77,6 +80,7 @@ export class Player {
     this.initEvent()
     this.applyPlugins()
     if (this.options.source.src) this.load(this.options.source)
+    players.push(this)
     return this
   }
 
@@ -232,6 +236,12 @@ export class Player {
 
   play() {
     if (!this.$video.src) return Promise.reject(Error('The element has no supported sources.'))
+    if (this.options.autopause) {
+      for (let i = 0; i < players.length; i++) {
+        const player = players[i]
+        if (player != this) player!.pause()
+      }
+    }
     return (this._playPromise = this.$video.play())
   }
 
@@ -376,6 +386,7 @@ export class Player {
   }
 
   destroy() {
+    players.splice(players.indexOf(this), 1)
     this.emit('destroy')
     this.pause()
     this.isFullScreen && this.exitFullscreen()
