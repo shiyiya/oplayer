@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "shaka-player": "^4.3.0"
+    "shaka-player": "^4.3.1"
   }
 }
