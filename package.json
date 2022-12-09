@@ -17,7 +17,7 @@
     "build:packs": "pnpm --filter=@oplayer/* run build && pnpm run clean:mmap",
     "clean:mmap": "rimraf packages/*/dist/*.min.js.map",
     "build:plugins": "pnpm --filter=@oplayer/plugins run build",
-    "build:cache": "nx run-many --target=build --all --parallel",
+    "build:cache": "nx run-many --target=build --all --parallel && pnpm run clean:mmap",
     "build:affected": "nx Affected --target=build",
     "graph": "nx dep-graph",
     "clear": "rimraf 'packages/*/{dist,tsconfig.tsbuildinfo,node_modules,.rollup.cache}' && rimraf node_modules &&  rimraf docs",
