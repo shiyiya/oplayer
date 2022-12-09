@@ -25,7 +25,7 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
   return false
 }
 
-const plugin = (options: PluginOptions): PlayerPlugin => {
+const plugin = (options?: PluginOptions): PlayerPlugin => {
   const { mpegtsConfig, matcher = defaultMatcher } = options || {}
   let instance: Mpegts.Player | null
 
