@@ -1,10 +1,11 @@
-import { $, isMobile } from '@oplayer/core'
+import { Player, $, isIOS, isMobile } from '@oplayer/core'
 import { danmakuParseFromUrl } from './danmaku-parse'
 import getDanmakuTop from './top'
 
 import DanmakuWorker from './danmaku.worker?worker&inline'
+//@ts-ignore
+import danmakuSvg from './danmaku.svg?raw'
 
-import type { Player } from '@oplayer/core'
 import type { ActiveDanmakuRect, DanmakuItem, Options, QueueItem, _Options } from './types'
 
 const danmakuWrap = (opacity?: number) =>
@@ -18,6 +19,7 @@ const danmakuWrap = (opacity?: number) =>
   top: 0;
   pointer-events: none;
   font-family: SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
+  font-size: 1.25em;
 `)
 
 const danmakuItemCls = $.css(`
@@ -27,6 +29,7 @@ const danmakuItemCls = $.css(`
   perspective: 500px;
   will-change: transform, top;
   line-height: 1.125;
+  color: #fff;
   text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;
 `)
 
@@ -60,6 +63,7 @@ export default class Danmaku {
       useWorker: true,
       synchronousPlayback: true,
       fontSize: isMobile ? 0.6 : 1,
+      enable: true,
       ...options
     }
 
@@ -75,7 +79,7 @@ export default class Danmaku {
 
   async fetch() {
     try {
-      let danmakus: DanmakuItem[] = []
+      let danmakus: DanmakuItem[]
       if (typeof this.options.source === 'function') {
         danmakus = await this.options.source()
       } else if (typeof this.options.source === 'string') {
@@ -84,7 +88,7 @@ export default class Danmaku {
         danmakus = this.options.source
       }
       this.player.emit('loadeddanmaku', danmakus)
-      this.load(danmakus)
+      this.load(danmakus || [])
     } catch (error) {
       this.player.emit('notice', { text: 'danmaku: ' + (<Error>error).message })
       throw error
@@ -106,6 +110,104 @@ export default class Danmaku {
         ...danmaku
       })
     })
+
+    this.addEvents()
+    this.registerSetting()
+    if (this.options.enable) this.start()
+  }
+
+  addEvents() {
+    const { player } = this
+    player.on(['play', 'playing'], () => this.start())
+    player.on(['pause', 'waiting'], () => this.stop())
+    player.on('seeking', () => this.reset())
+    player.on('destroy', () => this.destroy())
+    player.on('fullscreenchange', ({ payload }) => {
+      if (payload.isWeb) return this.reset()
+      setTimeout(() => {
+        if (isIOS) {
+          if (player.isFullScreen) {
+            this.hide()
+          } else {
+            if (this.isHide) this.show()
+          }
+        } else {
+          this.reset()
+        }
+      })
+    })
+
+    player.on('videosourcechange', () => {
+      this.queue = []
+      this.hide()
+    })
+  }
+
+  registerSetting() {
+    const { player, options } = this
+    player.plugins.ui?.setting.register({
+      name: player.locales.get('Danmaku'),
+      type: 'selector',
+      default: true,
+      key: 'danmaku',
+      icon: danmakuSvg,
+      children: [
+        {
+          name: player.locales.get('Display'),
+          type: 'switcher',
+          default: options.enable,
+          key: 'danmaku-switcher',
+          onChange: (value: boolean) => {
+            this.options.enable = value
+            if (value) {
+              this.show()
+            } else {
+              this.hide()
+            }
+          }
+        },
+        {
+          name: player.locales.get('FontSize'),
+          type: 'selector',
+          key: 'danmaku-font',
+          onChange: ({ value }: any) => {
+            this.setSize(value)
+          },
+          children: [0.5, 0.75, 1, 1.25].map((it) => ({
+            name: `${it * 100}%`,
+            value: it,
+            default: it == 1
+          }))
+        },
+
+        {
+          name: player.locales.get('Opacity'),
+          type: 'selector',
+          key: 'danmaku-opacity',
+          onChange: ({ value }: any) => {
+            this.setOpacity(value)
+          },
+          children: [0.3, 0.5, 0.8, 1].map((it) => ({
+            name: `${it * 100}%`,
+            value: it,
+            default: it == this.options?.opacity
+          }))
+        },
+        {
+          name: player.locales.get('Display Area'),
+          type: 'selector',
+          key: 'danmaku-area',
+          onChange: ({ value }: any) => {
+            this.setMargin([undefined, 1 - value])
+          },
+          children: [0.25, 0.5, 0.8, 1].map((it) => ({
+            name: player.locales.get(`${it * 100}%`),
+            value: it,
+            default: it == 1
+          }))
+        }
+      ]
+    })
   }
 
   start() {
@@ -117,7 +219,7 @@ export default class Danmaku {
 
   update() {
     this.timer = window.requestAnimationFrame(async () => {
-      if (this.player.isPlaying && !this.isHide && this.queue.length) {
+      if (this.player.isPlaying && !this.isHide && this.options.enable) {
         this.mapping('emit', (danmaku) => {
           danmaku.restTime -= (Date.now() - danmaku.lastTime) / 1000
           danmaku.lastTime = Date.now()
@@ -341,7 +443,7 @@ export default class Danmaku {
     }
 
     if (typeof margin[1] == 'number') {
-      if (margin[1] > 1 && margin[1] <= 1) {
+      if (margin[1] > 0 && margin[1] <= 1) {
         this.options.margin[1] = this.$player.clientHeight * margin[1]
       } else {
         this.options.margin[1] = margin[1]
@@ -353,13 +455,15 @@ export default class Danmaku {
     this.queue.forEach((danmaku) => this.makeWait(danmaku))
   }
 
-  emit(danmaku: DanmakuItem) {
+  emit(danmaku: Partial<DanmakuItem>) {
     this.queue.push({
-      ...danmaku,
+      mode: 0,
       status: 'wait',
       $ref: null,
       restTime: 0,
-      lastTime: 0
+      lastTime: 0,
+      time: this.player.currentTime + 0.5,
+      ...(danmaku as any)
     })
   }
 

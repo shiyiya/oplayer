@@ -231,7 +231,7 @@ export class Player {
   }
 
   play() {
-    if (!this.$video.src) throw Error('The element has no supported sources.')
+    if (!this.$video.src) return Promise.reject(Error('The element has no supported sources.'))
     return (this._playPromise = this.$video.play())
   }
 

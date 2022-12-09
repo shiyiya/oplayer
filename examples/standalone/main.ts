@@ -49,6 +49,7 @@ const player = Player.make('#player', {
   muted: true,
   volume: 0.5,
   // isLive: true,
+  // autoplay: true,
   preload: 'none',
   source: { poster: POSTER, src, title: '君の名は' },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
@@ -145,13 +146,16 @@ const player = Player.make('#player', {
     //   ]
     // })
     danmaku({
-      enable: false,
-      source: DANMAKU,
-      opacity: 0.8,
-      filter: (d: DanmakuItem) => d.text == '+1s'
+      // ,source: DANMAKU
+      // opacity: 0.8,
+      // filter: (d: DanmakuItem) => d.text == '+1s'
     })
   ])
   .create()
+
+setInterval(() => {
+  player.plugins.danmaku.emit({ text: Date.now().toLocaleString(), time: player.currentTime + 1 })
+}, 1000)
 
 player.plugins.ui.menu.register({
   name: '视频列表',
