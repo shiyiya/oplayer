@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/dash",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Dash plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
