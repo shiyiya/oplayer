@@ -75,7 +75,7 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
       },
       rollupOptions: {
         external: makeExternalPredicate([
-          ...Object.keys(pkg.dependencies || {}),
+          // ...Object.keys(pkg.dependencies || {}),
           ...Object.keys(pkg.peerDependencies || {})
         ]),
         output: {

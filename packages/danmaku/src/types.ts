@@ -1,67 +1,27 @@
-export type DanmakuItem = {
-  text: string
-  time: number
-  /**
-   * 0 scroll
-   * 1 static
-   */
-  mode: number
-  fontSize: number
-  color?: string
-  timestamp: number
-  pool: number
-  userID: string
-  rowID: number
-  border?: string
-}
-
-export type QueueItem = DanmakuItem & {
-  status: 'wait' | 'emit' | 'ready' | 'stop'
-  $ref: HTMLDivElement | null
-  restTime: number
-  lastTime: number
-}
-
-export type ActiveDanmakuRect = {
-  top: number
-  left: number
-  right: number
-  height: number
-  width: number
-  speed: number
-  distance: number
-  time?: number
-  mode?: number
-}
-
-export type RootRect = {
-  target: {
-    mode: number
-    height: number
-    speed: number
-  }
-  emits: ActiveDanmakuRect[]
-  clientWidth: number
-  clientHeight: number
-  marginBottom: number
-  marginTop: number
-  antiOverlap: boolean
-}
-
 export type Options = {
-  source: string | Function | DanmakuItem[]
+  source: string | Function | Comment[]
   speed?: number // 持续时间 秒，[1 ~ 10]
-  antiOverlap?: boolean // 是否防重叠
-  useWorker?: boolean
-  synchronousPlayback?: boolean // 是否同步到播放速度
   opacity?: number
   fontSize?: number
-  margin?: [number, number]
-  filter?: (danmaku: DanmakuItem) => boolean
+  engine: 'canvas' | 'dom'
   enable?: boolean //default true
 }
 
-export type _Options = Omit<Required<Options>, 'opacity' | 'filter'> & {
-  opacity?: number
-  filter?: (danmaku: DanmakuItem) => boolean
+export interface Comment {
+  text?: string
+  /**
+   * @default rtl
+   */
+  mode?: 'ltr' | 'rtl' | 'top' | 'bottom'
+  /**
+   * Specified in seconds. Not required in live mode.
+   * @default media?.currentTime
+   */
+  time?: number
+  style?: Partial<CSSStyleDeclaration> | CanvasRenderingContext2D
+  /**
+   * A custom render to draw comment.
+   * When it exist, `text` and `style` will be ignored.
+   */
+  render?(): HTMLElement | HTMLCanvasElement
 }

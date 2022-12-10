@@ -115,6 +115,7 @@ const player = Player.make('#player', {
     }),
     shaka(),
     chromecast,
+    danmaku({ enable: false, source: DANMAKU, opacity: 0.8 })
     // ad({
     //   autoplay: false,
     //   image:
@@ -132,17 +133,8 @@ const player = Player.make('#player', {
     //     })
     //   ]
     // })
-    danmaku({
-      // ,source: DANMAKU
-      // opacity: 0.8,
-      // filter: (d: DanmakuItem) => d.text == '+1s'
-    })
   ])
   .create()
-
-setInterval(() => {
-  player.plugins.danmaku.emit({ text: Date.now().toLocaleString(), time: player.currentTime + 1 })
-}, 1000)
 
 player.plugins.ui.menu.register({
   name: 'FORMAT',
