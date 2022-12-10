@@ -16,9 +16,9 @@ const styles = $.css(
       '& > button': {
         position: 'absolute',
         right: '40px',
-        bottom: '5em',
+        bottom: '3.75em',
         fill: '#fff',
-        width: '4.5em',
+        width: '3.5em',
         'z-index': '97',
 
         '& > svg': Object.assign(
@@ -44,8 +44,8 @@ const styles = $.css(
           left: '0',
           right: '0',
           margin: 'auto',
-          width: '3.5em',
-          height: '3.5em'
+          width: '2.5em',
+          height: '2.5em'
         }
       }
     },

@@ -14,6 +14,16 @@ import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle from './components/Subtitle'
 
+import {
+  loading,
+  playing,
+  focused,
+  fullscreen,
+  webFullScreen,
+  settingShown,
+  controllerHidden
+} from './style'
+
 import type { Player, PlayerPlugin } from '@oplayer/core'
 import type { UiConfig } from './types'
 
@@ -44,7 +54,25 @@ const apply = (player: Player, config: UiConfig) => {
   $.render($root, player.$root)
   if (!isMobile) registerHotKey(player)
 
-  return { icons, error, notice, setting, menu, subtitle, ...exp }
+  return {
+    icons,
+    error,
+    notice,
+    setting,
+    menu,
+    subtitle,
+    ...exp,
+    cls: {
+      loading,
+      playing,
+      focused,
+      fullscreen,
+      webFullScreen,
+      settingShown,
+      controllerHidden,
+      root: $root.className
+    }
+  }
 }
 
 const defaultConfig: UiConfig = {

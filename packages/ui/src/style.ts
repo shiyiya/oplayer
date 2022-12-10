@@ -1,17 +1,17 @@
 import { $, isMobile } from '@oplayer/core'
 import type { UiConfig } from './types'
 
-export const settingShown = $.cls('settingShown')
-
-export const fullscreen = $.cls('fullscreen')
-
-export const controllerHidden = $.cls('controllerHidden')
-
 export const loading = $.cls('loading')
 
 export const playing = $.cls('playing')
 
 export const focused = $.cls('focused')
+
+export const fullscreen = $.cls('fullscreen')
+
+export const settingShown = $.cls('settingShown')
+
+export const controllerHidden = $.cls('controllerHidden')
 
 export const root = ({ theme }: UiConfig) => {
   return $.css(
@@ -26,13 +26,16 @@ export const root = ({ theme }: UiConfig) => {
         width: '100%',
         height: '100%',
 
-        'font-size': '12px',
+        'font-size': '16px',
 
         '&, & > *': {
           '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
         }
       },
-      !isMobile && { [`&.${fullscreen}`]: { 'font-size': '16px' } }
+      !isMobile && {
+        [`&.${fullscreen}`]: { 'font-size': '24px' },
+        [`@global .${webFullScreen} &`]: { 'font-size': '24px' }
+      }
     )
   )
 }
@@ -104,7 +107,8 @@ export const tooltip = isMobile
         padding: '4px 8px',
         'border-radius': '4px',
         transition: 'transform .2s ease .1s,opacity .2s ease .1s',
-        'pointer-events': 'none'
+        'pointer-events': 'none',
+        'font-size': '0.75em'
       },
 
       '&[data-tooltip-pos=up-right]::after': {

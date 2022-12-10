@@ -4,7 +4,7 @@ import { icon } from '../style'
 export const time = $.css`
   padding: ${isMobile ? 0 : '0px 0.5em'};
   font-variant-numeric: tabular-nums;
-  font-size: 120%;
+  font-size: 0.875em;
 `
 
 export const expand = $.css(`
@@ -12,11 +12,11 @@ export const expand = $.css(`
     top: 0;
     right: 50%;
     z-index: 10;
-    border-radius: 3px;
+    border-radius: 2px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
     transition: visibility 0s, opacity 0.1s linear;
-    font-size: 120%;
+    font-size: 0.875em;
 `)
 
 export const dropdown = $.css({
@@ -75,7 +75,7 @@ export const controllerBottom = $.css({
   'justify-content': 'space-between',
   color: '#fff',
   fill: '#fff',
-  height: '3.25em',
+  height: '2em',
   padding: isMobile ? 0 : '0px 0px 5px 0px',
   'margin-right': isMobile ? '-8px' : '0px',
   'text-align': 'center',
@@ -83,17 +83,16 @@ export const controllerBottom = $.css({
   [`& .${icon}.${textIcon}`]: {
     width: 'auto',
     'min-width': '2em',
-    'font-size': '120%'
+    'font-size': '0.875em'
   },
 
   [`& .${icon}`]: {
     padding: '0 0.5em',
-    width: '2em',
-    height: '2em',
+    width: '1.25em',
+    height: '1.5em',
     'box-sizing': 'content-box',
 
     ['& svg']: {
-      width: '100%',
       height: '100%',
       'pointer-events': 'none'
     }

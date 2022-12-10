@@ -65,6 +65,7 @@ export const progress = $.css({
   padding: '5px 0',
   cursor: 'pointer',
   width: '100%',
+  'font-size': '0.75em',
 
   [`&.${progressDragging} .${dot} > * ${!isMobile ? `,&:hover .${dot} > *` : ''}`]: {
     transform: 'scale(1)'

@@ -1,8 +1,8 @@
 import { $ } from '@oplayer/core'
 
 export const wrap = $.css`
-  width: 2.5em;
-  height: 7.5em;
+  width: 2.65em;
+  height: 7.65em;
   padding-bottom: 3px;
   box-sizing: content-box;
 `
@@ -13,7 +13,7 @@ export const volumeValue = $.css(`
   height: 28px;
   line-height: 28px;
   margin-bottom: 2px;
-  font-size: 80%;
+  font-size: 0.75em;
 `)
 
 export const track = $.css(`
@@ -26,31 +26,29 @@ export const track = $.css(`
 
 export const sliderWrap = $.css(`
   height: 100%;
-  width: 2px;
+  width: 4px;
   position: relative;
-
 `)
 
 export const slider = $.css(`
-  background: rgb(231 231 231);
+  width: 4px;
   height: 100%;
-  width: 2px;
+  overflow: hidden;
   border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
 `)
 
 export const line = $.css(`
   height: 100%;
-  width: 100%;
   background-color: var(--primary-color);
   transform-origin: 0 100%;
-  border-radius: 2px;
 `)
 
 export const thumb = $.css`
   position:absolute;
   bottom: 0;
   top: auto;
-  left: -5px;
+  left: -4px;
   width: 12px;
   height: 12px;
   border-radius: 50%;

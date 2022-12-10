@@ -11,7 +11,7 @@ const controllerBottom = $.css({
   right: 0,
   bottom: 0,
   'z-index': 97,
-  padding: '0 1.25em',
+  padding: '0 1em',
   transition: 'transform 0.3s ease, padding 0.3s ease',
   'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
 })

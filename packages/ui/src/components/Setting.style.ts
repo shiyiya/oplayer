@@ -8,8 +8,8 @@ export const setting = $.css({
   'border-radius': '3px',
   display: 'block',
   position: 'absolute',
-  right: '1.25em',
-  bottom: '3.4em',
+  right: '1em',
+  bottom: '2.5em',
   overflow: 'auto',
   'background-color': 'var(--shadow-background-color)',
   fill: '#fff',
@@ -21,7 +21,7 @@ export const setting = $.css({
   },
 
   // panel
-  '& > div': { display: 'none', 'font-size': '120%' },
+  '& > div': { display: 'none', 'font-size': '0.875em' },
 
   // active panel
   [`& > div.${activeCls}`]: { display: 'block' }
@@ -34,21 +34,21 @@ export const subPanelCls = $.css('min-width: 10.5em;')
 // √
 export const yesIcon = $.css(`
   display: none;
-  width: 18px;
-  height: 18px;
+  width: 1.4em;
+  height: 1.4em;
 `)
 
 // >
 export const nextIcon = $.css(`
-  width: 30px;
-  height: 30px;
+  width: 2em;
+  height: 2em;
   margin: 0 -10px 0 -5px;
 `)
 
 // <
 export const BackIcon = $.css(`
-  width: 30px;
-  height: 30px;
+  width: 2em;
+  height: 2em;
   transform: rotate(180deg);
   margin-left: -10px;
 `)
@@ -87,7 +87,7 @@ export const switcherContainer = $.css(`
 export const nextLabelText = $.css(`
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 80%;
+  font-size: 0.8em;
 `)
 
 export const settingItemCls = $.css({
@@ -96,7 +96,7 @@ export const settingItemCls = $.css({
   color: '#fff',
   'justify-content': 'space-between',
   'align-items': 'center',
-  padding: '0 10px',
+  padding: '0 0.75em',
   'line-height': '1',
   display: 'flex',
   overflow: 'hidden',
@@ -127,7 +127,7 @@ export const settingItemLeft = $.css({
   'margin-right': '10px',
 
   '& > svg': {
-    width: '1.8em',
+    width: '1.7em',
     height: '1.7em',
     'margin-right': '0.5em'
   }

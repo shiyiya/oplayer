@@ -24,7 +24,7 @@ const noticeTextCls = $.css(`
   background-color: var(--shadow-background-color);
   border-radius: 2px;
   padding: 5px 10px;
-  font-size: 120%;
+  font-size: 0.875em;
 `)
 
 const topCenter = $.css`

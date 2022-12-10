@@ -25,5 +25,5 @@ export default () => {
       .on(console.log)
   }, [])
 
-  return <div id="oplayer" style={{ width: '100vw', height: '100vh' }} />
+  return <div id="oplayer" className="css-6okxqo" style={{ width: '100vw', height: '100vh' }} />
 }
