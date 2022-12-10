@@ -15,7 +15,7 @@ const styles = $.css(
       transition: 'opacity 100ms linear',
       '& > button': {
         position: 'absolute',
-        right: '40px',
+        right: '2.5em',
         bottom: '3.75em',
         fill: '#fff',
         width: '3.5em',
