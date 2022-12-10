@@ -41,7 +41,12 @@ const player = Player.make('#oplayer', {
     }),
     dash(),
     mpegts(),
-    chromecast
+    chromecast,
+    danmaku({
+      enable: false,
+      source: 'https://oplayer.vercel.app/danmaku.xml',
+      opacity: 0.8
+    })
   ])
   .create()
 

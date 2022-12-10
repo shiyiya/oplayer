@@ -1,6 +1,6 @@
 import React from 'react'
 import Translate from '@docusaurus/Translate'
-import danmaku from '../../../../packages/danmaku/dist/index.es'
+// import danmaku from '../../../../packages/danmaku/dist/index.es'
 import ui from '../../../../packages/ui/dist/index.es'
 import ReactPlayer, { isMobile } from '../Player'
 import styles from './styles.module.css'
@@ -36,12 +36,12 @@ const plugins = [
         text: '－－终わり－－'
       }
     ]
-  }),
-  danmaku({
-    source: 'https://oplayer.vercel.app/danmaku.xml',
-    fontSize: isMobile ? 0.6 : 0.8,
-    enable: false
   })
+  // danmaku({
+  //   enable: false,
+  //   fontSize: isMobile ? 0.6 : 0.8,
+  //   source: 'https://oplayer.vercel.app/danmaku.xml',
+  // })
 ]
 
 const Preview = () => {
