@@ -13,7 +13,7 @@ importers:
       '@babel/plugin-transform-template-literals': ^7.18.9
       '@changesets/cli': ^2.25.2
       '@rollup/plugin-babel': ^6.0.3
-      '@types/node': ^18.11.12
+      '@types/node': ^18.11.13
       '@vitejs/plugin-react': ^2.2.0
       babel-plugin-syntax-trailing-function-commas: ^6.22.0
       concurrently: ^7.6.0
@@ -28,7 +28,7 @@ importers:
       typescript: ^4.9.4
       vite: ^3.2.5
       vite-plugin-banner: ^0.6.1
-      vitest: ^0.25.6
+      vitest: ^0.25.7
     devDependencies:
       '@babel/core': 7.20.5
       '@babel/plugin-proposal-object-rest-spread': 7.20.2_@babel+core@7.20.5
@@ -39,7 +39,7 @@ importers:
       '@babel/plugin-transform-template-literals': 7.18.9_@babel+core@7.20.5
       '@changesets/cli': 2.25.2
       '@rollup/plugin-babel': 6.0.3_@babel+core@7.20.5
-      '@types/node': 18.11.12
+      '@types/node': 18.11.13
       '@vitejs/plugin-react': 2.2.0_vite@3.2.5
       babel-plugin-syntax-trailing-function-commas: 6.22.0
       concurrently: 7.6.0
@@ -52,9 +52,9 @@ importers:
       terser: 5.16.1
       tslib: 2.4.1
       typescript: 4.9.4
-      vite: 3.2.5_d7g4vtc6tti6vtzfyfy2fsuio4
+      vite: 3.2.5_2jljxqqm3icfr33rwkwj4ubglu
       vite-plugin-banner: 0.6.1
-      vitest: 0.25.6_jsdom@20.0.3+terser@5.16.1
+      vitest: 0.25.7_jsdom@20.0.3+terser@5.16.1
 
   examples/standalone:
     specifiers:
@@ -94,7 +94,7 @@ importers:
   packages/danmaku:
     specifiers:
       '@oplayer/core': workspace:*
-      danmaku: ^2.0.2
+      danmaku: ^2.0.4
     dependencies:
       danmaku: 2.0.4
     devDependencies:
@@ -914,8 +914,8 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: true
 
-  /@types/node/18.11.12:
-    resolution: {integrity: sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==}
+  /@types/node/18.11.13:
+    resolution: {integrity: sha512-IASpMGVcWpUsx5xBOrxMj7Bl8lqfuTY7FKAnPmu5cHkfQVWF8GulWS1jbRqA934qZL35xh5xN/+Xe/i26Bod4w==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -959,7 +959,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.5
       magic-string: 0.26.7
       react-refresh: 0.14.0
-      vite: 3.2.5_d7g4vtc6tti6vtzfyfy2fsuio4
+      vite: 3.2.5_2jljxqqm3icfr33rwkwj4ubglu
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4867,7 +4867,7 @@ packages:
     resolution: {integrity: sha512-E5abFbnqO21R1dCFwoRYAIcJArX3XAMZv1zV4uU9PcWQNt1PaWtj5SP1QcnbyXn2FhWSnvPkJp7yP16DeA/BzA==}
     dev: true
 
-  /vite/3.2.5_d7g4vtc6tti6vtzfyfy2fsuio4:
+  /vite/3.2.5_2jljxqqm3icfr33rwkwj4ubglu:
     resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -4892,7 +4892,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.11.12
+      '@types/node': 18.11.13
       esbuild: 0.15.18
       postcss: 8.4.19
       resolve: 1.22.1
@@ -4902,8 +4902,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.25.6_jsdom@20.0.3+terser@5.16.1:
-    resolution: {integrity: sha512-jdPgmZ7BcDnm1+hmMPIl9BZjSy+b8Y8V0tQMsv7ECO90Qic7EZ5/+traILXLpsXgqK5KgVrUJmchevAUuKL/1w==}
+  /vitest/0.25.7_jsdom@20.0.3+terser@5.16.1:
+    resolution: {integrity: sha512-lJ+Ue+v8kHl2JzjaKHJ9u5Yo/loU7zrWK2/Whn8OKQjtq5G7nkeWfXuq3elZaC8xKdkdIuWiiIicaNBG1F5yzg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -4926,7 +4926,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.4
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.12
+      '@types/node': 18.11.13
       acorn: 8.8.1
       acorn-walk: 8.2.0
       chai: 4.3.7
@@ -4938,7 +4938,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 3.2.5_d7g4vtc6tti6vtzfyfy2fsuio4
+      vite: 3.2.5_2jljxqqm3icfr33rwkwj4ubglu
     transitivePeerDependencies:
       - less
       - sass

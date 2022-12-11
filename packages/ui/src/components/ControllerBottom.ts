@@ -75,7 +75,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       ${
-        config.fullscreen || config.fullscreenWeb
+        config.fullscreen
           ? `<button class="${icon} ${off} ${tooltip}" data-tooltip-pos="up-right" aria-label="${fullscreenLabel}">
                 ${Icons.get('fullscreen')[0]}
                 ${Icons.get('fullscreen')[1]}
@@ -147,7 +147,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         switcher($pip, !player.isInPip)
         return player.togglePip()
       case fullscreenLabel:
-        if (player.isFullscreenEnabled && !config.fullscreenWeb) {
+        if (player.isFullscreenEnabled) {
           player.toggleFullScreen()
         } else {
           player.emit('fullscreenchange', { isWeb: true })

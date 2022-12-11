@@ -83,11 +83,6 @@ export type UiConfig = {
    */
   fullscreen?: boolean
   /**
-   * default: false
-   * 使用网页全屏替代全屏
-   */
-  fullscreenWeb?: boolean
-  /**
    * default: true
    */
   pictureInPicture?: boolean
