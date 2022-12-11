@@ -120,3 +120,7 @@ More informations [here](https://jb.gg/OpenSourceSupport)
 I use these products:
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/DataGrip_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/WebStorm_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/CodeWithMe_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/Toolbox_icon.png" width="45" height="52">
+
+# FAQ
+
+https://stackoverflow.com/questions/14317179/display-a-video-from-a-blob-javascript/14360868#14360868

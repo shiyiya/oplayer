@@ -75,7 +75,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       }
 
       ${
-        config.fullscreen
+        config.fullscreen || config.fullscreenWeb
           ? `<button class="${icon} ${off} ${tooltip}" data-tooltip-pos="up-right" aria-label="${fullscreenLabel}">
                 ${Icons.get('fullscreen')[0]}
                 ${Icons.get('fullscreen')[1]}
@@ -123,7 +123,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   player.on('volumechange', () => switcher($volume, player.isMuted))
   player.on(['durationchange', 'timeupdate', 'seeking', 'seeked'], () => {
     $time.innerText = `${formatTime(player.currentTime)} ${
-      player.options.isLive ? '' : ` / ${formatTime(player.duration)}`
+      player.options.isLive ? '' : `/ ${formatTime(player.duration)}`
     }`
   })
 
@@ -147,7 +147,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         switcher($pip, !player.isInPip)
         return player.togglePip()
       case fullscreenLabel:
-        if (player.isFullscreenEnabled) {
+        if (player.isFullscreenEnabled && !config.fullscreenWeb) {
           player.toggleFullScreen()
         } else {
           player.emit('fullscreenchange', { isWeb: true })

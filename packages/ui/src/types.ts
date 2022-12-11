@@ -79,8 +79,14 @@ export type UiConfig = {
   screenshot?: boolean
   /**
    * default: true
+   * 全屏（如果不可用将会降级为网页全屏）
    */
   fullscreen?: boolean
+  /**
+   * default: false
+   * 使用网页全屏替代全屏
+   */
+  fullscreenWeb?: boolean
   /**
    * default: true
    */
@@ -121,6 +127,8 @@ export type UiConfig = {
   /*  --- WIP ---  */
 
   contextmenu?: []
+
+  layers?: any[]
 }
 
 export type ErrorPayload =
@@ -129,13 +137,3 @@ export type ErrorPayload =
       message: string
       code?: number
     }
-
-export type UIMethods = {
-  error: (text: string) => void
-  notice: (text: string) => void
-  setting: {}
-  menu: {}
-  subtitle: {}
-  highlight: {}
-  thumbnails: {}
-}
