@@ -127,11 +127,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     }`
   })
 
-  player.on(
-    'videosourcechange',
-    () => ($time.innerText = player.options.isLive ? '00:00' : '00:00 / --:--')
-  )
-
   $dom.addEventListener('click', (e: Event) => {
     const target = e.target! as HTMLDivElement
     const label = target.getAttribute('aria-label')

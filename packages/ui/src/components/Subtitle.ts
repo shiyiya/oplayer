@@ -67,8 +67,7 @@ class Subtitle {
           shadow ||
           '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
         bottom: `${bottom || '5%'}`,
-        'font-size':
-          typeof fontSize == 'string' ? fontSize : `${(fontSize || (isMobile ? 14 : 16)) / 0.12}%`,
+        'font-size': `${(fontSize || (isMobile ? 14 : 16)) / 16}em`,
 
         '& > p': { margin: 0 }
       })}`,

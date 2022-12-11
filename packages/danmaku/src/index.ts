@@ -38,6 +38,13 @@ export default (options = {} as Options): PlayerPlugin => ({
       danmaku.comments = []
     })
 
+    const resize = danmaku.resize.bind(danmaku)
+    window.addEventListener('resize', resize)
+    player.on('destroy', () => {
+      danmaku.destroy()
+      window.removeEventListener('resize', resize)
+    })
+
     bootstrap(options.source).then((_) => {
       registerSetting()
       if (!options.enable) danmaku.hide()

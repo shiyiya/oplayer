@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import Translate from '@docusaurus/Translate'
-// import danmaku from '../../../../packages/danmaku/dist/index.es'
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment'
+import ReactPlayer from '../Player'
 import ui from '../../../../packages/ui/dist/index.es'
-import ReactPlayer, { isMobile } from '../Player'
 import styles from './styles.module.css'
 
 const plugins = [
@@ -37,40 +37,24 @@ const plugins = [
       }
     ]
   })
-  // danmaku({
-  //   enable: false,
-  //   fontSize: isMobile ? 0.6 : 0.8,
-  //   source: 'https://oplayer.vercel.app/danmaku.xml',
-  // })
 ]
 
 const Preview = () => {
-  // useEffect(() => {
-  //   if (ExecutionEnvironment.canUseDOM) {
-  //     const Player = require('@oplayer/core').default
-  //     const ui = require('@oplayer/ui').default
-  //     const danmaku = require('@oplayer/danmaku').default
-  //     setTimeout(() => {
-  //       Player.make(document.querySelector('#oplayer'), {
-  //         source: { src: 'https://oplayer.vercel.app/君の名は.mp4' }
-  //       })
-  //         .use([
-  //           danmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' }),
-  //           ui({
-  //             theme: { primaryColor: '#9370db' },
-  //             subtitle: [
-  //               {
-  //                 name: '君の名は',
-  //                 default: true,
-  //                 url: 'https://oplayer.vercel.app/君の名は.srt'
-  //               }
-  //             ]
-  //           })
-  //         ])
-  //         .create()
-  //     })
-  //   }
-  // }, [])
+  const player = useRef()
+
+  useEffect(() => {
+    if (ExecutionEnvironment.canUseDOM && player.current) {
+      console.log(player.current)
+      console.log(require('../../../../packages/danmaku/dist/index.es').default)
+      require('../../../../packages/danmaku/dist/index.es')
+        .default({
+          source: 'https://oplayer.vercel.app/danmaku.xml',
+          opacity: 0.8,
+          fontSize: 0.75
+        })
+        .apply(player.current)
+    }
+  }, [])
 
   return (
     <div className={styles.Container} id="preview">
@@ -79,6 +63,7 @@ const Preview = () => {
       </div>
       <div>
         <ReactPlayer
+          ref={player}
           plugins={plugins}
           source={{
             src: 'https://oplayer.vercel.app/君の名は.mp4',

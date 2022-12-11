@@ -33,8 +33,8 @@ export const root = ({ theme }: UiConfig) => {
         }
       },
       !isMobile && {
-        [`&.${fullscreen}`]: { 'font-size': '24px' },
-        [`@global .${webFullScreen} &`]: { 'font-size': '24px' }
+        [`&.${fullscreen}`]: { 'font-size': '22px' },
+        [`@global .${webFullScreen} &`]: { 'font-size': '22px' }
       }
     )
   )
