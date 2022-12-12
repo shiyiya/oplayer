@@ -20,6 +20,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     if (opacity) $danmaku.style.opacity = `${opacity}`
     if (options.enable == undefined) options.enable = true
 
+    let loaded = false
     const danmaku = new Danmaku({
       container: $danmaku,
       media: player.$video,
@@ -45,10 +46,8 @@ export default (options = {} as Options): PlayerPlugin => ({
       window.removeEventListener('resize', resize)
     })
 
-    bootstrap(options.source).then(() => {
-      registerSetting()
-      if (!options.enable) danmaku.hide()
-    })
+    registerSetting()
+    if (options.enable) bootstrap(options.source)
 
     async function fetch(source: any) {
       try {
@@ -68,12 +67,17 @@ export default (options = {} as Options): PlayerPlugin => ({
     }
 
     function bootstrap(source: any) {
-      return fetch(source).then((res) => {
-        danmaku.clear()
-        // @ts-ignore
-        danmaku.comments = res.sort((a, b) => a.time - b.time)
-        if (options.fontSize) setFontSize(options.fontSize)
-      })
+      options.source = source
+      loaded = options.enable!
+      if (options.enable) {
+        fetch(source).then((res) => {
+          danmaku.clear()
+          // @ts-ignore
+          danmaku.comments = res.sort((a, b) => a.time - b.time)
+          if (options.fontSize) setFontSize(options.fontSize)
+          danmaku.show()
+        })
+      }
     }
 
     function setFontSize(value: number) {
@@ -101,6 +105,10 @@ export default (options = {} as Options): PlayerPlugin => ({
             onChange: (value: boolean) => {
               options.enable = value
               if (value) {
+                if (!loaded) {
+                  bootstrap(options.source)
+                  return
+                }
                 danmaku.show()
               } else {
                 danmaku.hide()

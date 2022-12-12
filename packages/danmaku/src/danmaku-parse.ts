@@ -23,7 +23,8 @@ export function getMode(key: number): Comment['mode'] {
 // http://jabbany.github.io/CommentCoreLibrary/docs/data-formats/bilibili-xml.html
 export function danmakuParseFromXml(xmlString: string) {
   const matches = xmlString.matchAll(/<d (?:.*? )??p="(?<p>.+?)"(?: .*?)?>(?<text>.+?)<\/d>/gs)
-  return Array.from(matches).reduce<Comment[]>((initialValue, match) => {
+  const result: Comment[] = []
+  Array.from(matches).forEach((match) => {
     const p = match.groups?.['p']?.split(',')
     let text = match.groups?.['text']?.trim()
 
@@ -37,38 +38,32 @@ export function danmakuParseFromXml(xmlString: string) {
         fontFamily: 'SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif'
       } as any
 
-      // 高级弹幕
-      // <d p="168.11800,7,36,16777215,1597152805,0,130cb53f,36705733621841927,10">[0,0,"1-1",4.5,"天气之子\n天气之子\n天气之子",0,0,0,0,500,0,1,"SimHei",1]</d>
       if (modeId >= 7) {
         const styledText = JSON.parse(text)
+
         text = styledText[4]
         if (styledText[12]) style.fontFamily = styledText[12]
 
         if (modeId == 7) {
           style.position = 'absolute'
-          style.left = styledText[0]
-          style.right = styledText[1]
+          style.left = `${styledText[0]}px`
+          style.right = `${styledText[1]}px`
         } else {
-          if (styledText[5])
-            style.transform = `rotateY(${styledText[5]}deg) rotateZ(${styledText[6]}deg)`
-          //TODO: 动画弹幕
+          // TODO pr
+          // 被占用 https://github.com/weizhenye/Danmaku
+          // style.transform = `rotateZ(${styledText[5]}deg) rotateY(${styledText[6]}deg)`
         }
       }
 
-      return initialValue.concat({
-        mode: getMode(modeId),
-        text: text!
-          .replace(/&quot;/g, '"')
-          .replace(/&apos;/g, "'")
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&amp;/g, '&') as string,
-        time: Number(p[0]),
-        style
+      result.push({
+        text,
+        style,
+        mode: getMode(Number(modeId)),
+        time: Number(p[0])
       })
     }
-    return initialValue
-  }, [])
+  })
+  return result
 }
 
 export function danmakuParseFromUrl(src: string) {
