@@ -45,7 +45,7 @@ export default (options = {} as Options): PlayerPlugin => ({
       window.removeEventListener('resize', resize)
     })
 
-    bootstrap(options.source).then((_) => {
+    bootstrap(options.source).then(() => {
       registerSetting()
       if (!options.enable) danmaku.hide()
     })
@@ -71,7 +71,11 @@ export default (options = {} as Options): PlayerPlugin => ({
       return fetch(source).then((res) => {
         danmaku.clear()
         // @ts-ignore
-        danmaku.comments = res
+        console.log(res.length)
+
+        danmaku.comments = res.sort((a, b) => a.time - b.time)
+        // console.log(danmaku.comments)
+
         if (options.fontSize) setFontSize(options.fontSize)
       })
     }

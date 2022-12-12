@@ -44,6 +44,7 @@ const player = Player.make('#oplayer', {
     chromecast,
     danmaku({
       enable: false,
+      // 海量弹幕 https://oplayer.vercel.app/天气之子.xml
       source: 'https://oplayer.vercel.app/danmaku.xml',
       opacity: 0.8
     })

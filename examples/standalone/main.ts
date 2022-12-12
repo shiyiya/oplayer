@@ -16,6 +16,8 @@ import THUMB from '../../website/static/thumbnails.jpg'
 import POSTER from '../../website/static/poster.png'
 import flv from '../../website/static/op.flv'
 
+// import SUPER_DANMAKU from '../../website/static/天气之子.xml'
+
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
@@ -115,7 +117,11 @@ const player = Player.make('#player', {
     }),
     shaka(),
     chromecast,
-    danmaku({ enable: false, source: DANMAKU, opacity: 0.8 })
+    danmaku({
+      enable: false,
+      source: DANMAKU, //SUPER_DANMAKU
+      opacity: 0.8
+    })
     // ad({
     //   autoplay: false,
     //   image:
