@@ -71,11 +71,7 @@ export default (options = {} as Options): PlayerPlugin => ({
       return fetch(source).then((res) => {
         danmaku.clear()
         // @ts-ignore
-        console.log(res.length)
-
         danmaku.comments = res.sort((a, b) => a.time - b.time)
-        // console.log(danmaku.comments)
-
         if (options.fontSize) setFontSize(options.fontSize)
       })
     }
