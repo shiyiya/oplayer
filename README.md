@@ -11,6 +11,7 @@ Oh! Another HTML5 video player.
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](#support)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1dac4911-935b-43a0-a69d-15c98e2668ed/deploy-status)](https://app.netlify.com/sites/ohplayer/deploys)
 
 ![oplayer](./oplayer.png)
 

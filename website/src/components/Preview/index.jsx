@@ -13,11 +13,11 @@ const plugins = [
         {
           name: 'Default',
           default: true,
-          src: 'https://oplayer.vercel.app/君の名は.srt'
+          src: 'https://ohplayer.netlify.app/君の名は.srt'
         }
       ]
     },
-    thumbnails: { src: 'https://oplayer.vercel.app/thumbnails.jpg', number: 100 },
+    thumbnails: { src: 'https://ohplayer.netlify.app/thumbnails.jpg', number: 100 },
     highlight: [
       {
         time: 12,
@@ -45,10 +45,9 @@ const Preview = () => {
   useEffect(() => {
     if (ExecutionEnvironment.canUseDOM && player.current) {
       console.log(player.current)
-      console.log(require('../../../../packages/danmaku/dist/index.es').default)
       require('../../../../packages/danmaku/dist/index.es')
         .default({
-          source: 'https://oplayer.vercel.app/danmaku.xml',
+          source: 'https://ohplayer.netlify.app/danmaku.xml',
           opacity: 0.8,
           fontSize: 0.75
         })
@@ -66,8 +65,8 @@ const Preview = () => {
           ref={player}
           plugins={plugins}
           source={{
-            src: 'https://oplayer.vercel.app/君の名は.mp4',
-            poster: 'https://oplayer.vercel.app/poster.png'
+            src: 'https://ohplayer.netlify.app/君の名は.mp4',
+            poster: 'https://ohplayer.netlify.app/poster.png'
           }}
           onEvent={console.log}
         />

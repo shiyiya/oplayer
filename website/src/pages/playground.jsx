@@ -13,13 +13,13 @@ import danmaku from '/danmaku.es.js'
 import { chromecast } from '/plugins.es.js'
 
 // html script example:
-// preview: https://oplayer.vercel.app/script.html
+// preview: https://ohplayer.netlify.app/script.html
 // code: https://github.com/shiyiya/oplayer/blob/main/examples/script.html
 
 const player = Player.make('#oplayer', {
   source: {
-    src: 'https://oplayer.vercel.app/君の名は.mp4',
-    poster: 'https://oplayer.vercel.app/poster.png'
+    src: 'https://ohplayer.netlify.app/君の名は.mp4',
+    poster: 'https://ohplayer.netlify.app/poster.png'
   }
 })
   .use([
@@ -44,8 +44,8 @@ const player = Player.make('#oplayer', {
     chromecast,
     danmaku({
       enable: false,
-      // 海量弹幕 https://oplayer.vercel.app/天气之子.xml
-      source: 'https://oplayer.vercel.app/danmaku.xml',
+      // 海量弹幕 https://ohplayer.netlify.app/天气之子.xml
+      source: 'https://ohplayer.netlify.app/danmaku.xml',
       opacity: 0.8
     })
   ])
@@ -57,7 +57,7 @@ player.plugins.ui.menu.register({
     {
       name: 'MP4',
       default: true,
-      value: 'https://oplayer.vercel.app/君の名は.mp4'
+      value: 'https://ohplayer.netlify.app/君の名は.mp4'
     },
     {
       name: 'HLS',
@@ -69,7 +69,7 @@ player.plugins.ui.menu.register({
     },
     {
       name: 'FLV',
-      value: 'https://oplayer.vercel.app/op.flv'
+      value: 'https://ohplayer.netlify.app/op.flv'
     }
   ],
   onChange({ name, value }, elm) {
@@ -84,14 +84,7 @@ export default () => {
     <Layout title="Oh! Another HTML5 video player" description="Oh! Another HTML5 video player">
       <Playground
         initialSnippet={{
-          markup: `
-            html script example: <br />
-            <a href="https://oplayer.vercel.app/script.html" target="_blank">https://oplayer.vercel.app/script.html</a> <br />
-            <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html" target="_blank">https://github.com/shiyiya/oplayer/blob/main/examples/script.html</a>
-            <br />
-            <br />
-            <div id=oplayer />
-        `,
+          markup: '<div id=oplayer />',
           javascript: globalThis?.location?.search || code
         }}
         defaultEditorTab="javascript"
