@@ -2,9 +2,8 @@
 
 Oh! Another HTML5 video player.
 
-Preview on https://oplayer.vercel.app/player?../君の名は.mp4
-
-Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
+~~国内无法访问点我（暂无）~~ | [Preview](https://oplayer.vercel.app/player?../君の名は.mp4) | [Playground](https://oplayer.vercel.app) | [Website](https://oplayer.vercel.app)｜
+[Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 [![GitHub license](https://img.shields.io/github/license/shiyiya/oplayer?style=flat-square)](https://github.com/shiyiya/oplayer/blob/main/LICENSE)
@@ -14,8 +13,6 @@ Website: https://oplayer.vercel.app | https://shiyiya.github.io/oplayer
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](#support)
 
 ![oplayer](./oplayer.png)
-
-[Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 ## Feature
 
@@ -50,7 +47,7 @@ import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 
-Player.make(document.getElementById('oplayer'), {
+Player.make('#oplayer', {
   source: {
     src: 'https://oplayer.vercel.app/君の名は.mp4',
     poster: 'https://oplayer.vercel.app/poster.png'
@@ -71,7 +68,7 @@ Player.make(document.getElementById('oplayer'), {
 <div id="oplayer" />
 
 <script>
-  OPlayer.make(document.getElementById('oplayer'), {
+  OPlayer.make('#oplayer', {
     source: {
       src: 'https://oplayer.vercel.app/君の名は.mp4',
       poster: 'https://oplayer.vercel.app/poster.png'
@@ -93,8 +90,7 @@ Player.make(document.getElementById('oplayer'), {
 - [@oplayer/danmaku](./packages/danmaku)
 - [@oplayer/ad](./packages/ad)
 - [@oplayer/react](./packages/react)
-- [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
-- [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
+- [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)- [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
 
 ## Who use OPlayer?
 
@@ -115,7 +111,7 @@ If you think this is super cool, or useful, and want to donate a little, then yo
 ## Jetbrains <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="35" height="35">
 
 This project is helped by [Jetbrains](https://www.jetbrains.com/) with their open source program.
-More informations [here](https://jb.gg/OpenSourceSupport)
+More information [here](https://jb.gg/OpenSourceSupport)
 
 I use these products:
 

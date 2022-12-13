@@ -16,6 +16,7 @@ import {
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
+  const enablePlayPause = !isMobile || !config.coverButton
   const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel] = [
     player.locales.get('Play'),
     player.locales.get('Pause'),
@@ -29,7 +30,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     {},
     `<div>
       ${
-        !isMobile
+        enablePlayPause
           ? `<button
               class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
               aria-label="${playLabel}"
@@ -113,7 +114,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   }
 
-  if (!isMobile) {
+  if (enablePlayPause) {
     player.on(['play', 'pause', 'videosourcechange'], () => {
       $play.setAttribute('aria-label', player.isPlaying ? pauseLabel : playLabel)
       switcher($play, player.isPlaying)

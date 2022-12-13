@@ -34,24 +34,24 @@ const apply = (player: Player, config: UiConfig) => {
   }
 
   const icons = Icons.setupIcons(player, config.icons)
-
   const $root = $.create(`div.${root(config)}`)
   startListening(player, config, $root)
 
   const error = renderError(player, $root, config)
   const notice = renderNotice(player, $root)
   renderLoading(player, $root)
-  renderCoverButton(player, $root)
+
+  if (config.coverButton) renderCoverButton(player, $root)
   const { exp, toggle } = renderController(player, $root, config)
   renderMask(player, $root, toggle)
 
   const setting = renderSetting(player, $root, config.settings)
   const menu = renderMenubar(player, $root, config.menu)
-
-  registerSpeedSetting(player, config.speed, setting)
   const subtitle = renderSubtitle(player, setting, $root, config.subtitle)
 
+  registerSpeedSetting(player, config.speed, setting)
   $.render($root, player.$root)
+
   if (!isMobile) registerHotKey(player)
 
   return {

@@ -1,10 +1,19 @@
 export type Options = {
   source: string | Function | Comment[]
-  speed?: number // 持续时间 秒，[1 ~ 10]
+  /**
+   * @default:144
+   * */
+  speed?: number
   opacity?: number
   fontSize?: number
+  /**
+   * @default 'dom'
+   */
   engine: 'canvas' | 'dom'
-  enable?: boolean //default true
+  /**
+   * @default true
+   */
+  enable?: boolean
 }
 
 export interface Comment {

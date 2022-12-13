@@ -103,6 +103,8 @@ export type UiConfig = {
 
   menu?: MenuBar[]
 
+  coverButton?: boolean
+
   errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
 
   icons?: {
