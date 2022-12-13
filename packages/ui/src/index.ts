@@ -76,15 +76,15 @@ const apply = (player: Player, config: UiConfig) => {
 }
 
 const defaultConfig: UiConfig = {
-  theme: {
-    primaryColor: '#6668ab'
-  },
   hotkey: true,
-  speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
   fullscreen: true,
-  pictureInPicture: true,
+  coverButton: true,
   miniProgressBar: true,
-  settings: ['loop']
+  pictureInPicture: true,
+  settings: ['loop'],
+  speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
+
+  theme: { primaryColor: '#6668ab' }
 }
 
 const snow = (config?: UiConfig): PlayerPlugin => ({
