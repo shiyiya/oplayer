@@ -62,13 +62,13 @@ export const icon = $.css({
 })
 
 export const on = $.css({
-  '& > svg:nth-child(1)': {
+  '& > *:nth-child(1)': {
     display: 'none'
   }
 })
 
 export const off = $.css({
-  '& > svg:nth-child(2)': {
+  '& > *:nth-child(2)': {
     display: 'none'
   }
 })

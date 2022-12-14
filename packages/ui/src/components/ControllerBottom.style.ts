@@ -94,7 +94,7 @@ export const controllerBottom = $.css({
     'line-height': '1.5em',
     'box-sizing': 'content-box',
 
-    ['& svg']: {
+    ['& > *']: {
       height: '1.5em',
       width: '1.5em',
       'pointer-events': 'none'

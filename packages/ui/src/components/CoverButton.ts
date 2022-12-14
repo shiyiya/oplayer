@@ -13,17 +13,32 @@ const styles = $.css(
   Object.assign(
     {
       transition: 'opacity 100ms linear',
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      margin: 'auto',
+      fill: '#fff',
+      width: '3em',
+      height: '3em',
+      'z-index': '97',
+
       '& > button': {
-        position: 'absolute',
-        right: '2em',
-        bottom: '3.75em',
-        fill: '#fff',
-        width: '3.5em',
-        'z-index': '97',
+        width: '100%',
+        height: '100%',
+        'border-radius': '100%',
+        background: 'var(--primary-color)',
+        opacity: 0.9,
+        padding: '1em',
 
         '& > svg': Object.assign(
           {
-            filter: 'drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3))'
+            position: 'relative',
+            width: '1.5em',
+            height: '1.5em',
+            left: '-0.2em',
+            top: '-0.25em'
           },
           isMobile && {
             '&:nth-child(1)': { display: 'block' },
@@ -35,18 +50,6 @@ const styles = $.css(
             }
           }
         )
-      },
-
-      '@media only screen and (max-width: 991px)': {
-        '& > button': {
-          top: '0',
-          bottom: '0',
-          left: '0',
-          right: '0',
-          margin: 'auto',
-          width: '2.5em',
-          height: '2.5em'
-        }
       }
     },
     isMobile
