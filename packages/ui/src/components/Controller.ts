@@ -23,6 +23,7 @@ const controllerBottom = $.css({
     'z-index': -1,
     top: '-1em',
     transition: 'opacity 0.3s ease',
+    'pointer-events': 'none',
     'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
   }
 })
