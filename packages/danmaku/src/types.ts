@@ -14,6 +14,13 @@ export type Options = {
    * @default true
    */
   enable?: boolean
+  /**
+   * TODO: 换个名字
+   * @default false
+   */
+  withSendDom?: boolean
+
+  onEmit?: (comment: Comment) => boolean | void
 }
 
 export interface Comment {

@@ -168,6 +168,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   })
 
   $.render($dom, el)
+
+  return { cls: { controllerBottom } }
 }
 
 export default render

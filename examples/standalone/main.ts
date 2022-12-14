@@ -119,6 +119,7 @@ const player = Player.make('#player', {
     chromecast,
     danmaku({
       enable: false,
+      withSendDom: true,
       source: DANMAKU, //SUPER_DANMAKU
       opacity: 0.8
     })
@@ -243,16 +244,3 @@ player.on((e: PlayerEvent) => {
 render(meta(), document.getElementById('meta')!)
 
 window.p = player
-
-// console.table({
-//   UA: globalThis.navigator?.userAgent,
-//   isMobile,
-//   isIOS,
-//   isiPad,
-//   isiPhone,
-//   fullscreenEnabled: Boolean(document.fullscreenEnabled),
-//   webkitFullscreenEnabled: Boolean(document.webkitFullscreenEnabled),
-//   mozFullScreenEnabled: Boolean(document.mozFullScreenEnabled),
-//   msFullscreenEnabled: Boolean(document.msFullscreenEnabled),
-//   video: Boolean(player.$video.webkitEnterFullscreen)
-// })

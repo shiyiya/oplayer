@@ -21,7 +21,7 @@ const CTRL_HIDE_DELAY = 1500
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.render($.create(`div.${controllerBottom}`), el)
   const exp = renderProgress(player, $dom, config)
-  renderControllerBottom(player, $dom, config)
+  const { cls } = renderControllerBottom(player, $dom, config)
 
   $.css({
     [`@global .${controllerHidden}`]: {
@@ -42,7 +42,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     if (
       (!player.isPlaying && !isMobile) ||
       hasClass(player.$root, controllerHidden) ||
-      hasClass(player.$root, settingShown)
+      hasClass(player.$root, settingShown) ||
+      (player.$root.contains(document.activeElement) && document.activeElement?.tagName == 'INPUT')
     ) {
       return
     }
@@ -71,6 +72,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   return {
     exp,
+    cls,
     toggle() {
       if (hasClass(player.$root, controllerHidden)) {
         showCtrl()

@@ -42,7 +42,7 @@ const apply = (player: Player, config: UiConfig) => {
   renderLoading(player, $root)
 
   if (config.coverButton) renderCoverButton(player, $root)
-  const { exp, toggle } = renderController(player, $root, config)
+  const { exp, cls, toggle } = renderController(player, $root, config)
   renderMask(player, $root, toggle)
 
   const setting = renderSetting(player, $root, config.settings)
@@ -63,6 +63,7 @@ const apply = (player: Player, config: UiConfig) => {
     subtitle,
     ...exp,
     cls: {
+      ...cls,
       loading,
       playing,
       focused,

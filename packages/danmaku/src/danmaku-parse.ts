@@ -32,10 +32,7 @@ export function danmakuParseFromXml(xmlString: string) {
       const modeId = Number(p[1])
       const style: CSSStyleDeclaration = {
         fontSize: `${Number(p[2])}px`,
-        color: `#${Number(p[3]).toString(16)}`,
-        textShadow:
-          'rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px',
-        fontFamily: 'SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif'
+        color: `#${Number(p[3]).toString(16)}`
       } as any
 
       if (modeId >= 7) {
@@ -49,8 +46,8 @@ export function danmakuParseFromXml(xmlString: string) {
           style.left = `${styledText[0]}px`
           style.right = `${styledText[1]}px`
         } else {
-          // TODO pr
-          // 被占用 https://github.com/weizhenye/Danmaku
+          // TODO custom render
+          // https://github.com/weizhenye/Danmaku
           // style.transform = `rotateZ(${styledText[5]}deg) rotateY(${styledText[6]}deg)`
         }
       }

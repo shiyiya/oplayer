@@ -54,7 +54,12 @@ export default function registerHotKey(player: Player) {
   let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {
-    if (document.activeElement?.getAttribute('contenteditable') || !isFocused(player)) return
+    if (
+      document.activeElement?.tagName == 'INPUT' ||
+      document.activeElement?.getAttribute('contenteditable') ||
+      !isFocused(player)
+    )
+      return
 
     const key = e.key
 
