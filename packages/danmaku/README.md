@@ -89,4 +89,7 @@ ws.onmessage = async function (msg) {
 
 // 发送弹幕
 ws.send({ text: '我来了' })
+
+// 完整代码示例
+// https://github.com/shiyiya/JustLive-Web/blob/master/src/components/Player/Player.vue
 ```

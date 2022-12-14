@@ -195,7 +195,7 @@ export default (options = {} as Options): PlayerPlugin => ({
               .getPropertyValue('--primary-color')
 
             //@ts-ignore
-            comment.style!.border = `1px solid ${primaryColor}`
+            comment.style!.border = `2px solid ${primaryColor}`
             //@ts-ignore
             comment.style!.marginTop = '4px'
             danmaku.emit(comment)
@@ -268,7 +268,6 @@ function registerInputStyle() {
   background-color: var(--primary-color,#00a1d6);
   color: #fff;
   min-width: 60px;
-  padding: 3px;
   outline: none;
   font-size: 14px;
   display: flex;
