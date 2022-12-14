@@ -62,7 +62,7 @@ export const progressDragging = $.css('/* progressDragging */')
 export const progress = $.css({
   position: 'relative',
   'box-sizing': 'border-box',
-  padding: '5px 0',
+  padding: '4px 0',
   cursor: 'pointer',
   width: '100%',
   'font-size': '0.75em',

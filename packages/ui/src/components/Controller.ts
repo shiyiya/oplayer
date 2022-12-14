@@ -13,7 +13,18 @@ const controllerBottom = $.css({
   'z-index': 97,
   padding: '0 1em',
   transition: 'transform 0.3s ease, padding 0.3s ease',
-  'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
+  '&::before': {
+    position: 'absolute',
+    content: "''",
+    width: '100%',
+    display: 'block',
+    bottom: 0,
+    left: 0,
+    'z-index': -1,
+    top: '-1em',
+    transition: 'opacity 0.3s ease',
+    'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
+  }
 })
 
 const CTRL_HIDE_DELAY = 1500
@@ -28,9 +39,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       cursor: 'none',
       [`& .${controllerBottom}`]: config.miniProgressBar
         ? {
-            transform: 'translateY(calc(100% - 7px))',
+            transform: 'translateY(calc(100% - 6px))',
             padding: 0,
-            'pointer-events': 'none'
+            'pointer-events': 'none',
+            '&::before': { opacity: 0 }
           }
         : {
             transform: 'translateY(100%)'

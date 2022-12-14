@@ -220,12 +220,12 @@ export default (options = {} as Options): PlayerPlugin => ({
 
 function registerInputStyle() {
   const inputBar = $.css(`
-  margin: 0.125em 0;
   min-width: 25em;
   border-radius: 6px;
   background: #f4f4f4;
   color: #999;
-  overflowL hidden;
+  overflow: hidden;
+  height:85%;
 `)
 
   const inputBarWrap = $.css(`
@@ -265,7 +265,7 @@ function registerInputStyle() {
 
   const sendBottom = $.css(`
   height: 100%;
-  background-color: var(--primary-color,#00a1d6);
+  background-color: var(--primary-color,#6668ab);
   color: #fff;
   min-width: 60px;
   outline: none;

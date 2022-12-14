@@ -44,6 +44,7 @@ const player = Player.make('#oplayer', {
     chromecast,
     danmaku({
       enable: false,
+      withSendDom: true,
       // 海量弹幕 https://ohplayer.netlify.app/天气之子.xml
       source: 'https://ohplayer.netlify.app/danmaku.xml',
       opacity: 0.8

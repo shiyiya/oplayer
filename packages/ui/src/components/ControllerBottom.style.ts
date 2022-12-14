@@ -77,7 +77,8 @@ export const controllerBottom = $.css({
   display: 'flex',
   'box-sizing': 'border-box',
   'justify-content': 'space-between',
-  padding: isMobile ? 0 : '0px 0px 5px 0px',
+  'align-items': 'center',
+  'padding-bottom': isMobile ? 0 : '4px',
   'margin-right': isMobile ? '-8px' : '0px',
 
   [`& .${icon}.${textIcon}`]: {
@@ -90,6 +91,7 @@ export const controllerBottom = $.css({
     padding: '0 0.5em',
     width: '1.25em',
     height: '1.5em',
+    'line-height': '1.5em',
     'box-sizing': 'content-box',
 
     ['& svg']: {
