@@ -32,45 +32,30 @@ const styles = $.css(
         opacity: 0.9,
         padding: '1em',
 
-        '& > svg': Object.assign(
-          {
-            position: 'relative',
-            width: '1.5em',
-            height: '1.5em',
-            left: '-0.2em',
-            top: '-0.25em'
-          },
-          isMobile && {
-            '&:nth-child(1)': { display: 'block' },
-            '&:nth-child(2)': { display: 'none' },
+        '& > *': {
+          position: 'relative',
+          width: '1.5em',
+          height: '1.5em',
+          left: '-0.2em',
+          top: '-0.25em'
+        }
+      },
 
-            [`@global .${playing} &`]: {
-              '&:nth-child(1)': { display: 'none' },
-              '&:nth-child(2)': { display: 'block' }
-            }
-          }
-        )
-      }
+      [`@global .${playing} &`]: hidden,
+      [`@global .${loading} &`]: hidden
     },
-    isMobile
-      ? {
-          [`@global .${controllerHidden} &`]: hidden
-        }
-      : {
-          [`@global .${loading} &`]: hidden,
-          [`@global .${playing} &`]: hidden
-        }
+    isMobile && {
+      [`@global .${controllerHidden} &`]: hidden
+    }
   )
 )
 
 const render = (player: Player, el: HTMLElement) => {
-  const needPause = !player.isNativeUI && isMobile
   const $dom = $.create(
     `div.${styles}`,
     {},
     `<button aria-label="Play" class="${icon}" type="button">
       ${Icons.get('play')}
-      ${needPause ? Icons.get('pause') : ''}
     </button>`
   )
 

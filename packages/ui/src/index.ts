@@ -1,7 +1,7 @@
 import { $, isMobile } from '@oplayer/core'
 import { root } from './style'
 
-import { Icons, registerHotKey, registerSpeedSetting } from './functions'
+import { Icons, registerKeyboard, registerSpeedSetting } from './functions'
 import startListening from './listeners'
 
 import renderController from './components/Controller'
@@ -52,7 +52,10 @@ const apply = (player: Player, config: UiConfig) => {
   registerSpeedSetting(player, config.speed, setting)
   $.render($root, player.$root)
 
-  if (!isMobile) registerHotKey(player)
+  let keyboard = {}
+  if (!isMobile && (config.keyboard?.focused || config.keyboard?.global)) {
+    keyboard = registerKeyboard(player, config)
+  }
 
   return {
     icons,
@@ -61,6 +64,7 @@ const apply = (player: Player, config: UiConfig) => {
     setting,
     menu,
     subtitle,
+    keyboard,
     ...exp,
     cls: {
       ...cls,
@@ -77,12 +81,12 @@ const apply = (player: Player, config: UiConfig) => {
 }
 
 const defaultConfig: UiConfig = {
-  hotkey: true,
   fullscreen: true,
   coverButton: true,
   miniProgressBar: true,
-  pictureInPicture: true,
+  autoFocus: true,
   settings: ['loop'],
+  keyboard: { focused: true },
   speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
 
   theme: { primaryColor: '#6668ab' }

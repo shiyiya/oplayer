@@ -26,7 +26,7 @@ export type Options = {
    * @default false
    * 是否显示发送弹幕的输入框，仅 PC 生效
    */
-  withSendDom?: boolean
+  displaySender?: boolean
   /**
    * 使用发送输入框发送弹幕时出发，返回 false 进行拦截
    */

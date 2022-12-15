@@ -16,7 +16,6 @@ import {
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  const enablePlayPause = !isMobile || !config.coverButton
   const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel] = [
     player.locales.get('Play'),
     player.locales.get('Pause'),
@@ -29,17 +28,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     `div.${controllerBottom}`,
     {},
     `<div>
-      ${
-        enablePlayPause
-          ? `<button
-              class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
-              aria-label="${playLabel}"
-            >
-              ${Icons.get('play')}
-              ${Icons.get('pause')}
-            </button>`
-          : ''
-      }
+      <button
+        class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
+        aria-label="${playLabel}"
+      >
+        ${Icons.get('play')}
+        ${Icons.get('pause')}
+      </button>
 
       <span class=${time}>${
       player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
@@ -114,12 +109,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   }
 
-  if (enablePlayPause) {
-    player.on(['play', 'pause', 'videosourcechange'], () => {
-      $play.setAttribute('aria-label', player.isPlaying ? pauseLabel : playLabel)
-      switcher($play, player.isPlaying)
-    })
-  }
+  player.on(['play', 'pause', 'videosourcechange'], () => {
+    $play.setAttribute('aria-label', player.isPlaying ? pauseLabel : playLabel)
+    switcher($play, player.isPlaying)
+  })
 
   player.on('volumechange', () => switcher($volume, player.isMuted))
   player.on(['durationchange', 'timeupdate', 'seeking', 'seeked'], () => {

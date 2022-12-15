@@ -190,7 +190,9 @@ class Subtitle {
         const decoder = new TextDecoder(encoding)
         const text = decoder.decode(buffer)
 
-        switch (type == undefined || type == 'auto' ? new URL(src).pathname.split('.')[1] : type) {
+        switch (
+          type == undefined || type == 'auto' ? /srt|ass|vtt(#|\?|$)/i.exec(src)?.[0] : type
+        ) {
           case 'srt':
             return vttToBlob(srtToVtt(text))
           case 'ass':

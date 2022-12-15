@@ -21,6 +21,6 @@ export default (player: Player, config: UiConfig, $root: HTMLDivElement) => {
   fullscreenListener(player, $root)
 
   if (!isMobile) {
-    focusListener(player, config.autoFocus)
+    focusListener(player, config.autoFocus!)
   }
 }

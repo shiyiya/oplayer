@@ -1,4 +1,4 @@
 export { Icons } from './icons'
 
-export { default as registerHotKey } from './hotkey'
+export { default as registerKeyboard } from './keyboard'
 export { default as registerSpeedSetting } from './speed'

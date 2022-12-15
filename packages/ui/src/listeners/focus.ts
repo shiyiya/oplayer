@@ -1,7 +1,7 @@
 import type Player from '@oplayer/core'
 import { focused } from '../style'
 
-const focusListener = (player: Player, autoFocus: boolean = false) => {
+const focusListener = (player: Player, autoFocus: boolean) => {
   function focus({ target }: FocusEvent) {
     if (target && (player.$root.contains(target as Node) || player.$root == target!)) {
       player.$root.classList.add(focused)

@@ -84,7 +84,7 @@ export type UiConfig = {
    *  ← → 进度条 +-5s
    *  空格 播放暂停
    */
-  hotkey?: boolean
+  keyboard?: { focused?: boolean; global?: boolean }
   /**
    * default: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
    * 指定倍速列表

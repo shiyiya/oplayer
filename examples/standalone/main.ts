@@ -119,7 +119,7 @@ const player = Player.make('#player', {
     chromecast,
     danmaku({
       enable: false,
-      withSendDom: true,
+      displaySender: true,
       source: DANMAKU, //SUPER_DANMAKU
       opacity: 0.8
     })

@@ -15,10 +15,10 @@ export type Options = {
    */
   enable?: boolean
   /**
-   * TODO: 换个名字
    * @default false
+   * PC only
    */
-  withSendDom?: boolean
+  displaySender?: boolean
 
   onEmit?: (comment: Comment) => boolean | void
 }

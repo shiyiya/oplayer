@@ -1,12 +1,13 @@
-import type { Player, PlayerEvent } from '@oplayer/core'
+import type { Player } from '@oplayer/core'
 import { isFocused } from '../listeners/focus'
 import { webFullScreen } from '../style'
+import { UiConfig } from '../types'
 import { formatTime, screenShot } from '../utils'
 
 const VOLUME_SETUP = 10 //10% 0.1 有精度问题
 const SEEK_SETUP = 5
 
-const HOTKEY_FN: Record<string, (player: Player) => void> = {
+const KEY_FN: Record<string, (player: Player) => void> = {
   ArrowUp: (player: Player) => {
     const nextVolume = player.volume * 100 + VOLUME_SETUP
     player.setVolume(nextVolume / 100)
@@ -20,7 +21,13 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
 
   ArrowLeft: (player: Player) => {
     if (player.options.isLive) return
-    player.seek(player.currentTime - SEEK_SETUP)
+    const tar = player.currentTime - SEEK_SETUP
+    if (tar < 0) {
+      player.seek(0)
+    } else {
+      player.seek(player.currentTime - SEEK_SETUP)
+    }
+
     player.emit('notice', {
       text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
     })
@@ -28,6 +35,7 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
   ArrowRight: (player: Player) => {
     if (player.options.isLive) return
     player.seek(player.currentTime + SEEK_SETUP)
+
     player.emit('notice', {
       text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
     })
@@ -47,31 +55,33 @@ const HOTKEY_FN: Record<string, (player: Player) => void> = {
 
   f: (player: Player) => player.toggleFullScreen(),
 
-  's+s': screenShot
+  s: screenShot
 }
 
-export default function registerHotKey(player: Player) {
+export default function (player: Player, config: UiConfig) {
   let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {
     if (
       document.activeElement?.tagName == 'INPUT' ||
       document.activeElement?.getAttribute('contenteditable') ||
-      !isFocused(player)
-    )
+      (!config.keyboard?.global && !config.keyboard?.focused) ||
+      (config.keyboard.focused && !isFocused(player))
+    ) {
       return
+    }
 
     const key = e.key
 
-    if (HOTKEY_FN[key]) {
+    if (KEY_FN[key]) {
       e.preventDefault()
-      HOTKEY_FN[key!]!(player)
+      KEY_FN[key!]!(player)
     }
 
     //double key
-    if (preKey && preKey === key && HOTKEY_FN[`${preKey}+${key}`]) {
+    if (preKey && preKey === key && KEY_FN[`${preKey}+${key}`]) {
       e.preventDefault()
-      HOTKEY_FN[`${preKey}+${key}`]!(player)
+      KEY_FN[`${preKey}+${key}`]!(player)
     }
 
     preKey = key
@@ -80,22 +90,24 @@ export default function registerHotKey(player: Player) {
     }, 200)
   }
 
-  player.on('addhotkey', ({ payload }: PlayerEvent) => {
+  function register(payload: any) {
     for (const key in payload) {
       if (Object.prototype.hasOwnProperty.call(payload, key)) {
-        HOTKEY_FN[key] = payload[key]
+        KEY_FN[key] = payload[key]
       }
     }
-  })
+  }
 
-  player.on('removehotkey', ({ payload }: PlayerEvent) => {
-    ;(<string[]>payload).forEach((k) => {
-      delete HOTKEY_FN[k]
+  function unRegister(payload: string[]) {
+    payload.forEach((k) => {
+      delete KEY_FN[k]
     })
-  })
+  }
 
   document.addEventListener('keydown', keydown)
   player.on('destroy', () => {
     document.removeEventListener('keydown', keydown)
   })
+
+  return { register, unRegister }
 }

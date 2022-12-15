@@ -18,8 +18,8 @@ import { chromecast } from '/plugins.es.js'
 
 const player = Player.make('#oplayer', {
   source: {
-    src: 'https://ohplayer.netlify.app/君の名は.mp4',
-    poster: 'https://ohplayer.netlify.app/poster.png'
+    src: '/君の名は.mp4',
+    poster: '/poster.png'
   }
 })
   .use([
@@ -44,9 +44,9 @@ const player = Player.make('#oplayer', {
     chromecast,
     danmaku({
       enable: false,
-      withSendDom: true,
-      // 海量弹幕 https://ohplayer.netlify.app/天气之子.xml
-      source: 'https://ohplayer.netlify.app/danmaku.xml',
+      displaySender: true,
+      // 海量弹幕 /天气之子.xml
+      source: '/danmaku.xml',
       opacity: 0.8
     })
   ])
@@ -58,7 +58,7 @@ player.plugins.ui.menu.register({
     {
       name: 'MP4',
       default: true,
-      value: 'https://ohplayer.netlify.app/君の名は.mp4'
+      value: '/君の名は.mp4'
     },
     {
       name: 'HLS',
@@ -70,7 +70,7 @@ player.plugins.ui.menu.register({
     },
     {
       name: 'FLV',
-      value: 'https://ohplayer.netlify.app/op.flv'
+      value: '/op.flv'
     }
   ],
   onChange({ name, value }, elm) {

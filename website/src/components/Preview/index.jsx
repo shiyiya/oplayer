@@ -13,11 +13,11 @@ const plugins = [
         {
           name: 'Default',
           default: true,
-          src: 'https://ohplayer.netlify.app/君の名は.srt'
+          src: '/君の名は.srt'
         }
       ]
     },
-    thumbnails: { src: 'https://ohplayer.netlify.app/thumbnails.jpg', number: 100 },
+    thumbnails: { src: '/thumbnails.jpg', number: 100 },
     highlight: [
       {
         time: 12,
@@ -44,10 +44,9 @@ const Preview = () => {
 
   useEffect(() => {
     if (ExecutionEnvironment.canUseDOM && player.current) {
-      console.log(player.current)
       require('../../../../packages/danmaku/dist/index.es')
         .default({
-          source: 'https://ohplayer.netlify.app/danmaku.xml',
+          source: '/danmaku.xml',
           opacity: 0.8,
           fontSize: 0.75
         })
@@ -64,10 +63,7 @@ const Preview = () => {
         <ReactPlayer
           ref={player}
           plugins={plugins}
-          source={{
-            src: 'https://ohplayer.netlify.app/君の名は.mp4',
-            poster: 'https://ohplayer.netlify.app/poster.png'
-          }}
+          source={{ src: '/君の名は.mp4', poster: '/poster.png' }}
           onEvent={console.log}
         />
       </div>

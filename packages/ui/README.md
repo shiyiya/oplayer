@@ -12,6 +12,7 @@ OUI({
   coverButton: true,
   miniProgressBar: true,
   pictureInPicture: true,
+  keyboard: { focused: true },
   theme: { primaryColor: '#f00' },
   speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
   settings: ['loop'],

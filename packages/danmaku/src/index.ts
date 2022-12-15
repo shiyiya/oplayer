@@ -14,9 +14,9 @@ export default (options = {} as Options): PlayerPlugin => ({
   apply: (player: Player) => {
     if (player.isNativeUI) return
 
-    const { speed, opacity, engine, withSendDom } = options
+    const { speed, opacity, engine, displaySender } = options
     const $danmaku = $.render($.create('div'), player.$root)
-    $danmaku.style.cssText = `position: absolute;left: 0;top: 0;right: 0;bottom: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;font-family: 'SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif';color:#fff;`
+    $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;font-family: 'SimHei, "Microsoft JhengHei", Arial, Helvetica, sans-serif';color:#fff;`
     if (opacity) $danmaku.style.opacity = `${opacity}`
     if (options.enable == undefined) options.enable = true
 
@@ -47,7 +47,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     })
 
     registerSetting()
-    if (withSendDom && !isMobile) registerInput()
+    if (displaySender && !isMobile) registerInput()
     if (options.enable) bootstrap(options.source)
 
     async function fetch(source: any) {
