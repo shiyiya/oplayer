@@ -22,7 +22,7 @@ import {
 } from './Setting.style'
 
 const arrowSvg = (className = nextIcon) =>
-  `<svg class="${className}"  xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
+  `<svg class="${className}" viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
 
 // Selector Options
 export const selectorOption = (name: string, icon: string = '') =>
@@ -30,7 +30,7 @@ export const selectorOption = (name: string, icon: string = '') =>
       ${icon}
       <span>${name}</span>
     </div>
-    <svg class=${yesIcon} xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24">
+    <svg class=${yesIcon} viewBox="0 0 24 24">
       <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#fff"></path>
     </svg>
 `
@@ -247,7 +247,8 @@ function createPanel(
   return panel
 }
 
-export default function (player: Player, $el: HTMLElement, options: UiConfig['settings'] = []) {
+export default function (player: Player, $el: HTMLElement, config: UiConfig) {
+  const options = config.settings || []
   const $dom = $.create(`div.${setting}`, { 'aria-label': 'Setting' })
   let panels: Panel[] = []
   let hasRendered = false
@@ -339,11 +340,9 @@ export default function (player: Player, $el: HTMLElement, options: UiConfig['se
       })
     })
 
+    const index = [config.pictureInPicture, config.fullscreen].filter((it) => Boolean(it)).length
     const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
-    parent.insertBefore(
-      settingButton,
-      parent.children[parent.children.length - (player.isPipEnabled ? 2 : 1)]!
-    )
+    parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
   }
 
   return { register, unregister, updateLabel, select }

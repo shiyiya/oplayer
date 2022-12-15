@@ -45,7 +45,7 @@ const apply = (player: Player, config: UiConfig) => {
   const { exp, cls, toggle } = renderController(player, $root, config)
   renderMask(player, $root, toggle)
 
-  const setting = renderSetting(player, $root, config.settings)
+  const setting = renderSetting(player, $root, config)
   const menu = renderMenubar(player, $root, config.menu)
   const subtitle = renderSubtitle(player, setting, $root, config.subtitle)
 
