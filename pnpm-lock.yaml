@@ -13,14 +13,14 @@ importers:
       '@babel/plugin-transform-template-literals': ^7.18.9
       '@changesets/cli': ^2.25.2
       '@rollup/plugin-babel': ^6.0.3
-      '@types/node': ^18.11.14
+      '@types/node': ^18.11.15
       '@vitejs/plugin-react': ^2.2.0
       babel-plugin-syntax-trailing-function-commas: ^6.22.0
       concurrently: ^7.6.0
       cross-env: ^7.0.3
       jsdom: ^20.0.3
       lint-staged: ^13.1.0
-      nx: latest
+      nx: ^15.3.3
       prettier: ^2.8.1
       rimraf: ^3.0.2
       terser: ^5.16.1
@@ -28,7 +28,7 @@ importers:
       typescript: ^4.9.4
       vite: ^3.2.5
       vite-plugin-banner: ^0.6.1
-      vitest: ^0.25.7
+      vitest: ^0.25.8
     devDependencies:
       '@babel/core': 7.20.5
       '@babel/plugin-proposal-object-rest-spread': 7.20.2_@babel+core@7.20.5
@@ -39,7 +39,7 @@ importers:
       '@babel/plugin-transform-template-literals': 7.18.9_@babel+core@7.20.5
       '@changesets/cli': 2.25.2
       '@rollup/plugin-babel': 6.0.3_@babel+core@7.20.5
-      '@types/node': 18.11.14
+      '@types/node': 18.11.15
       '@vitejs/plugin-react': 2.2.0_vite@3.2.5
       babel-plugin-syntax-trailing-function-commas: 6.22.0
       concurrently: 7.6.0
@@ -52,9 +52,9 @@ importers:
       terser: 5.16.1
       tslib: 2.4.1
       typescript: 4.9.4
-      vite: 3.2.5_rvijedpwcxnbovz4be7okoa22a
+      vite: 3.2.5_7lnuvt4ijkllbxq32rxiqvkj7u
       vite-plugin-banner: 0.6.1
-      vitest: 0.25.7_jsdom@20.0.3+terser@5.16.1
+      vitest: 0.25.8_jsdom@20.0.3+terser@5.16.1
 
   examples/standalone:
     specifiers:
@@ -103,10 +103,10 @@ importers:
   packages/dash:
     specifiers:
       '@oplayer/core': workspace:*
-      dashjs: ^4.5.1
+      dashjs: ^4.5.2
     devDependencies:
       '@oplayer/core': link:../core
-      dashjs: 4.5.1
+      dashjs: 4.5.2
 
   packages/hls:
     specifiers:
@@ -149,10 +149,10 @@ importers:
   packages/shaka:
     specifiers:
       '@oplayer/core': workspace:*
-      shaka-player: ^4.3.1
+      shaka-player: ^4.3.2
     devDependencies:
       '@oplayer/core': link:../core
-      shaka-player: 4.3.1
+      shaka-player: 4.3.2
 
   packages/torrent:
     specifiers:
@@ -914,8 +914,8 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: true
 
-  /@types/node/18.11.14:
-    resolution: {integrity: sha512-0KXV57tENYmmJMl+FekeW9V3O/rlcqGQQJ/hNh9r8pKIj304pskWuEd8fCyNT86g/TpO0gcOTiLzsHLEURFMIQ==}
+  /@types/node/18.11.15:
+    resolution: {integrity: sha512-VkhBbVo2+2oozlkdHXLrb3zjsRkpdnaU2bXmX8Wgle3PUi569eLRaHGlgETQHR7lLL1w7GiG3h9SnePhxNDecw==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -959,7 +959,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.5
       magic-string: 0.26.7
       react-refresh: 0.14.0
-      vite: 3.2.5_rvijedpwcxnbovz4be7okoa22a
+      vite: 3.2.5_7lnuvt4ijkllbxq32rxiqvkj7u
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1343,7 +1343,7 @@ packages:
     dependencies:
       caniuse-lite: 1.0.30001439
       electron-to-chromium: 1.4.284
-      node-releases: 2.0.6
+      node-releases: 2.0.7
       update-browserslist-db: 1.0.10_browserslist@4.21.4
     dev: true
 
@@ -1633,7 +1633,7 @@ packages:
     dev: true
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
   /concurrently/7.6.0:
@@ -1748,8 +1748,8 @@ packages:
     resolution: {integrity: sha512-wU3q8NithJsm4DSZ9aWfQM2gYJxEFrM7s91whC8RI7p2Sw3Jj7kaUDV8odYd/X9fbTf5Mv6kFxOFXXNpmOQdbQ==}
     dev: false
 
-  /dashjs/4.5.1:
-    resolution: {integrity: sha512-pC5p+cSsXMJGuGgtt21ccpNkENhu6/2+niTU1Krq18Zr9dSMAO4J9jv4IlAJnWAok8hRDKyV9a1jskUiGPCnKQ==}
+  /dashjs/4.5.2:
+    resolution: {integrity: sha512-WXPk0lPDSaHjiSVoVRh2jQPiMmB1alKUH8hV2CVmaI0vPUeT1wIY7madVE38SthfOmwS9IJViv1RrxrxdGjElg==}
     dependencies:
       bcp-47-match: 1.0.3
       bcp-47-normalize: 1.1.1
@@ -1937,7 +1937,7 @@ packages:
       has: 1.0.3
       has-property-descriptors: 1.0.0
       has-symbols: 1.0.3
-      internal-slot: 1.0.3
+      internal-slot: 1.0.4
       is-callable: 1.2.7
       is-negative-zero: 2.0.2
       is-regex: 1.1.4
@@ -2507,7 +2507,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 3.0.5
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -2716,8 +2716,8 @@ packages:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
     dev: true
 
-  /internal-slot/1.0.3:
-    resolution: {integrity: sha512-O0DB1JC/sPyZl7cIo78n5dR7eUSwwpYPiXRhTzNxZVAMUuB8vlnRFyLxdrVToks6XPLVnFfbzaVd5WLjhgg+vA==}
+  /internal-slot/1.0.4:
+    resolution: {integrity: sha512-tA8URYccNzMo94s5MQZgH8NB/XTa6HsOo0MLfXTKKEnHVVdegzaQoFZ7Jp44bdvLvY2waT5dc+j5ICEswhi7UQ==}
     engines: {node: '>= 0.4'}
     dependencies:
       get-intrinsic: 1.1.3
@@ -3459,8 +3459,8 @@ packages:
     hasBin: true
     dev: true
 
-  /napi-macros/2.1.0:
-    resolution: {integrity: sha512-wJugWHfxRnVhV26BpJl2vyLHOXPrNBUyYJA5CTYcgbRcqHXAEJqStqpKOfBJyd0eb1VMbjdNvoeBWucpbdDrTw==}
+  /napi-macros/2.1.1:
+    resolution: {integrity: sha512-Q5w6SrLzogp1bg1wn2WlFCrRLn2eckE20aNk2J8fK5i9+I6P7tc3Z4rkDAZ+abRzdbFDOemCTgoopSAkRfsa4g==}
     dev: true
     optional: true
 
@@ -3482,8 +3482,8 @@ packages:
     hasBin: true
     dev: true
 
-  /node-releases/2.0.6:
-    resolution: {integrity: sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==}
+  /node-releases/2.0.7:
+    resolution: {integrity: sha512-EJ3rzxL9pTWPjk5arA0s0dgXpnyiAbJDE6wHT62g7VsgrgQgmmZ+Ru++M1BFofncWja+Pnn3rEr3fieRySAdKQ==}
     dev: true
 
   /normalize-package-data/2.5.0:
@@ -4148,8 +4148,8 @@ packages:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
     dev: true
 
-  /shaka-player/4.3.1:
-    resolution: {integrity: sha512-TeZh80k1o2zba/bC8H+ypmosTA9dgfNK5UZM8taK2j1vQgICrqiOEK0HuzFoZ3hOTLvGo6IhIIUSXfaGelO66g==}
+  /shaka-player/4.3.2:
+    resolution: {integrity: sha512-sHGDKhKJTPeTks5BiASqr+E+daPHrLYSznEasHR2b7VR34D1OcAcVJk3WQXQiV03tWFFydFGHrgxQDmj1hIA+Q==}
     engines: {node: '>=14'}
     dependencies:
       eme-encryption-scheme-polyfill: 2.1.1
@@ -4833,7 +4833,7 @@ packages:
     hasBin: true
     requiresBuild: true
     dependencies:
-      napi-macros: 2.1.0
+      napi-macros: 2.1.1
       node-gyp-build: 4.5.0
       readable-stream: 3.6.0
       timeout-refresh: 1.0.3
@@ -4867,7 +4867,7 @@ packages:
     resolution: {integrity: sha512-E5abFbnqO21R1dCFwoRYAIcJArX3XAMZv1zV4uU9PcWQNt1PaWtj5SP1QcnbyXn2FhWSnvPkJp7yP16DeA/BzA==}
     dev: true
 
-  /vite/3.2.5_rvijedpwcxnbovz4be7okoa22a:
+  /vite/3.2.5_7lnuvt4ijkllbxq32rxiqvkj7u:
     resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -4892,7 +4892,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.11.14
+      '@types/node': 18.11.15
       esbuild: 0.15.18
       postcss: 8.4.20
       resolve: 1.22.1
@@ -4902,8 +4902,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.25.7_jsdom@20.0.3+terser@5.16.1:
-    resolution: {integrity: sha512-lJ+Ue+v8kHl2JzjaKHJ9u5Yo/loU7zrWK2/Whn8OKQjtq5G7nkeWfXuq3elZaC8xKdkdIuWiiIicaNBG1F5yzg==}
+  /vitest/0.25.8_jsdom@20.0.3+terser@5.16.1:
+    resolution: {integrity: sha512-X75TApG2wZTJn299E/TIYevr4E9/nBo1sUtZzn0Ci5oK8qnpZAZyhwg0qCeMSakGIWtc6oRwcQFyFfW14aOFWg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -4926,7 +4926,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.4
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.14
+      '@types/node': 18.11.15
       acorn: 8.8.1
       acorn-walk: 8.2.0
       chai: 4.3.7
@@ -4938,7 +4938,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 3.2.5_rvijedpwcxnbovz4be7okoa22a
+      vite: 3.2.5_7lnuvt4ijkllbxq32rxiqvkj7u
     transitivePeerDependencies:
       - less
       - sass

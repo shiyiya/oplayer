@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/dash",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "Dash plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "dashjs": "^4.5.1"
+    "dashjs": "^4.5.2"
   }
 }
