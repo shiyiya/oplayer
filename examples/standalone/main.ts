@@ -52,7 +52,7 @@ const player = Player.make('#player', {
   volume: 0.5,
   // isLive: true,
   // autoplay: true,
-  preload: 'none',
+  // preload: 'none',
   source: { poster: POSTER, src, title: '君の名は' },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
@@ -120,8 +120,7 @@ const player = Player.make('#player', {
     danmaku({
       enable: false,
       displaySender: true,
-      source: DANMAKU, //SUPER_DANMAKU
-      opacity: 0.8
+      source: DANMAKU //SUPER_DANMAKU
     })
     // ad({
     //   autoplay: false,
@@ -227,7 +226,7 @@ player.on((e: PlayerEvent) => {
   // logs.style.height = `${logs.scrollHeight}px`
 
   if (e.type == 'videosourcechange') {
-    logs.value = ''
+    logs.value = eventName + '\r\n'
   }
 
   if (logs.value.split('==>').length >= 66) {

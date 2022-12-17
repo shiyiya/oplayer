@@ -242,7 +242,12 @@ export class Player {
         if (player != this) player!.pause()
       }
     }
-    return (this._playPromise = this.$video.play())
+
+    if (this._playPromise?.then) {
+      return (this._playPromise = this._playPromise?.then(() => this.$video.play()))
+    } else {
+      return this.$video.play()
+    }
   }
 
   pause() {
@@ -368,21 +373,31 @@ export class Player {
     this.hasError = false
     this.isCustomLoader = false
     this.$video.pause()
+    //TODO: Cancel req
+    // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }
 
-  changeQuality(source: Omit<Source, 'poster'>): Promise<void> {
+  changeQuality(source: Omit<Source, 'poster'>) {
+    const { isPlaying, currentTime, options } = this
     this._resetStatus()
     this.emit('videoqualitychange', source)
-    this.options.source = { ...this.options.source, ...source }
-    return this.load(source)
+    this.options.source = { ...options.source, ...source }
+    return (this._playPromise = this.load(source).then((): any => {
+      if (currentTime) this.seek(currentTime)
+      if (isPlaying) return this.$video.play()
+    }))
   }
 
-  changeSource(source: Source): Promise<void> {
+  changeSource(source: Source, keepPlaying: boolean = true) {
+    const isPlaying = this.isPlaying
     this._resetStatus()
+    this.seek(0)
     this.emit('videosourcechange', source)
     this.$video.poster = source.poster || ''
     this.options.source = source
-    return this.load(source)
+    return (this._playPromise = this.load(source)).then((): any => {
+      if (keepPlaying && isPlaying) return this.$video.play()
+    })
   }
 
   destroy() {
@@ -404,25 +419,8 @@ export class Player {
     return this.$video.readyState
   }
 
-  // Not working in IOS
-  get isLoading() {
-    /**
-     * @HAVE_FUTURE_DATA canplay: fired when video ready to play but buffering not complete
-     * @HAVE_ENOUGH_DATA canplaythrough : fired when video ready to play and buffering complete
-     */
-    return this.$video.readyState < this.$video.HAVE_FUTURE_DATA && !this.hasError
-  }
-
-  get isLoaded() {
-    return this.$video.readyState >= this.$video.HAVE_FUTURE_DATA // 3
-  }
-
-  get canPlay() {
-    return this.$video.readyState >= this.$video.HAVE_ENOUGH_DATA // 4
-  }
-
   get isPlaying() {
-    return this.$video.paused === false
+    return !this.$video.paused
   }
 
   get isMuted() {

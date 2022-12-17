@@ -47,7 +47,7 @@ const player = Player.make('#oplayer', {
       displaySender: true,
       // 海量弹幕 /天气之子.xml
       source: '/danmaku.xml',
-      opacity: 0.8
+      opacity: 1
     })
   ])
   .create()

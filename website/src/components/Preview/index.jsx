@@ -45,11 +45,7 @@ const Preview = () => {
   useEffect(() => {
     if (ExecutionEnvironment.canUseDOM && player.current) {
       require('../../../../packages/danmaku/dist/index.es')
-        .default({
-          source: '/danmaku.xml',
-          opacity: 0.8,
-          fontSize: 0.75
-        })
+        .default({ source: '/danmaku.xml', fontSize: 0.75 })
         .apply(player.current)
     }
   }, [])

@@ -53,6 +53,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@latest/dist/index.min.js"></script>
     <!-- <script src="../packages/mpegts/dist/index.min.js"></script> -->
 
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js"></script>
+
     <script>
       var $ = OPlayer.$
       var player = OPlayer.make('#oplayer', {
@@ -97,6 +99,7 @@
           }),
           ODash(),
           OMpegts(),
+          ODanmaku({ source: 'https://ohplayer.netlify.app/danmaku.xml' }),
           {
             name: 'oplayer-plugin-chromecast',
             apply(player) {
