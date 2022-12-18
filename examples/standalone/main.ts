@@ -52,7 +52,7 @@ const player = Player.make('#player', {
   volume: 0.5,
   // isLive: true,
   // autoplay: true,
-  // preload: 'none',
+  preload: 'none',
   source: { poster: POSTER, src, title: '君の名は' },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
@@ -166,7 +166,7 @@ player.plugins.ui.menu.register({
   onChange({ value, name }, elm) {
     src = value
     elm.innerText = name
-    player.changeSource({ src: value })
+    player.changeQuality({ src: value })
   }
 })
 

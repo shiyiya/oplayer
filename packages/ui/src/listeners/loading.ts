@@ -4,7 +4,11 @@ import { loading } from '../style'
 
 const loadingListener = (player: Player) => {
   const add = () => player.$root.classList.add(loading)
-  const remove = () => player.$root.classList.remove(loading)
+  const remove = () => {
+    if (!player.isLoaderLoading) {
+      player.$root.classList.remove(loading)
+    }
+  }
 
   if (player.$video.preload != 'none') {
     add()
@@ -15,7 +19,7 @@ const loadingListener = (player: Player) => {
   })
 
   if (isMobile) {
-    detectLoading(player)
+    detectLoading(player, add, remove)
   } else {
     player.on(['waiting', 'seeking', 'videosourcechange', 'videoqualitychange'], add)
     player.on(['loadedmetadata', 'canplay', 'pause', 'seeked', 'error'], remove)
@@ -23,14 +27,11 @@ const loadingListener = (player: Player) => {
 }
 
 // 主动检测是否loading 手机上事件都不靠谱
-const detectLoading = (player: Player) => {
+const detectLoading = (player: Player, add: Function, remove: Function) => {
   let lastTime = 0
   let currentTime = 0
   let bufferingDetected = false
   let enable = false
-
-  const add = () => player.$root.classList.add(loading)
-  const remove = () => player.$root.classList.remove(loading)
 
   player.on('seeking', () => {
     if (!player.isPlaying) {

@@ -121,7 +121,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     }`
   })
 
-  player.on(['videosourcechange', 'videoqualitychange'], () => {
+  player.on('videosourcechange', () => {
     $time.innerText =
       player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
   })

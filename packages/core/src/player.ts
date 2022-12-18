@@ -235,7 +235,7 @@ export class Player {
   }
 
   play() {
-    if (!this.$video.src) return Promise.reject(Error('The element has no supported sources.'))
+    if (!this.$video.src) return
     if (this.options.autopause) {
       for (let i = 0; i < players.length; i++) {
         const player = players[i]
@@ -377,27 +377,48 @@ export class Player {
     // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }
 
+  isLoaderLoading: boolean
+
   changeQuality(source: Omit<Source, 'poster'>) {
-    const { isPlaying, currentTime, options } = this
-    this._resetStatus()
     this.emit('videoqualitychange', source)
-    this.options.source = { ...options.source, ...source }
-    return (this._playPromise = this.load(source).then((): any => {
-      if (currentTime) this.seek(currentTime)
-      if (isPlaying) return this.$video.play()
-    }))
+    this.options.source = { ...this.options.source, ...source }
+    return this._loader(source, { keepPlaying: true, keepTime: true })
   }
 
   changeSource(source: Source, keepPlaying: boolean = true) {
-    const isPlaying = this.isPlaying
-    this._resetStatus()
-    this.seek(0)
     this.emit('videosourcechange', source)
     this.$video.poster = source.poster || ''
     this.options.source = source
-    return (this._playPromise = this.load(source)).then((): any => {
-      if (keepPlaying && isPlaying) return this.$video.play()
-    })
+    return this._loader(source, { keepPlaying })
+  }
+
+  _loader(source: Source, options: { keepPlaying: boolean; keepTime?: boolean }) {
+    this.isLoaderLoading = true
+    const { isPlaying, currentTime } = this
+    const { keepPlaying, keepTime } = options
+    this._resetStatus()
+    if (!keepTime) this.seek(0)
+    return (this._playPromise = new Promise((resolve, reject) => {
+      this.load(source)
+        .then(() => {
+          const isPreloadNone = this.options.preload == 'none'
+          this.on(
+            isPreloadNone ? 'loadstart' : 'canplay',
+            () => {
+              this.isLoaderLoading = false
+              if (isPreloadNone) this.emit('canplay')
+              if (keepTime) this.seek(currentTime)
+              if (keepPlaying && isPlaying) this.$video.play()
+              resolve()
+            },
+            { once: true }
+          )
+        })
+        .catch(() => {
+          this.isLoaderLoading = false
+          reject()
+        })
+    }))
   }
 
   destroy() {

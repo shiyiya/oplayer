@@ -43,6 +43,7 @@ export const dropdownHoverable = $.css({
 })
 
 export const dropItem = $.css({
+  padding: '0 0.5em',
   'min-width': '6em',
   display: 'block',
   height: '2.4em',
