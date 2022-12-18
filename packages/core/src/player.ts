@@ -401,18 +401,23 @@ export class Player {
     return (this._playPromise = new Promise((resolve, reject) => {
       this.load(source)
         .then(() => {
-          const isPreloadNone = this.options.preload == 'none'
-          this.on(
-            isPreloadNone ? 'loadstart' : 'canplay',
-            () => {
-              this.isLoaderLoading = false
-              if (isPreloadNone) this.emit('canplay')
-              if (keepTime) this.seek(currentTime)
-              if (keepPlaying && isPlaying) this.$video.play()
-              resolve()
-            },
-            { once: true }
-          )
+          const shouldPlay = keepPlaying && isPlaying
+          if (!shouldPlay && !keepTime) {
+            this.isLoaderLoading = false
+            resolve()
+          } else {
+            if (this.options.preload == 'none') this.$video.load()
+            this.on(
+              'canplay',
+              () => {
+                if (keepTime) this.seek(currentTime)
+                if (shouldPlay) this.$video.play()
+                this.isLoaderLoading = false
+                resolve()
+              },
+              { once: true }
+            )
+          }
         })
         .catch(() => {
           this.isLoaderLoading = false
