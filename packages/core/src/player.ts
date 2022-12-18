@@ -377,33 +377,32 @@ export class Player {
     // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }
 
-  isLoaderLoading: boolean
-
   changeQuality(source: Omit<Source, 'poster'>) {
     this.emit('videoqualitychange', source)
     this.options.source = { ...this.options.source, ...source }
-    return this._loader(source, { keepPlaying: true, keepTime: true })
+    return this._loader(source, { keepPlaying: true, keepTime: true }).then(() => {
+      this.emit('videoqualitychanged', source)
+    })
   }
 
   changeSource(source: Source, keepPlaying: boolean = true) {
     this.emit('videosourcechange', source)
     this.$video.poster = source.poster || ''
     this.options.source = source
-    return this._loader(source, { keepPlaying })
+    return this._loader(source, { keepPlaying }).then(() => {
+      this.emit('videosourcechanged', source)
+    })
   }
 
   _loader(source: Source, options: { keepPlaying: boolean; keepTime?: boolean }) {
-    this.isLoaderLoading = true
     const { isPlaying, currentTime } = this
     const { keepPlaying, keepTime } = options
     this._resetStatus()
-    if (!keepTime) this.seek(0)
     return (this._playPromise = new Promise((resolve, reject) => {
       this.load(source)
         .then(() => {
           const shouldPlay = keepPlaying && isPlaying
           if (!shouldPlay && !keepTime) {
-            this.isLoaderLoading = false
             resolve()
           } else {
             if (this.options.preload == 'none') this.$video.load()
@@ -412,17 +411,13 @@ export class Player {
               () => {
                 if (keepTime) this.seek(currentTime)
                 if (shouldPlay) this.$video.play()
-                this.isLoaderLoading = false
                 resolve()
               },
               { once: true }
             )
           }
         })
-        .catch(() => {
-          this.isLoaderLoading = false
-          reject()
-        })
+        .catch(reject)
     }))
   }
 
