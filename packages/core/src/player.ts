@@ -402,20 +402,18 @@ export class Player {
       this.load(source)
         .then(() => {
           const shouldPlay = keepPlaying && isPlaying
-          if (!shouldPlay && !keepTime) {
-            resolve()
-          } else {
-            if (this.options.preload == 'none') this.$video.load()
-            this.on(
-              'canplay',
-              () => {
-                if (keepTime) this.seek(currentTime)
-                if (shouldPlay) this.$video.play()
-                resolve()
-              },
-              { once: true }
-            )
-          }
+          const isPreloadNone = this.options.preload == 'none'
+          if (isPreloadNone && keepTime) this.$video.load()
+
+          this.on(
+            isPreloadNone ? 'loadstart' : 'canplay',
+            () => {
+              if (keepTime) this.seek(currentTime)
+              if (shouldPlay) this.$video.play()
+              resolve()
+            },
+            { once: true }
+          )
         })
         .catch(reject)
     }))

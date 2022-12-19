@@ -72,27 +72,6 @@ const render = (player: Player, el: HTMLElement) => {
   const $text: HTMLSpanElement = $dom.querySelector(`.${noticeTextCls}`)!
   const { callee: delayHide } = debounce(() => removeClass($dom, noticeShowCls), NOTICE_HIDE_DELAY)
 
-  ;(['play', 'pause', 'enterFullscreen', 'exitFullscreen', 'enterPip', 'exitPip'] as const).forEach(
-    (key) => {
-      const fn: any = player[key].bind(player)
-      Object.defineProperty(player, key, {
-        get:
-          () =>
-          (...arg: any[]) => {
-            const returnValue = fn(...arg)
-            if ((<Promise<any>>returnValue)?.catch) {
-              return (<Promise<any>>returnValue).catch((error) => {
-                show((<Error>error).message)
-                return error
-              })
-            } else {
-              return returnValue
-            }
-          }
-      })
-    }
-  )
-
   function show(text: string, pos?: keyof typeof POS_CLS) {
     $text.innerHTML = text
     $dom.className = `${noticeCls} ${noticeShowCls} ${POS_CLS[pos || 'left']}`
