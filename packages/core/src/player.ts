@@ -33,6 +33,7 @@ export class Player {
 
   hasError: boolean = false
   isCustomLoader: boolean = false
+  isSourceChanging: boolean = false
 
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   _playPromise: Promise<void> | undefined
@@ -235,7 +236,7 @@ export class Player {
   }
 
   play() {
-    if (!this.$video.src) return
+    if (!this.$video.src && this.isSourceChanging) return
     if (this.options.autopause) {
       for (let i = 0; i < players.length; i++) {
         const player = players[i]
@@ -243,11 +244,7 @@ export class Player {
       }
     }
 
-    if (this._playPromise?.then) {
-      return (this._playPromise = this._playPromise?.then(() => this.$video.play()))
-    } else {
-      return this.$video.play()
-    }
+    return (this._playPromise = this.$video.play())
   }
 
   pause() {
@@ -378,6 +375,7 @@ export class Player {
   }
 
   changeQuality(source: Omit<Source, 'poster'>) {
+    this.isSourceChanging = true
     this.emit('videoqualitychange', source)
     this.options.source = { ...this.options.source, ...source }
     return this._loader(source, { keepPlaying: true, keepTime: true }).then(() => {
@@ -386,6 +384,7 @@ export class Player {
   }
 
   changeSource(source: Source, keepPlaying: boolean = true) {
+    this.isSourceChanging = true
     this.emit('videosourcechange', source)
     this.$video.poster = source.poster || ''
     this.options.source = source
@@ -404,12 +403,12 @@ export class Player {
           const shouldPlay = keepPlaying && isPlaying
           const isPreloadNone = this.options.preload == 'none'
           if (isPreloadNone && keepTime) this.$video.load()
-
           this.on(
             isPreloadNone ? 'loadstart' : 'canplay',
             () => {
               if (keepTime) this.seek(currentTime)
               if (shouldPlay) this.$video.play()
+              this.isSourceChanging = false
               resolve()
             },
             { once: true }

@@ -3,10 +3,9 @@ import { isMobile } from '@oplayer/core'
 import { loading } from '../style'
 
 const loadingListener = (player: Player) => {
-  let sourceChanging = false
   const add = () => player.$root.classList.add(loading)
   const remove = () => {
-    if (!sourceChanging) {
+    if (!player.isSourceChanging) {
       player.$root.classList.remove(loading)
     }
   }
@@ -19,15 +18,8 @@ const loadingListener = (player: Player) => {
     if (player.$video.preload == 'none') remove()
   })
 
-  player.on(['videoqualitychange', 'videosourcechange'], () => {
-    sourceChanging = true
-    add()
-  })
-
-  player.on(['videoqualitychanged', 'videosourcechanged'], () => {
-    sourceChanging = false
-    remove()
-  })
+  player.on(['videoqualitychange', 'videosourcechange'], add)
+  player.on(['videoqualitychanged', 'videosourcechanged'], remove)
 
   if (isMobile) {
     detectLoading(player, add, remove)

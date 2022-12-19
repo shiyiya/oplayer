@@ -166,7 +166,8 @@ player.plugins.ui.menu.register({
   onChange({ value, name }, elm) {
     src = value
     elm.innerText = name
-    player.changeQuality({ src: value })
+    player.changeSource({ src: value })
+    // player.changeQuality({ src: value })
   }
 })
 
