@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/shaka",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "shaka plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",

@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/mpegts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "mpegts.js plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "mpegts.js": "^1.7.0"
+    "mpegts.js": "^1.7.1"
   }
 }

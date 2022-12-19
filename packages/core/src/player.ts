@@ -504,10 +504,12 @@ export class Player {
   }
 }
 
-console.log(
-  '%cOPlayer%c v%s\n %c\nOh! Another HTML5 video player.\nhttps://github.com/shiyiya/oplayer\n',
-  'font-size:32px;',
-  'font-size:12px;color:#999999;',
-  Player.version,
-  'font-size:14px;'
-)
+if (typeof window !== undefined) {
+  console.log(
+    '%cOPlayer%c v%s\n %c\nOh! Another HTML5 video player.\nhttps://github.com/shiyiya/oplayer\n',
+    'font-size:32px;',
+    'font-size:12px;color:#999999;',
+    Player.version,
+    'font-size:14px;'
+  )
+}
