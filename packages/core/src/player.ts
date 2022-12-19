@@ -236,7 +236,7 @@ export class Player {
   }
 
   play() {
-    if (!this.$video.src && this.isSourceChanging) return
+    if (!this.$video.src || this.isSourceChanging) return
     if (this.options.autopause) {
       for (let i = 0; i < players.length; i++) {
         const player = players[i]
