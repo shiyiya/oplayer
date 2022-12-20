@@ -11,7 +11,7 @@ export default function (player: Player, setting: any, el: HTMLElement, options?
 }
 
 class Subtitle {
-  options: SubtitleConfig
+  options: SubtitleConfig & { source: SubtitleSource[] }
 
   $track?: HTMLTrackElement
   $iosTrack?: HTMLTrackElement
@@ -32,11 +32,20 @@ class Subtitle {
     }
 
     this.setting = setting
-    this.options = options || { source: [] }
+    this.options = { source: [], ...options }
 
     this.processDefault()
     this.createContainer()
-    this.initEvents()
+
+    this.load()
+    this.loadSetting()
+
+    this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
+  }
+
+  updateSource(payload: SubtitleSource[]) {
+    this.options.source = payload
+    this.processDefault()
 
     this.load()
     this.loadSetting()
@@ -109,22 +118,9 @@ class Subtitle {
     }
   }
 
-  initEvents() {
-    this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
-  }
-
-  updateSource(payload: SubtitleSource[]) {
-    this.destroy()
-    this.options.source = payload
-    this.processDefault()
-    this.loadSetting()
-    this.load()
-  }
-
   load() {
     if (!this.currentSubtitle) return
     if (!this.$track) this.createTrack()
-
     this.loadSubtitle()
       .then(() => this.show())
       .catch((e) => {
@@ -143,9 +139,10 @@ class Subtitle {
     $iosTrack?.remove()
     this.$track = undefined
     this.$iosTrack = undefined
+    this.isShow = false
   }
 
-  update = (_: Event) => {
+  update = () => {
     const { $dom, player } = this
     const activeCues = player.$video.textTracks[0]?.activeCues
 
@@ -219,7 +216,6 @@ class Subtitle {
 
   loadSetting() {
     const source = this.options.source
-
     if (source.length) {
       this.setting.register(<Setting>{
         name: this.player.locales.get('Subtitle'),

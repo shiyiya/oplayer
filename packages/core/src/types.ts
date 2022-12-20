@@ -2,7 +2,7 @@ import { EVENTS } from './constants'
 import type { Player } from './player'
 
 export type Source = {
-  src: string
+  src?: string
   poster?: string
   title?: string
   format?: 'auto' | 'm3u8' | 'mpd' | 'flv' | 'm2ts' | 'mpegts' | string

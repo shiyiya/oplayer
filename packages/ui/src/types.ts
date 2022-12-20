@@ -7,7 +7,7 @@ export type SubtitleSource = {
 }
 
 export type Subtitle = {
-  source: SubtitleSource[]
+  source?: SubtitleSource[]
   fontSize?: number
   bottom?: string
   color?: string

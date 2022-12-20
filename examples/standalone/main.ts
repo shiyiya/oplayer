@@ -51,9 +51,13 @@ const player = Player.make('#player', {
   muted: true,
   volume: 0.5,
   // isLive: true,
-  // autoplay: true,
+  autoplay: true,
   // preload: 'none',
-  source: { poster: POSTER, src, title: '君の名は' },
+  source: {
+    poster: POSTER,
+    // src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+    title: '君の名は'
+  },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
 })
   .use([
@@ -64,13 +68,13 @@ const player = Player.make('#player', {
       settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
       subtitle: {
-        source: [
-          {
-            name: 'Default',
-            default: true,
-            src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-          }
-        ]
+        // source: [
+        //   {
+        //     name: 'Default',
+        //     default: true,
+        //     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+        //   }
+        // ]
       },
       thumbnails: {
         src:
@@ -166,8 +170,18 @@ player.plugins.ui.menu.register({
   onChange({ value, name }, elm) {
     src = value
     elm.innerText = name
-    player.changeSource({ src: value })
-    // player.changeQuality({ src: value })
+    player
+      .changeSource({ src: value })
+      // .changeQuality({ src: value })
+      .then((_) => {
+        player.plugins.ui.subtitle.updateSource([
+          {
+            name: 'Default',
+            default: true,
+            src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+          }
+        ])
+      })
   }
 })
 
