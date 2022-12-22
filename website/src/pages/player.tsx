@@ -10,17 +10,7 @@ export default () => {
     Player.make('#oplayer', {
       source: { src: document.location.search.substring(1) }
     })
-      .use([
-        ui(),
-        hls({
-          options: {
-            hlsQualityControl: true,
-            hlsQualitySwitch: 'immediate'
-          }
-        }),
-        dash(),
-        mpegts()
-      ])
+      .use([ui(), hls(), dash(), mpegts()])
       .create()
       .on(console.log)
   }, [])

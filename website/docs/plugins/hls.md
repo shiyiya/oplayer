@@ -66,13 +66,13 @@ type hlsPluginOptions = {
      * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
      * default: false
      */
-    hlsQualityControl?: boolean
+    qualityControl?: boolean
     /**
      *  control how the stream quality is switched. default: smooth
      *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
      *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
      */
-    hlsQualitySwitch?: 'immediate' | 'smooth'
+    qualitySwitch?: 'immediate' | 'smooth'
     /**
      * @default: false
      */

@@ -5,12 +5,12 @@ import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 //@ts-ignore
-let imported: typeof import('hls.js/dist/hls.light.min.js') = globalThis.Hls
+let imported: typeof import('hls.js/dist/hls.min.js') = globalThis.Hls
 
 type PluginOptions = {
-  hlsConfig?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
   options?: Options
+  config?: Partial<HlsConfig>
+  matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
 }
 
 type Options = {
@@ -19,20 +19,16 @@ type Options = {
    */
   forceHLS?: boolean
   /**
-   * @default: true
-   */
-  light?: boolean
-  /**
    * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
-   * default: false
+   * default: true
    */
-  hlsQualityControl?: boolean
+  qualityControl?: boolean
   /**
    *  control how the stream quality is switched. default: smooth
    *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
-  hlsQualitySwitch?: 'immediate' | 'smooth'
+  qualitySwitch?: 'immediate' | 'smooth'
   /**
    * @default: false
    */
@@ -54,8 +50,6 @@ const defaultMatcher: PluginOptions['matcher'] = (video, source, force) =>
       /m3u8(#|\?|$)/i.test(source.src)))
 
 const generateSetting = (player: Player, instance: Hls, options: Options = {}) => {
-  if (!options.hlsQualityControl) return
-
   const settingUpdater = () => {
     const settingOptions = [
       {
@@ -79,17 +73,17 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
         return settingOptions.push({ name, default: false, value: i })
       })
 
-    player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-    player.plugins.ui?.setting.register({
+    player.plugins.ui.setting.unregister(PLUGIN_NAME)
+    player.plugins.ui.setting.register({
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
       icon: player.plugins.ui.icons.quality,
       onChange: (level: typeof settingOptions[number]) => {
-        if (options.hlsQualitySwitch == 'immediate') {
+        if (options.qualitySwitch == 'immediate') {
           instance.currentLevel = level.value
           if (level.value !== -1) instance.loadLevel = level.value
-        } /* if (options.hlsQualitySwitch == 'smooth')*/ else {
+        } /* if (options.qualitySwitch == 'smooth')*/ else {
           instance.nextLevel = level.value
           if (level.value !== -1) instance.nextLoadLevel = level.value
         }
@@ -99,14 +93,15 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   }
 
   // Update settings menu with the information about current level
-  const menuUpdater = (data: LevelSwitchedData) => {
-    const level = data.level
+  const menuUpdater = ({ level }: LevelSwitchedData) => {
+    if (!instance.autoLevelEnabled) return
+
     if (instance.autoLevelEnabled) {
       const height = instance.levels[level]!.height
       const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-      player.plugins.ui?.setting.updateLabel(PLUGIN_NAME, levelName)
+      player.plugins.ui.setting.updateLabel(PLUGIN_NAME, levelName)
     } else {
-      player.plugins.ui?.setting.select(PLUGIN_NAME, level + 1, false)
+      player.plugins.ui.setting.select(PLUGIN_NAME, level + 1, false)
     }
   }
 
@@ -115,19 +110,17 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 }
 
 const plugin = ({
-  hlsConfig = {},
-  matcher = defaultMatcher,
-  options: _pluginOptions
+  config = {},
+  options: _pluginOptions,
+  matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: Hls | null
 
   const pluginOptions: Options = {
-    light: true,
-    hlsQualityControl: false,
-    hlsQualitySwitch: 'smooth',
+    qualityControl: true,
+    qualitySwitch: 'smooth',
     ..._pluginOptions
   }
-  if (pluginOptions.hlsQualityControl) pluginOptions.light = false
 
   return {
     name: PLUGIN_NAME,
@@ -143,18 +136,17 @@ const plugin = ({
 
       if (options.loader || !isMatch) return false
 
-      imported ??= (
-        await import(
-          pluginOptions.light ? 'hls.js/dist/hls.light.min.js' : 'hls.js/dist/hls.min.js'
-        )
-      ).default
+      imported ??= (await import('hls.js/dist/hls.min.js')).default
 
       if (!imported.isSupported()) return false
 
-      instance = new imported(hlsConfig)
+      instance = new imported(config)
       instance.loadSource(source.src)
       instance.attachMedia(player.$video)
-      if (!player.isNativeUI) generateSetting(player, instance, pluginOptions)
+
+      if (!player.isNativeUI && pluginOptions.qualityControl && player.plugins.ui?.setting) {
+        generateSetting(player, instance, pluginOptions)
+      }
 
       instance.on(imported.Events.ERROR, function (_, data) {
         const { type, details, fatal } = data

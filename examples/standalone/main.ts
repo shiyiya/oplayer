@@ -113,12 +113,7 @@ const player = Player.make('#player', {
     }),
     mpegts(),
     dash(),
-    hls({
-      options: {
-        hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate'
-      }
-    }),
+    hls(),
     shaka(),
     chromecast,
     danmaku({
@@ -137,8 +132,7 @@ const player = Player.make('#player', {
     //   plugins: [
     //     hls({
     //       options: {
-    //         hlsQualityControl: true,
-    //         hlsQualitySwitch: 'immediate'
+    //         qualityControl: false,
     //       }
     //     })
     //   ]

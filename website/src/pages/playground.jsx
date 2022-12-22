@@ -33,12 +33,7 @@ const player = Player.make('#oplayer', {
         loadingIndicator: \`<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>\`
       }
     }),
-    hls({
-      options: {
-        hlsQualityControl: true,
-        hlsQualitySwitch: 'immediate'
-      }
-    }),
+    hls(),
     dash(),
     mpegts(),
     chromecast,

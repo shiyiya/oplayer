@@ -6,14 +6,27 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 let imported: typeof import('dashjs') = globalThis.dashjs
 
 type PluginOptions = {
+  options?: Options
+  config?: MediaPlayerSettingClass
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
-  setting?: MediaPlayerSettingClass
-  options?: {
-    /**
-     * @default: false
-     */
-    withBitrate?: boolean
-  }
+}
+
+type Options = {
+  /**
+   * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
+   * default: true
+   */
+  qualityControl?: boolean
+  /**
+   *  control how the stream quality is switched. default: smooth
+   *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
+   *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
+   */
+  qualitySwitch?: 'immediate' | 'smooth'
+  /**
+   * @default: false
+   */
+  withBitrate?: boolean
 }
 
 const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
@@ -21,11 +34,7 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
     /.mpd(#|\?|$)/i.test(source.src))
 
-const generateSetting = (
-  player: Player,
-  instance: MediaPlayerClass,
-  options: PluginOptions['options']
-) => {
+const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
   const settingUpdater = () => {
     const isAutoSwitch = instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
 
@@ -44,7 +53,7 @@ const generateSetting = (
     if (instance.getBitrateInfoListFor('video').length > 1) {
       instance.getBitrateInfoListFor('video').forEach((bitrate) => {
         let name = bitrate.height + 'p'
-        if (options?.withBitrate) {
+        if (options.withBitrate) {
           const kb = bitrate.bitrate / 1000
           const useMb = kb > 1000
           const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
@@ -58,8 +67,8 @@ const generateSetting = (
         })
       })
     }
-    player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-    player.plugins.ui?.setting.register({
+    player.plugins.ui.setting.unregister(PLUGIN_NAME)
+    player.plugins.ui.setting.register({
       name: player.locales.get('Quality'),
       type: 'selector',
       key: PLUGIN_NAME,
@@ -71,7 +80,7 @@ const generateSetting = (
           instance.updateSettings({
             streaming: { abr: { autoSwitchBitrate: { video: false } } }
           })
-          instance.setQualityFor('video', value)
+          instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
         }
       },
       children: settingOptions
@@ -85,7 +94,7 @@ const generateSetting = (
     const level = instance.getQualityFor('video')
     const height = instance.getBitrateInfoListFor('video')[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    player.emit('updatesettinglabel', { name: levelName, key: PLUGIN_NAME })
+    player.plugins.ui?.setting.updateLabel(PLUGIN_NAME, levelName)
   }
 
   instance.on(imported.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
@@ -93,11 +102,17 @@ const generateSetting = (
 }
 
 const plugin = ({
-  matcher = defaultMatcher,
-  setting,
-  options: pluginOptions
+  config,
+  options: _pluginOptions = {},
+  matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: MediaPlayerClass | null
+
+  const pluginOptions: PluginOptions['options'] = {
+    qualityControl: true,
+    qualitySwitch: 'smooth',
+    ..._pluginOptions
+  }
 
   return {
     name: PLUGIN_NAME,
@@ -111,19 +126,20 @@ const plugin = ({
         instance = null
       }
 
-      if (options.loader || !isMatch) {
-        return false
-      }
+      if (options.loader || !isMatch) return false
 
       imported ??= (await import('dashjs')).default
 
       if (!imported.supportsMediaSource()) return false
 
       instance = imported.MediaPlayer().create()
-
-      if (setting) instance.updateSettings(setting)
+      if (config) instance.updateSettings(config)
       instance.initialize(player.$video, source.src, player.$video.autoplay)
       if (!player.isNativeUI) generateSetting(player, instance, pluginOptions)
+
+      if (!player.isNativeUI && pluginOptions.qualityControl && player.plugins.ui?.setting) {
+        generateSetting(player, instance, pluginOptions)
+      }
 
       instance.on(imported.MediaPlayer.events.ERROR, (event: any) => {
         const err = event.event || event.error
