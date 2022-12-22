@@ -111,9 +111,9 @@ const player = Player.make('#player', {
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
-    mpegts(),
-    dash(),
     hls(),
+    dash({ options: { qualitySwitch: 'immediate' } }),
+    mpegts({ options: { qualitySwitch: 'immediate' } }),
     shaka(),
     chromecast,
     danmaku({

@@ -89,7 +89,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
 
   const menuUpdater = (data: QualityChangeRenderedEvent) => {
     const settings = instance.getSettings()
-    if (data.mediaType !== 'video' && !settings.streaming?.abr?.autoSwitchBitrate?.video) return
+    if (data.mediaType !== 'video' || !settings.streaming?.abr?.autoSwitchBitrate?.video) return
 
     const level = instance.getQualityFor('video')
     const height = instance.getBitrateInfoListFor('video')[level]?.height
