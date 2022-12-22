@@ -112,8 +112,8 @@ const player = Player.make('#player', {
       }
     }),
     hls(),
-    dash({ options: { qualitySwitch: 'immediate' } }),
-    mpegts({ options: { qualitySwitch: 'immediate' } }),
+    dash(),
+    mpegts(),
     shaka(),
     chromecast,
     danmaku({
@@ -129,13 +129,7 @@ const player = Player.make('#player', {
     //   duration: 10,
     //   skipDuration: 5,
     //   target: 'https://oplayer.vercel.app',
-    //   plugins: [
-    //     hls({
-    //       options: {
-    //         qualityControl: false,
-    //       }
-    //     })
-    //   ]
+    //   plugins: [hls({ qualityControl: false })]
     // })
   ])
   .create()

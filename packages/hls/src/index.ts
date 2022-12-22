@@ -8,23 +8,18 @@ const PLUGIN_NAME = 'oplayer-plugin-hls'
 let imported: typeof import('hls.js/dist/hls.min.js') = globalThis.Hls
 
 type PluginOptions = {
-  options?: Options
   config?: Partial<HlsConfig>
   matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
-}
+} & Options
 
 type Options = {
-  /**
-   * @default: false
-   */
-  forceHLS?: boolean
   /**
    * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
    * default: true
    */
   qualityControl?: boolean
   /**
-   *  control how the stream quality is switched. default: smooth
+   *  control how the stream quality is switched. default: immediate
    *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
@@ -39,12 +34,11 @@ type Options = {
   showWarning?: boolean
 }
 
-const defaultMatcher: PluginOptions['matcher'] = (video, source, force) =>
-  (force ||
-    !(
-      Boolean(video.canPlayType('application/x-mpegURL')) ||
-      Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
-    )) &&
+const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
+  !(
+    Boolean(video.canPlayType('application/x-mpegURL')) ||
+    Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
+  ) &&
   (source.format === 'm3u8' ||
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
       /m3u8(#|\?|$)/i.test(source.src)))
@@ -110,23 +104,20 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 }
 
 const plugin = ({
-  config = {},
-  options: _pluginOptions,
+  config,
+  showWarning = false,
+  withBitrate = false,
+  qualityControl = true,
+  qualitySwitch = 'immediate',
   matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: Hls | null
-
-  const pluginOptions: Options = {
-    qualityControl: true,
-    qualitySwitch: 'smooth',
-    ..._pluginOptions
-  }
 
   return {
     name: PLUGIN_NAME,
     key: 'hls',
     load: async (player, source, options) => {
-      const isMatch = matcher(player.$video, source, pluginOptions.forceHLS)
+      const isMatch = matcher(player.$video, source)
 
       if (instance) {
         player.plugins.ui?.setting.unregister(PLUGIN_NAME)
@@ -144,8 +135,8 @@ const plugin = ({
       instance.loadSource(source.src)
       instance.attachMedia(player.$video)
 
-      if (!player.isNativeUI && pluginOptions.qualityControl && player.plugins.ui?.setting) {
-        generateSetting(player, instance, pluginOptions)
+      if (!player.isNativeUI && qualityControl && player.plugins.ui?.setting) {
+        generateSetting(player, instance, { qualityControl, qualitySwitch, withBitrate })
       }
 
       instance.on(imported.Events.ERROR, function (_, data) {
@@ -155,7 +146,7 @@ const plugin = ({
           player.hasError = true
           player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
         } else {
-          if (pluginOptions.showWarning) {
+          if (showWarning) {
             player.emit('notice', { ...data, pluginName: PLUGIN_NAME, text: type + ': ' + details })
           }
         }

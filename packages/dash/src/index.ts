@@ -6,10 +6,9 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 let imported: typeof import('dashjs') = globalThis.dashjs
 
 type PluginOptions = {
-  options?: Options
   config?: MediaPlayerSettingClass
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
-}
+} & Options
 
 type Options = {
   /**
@@ -18,7 +17,7 @@ type Options = {
    */
   qualityControl?: boolean
   /**
-   *  control how the stream quality is switched. default: smooth
+   *  control how the stream quality is switched. default: immediate
    *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
@@ -103,16 +102,12 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
 
 const plugin = ({
   config,
-  options: _pluginOptions = {},
+  withBitrate = false,
+  qualityControl = true,
+  qualitySwitch = 'immediate',
   matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: MediaPlayerClass | null
-
-  const pluginOptions: PluginOptions['options'] = {
-    qualityControl: true,
-    qualitySwitch: 'smooth',
-    ..._pluginOptions
-  }
 
   return {
     name: PLUGIN_NAME,
@@ -135,10 +130,9 @@ const plugin = ({
       instance = imported.MediaPlayer().create()
       if (config) instance.updateSettings(config)
       instance.initialize(player.$video, source.src, player.$video.autoplay)
-      if (!player.isNativeUI) generateSetting(player, instance, pluginOptions)
 
-      if (!player.isNativeUI && pluginOptions.qualityControl && player.plugins.ui?.setting) {
-        generateSetting(player, instance, pluginOptions)
+      if (!player.isNativeUI && qualityControl && player.plugins.ui?.setting) {
+        generateSetting(player, instance, { qualityControl, qualitySwitch, withBitrate })
       }
 
       instance.on(imported.MediaPlayer.events.ERROR, (event: any) => {

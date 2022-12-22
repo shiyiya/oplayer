@@ -57,26 +57,24 @@ Player.make(document.getElementById('oplayer'), {
 
 ```ts
 type hlsPluginOptions = {
-  hlsConfig?: Partial<HlsConfig> // 传递给 hls.js 的参数
+  config?: Partial<HlsConfig> // 传递给 hls.js 的参数
 
   // 匹配当前播放 url 是否是该格式 返回false将不会启用 hls.js
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
-  options?: {
-    /**
-     * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
-     * default: false
-     */
-    qualityControl?: boolean
-    /**
-     *  control how the stream quality is switched. default: smooth
-     *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
-     *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
-     */
-    qualitySwitch?: 'immediate' | 'smooth'
-    /**
-     * @default: false
-     */
-    withBitrate?: boolean
-  }
+  /**
+   * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
+   * default: false
+   */
+  qualityControl?: boolean
+  /**
+   *  control how the stream quality is switched. default: smooth
+   *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
+   *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
+   */
+  qualitySwitch?: 'immediate' | 'smooth'
+  /**
+   * @default: false
+   */
+  withBitrate?: boolean
 }
 ```
