@@ -7,7 +7,7 @@ const PLUGIN_NAME = 'oplayer-plugin-shaka'
 let imported: typeof Shaka = globalThis.shaka
 
 type PluginOptions = {
-  shakaConfig: object
+  config: object
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
@@ -16,7 +16,7 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
 }
 
 const plugin = (options: PluginOptions): PlayerPlugin => {
-  const { shakaConfig, matcher = defaultMatcher } = options || {}
+  const { config, matcher = defaultMatcher } = options || {}
   let instance: Shaka.Player | null
 
   return {
@@ -42,7 +42,7 @@ const plugin = (options: PluginOptions): PlayerPlugin => {
       if (!imported.Player.isBrowserSupported()) return false
 
       instance = new imported.Player(player.$video)
-      instance.configure(shakaConfig)
+      instance.configure(config)
       instance.load(source.src).then((_) => {
         registerSetting(player, instance!)
       })
@@ -94,11 +94,7 @@ function registerSetting(player: Player, shakaPlayer: Shaka.Player) {
     icon: player.plugins.ui.icons.quality,
     children: settingOptions,
     onChange: ({ value }: typeof settingOptions[number]) => {
-      console.log(1)
-
-      shakaPlayer.configure({
-        abr: { enabled: value === -1 }
-      })
+      shakaPlayer.configure({ abr: { enabled: value === -1 } })
 
       const tracks = shakaPlayer
         .getVariantTracks()
