@@ -25,6 +25,7 @@ import { played } from '@oplayer/ui/src/components/Progress.style'
 import { $ } from '@oplayer/core'
 
 const dataSrcs = [
+  'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
   MP4,
   flv,
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
@@ -54,8 +55,8 @@ const player = Player.make('#player', {
   autoplay: true,
   // preload: 'none',
   source: {
+    src,
     poster: POSTER,
-    // src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     title: '君の名は'
   },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
@@ -114,7 +115,7 @@ const player = Player.make('#player', {
     hls(),
     dash(),
     mpegts(),
-    shaka(),
+    shaka({ ui: false }),
     chromecast,
     danmaku({
       enable: false,
@@ -134,7 +135,7 @@ const player = Player.make('#player', {
   ])
   .create()
 
-player.plugins.ui.menu.register({
+player.plugins.ui?.menu.register({
   name: 'FORMAT',
   children: [
     {

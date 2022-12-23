@@ -22,7 +22,6 @@ export type Options = {
    */
   enable?: boolean
   /**
-   * TODO: 换个名字
    * @default false
    * 是否显示发送弹幕的输入框，仅 PC 生效
    */
