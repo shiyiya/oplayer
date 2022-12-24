@@ -5,6 +5,8 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 let imported: typeof import('dashjs') = globalThis.dashjs
 
+const languageIcon = `<svg viewBox="0 0 1024 1024"><path d="M512 85.333333C277.333333 85.333333 85.333333 277.333333 85.333333 512s192 426.666667 426.666667 426.666667 426.666667-192 426.666667-426.666667S746.666667 85.333333 512 85.333333z m294.4 256H682.666667c-12.8-55.466667-34.133333-102.4-59.733334-153.6 76.8 29.866667 145.066667 81.066667 183.466667 153.6zM512 170.666667c34.133333 51.2 64 106.666667 81.066667 170.666666h-162.133334c17.066667-59.733333 46.933333-119.466667 81.066667-170.666666zM183.466667 597.333333c-8.533333-25.6-12.8-55.466667-12.8-85.333333s4.266667-59.733333 12.8-85.333333h145.066666c-4.266667 29.866667-4.266667 55.466667-4.266666 85.333333s4.266667 55.466667 4.266666 85.333333H183.466667z m34.133333 85.333334H341.333333c12.8 55.466667 34.133333 102.4 59.733334 153.6-76.8-29.866667-145.066667-81.066667-183.466667-153.6zM341.333333 341.333333H217.6c42.666667-72.533333 106.666667-123.733333 183.466667-153.6C375.466667 238.933333 354.133333 285.866667 341.333333 341.333333z m170.666667 512c-34.133333-51.2-64-106.666667-81.066667-170.666666h162.133334c-17.066667 59.733333-46.933333 119.466667-81.066667 170.666666z m98.133333-256H413.866667c-4.266667-29.866667-8.533333-55.466667-8.533334-85.333333s4.266667-55.466667 8.533334-85.333333h200.533333c4.266667 29.866667 8.533333 55.466667 8.533333 85.333333s-8.533333 55.466667-12.8 85.333333z m12.8 238.933334c25.6-46.933333 46.933333-98.133333 59.733334-153.6h123.733333c-38.4 72.533333-106.666667 123.733333-183.466667 153.6z m76.8-238.933334c4.266667-29.866667 4.266667-55.466667 4.266667-85.333333s-4.266667-55.466667-4.266667-85.333333h145.066667c8.533333 25.6 12.8 55.466667 12.8 85.333333s-4.266667 59.733333-12.8 85.333333h-145.066667z"></path></svg>`
+
 type PluginOptions = {
   config?: MediaPlayerSettingClass
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
@@ -22,6 +24,8 @@ type Options = {
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
   qualitySwitch?: 'immediate' | 'smooth'
+  audioControl?: boolean
+  textControl?: boolean
   /**
    * @default: false
    */
@@ -34,59 +38,108 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
     /.mpd(#|\?|$)/i.test(source.src))
 
 const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
-  const settingUpdater = () => {
-    const isAutoSwitch = instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
+  instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
+    if (options.qualityControl) {
+      settingUpdater('video', {
+        name: player.locales.get('Quality'),
+        icon: player.plugins.ui.icons.quality,
+        bitrateInfoParse(it) {
+          let name = it.height + 'p'
+          if (options.withBitrate) {
+            const kb = it.bitrate / 1000
+            const useMb = kb > 1000
+            const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+            name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+          }
+
+          return { name, default: false, value: it.qualityIndex }
+        }
+      })
+    }
+
+    if (options.audioControl) {
+      settingUpdater('audio', {
+        name: 'Language',
+        icon: languageIcon,
+        bitrateInfoParse(it) {
+          return {
+            name: it.qualityIndex, //TODO: while is name?
+            default: false,
+            value: it.qualityIndex
+          }
+        }
+      })
+    }
+  })
+
+  if (options.textControl) {
+    settingUpdater('text', {
+      name: player.locales.get('Subtitle'),
+      icon: player.plugins.ui.icons.subtitle,
+      bitrateInfoParse(it) {
+        return {
+          name: it.qualityIndex, //TODO: while is name?
+          default: instance.getCurrentTrackFor('text')?.index == it.qualityIndex,
+          value: it.qualityIndex
+        }
+      }
+    })
+  }
+
+  instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, qualityMenuUpdater)
+
+  function settingUpdater(
+    type: 'video' | 'audio' | 'text',
+    config: {
+      name: string
+      icon: string
+      bitrateInfoParse: (bitrateInfo: dashjs.BitrateInfo) => any
+    }
+  ) {
+    const { name, icon, bitrateInfoParse } = config
+    const isText = type == 'text'
+    // 视频和音频 默认就是自动直接写-1 //instance.getSettings().streaming?.abr?.autoSwitchBitrate?.[type]
+    const currentIndex = isText ? instance.getCurrentTextTrackIndex : -1
 
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
-        default: isAutoSwitch,
+        default: currentIndex == -1,
+        //如果是 text 这里应该是关闭 ？
         value: () => {
           instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { video: true } } }
+            streaming: { abr: { autoSwitchBitrate: { [type]: true } } }
           })
         }
       }
     ]
 
-    if (instance.getBitrateInfoListFor('video').length > 1) {
-      instance.getBitrateInfoListFor('video').forEach((bitrate) => {
-        let name = bitrate.height + 'p'
-        if (options.withBitrate) {
-          const kb = bitrate.bitrate / 1000
-          const useMb = kb > 1000
-          const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
-          name += ` (${number}${useMb ? 'm' : 'k'}bps)`
-        }
+    instance.getBitrateInfoListFor(type).forEach((bitrate) => {
+      settingOptions.push(bitrateInfoParse(bitrate))
+    })
 
-        settingOptions.push({
-          name,
-          default: isAutoSwitch ? false : bitrate.qualityIndex == instance.getQualityFor('video'),
-          value: bitrate.qualityIndex as any
-        })
-      })
-    }
     player.plugins.ui.setting.unregister(PLUGIN_NAME)
     player.plugins.ui.setting.register({
-      name: player.locales.get('Quality'),
+      name: name,
       type: 'selector',
-      key: PLUGIN_NAME,
-      icon: player.plugins.ui.icons.quality,
+      key: `${PLUGIN_NAME}-${type}`,
+      icon: icon,
       onChange: ({ value }: typeof settingOptions[number]) => {
         if (typeof value == 'function') {
           value()
         } else {
+          //如果是 text 这里应该是关闭 ？
           instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { video: false } } }
+            streaming: { abr: { autoSwitchBitrate: { [type]: false } } }
           })
-          instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
+          instance.setQualityFor(type, value, options.qualitySwitch == 'immediate')
         }
       },
       children: settingOptions
     })
   }
 
-  const menuUpdater = (data: QualityChangeRenderedEvent) => {
+  function qualityMenuUpdater(data: QualityChangeRenderedEvent) {
     const settings = instance.getSettings()
     if (data.mediaType !== 'video' || !settings.streaming?.abr?.autoSwitchBitrate?.video) return
 
@@ -95,9 +148,6 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
     player.plugins.ui?.setting.updateLabel(PLUGIN_NAME, levelName)
   }
-
-  instance.on(imported.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
-  instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
 }
 
 const plugin = ({
@@ -105,6 +155,8 @@ const plugin = ({
   withBitrate = false,
   qualityControl = true,
   qualitySwitch = 'immediate',
+  audioControl = true,
+  textControl = true,
   matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: MediaPlayerClass | null
@@ -131,8 +183,14 @@ const plugin = ({
       if (config) instance.updateSettings(config)
       instance.initialize(player.$video, source.src, player.$video.autoplay)
 
-      if (!player.isNativeUI && qualityControl && player.plugins.ui?.setting) {
-        generateSetting(player, instance, { qualityControl, qualitySwitch, withBitrate })
+      if (!player.isNativeUI && player.plugins.ui?.setting) {
+        generateSetting(player, instance, {
+          qualityControl,
+          qualitySwitch,
+          withBitrate,
+          audioControl,
+          textControl
+        })
       }
 
       instance.on(imported.MediaPlayer.events.ERROR, (event: any) => {

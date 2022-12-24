@@ -25,6 +25,7 @@ import { played } from '@oplayer/ui/src/components/Progress.style'
 import { $ } from '@oplayer/core'
 
 const dataSrcs = [
+  'https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1_https.mpd',
   'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
   MP4,
   flv,
@@ -52,7 +53,7 @@ const player = Player.make('#player', {
   muted: true,
   volume: 0.5,
   // isLive: true,
-  autoplay: true,
+  // autoplay: true,
   // preload: 'none',
   source: {
     src,
@@ -112,10 +113,10 @@ const player = Player.make('#player', {
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
-    hls(),
+    // hls(),
     dash(),
-    mpegts(),
-    shaka({ ui: false }),
+    // mpegts(),
+    // shaka({ ui: true }),
     chromecast,
     danmaku({
       enable: false,
