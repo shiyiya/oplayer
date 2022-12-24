@@ -25,8 +25,8 @@ import { played } from '@oplayer/ui/src/components/Progress.style'
 import { $ } from '@oplayer/core'
 
 const dataSrcs = [
-  'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8',
   'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
+  'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1_https.mpd',
   MP4,
@@ -115,7 +115,7 @@ const player = Player.make('#player', {
       }
     }),
     hls(),
-    // dash(),
+    dash(),
     // mpegts(),
     // shaka({ ui: true }),
     chromecast,

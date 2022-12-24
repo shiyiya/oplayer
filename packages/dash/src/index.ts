@@ -32,6 +32,42 @@ type Options = {
   withBitrate?: boolean
 }
 
+interface settingItem {
+  name: string
+  default: boolean
+  value: any
+}
+
+function getSettingsByType(
+  instance: MediaPlayerClass,
+  type: 'video' | 'audio' | 'text',
+  withBitrate?: boolean
+) {
+  const bitrateInfoList = instance.getBitrateInfoListFor(type)
+  if (bitrateInfoList.length > 1) {
+    return bitrateInfoList.map<settingItem>((it) => {
+      let name = type == 'video' ? it.height + 'p' : it.bitrate / 1000 + 'kbps'
+
+      if (withBitrate) {
+        const kb = it.bitrate / 1000
+        const useMb = kb > 1000
+        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+        name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+      }
+
+      return {
+        name,
+        default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
+          ? false
+          : instance.getTopBitrateInfoFor(type).qualityIndex == it.qualityIndex,
+        value: it.qualityIndex
+      }
+    })
+  }
+
+  return []
+}
+
 const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
   source.format === 'mpd' ||
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
@@ -40,106 +76,87 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
 const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
   instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
     if (options.qualityControl) {
-      settingUpdater('video', {
+      settingUpdater({
         name: player.locales.get('Quality'),
         icon: player.plugins.ui.icons.quality,
-        bitrateInfoParse(it) {
-          let name = it.height + 'p'
-          if (options.withBitrate) {
-            const kb = it.bitrate / 1000
-            const useMb = kb > 1000
-            const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
-            name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+        settings() {
+          const auto: settingItem = {
+            name: player.locales.get('Auto'),
+            default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
+            value: () => {
+              instance.updateSettings({
+                streaming: { abr: { autoSwitchBitrate: { video: true } } }
+              })
+            }
           }
+          const ex = getSettingsByType(instance, 'video', options.withBitrate)
 
-          return { name, default: false, value: it.qualityIndex }
+          if (ex.length) ex.unshift(auto)
+
+          return ex
+        },
+        onChange({ value }) {
+          if (typeof value == 'function') {
+            value()
+          } else {
+            //如果是 text 这里应该是关闭 ？
+            instance.updateSettings({
+              streaming: { abr: { autoSwitchBitrate: { video: false } } }
+            })
+            instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
+          }
         }
       })
     }
 
     if (options.audioControl) {
-      settingUpdater('audio', {
-        name: 'Language',
+      settingUpdater({
+        name: player.locales.get('Language'),
         icon: languageIcon,
-        bitrateInfoParse(it) {
-          return {
-            name: it.bitrate / 1000 + 'kbps', //TODO: while is name?
-            default: false,
-            value: it.qualityIndex
-          }
+        settings() {
+          return getSettingsByType(instance, 'audio')
+        },
+        onChange({ value }) {
+          instance.setQualityFor('audio', value, options.qualitySwitch == 'immediate')
+        }
+      })
+    }
+
+    if (options.textControl) {
+      settingUpdater({
+        name: player.locales.get('Subtitle'),
+        icon: player.plugins.ui.icons.subtitle,
+        settings() {
+          return getSettingsByType(instance, 'text')
+        },
+        onChange({ value }) {
+          instance.setQualityFor('text', value, options.qualitySwitch == 'immediate')
         }
       })
     }
   })
 
-  if (options.textControl) {
-    settingUpdater('text', {
-      name: player.locales.get('Subtitle'),
-      icon: player.plugins.ui.icons.subtitle,
-      bitrateInfoParse(it) {
-        return {
-          name: it.qualityIndex, //TODO: while is name?
-          default: instance.getCurrentTrackFor('text')?.index == it.qualityIndex,
-          value: it.qualityIndex
-        }
-      }
-    })
-  }
-
   instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, qualityMenuUpdater)
-  // no audio change event ?
 
-  function settingUpdater(
-    type: 'video' | 'audio' | 'text',
-    config: {
-      name: string
-      icon: string
-      bitrateInfoParse: (bitrateInfo: dashjs.BitrateInfo) => any
-    }
-  ) {
-    const { name, icon, bitrateInfoParse } = config
-    const isText = type == 'text'
-    // 视频和音频 默认就是自动直接写-1 //instance.getSettings().streaming?.abr?.autoSwitchBitrate?.[type]
-    const currentIndex = isText ? instance.getCurrentTextTrackIndex : -1
-    const bitrateInfoList = instance.getBitrateInfoListFor(type)
+  function settingUpdater(arg: {
+    icon: string
+    name: string
+    settings: () => settingItem[]
+    onChange: (it: { value: any }) => void
+  }) {
+    const settings = arg.settings()
+    if (settings.length < 2) return
 
-    const settingOptions = [
-      {
-        name: player.locales.get('Auto'),
-        default: currentIndex == -1 || bitrateInfoList.length < 2,
-        //如果是 text 这里应该是关闭 ？
-        value: () => {
-          instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { [type]: true } } }
-          })
-        }
-      }
-    ]
+    const { name, icon, onChange } = arg
 
-    if (bitrateInfoList.length > 1) {
-      bitrateInfoList.forEach((bitrate) => {
-        settingOptions.push(bitrateInfoParse(bitrate))
-      })
-    }
-
-    player.plugins.ui.setting.unregister(PLUGIN_NAME)
+    player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
     player.plugins.ui.setting.register({
-      name: name,
+      name,
+      icon,
+      onChange,
       type: 'selector',
-      key: `${PLUGIN_NAME}-${type}`,
-      icon: icon,
-      onChange: ({ value }: typeof settingOptions[number]) => {
-        if (typeof value == 'function') {
-          value()
-        } else {
-          //如果是 text 这里应该是关闭 ？
-          instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { [type]: false } } }
-          })
-          instance.setQualityFor(type, value, options.qualitySwitch == 'immediate')
-        }
-      },
-      children: settingOptions
+      key: `${PLUGIN_NAME}-${name}`,
+      children: settings
     })
   }
 
@@ -152,6 +169,14 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
     player.plugins.ui?.setting.updateLabel(`${PLUGIN_NAME}-video`, levelName)
   }
+}
+
+const removeSetting = (player: Player) => {
+  ;[
+    player.locales.get('Quality'),
+    player.locales.get('Language'),
+    player.locales.get('Subtitle')
+  ].forEach((it) => player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`))
 }
 
 const plugin = ({
@@ -172,7 +197,7 @@ const plugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (instance) {
-        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+        removeSetting(player)
         instance.destroy()
         instance = null
       }

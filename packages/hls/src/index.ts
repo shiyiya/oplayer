@@ -38,6 +38,12 @@ type Options = {
   showWarning?: boolean
 }
 
+interface settingItem {
+  name: string
+  default: boolean
+  value: any
+}
+
 const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
   !(
     Boolean(video.canPlayType('application/x-mpegURL')) ||
@@ -46,12 +52,6 @@ const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
   (source.format === 'm3u8' ||
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
       /m3u8(#|\?|$)/i.test(source.src)))
-
-interface settingItem {
-  name: string
-  default: boolean
-  value: any
-}
 
 const generateSetting = (player: Player, instance: Hls, options: Options = {}) => {
   if (options.qualityControl) {
@@ -102,8 +102,6 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 
   if (options.audioControl)
     instance.on(imported.Events.AUDIO_TRACK_LOADED, () => {
-      console.log(instance.audioTracks)
-
       settingUpdater({
         icon: languageIcon,
         name: player.locales.get('Language'),
@@ -125,9 +123,8 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 
   if (options.textControl)
     instance.on(imported.Events.SUBTITLE_TRACK_LOADED, () => {
-      console.log(instance.subtitleTracks)
       settingUpdater({
-        icon: player.plugin.ui.subtitle,
+        icon: player.plugins.ui.icons.subtitle,
         name: player.locales.get('Subtitle'),
         settings() {
           if (instance.subtitleTracks.length > 1) {
@@ -145,7 +142,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
               [
                 {
                   name: player.locales.get('Close'),
-                  default: instance.subtitleDisplay,
+                  default: !instance.subtitleDisplay,
                   value: -1
                 }
               ]
