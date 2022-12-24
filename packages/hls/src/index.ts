@@ -141,7 +141,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
               },
               [
                 {
-                  name: player.locales.get('Close'),
+                  name: player.locales.get('Off'),
                   default: !instance.subtitleDisplay,
                   value: -1
                 }

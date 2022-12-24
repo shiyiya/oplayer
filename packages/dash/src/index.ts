@@ -127,7 +127,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
             }))
             if (ex.length) {
               ex.unshift({
-                name: player.locales.get('Close'),
+                name: player.locales.get('Off'),
                 default: !instance.isTextEnabled(),
                 value: -1
               })
