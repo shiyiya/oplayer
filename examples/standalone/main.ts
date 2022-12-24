@@ -67,6 +67,7 @@ const player = Player.make('#player', {
     ui({
       // speed: [],
       autoFocus: true,
+      pictureInPicture: true,
       screenshot: true,
       settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
