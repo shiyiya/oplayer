@@ -80,18 +80,19 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
         name: player.locales.get('Quality'),
         icon: player.plugins.ui.icons.quality,
         settings() {
-          const auto: settingItem = {
-            name: player.locales.get('Auto'),
-            default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
-            value: () => {
-              instance.updateSettings({
-                streaming: { abr: { autoSwitchBitrate: { video: true } } }
-              })
-            }
-          }
           const ex = getSettingsByType(instance, 'video', options.withBitrate)
 
-          if (ex.length) ex.unshift(auto)
+          if (ex.length) {
+            ex.unshift({
+              name: player.locales.get('Auto'),
+              default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
+              value: () => {
+                instance.updateSettings({
+                  streaming: { abr: { autoSwitchBitrate: { video: true } } }
+                })
+              }
+            })
+          }
 
           return ex
         },
@@ -127,7 +128,15 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
         name: player.locales.get('Subtitle'),
         icon: player.plugins.ui.icons.subtitle,
         settings() {
-          return getSettingsByType(instance, 'text')
+          const ex = getSettingsByType(instance, 'text')
+          if (ex.length) {
+            ex.unshift({
+              name: player.locales.get('Close'),
+              default: instance.getTopBitrateInfoFor('text').qualityIndex == undefined,
+              value: undefined
+            })
+          }
+          return ex
         },
         onChange({ value }) {
           instance.setQualityFor('text', value, options.qualitySwitch == 'immediate')
