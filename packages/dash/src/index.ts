@@ -32,21 +32,17 @@ type Options = {
   withBitrate?: boolean
 }
 
-interface settingItem {
+interface SettingItem {
   name: string
   default: boolean
   value: any
 }
 
-function getSettingsByType(
-  instance: MediaPlayerClass,
-  type: 'video' | 'audio' | 'text',
-  withBitrate?: boolean
-) {
+function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrate?: boolean) {
   const bitrateInfoList = instance.getBitrateInfoListFor(type)
   if (bitrateInfoList.length > 1) {
-    return bitrateInfoList.map<settingItem>((it) => {
-      let name = type == 'video' ? it.height + 'p' : it.bitrate / 1000 + 'kbps'
+    return bitrateInfoList.map<SettingItem>((it) => {
+      let name = it.height + 'p'
 
       if (withBitrate) {
         const kb = it.bitrate / 1000
@@ -74,8 +70,8 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
     /.mpd(#|\?|$)/i.test(source.src))
 
 const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
-  instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
-    if (options.qualityControl) {
+  if (options.qualityControl) {
+    instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
       settingUpdater({
         name: player.locales.get('Quality'),
         icon: player.plugins.ui.icons.quality,
@@ -86,71 +82,73 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
             ex.unshift({
               name: player.locales.get('Auto'),
               default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
-              value: () => {
-                instance.updateSettings({
-                  streaming: { abr: { autoSwitchBitrate: { video: true } } }
-                })
-              }
+              value: -1
             })
           }
 
           return ex
         },
         onChange({ value }) {
-          if (typeof value == 'function') {
-            value()
-          } else {
-            //如果是 text 这里应该是关闭 ？
-            instance.updateSettings({
-              streaming: { abr: { autoSwitchBitrate: { video: false } } }
-            })
+          instance.updateSettings({
+            streaming: { abr: { autoSwitchBitrate: { video: value == -1 } } }
+          })
+          if (value != -1) {
             instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
           }
         }
       })
-    }
 
-    if (options.audioControl) {
-      settingUpdater({
-        name: player.locales.get('Language'),
-        icon: languageIcon,
-        settings() {
-          return getSettingsByType(instance, 'audio')
-        },
-        onChange({ value }) {
-          instance.setQualityFor('audio', value, options.qualitySwitch == 'immediate')
-        }
-      })
-    }
-
-    if (options.textControl) {
-      settingUpdater({
-        name: player.locales.get('Subtitle'),
-        icon: player.plugins.ui.icons.subtitle,
-        settings() {
-          const ex = getSettingsByType(instance, 'text')
-          if (ex.length) {
-            ex.unshift({
-              name: player.locales.get('Close'),
-              default: instance.getTopBitrateInfoFor('text').qualityIndex == undefined,
-              value: undefined
-            })
+      if (options.audioControl) {
+        settingUpdater({
+          name: player.locales.get('Language'),
+          icon: languageIcon,
+          settings() {
+            return instance.getTracksFor('audio').map<SettingItem>((it) => ({
+              name: it.lang || 'unknown',
+              default: instance.getCurrentTrackFor('audio')?.id == it.id,
+              value: it
+            }))
+          },
+          onChange({ value }) {
+            instance.setCurrentTrack(value)
           }
-          return ex
-        },
-        onChange({ value }) {
-          instance.setQualityFor('text', value, options.qualitySwitch == 'immediate')
-        }
-      })
-    }
-  })
+        })
+      }
+
+      if (options.textControl) {
+        settingUpdater({
+          name: player.locales.get('Subtitle'),
+          icon: player.plugins.ui.icons.subtitle,
+          settings() {
+            const ex = instance.getTracksFor('text').map<SettingItem>((it) => ({
+              name: it.lang || 'unknown',
+              default: instance.getCurrentTrackFor('text')?.id == it.id,
+              value: it.id
+            }))
+            if (ex.length) {
+              ex.unshift({
+                name: player.locales.get('Close'),
+                default: !instance.isTextEnabled(),
+                value: -1
+              })
+            }
+            return ex
+          },
+          onChange({ value }) {
+            instance.enableText(value != -1)
+            if (value != -1) instance.setTextTrack(value)
+          }
+        })
+      }
+    })
+  }
 
   instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, qualityMenuUpdater)
 
   function settingUpdater(arg: {
     icon: string
     name: string
-    settings: () => settingItem[]
+    settings: () => SettingItem[]
     onChange: (it: { value: any }) => void
   }) {
     const settings = arg.settings()

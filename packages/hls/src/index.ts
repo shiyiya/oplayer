@@ -38,7 +38,7 @@ type Options = {
   showWarning?: boolean
 }
 
-interface settingItem {
+interface SettingItem {
   name: string
   default: boolean
   value: any
@@ -81,7 +81,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
                   default: true,
                   value: (instance.currentLevel == -1) as any
                 }
-              ] as settingItem[]
+              ] as SettingItem[]
             )
           }
 
@@ -161,7 +161,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   function settingUpdater(arg: {
     icon: string
     name: string
-    settings: () => settingItem[]
+    settings: () => SettingItem[]
     onChange: (it: { value: any }) => void
   }) {
     const settings = arg.settings()

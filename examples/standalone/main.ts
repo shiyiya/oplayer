@@ -116,8 +116,8 @@ const player = Player.make('#player', {
     }),
     hls(),
     dash(),
-    // mpegts(),
-    // shaka({ ui: true }),
+    mpegts(),
+    shaka({ ui: false }),
     chromecast,
     danmaku({
       enable: false,
