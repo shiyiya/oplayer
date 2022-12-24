@@ -25,11 +25,12 @@ import { played } from '@oplayer/ui/src/components/Progress.style'
 import { $ } from '@oplayer/core'
 
 const dataSrcs = [
-  'https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1_https.mpd',
+  'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8',
   'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
+  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+  'https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1_https.mpd',
   MP4,
   flv,
-  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
@@ -50,7 +51,7 @@ const quailitySrcs = [
 ] as const
 
 const player = Player.make('#player', {
-  muted: true,
+  // muted: true,
   volume: 0.5,
   // isLive: true,
   // autoplay: true,
@@ -113,8 +114,8 @@ const player = Player.make('#player', {
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
-    // hls(),
-    dash(),
+    hls(),
+    // dash(),
     // mpegts(),
     // shaka({ ui: true }),
     chromecast,

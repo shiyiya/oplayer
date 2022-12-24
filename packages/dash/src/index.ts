@@ -63,7 +63,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
         icon: languageIcon,
         bitrateInfoParse(it) {
           return {
-            name: it.qualityIndex, //TODO: while is name?
+            name: it.bitrate / 1000 + 'kbps', //TODO: while is name?
             default: false,
             value: it.qualityIndex
           }
@@ -87,6 +87,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
   }
 
   instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, qualityMenuUpdater)
+  // no audio change event ?
 
   function settingUpdater(
     type: 'video' | 'audio' | 'text',
@@ -100,11 +101,12 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     const isText = type == 'text'
     // 视频和音频 默认就是自动直接写-1 //instance.getSettings().streaming?.abr?.autoSwitchBitrate?.[type]
     const currentIndex = isText ? instance.getCurrentTextTrackIndex : -1
+    const bitrateInfoList = instance.getBitrateInfoListFor(type)
 
     const settingOptions = [
       {
         name: player.locales.get('Auto'),
-        default: currentIndex == -1,
+        default: currentIndex == -1 || bitrateInfoList.length < 2,
         //如果是 text 这里应该是关闭 ？
         value: () => {
           instance.updateSettings({
@@ -114,9 +116,11 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
       }
     ]
 
-    instance.getBitrateInfoListFor(type).forEach((bitrate) => {
-      settingOptions.push(bitrateInfoParse(bitrate))
-    })
+    if (bitrateInfoList.length > 1) {
+      bitrateInfoList.forEach((bitrate) => {
+        settingOptions.push(bitrateInfoParse(bitrate))
+      })
+    }
 
     player.plugins.ui.setting.unregister(PLUGIN_NAME)
     player.plugins.ui.setting.register({
@@ -146,7 +150,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     const level = instance.getQualityFor('video')
     const height = instance.getBitrateInfoListFor('video')[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    player.plugins.ui?.setting.updateLabel(PLUGIN_NAME, levelName)
+    player.plugins.ui?.setting.updateLabel(`${PLUGIN_NAME}-video`, levelName)
   }
 }
 
