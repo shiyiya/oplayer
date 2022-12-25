@@ -1,6 +1,8 @@
 # oplayer-plugin-danmaku
 
-Danmaku plugin for oplayer
+[![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&color=ffa500&label=@oplayer/danmaku)](./packages/danmaku)
+
+![](./danmaku.png)
 
 ## Usage
 
