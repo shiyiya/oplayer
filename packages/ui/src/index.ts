@@ -21,7 +21,8 @@ import {
   fullscreen,
   webFullScreen,
   settingShown,
-  controllerHidden
+  controllerHidden,
+  error as errorCls
 } from './style'
 
 import type { Player, PlayerPlugin } from '@oplayer/core'
@@ -75,7 +76,8 @@ const apply = (player: Player, config: UiConfig) => {
       webFullScreen,
       settingShown,
       controllerHidden,
-      root: $root.className
+      root: $root.className,
+      isError: errorCls
     }
   }
 }

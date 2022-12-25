@@ -13,6 +13,8 @@ export const settingShown = $.cls('settingShown')
 
 export const controllerHidden = $.cls('controllerHidden')
 
+export const error = $.cls('error')
+
 export const root = ({ theme }: UiConfig) => {
   return $.css(
     Object.assign(

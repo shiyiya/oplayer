@@ -2,7 +2,7 @@ import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 
-import { icon, playing, loading, controllerHidden } from '../style'
+import { icon, playing, loading, controllerHidden, error } from '../style'
 
 const hidden = {
   opacity: 0,
@@ -42,7 +42,8 @@ const styles = $.css(
       },
 
       [`@global .${playing} &`]: hidden,
-      [`@global .${loading} &`]: hidden
+      [`@global .${loading} &`]: hidden,
+      [`@global .${error} &`]: hidden
     },
     isMobile && {
       [`@global .${controllerHidden} &`]: hidden

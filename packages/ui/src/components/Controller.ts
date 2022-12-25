@@ -1,5 +1,5 @@
 import Player, { $, isMobile } from '@oplayer/core'
-import { controllerHidden, settingShown } from '../style'
+import { controllerHidden, error, settingShown } from '../style'
 import type { UiConfig } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
@@ -56,6 +56,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       (!player.isPlaying && !isMobile) ||
       hasClass(player.$root, controllerHidden) ||
       hasClass(player.$root, settingShown) ||
+      hasClass(player.$root, error) ||
       (player.$root.contains(document.activeElement) && document.activeElement?.tagName == 'INPUT')
     ) {
       return

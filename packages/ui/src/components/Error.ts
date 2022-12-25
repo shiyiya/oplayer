@@ -1,5 +1,6 @@
 import type { Player, PlayerEvent } from '@oplayer/core'
 import { $ } from '@oplayer/core'
+import { error } from '../style'
 import { ErrorPayload, UiConfig } from '../types'
 import { addClass, removeClass } from '../utils'
 
@@ -12,13 +13,13 @@ const errorCls = $.css(`
   right: 0;
   color: #fff;
   background: #000;
-  z-index: 99;
+  z-index: 97;
   align-items: center;
   padding: 0 10px;
   -moz-user-select: text;
   -webkit-user-select: text;
   -ms-user-select: text;
-  user-select: text;
+  user-select: all;
   word-break: break-all;
   justify-content: center;
 `)
@@ -64,14 +65,16 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
     $dom.innerText = message || 'UNKNOWN_ERROR'
     addClass($dom, showCls)
+    player.$root.classList.add(error)
   }
 
   function clear() {
     removeClass($dom, showCls)
+    player.$root.classList.remove(error)
     $dom.innerText = ''
   }
 
-  player.on('videosourcechange', clear)
+  player.on(['videosourcechange', 'videoqualitychange'], clear)
   player.on('error', ({ payload }) => show(payload))
 
   return show
