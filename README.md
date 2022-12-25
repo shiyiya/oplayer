@@ -2,8 +2,7 @@
 
 Oh! Another HTML5 video player.
 
-[Preview](https://oplayer.vercel.app/player?../君の名は.mp4) | [Playground](https://oplayer.vercel.app) | [Website](https://oplayer.vercel.app) |
-[Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [国内无法访问点我](https://ohplayer.netlify.app)
+[Website](https://oplayer.vercel.app) | [Playground](https://oplayer.vercel.app) | [Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [国内无法访问点我](https://ohplayer.netlify.app)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 [![GitHub license](https://img.shields.io/github/license/shiyiya/oplayer?style=flat-square)](https://github.com/shiyiya/oplayer/blob/main/LICENSE)

@@ -34,7 +34,7 @@ const player = Player.make('#oplayer', {
     mpegts(),
     chromecast,
     // 海量弹幕 /天气之子.xml
-    danmaku({ source: '/danmaku.xml' })
+    danmaku({ enable: false, source: '/danmaku.xml' })
   ])
   .create()
 
@@ -72,6 +72,7 @@ export default () => {
       <Playground
         initialSnippet={{
           markup: `
+          <style>#oplayer{aspect-ratio: 16/9;}</style>
           <div id="oplayer" />
           <script>
             window.progressIndicator = \`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
