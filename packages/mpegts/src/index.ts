@@ -18,11 +18,7 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
     return true
   }
 
-  if (source.format === 'auto' || typeof source.format === 'undefined') {
-    return REG.test(source.src)
-  }
-
-  return false
+  return (source.format === 'auto' || typeof source.format === 'undefined') && REG.test(source.src)
 }
 
 const plugin = (options?: PluginOptions): PlayerPlugin => {
@@ -37,7 +33,8 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
 
       if (instance) {
         instance.destroy()
-        instance = null as any
+        instance = null
+        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -58,7 +55,7 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
         },
         mpegtsConfig
       )
-
+      player.loader = instance
       instance.attachMediaElement(player.$video)
       instance.load()
 
@@ -70,10 +67,7 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
         instance = null as any
       })
 
-      return {
-        value: () => instance,
-        constructor: () => imported
-      }
+      return () => imported
     }
   }
 }

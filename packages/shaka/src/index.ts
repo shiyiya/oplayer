@@ -66,6 +66,7 @@ const plugin = ({
         instance.unload()
         instance.destroy()
         instance = null
+        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -82,6 +83,8 @@ const plugin = ({
       if (!imported.Player.isBrowserSupported()) return false
 
       instance = new imported.Player(player.$video)
+      player.loader = instance
+
       if (ui && !instanceOverlay) {
         instanceOverlay = new imported.ui.Overlay(instance, player.$root, player.$video)
         instanceOverlay.configure(uiConfig)
@@ -107,14 +110,12 @@ const plugin = ({
         }
       })
 
-      return {
-        value: () => instance,
-        constructor: () => imported
-      }
+      return () => imported
     }
   }
 }
 
+//TODO lang & audio track
 function generateSetting(player: Player, instance: Shaka.Player, options: Options = {}) {
   const langLevels = instance.getVariantTracks().filter((it) => it.type === 'variant')
   const active = langLevels.findIndex((it) => it.active == true)

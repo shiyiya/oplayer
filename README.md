@@ -82,15 +82,15 @@ Player.make('#oplayer', {
 
 ## Plugins
 
-- [@oplayer/ui](./packages/ui)
-- [@oplayer/hls](./packages/hls)
-- [@oplayer/dash](./packages/dash)
-- [@oplayer/mpegts](./packages/mpegts)
-- [@oplayer/shaka](./packages/shaka)
-- [@oplayer/torrent](./packages/torrent)
-- [@oplayer/danmaku](./packages/danmaku)
-- [@oplayer/ad](./packages/ad)
-- [@oplayer/react](./packages/react)
+- [![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&color=6668ab&label=@oplayer/ui)](./packages/ui)
+- [![npm](https://img.shields.io/npm/v/@oplayer/hls?style=flat-square&color=0066dc&label=@oplayer/hls)](./packages/hls)
+- [![npm](https://img.shields.io/npm/v/@oplayer/dash?style=flat-square&color=208af9&label=@oplayer/dash)](./packages/dash)
+- [![npm](https://img.shields.io/npm/v/@oplayer/mpegts?style=flat-square&color=044F67&label=@oplayer/mpegts)](./packages/mpegts)
+- [![npm](https://img.shields.io/npm/v/@oplayer/shaka?style=flat-square&color=fcbc05&label=@oplayer/shaka)](./packages/shaka)
+- [![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&color=ef334c&label=@oplayer/torrent)](./packages/torrent)
+- [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&color=ffa500&label=@oplayer/danmaku)](./packages/danmaku)
+- [![npm](https://img.shields.io/npm/v/@oplayer/ad?style=flat-square&color=8b0000&label=@oplayer/ad)](./packages/ad)
+- [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&color=61dafb&label=@oplayer/react)](./packages/react)
 - [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
 - [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
 

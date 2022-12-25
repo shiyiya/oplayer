@@ -12,6 +12,7 @@ import volumeSvg from '../icons/sound-on.svg?raw'
 import speedSvg from '../icons/speed.svg?raw'
 import subtitleSvg from '../icons/subtitles.svg?raw'
 import qualitySvg from '../icons/quality.svg?raw'
+import langSvg from '../icons/lang.svg?raw'
 
 import type { Player } from '@oplayer/core'
 import type { UiConfig } from '../types'
@@ -29,7 +30,8 @@ const ICONS_MAP = {
   loop: loopSvg,
   progressIndicator: null,
   loadingIndicator: null,
-  quality: qualitySvg
+  quality: qualitySvg,
+  lang: langSvg
 }
 
 export namespace Icons {

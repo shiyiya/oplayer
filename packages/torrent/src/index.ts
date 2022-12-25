@@ -20,22 +20,23 @@ const torrentPlugin = ({
 
   return {
     name: PLUGIN_NAME,
-    load: ({ $video }, source, options) => {
+    load: (player, source, options) => {
       const isMatch = matcher(source)
+      const { $video } = player
 
       if (options.loader || !isMatch) {
         client?.remove(source.src)
+        client?.destroy()
         $video.preload = prePreload
-
+        player.loader = null
         return false
       }
 
       if (!webtorrent.WEBRTC_SUPPORT) return false
 
-      if (!client) {
-        prePreload = $video.preload
-        client = new webtorrent(config)
-      }
+      prePreload = $video.preload
+      client = new webtorrent(config)
+      player.loader = client
 
       $video.preload = 'metadata'
       client.add(source.src, (torrent: any) => {
@@ -49,6 +50,8 @@ const torrentPlugin = ({
       on('destroy', () => {
         client?.destroy()
       })
+
+      return webtorrent
     }
   }
 }

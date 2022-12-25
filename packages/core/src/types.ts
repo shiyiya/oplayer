@@ -5,7 +5,20 @@ export type Source = {
   src: string
   poster?: string
   title?: string
-  format?: 'auto' | 'm3u8' | 'mpd' | 'flv' | 'm2ts' | 'mpegts' | string
+  format?:
+    | 'auto'
+    /** hls.js */
+    | 'hls'
+    | 'm3u8'
+    /** dash.js */
+    | 'dash'
+    | 'mpd'
+    /** mpegts.js */
+    | 'flv'
+    | 'm2ts'
+    | 'mpegts'
+    /** other */
+    | string
 }
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'

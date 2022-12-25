@@ -7,6 +7,7 @@
   "Mute": "静音",
   "Speed": "播放速度",
 
+  "Language": "语言",
   "Screenshot": "截图",
   "Subtitle": "字幕",
   "Quality": "画质",
@@ -21,11 +22,12 @@
   "FontSize": "字体大小",
   "Display Area": "显示区域",
 
-  "Close": "关闭",
+  "Off": "关闭",
   "Auto": "自动",
   "Default": "默认",
   "Normal": "正常",
 
   "%ss": "%s秒",
+  "Close": "关闭",
   "Can be closed after %ss": "%s秒后可关闭广告"
 }

@@ -28,10 +28,18 @@ type Options = {
    * @default: false
    */
   withBitrate?: boolean
+  audioControl?: boolean
+  textControl?: boolean
   /**
    * @default false
    */
   showWarning?: boolean
+}
+
+interface SettingItem {
+  name: string
+  default: boolean
+  value: any
 }
 
 const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
@@ -39,55 +47,140 @@ const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
     Boolean(video.canPlayType('application/x-mpegURL')) ||
     Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
   ) &&
-  (source.format === 'm3u8' ||
+  (source.format === 'hls' ||
+    source.format === 'm3u8' ||
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
       /m3u8(#|\?|$)/i.test(source.src)))
 
 const generateSetting = (player: Player, instance: Hls, options: Options = {}) => {
-  const settingUpdater = () => {
-    const settingOptions = [
-      {
-        name: player.locales.get('Auto'),
-        default: true,
-        value: -1
-      }
-    ]
+  if (options.qualityControl) {
+    instance.on(imported.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
+    instance.once(imported.Events.MANIFEST_PARSED, () => {
+      settingUpdater({
+        icon: player.plugins.ui.icons.quality,
+        name: player.locales.get('Quality'),
+        settings() {
+          if (instance.levels.length > 1) {
+            return instance.levels.reduce(
+              (pre, level) => {
+                let name = (level.name || level.height).toString()
+                if (isFinite(+name)) name += 'p'
+                if (options.withBitrate) {
+                  const kb = level.bitrate / 1000
+                  const useMb = kb > 1000
+                  const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+                  name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+                }
+                pre.push({ name, default: instance.currentLevel == level.id, value: level.id })
+                return pre
+              },
+              [
+                {
+                  name: `${player.locales.get('Auto')}`,
+                  default: true,
+                  value: (instance.currentLevel == -1) as any
+                }
+              ] as SettingItem[]
+            )
+          }
 
-    if (instance.levels.length > 1)
-      instance.levels.forEach((level, i) => {
-        let name = (level.name || level.height).toString()
-        if (isFinite(+name)) name += 'p'
-        if (options.withBitrate) {
-          const kb = level.bitrate / 1000
-          const useMb = kb > 1000
-          const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
-          name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+          return []
+        },
+        onChange(it) {
+          if (options.qualitySwitch == 'immediate') {
+            instance.currentLevel = it.value
+            if (it.value !== -1) instance.loadLevel = it.value
+          } else {
+            instance.nextLevel = it.value
+            if (it.value !== -1) instance.nextLoadLevel = it.value
+          }
         }
-
-        return settingOptions.push({ name, default: false, value: i })
       })
+    })
+  }
 
-    player.plugins.ui.setting.unregister(PLUGIN_NAME)
-    player.plugins.ui.setting.register({
-      name: player.locales.get('Quality'),
-      type: 'selector',
-      key: PLUGIN_NAME,
-      icon: player.plugins.ui.icons.quality,
-      onChange: (level: typeof settingOptions[number]) => {
-        if (options.qualitySwitch == 'immediate') {
-          instance.currentLevel = level.value
-          if (level.value !== -1) instance.loadLevel = level.value
-        } /* if (options.qualitySwitch == 'smooth')*/ else {
-          instance.nextLevel = level.value
-          if (level.value !== -1) instance.nextLoadLevel = level.value
+  if (options.audioControl)
+    instance.on(imported.Events.AUDIO_TRACK_LOADED, () => {
+      settingUpdater({
+        icon: player.plugins.ui.icons.lang,
+        name: player.locales.get('Language'),
+        settings() {
+          if (instance.audioTracks.length > 1) {
+            return instance.audioTracks.map(({ name, lang, id }) => ({
+              name: lang || name,
+              default: instance.audioTrack == id,
+              value: id
+            }))
+          }
+          return []
+        },
+        onChange(it) {
+          instance.audioTrack = it.value
         }
-      },
-      children: settingOptions
+      })
+    })
+
+  if (options.textControl)
+    instance.on(imported.Events.SUBTITLE_TRACK_LOADED, () => {
+      settingUpdater({
+        icon: player.plugins.ui.icons.subtitle,
+        name: player.locales.get('Subtitle'),
+        settings() {
+          if (instance.subtitleTracks.length > 1) {
+            return instance.subtitleTracks.reduce(
+              (pre, { name, lang, id }) => {
+                return (
+                  pre.push({
+                    name: lang || name,
+                    default: instance.subtitleTrack == id,
+                    value: id
+                  }),
+                  pre
+                )
+              },
+              [
+                {
+                  name: player.locales.get('Off'),
+                  default: !instance.subtitleDisplay,
+                  value: -1
+                }
+              ]
+            )
+          }
+          return []
+        },
+        onChange({ value }) {
+          if ((instance.subtitleDisplay = !(value == -1))) {
+            instance.subtitleTrack = value
+          }
+        }
+      })
+    })
+
+  function settingUpdater(arg: {
+    icon: string
+    name: string
+    settings: () => SettingItem[]
+    onChange: (it: { value: any }) => void
+  }) {
+    const settings = arg.settings()
+    if (settings.length < 2) return
+
+    const { name, icon, onChange } = arg
+
+    player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
+    player.plugins.ui.setting.register({
+      name,
+      icon,
+      onChange,
+      type: 'selector',
+      key: `${PLUGIN_NAME}-${name}`,
+      children: settings
     })
   }
 
   // Update settings menu with the information about current level
-  const menuUpdater = ({ level }: LevelSwitchedData) => {
+  function menuUpdater({ level }: LevelSwitchedData) {
     if (!instance.autoLevelEnabled) return
 
     if (instance.autoLevelEnabled) {
@@ -98,9 +191,14 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
       player.plugins.ui.setting.select(PLUGIN_NAME, level + 1, false)
     }
   }
+}
 
-  instance.once(imported.Events.MANIFEST_PARSED, settingUpdater)
-  instance.on(imported.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
+const removeSetting = (player: Player) => {
+  ;[
+    player.locales.get('Quality'),
+    player.locales.get('Language'),
+    player.locales.get('Subtitle')
+  ].forEach((it) => player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`))
 }
 
 const plugin = ({
@@ -109,6 +207,8 @@ const plugin = ({
   withBitrate = false,
   qualityControl = true,
   qualitySwitch = 'immediate',
+  audioControl = true,
+  textControl = true,
   matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: Hls | null
@@ -120,9 +220,10 @@ const plugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (instance) {
-        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+        removeSetting(player)
         instance.destroy()
         instance = null
+        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -134,9 +235,16 @@ const plugin = ({
       instance = new imported(config)
       instance.loadSource(source.src)
       instance.attachMedia(player.$video)
+      player.loader = instance
 
-      if (!player.isNativeUI && qualityControl && player.plugins.ui?.setting) {
-        generateSetting(player, instance, { qualityControl, qualitySwitch, withBitrate })
+      if (!player.isNativeUI && player.plugins.ui?.setting) {
+        generateSetting(player, instance, {
+          qualityControl,
+          qualitySwitch,
+          withBitrate,
+          audioControl,
+          textControl
+        })
       }
 
       instance.on(imported.Events.ERROR, function (_, data) {
@@ -169,10 +277,7 @@ const plugin = ({
         instance = null
       })
 
-      return {
-        value: () => instance,
-        constructor: () => imported
-      }
+      return () => imported
     }
   }
 }

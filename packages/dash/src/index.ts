@@ -22,6 +22,8 @@ type Options = {
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
   qualitySwitch?: 'immediate' | 'smooth'
+  audioControl?: boolean
+  textControl?: boolean
   /**
    * @default: false
    */
@@ -29,75 +31,158 @@ type Options = {
 }
 
 const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
+  source.format === 'dash' ||
   source.format === 'mpd' ||
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
     /.mpd(#|\?|$)/i.test(source.src))
 
-const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
-  const settingUpdater = () => {
-    const isAutoSwitch = instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
+interface SettingItem {
+  name: string
+  default: boolean
+  value: any
+}
 
-    const settingOptions = [
-      {
-        name: player.locales.get('Auto'),
-        default: isAutoSwitch,
-        value: () => {
-          instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { video: true } } }
-          })
-        }
+function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrate?: boolean) {
+  const bitrateInfoList = instance.getBitrateInfoListFor(type)
+  if (bitrateInfoList.length > 1) {
+    return bitrateInfoList.map<SettingItem>((it) => {
+      let name = it.height + 'p'
+
+      if (withBitrate) {
+        const kb = it.bitrate / 1000
+        const useMb = kb > 1000
+        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+        name += ` (${number}${useMb ? 'm' : 'k'}bps)`
       }
-    ]
 
-    if (instance.getBitrateInfoListFor('video').length > 1) {
-      instance.getBitrateInfoListFor('video').forEach((bitrate) => {
-        let name = bitrate.height + 'p'
-        if (options.withBitrate) {
-          const kb = bitrate.bitrate / 1000
-          const useMb = kb > 1000
-          const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
-          name += ` (${number}${useMb ? 'm' : 'k'}bps)`
-        }
-
-        settingOptions.push({
-          name,
-          default: isAutoSwitch ? false : bitrate.qualityIndex == instance.getQualityFor('video'),
-          value: bitrate.qualityIndex as any
-        })
-      })
-    }
-    player.plugins.ui.setting.unregister(PLUGIN_NAME)
-    player.plugins.ui.setting.register({
-      name: player.locales.get('Quality'),
-      type: 'selector',
-      key: PLUGIN_NAME,
-      icon: player.plugins.ui.icons.quality,
-      onChange: ({ value }: typeof settingOptions[number]) => {
-        if (typeof value == 'function') {
-          value()
-        } else {
-          instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { video: false } } }
-          })
-          instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
-        }
-      },
-      children: settingOptions
+      return {
+        name,
+        default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
+          ? false
+          : instance.getTopBitrateInfoFor(type).qualityIndex == it.qualityIndex,
+        value: it.qualityIndex
+      }
     })
   }
 
-  const menuUpdater = (data: QualityChangeRenderedEvent) => {
+  return []
+}
+
+const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
+  if (options.qualityControl) {
+    instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
+      settingUpdater({
+        name: player.locales.get('Quality'),
+        icon: player.plugins.ui.icons.quality,
+        settings() {
+          const ex = getSettingsByType(instance, 'video', options.withBitrate)
+
+          if (ex.length) {
+            ex.unshift({
+              name: player.locales.get('Auto'),
+              default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
+              value: -1
+            })
+          }
+
+          return ex
+        },
+        onChange({ value }) {
+          instance.updateSettings({
+            streaming: { abr: { autoSwitchBitrate: { video: value == -1 } } }
+          })
+          if (value != -1) {
+            instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
+          }
+        }
+      })
+
+      if (options.audioControl) {
+        settingUpdater({
+          name: player.locales.get('Language'),
+          icon: player.plugins.ui.icons.lang,
+          settings() {
+            return instance.getTracksFor('audio').map<SettingItem>((it) => ({
+              name: it.lang || 'unknown',
+              default: instance.getCurrentTrackFor('audio')?.id == it.id,
+              value: it
+            }))
+          },
+          onChange({ value }) {
+            instance.setCurrentTrack(value)
+          }
+        })
+      }
+
+      if (options.textControl) {
+        settingUpdater({
+          name: player.locales.get('Subtitle'),
+          icon: player.plugins.ui.icons.subtitle,
+          settings() {
+            const ex = instance.getTracksFor('text').map<SettingItem>((it) => ({
+              name: it.lang || 'unknown',
+              default: instance.getCurrentTrackFor('text')?.id == it.id,
+              value: it.id
+            }))
+            if (ex.length) {
+              ex.unshift({
+                name: player.locales.get('Off'),
+                default: !instance.isTextEnabled(),
+                value: -1
+              })
+            }
+            return ex
+          },
+          onChange({ value }) {
+            instance.enableText(value != -1)
+            if (value != -1) instance.setTextTrack(value)
+          }
+        })
+      }
+    })
+  }
+
+  instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, qualityMenuUpdater)
+
+  function settingUpdater(arg: {
+    icon: string
+    name: string
+    settings: () => SettingItem[]
+    onChange: (it: { value: any }) => void
+  }) {
+    const settings = arg.settings()
+    if (settings.length < 2) return
+
+    const { name, icon, onChange } = arg
+
+    player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
+    player.plugins.ui.setting.register({
+      name,
+      icon,
+      onChange,
+      type: 'selector',
+      key: `${PLUGIN_NAME}-${name}`,
+      children: settings
+    })
+  }
+
+  function qualityMenuUpdater(data: QualityChangeRenderedEvent) {
     const settings = instance.getSettings()
     if (data.mediaType !== 'video' || !settings.streaming?.abr?.autoSwitchBitrate?.video) return
 
     const level = instance.getQualityFor('video')
     const height = instance.getBitrateInfoListFor('video')[level]?.height
     const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    player.plugins.ui?.setting.updateLabel(PLUGIN_NAME, levelName)
+    player.plugins.ui?.setting.updateLabel(`${PLUGIN_NAME}-video`, levelName)
   }
+}
 
-  instance.on(imported.MediaPlayer.events.STREAM_ACTIVATED, settingUpdater)
-  instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, menuUpdater)
+const removeSetting = (player: Player) => {
+  ;[
+    player.locales.get('Quality'),
+    player.locales.get('Language'),
+    player.locales.get('Subtitle')
+  ].forEach((it) => player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`))
 }
 
 const plugin = ({
@@ -105,6 +190,8 @@ const plugin = ({
   withBitrate = false,
   qualityControl = true,
   qualitySwitch = 'immediate',
+  audioControl = true,
+  textControl = true,
   matcher = defaultMatcher
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: MediaPlayerClass | null
@@ -116,9 +203,10 @@ const plugin = ({
       const isMatch = matcher(player.$video, source)
 
       if (instance) {
-        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+        removeSetting(player)
         instance.destroy()
         instance = null
+        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -130,9 +218,16 @@ const plugin = ({
       instance = imported.MediaPlayer().create()
       if (config) instance.updateSettings(config)
       instance.initialize(player.$video, source.src, player.$video.autoplay)
+      player.loader = instance
 
-      if (!player.isNativeUI && qualityControl && player.plugins.ui?.setting) {
-        generateSetting(player, instance, { qualityControl, qualitySwitch, withBitrate })
+      if (!player.isNativeUI && player.plugins.ui?.setting) {
+        generateSetting(player, instance, {
+          qualityControl,
+          qualitySwitch,
+          withBitrate,
+          audioControl,
+          textControl
+        })
       }
 
       instance.on(imported.MediaPlayer.events.ERROR, (event: any) => {
@@ -149,10 +244,7 @@ const plugin = ({
         instance = null
       })
 
-      return {
-        value: () => instance,
-        constructor: () => imported
-      }
+      return () => imported
     }
   }
 }

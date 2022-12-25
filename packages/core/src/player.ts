@@ -35,6 +35,9 @@ export class Player {
   isCustomLoader: boolean = false
   isSourceChanging: boolean = false
 
+  // hls|dash|etc. instance
+  loader: any = null
+
   //https://developer.chrome.com/blog/play-request-was-interrupted/
   _playPromise: Promise<void> | undefined
 
