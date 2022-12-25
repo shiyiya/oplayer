@@ -249,6 +249,4 @@ const plugin = ({
   }
 }
 
-plugin.prototype.defaultMatcher = defaultMatcher
-
 export default plugin

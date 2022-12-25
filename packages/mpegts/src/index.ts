@@ -72,6 +72,4 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
   }
 }
 
-plugin.prototype.defaultMatcher = defaultMatcher
-
 export default plugin
