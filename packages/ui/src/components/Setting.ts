@@ -2,7 +2,6 @@ import Player, { $ } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
 import type { Setting, UiConfig } from '../types'
-import { siblings } from '../utils'
 import { controllerBottom } from './ControllerBottom.style'
 import {
   activeCls,
@@ -210,14 +209,11 @@ function createPanel(
               ?.setAttribute('data-selected', 'false')
             return
           }
-          const $target = optionPanel.$ref.children[i + 1] as HTMLElement
-          if ($target!.getAttribute('data-selected') != 'true') {
-            $target!.setAttribute('data-selected', 'true')
-            siblings($target, (sibling) => {
-              if (sibling.hasAttribute('data-selected')) {
-                sibling.setAttribute('data-selected', 'false')
-              }
-            })
+
+          const $targets = optionPanel.$ref.querySelectorAll('[data-selected]')
+          if ($targets.item(i).getAttribute('data-selected') != 'true') {
+            $targets.forEach((it) => it.setAttribute('data-selected', 'false'))
+            $targets.item(i).setAttribute('data-selected', 'true')
             const value = children[i]
             $label.innerText = value!.name
             if (shouldBeCallFn) onChange?.(value, { index: i })
@@ -225,21 +221,24 @@ function createPanel(
         }
 
         optionPanel.$ref.addEventListener('click', (e) => {
-          optionPanel.select!(+(e.target as HTMLDivElement).getAttribute('data-index')!, true)
-          panel.$ref.classList.add(activeCls)
-          optionPanel.$ref.classList.remove(activeCls)
+          const target = e.target as HTMLDivElement
+          if (target.hasAttribute('data-index')) {
+            optionPanel.select!(+target.getAttribute('data-index')!, true)
+            panel.$ref.classList.add(activeCls)
+            optionPanel.$ref.classList.remove(activeCls)
+          }
         })
       }
     } else {
       if (type == 'switcher') {
         //@ts-ignore
-        $row.select = function (shouldBeCallFn = true) {
+        $row.select = function (shouldBeCallFn: boolean) {
           const selected = this.getAttribute('data-selected') == 'true'
           this.setAttribute('data-selected', `${!selected}`)
           if (shouldBeCallFn) onChange?.(!selected)
         }
         //@ts-ignore
-        $row.addEventListener('click', () => $row.select())
+        $row.addEventListener('click', () => $row.select(true))
       }
     }
   }
