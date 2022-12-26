@@ -347,7 +347,7 @@ export default (options = {} as Options): PlayerPlugin => ({
 
 function registerInputStyle() {
   const modeSelectionWrap = $.css(`
-  display: block;
+  display: none;
   box-sizing: border-box;
   width: 216px;
   height: auto;
