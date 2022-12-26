@@ -8,6 +8,7 @@ import styles from './styles.module.css'
 const plugins = [
   ui({
     theme: { primaryColor: '#6668ab' },
+    pictureInPicture: true,
     subtitle: {
       source: [
         {
@@ -18,24 +19,26 @@ const plugins = [
       ]
     },
     thumbnails: { src: '/thumbnails.jpg', number: 100 },
-    highlight: [
-      {
-        time: 12,
-        text: '谁でもいいはずなのに'
-      },
-      {
-        time: 34,
-        text: '夏の想い出がまわる'
-      },
-      {
-        time: 58,
-        text: 'こんなとこにあるはずもないのに'
-      },
-      {
-        time: 88,
-        text: '－－终わり－－'
-      }
-    ]
+    highlight: {
+      source: [
+        {
+          time: 12,
+          text: '谁でもいいはずなのに'
+        },
+        {
+          time: 34,
+          text: '夏の想い出がまわる'
+        },
+        {
+          time: 58,
+          text: 'こんなとこにあるはずもないのに'
+        },
+        {
+          time: 88,
+          text: '－－终わり－－'
+        }
+      ]
+    }
   })
 ]
 
