@@ -246,7 +246,7 @@ export default (options = {} as Options): PlayerPlugin => ({
               <div class="${modeSelectionRow}">
                 <div class="${modeSelectionRowTitle}">颜色</div>
                 <div class="${modeSelectionRowSelection}">
-                  <input class="${colorPickerInput}" style="color:#000;background:#fff;text-shadow: 0px 0px 6px #FFF;text-align: center;" value="#FFFFFF" >
+                  <input class="${colorPickerInput}" value="#FFFFFF" >
                     <div class="${colorPickerWrap}">
                   ${[
                     '#FE0302',
@@ -347,7 +347,7 @@ export default (options = {} as Options): PlayerPlugin => ({
 
 function registerInputStyle() {
   const modeSelectionWrap = $.css(`
-  display: none;
+  display: block;
   box-sizing: border-box;
   width: 216px;
   height: auto;
@@ -359,6 +359,11 @@ function registerInputStyle() {
   background: rgba(21,21,21,.9);
   border-radius: 2px;
   user-select: none;`)
+
+  const modeSelectionRowSelection = $.css(`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 8px -8px 0 0;`)
 
   const danmakuTypeWrap = $.css({
     width: '30px',
@@ -380,19 +385,12 @@ function registerInputStyle() {
 
     [`&:hover .${modeSelectionWrap}`]: { display: 'block' },
 
-    '& div[data-type=fontsize]': {
-      width: '84px',
+    [`& .${modeSelectionRowSelection} label`]: {
+      flex: 1,
       'margin-bottom': '8px'
     },
 
-    '& div[data-type=mode]': {
-      width: '50px',
-      'margin-bottom': '8px'
-    },
-
-    '& input[type="radio"]': {
-      display: 'none'
-    },
+    '& input[type="radio"]': { display: 'none' },
 
     '& input[type="radio"]:checked + label > div': {
       background: 'var(--primary-color)'
@@ -422,11 +420,6 @@ function registerInputStyle() {
 
   const modeSelectionRowTitle = $.css(`text-align: left;color: #fff; line-height: 16px;`)
 
-  const modeSelectionRowSelection = $.css(`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 8px -8px 0 0;`)
-
   const modeSelectionSpan = $.css(`
     position: relative;
     cursor: pointer;
@@ -445,8 +438,9 @@ function registerInputStyle() {
     border: 1px solid hsla(0,0%,100%,.2);
     border-radius: 2px;
     padding: 4px 7px;
-    margin: 0 auto 6px auto;
+    margin: 0 auto 8px auto;
     transition: background .2s;
+    color:#000;background:#fff;text-shadow: 0px 0px 6px #FFF;text-align: center;
   `)
 
   const colorPickerWrap = $.css(
