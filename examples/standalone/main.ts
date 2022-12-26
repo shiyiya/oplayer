@@ -45,6 +45,7 @@ const player = Player.make('#player', {
       screenshot: true,
       settings: ['loop'],
       theme: { primaryColor: '#00b2ff' },
+      highlight: { color: '#000' },
       subtitle: {
         // source: [
         //   {

@@ -1,5 +1,5 @@
 import Player, { $ } from '@oplayer/core'
-import type { Highlight } from '../types'
+import type { Highlight, UiConfig } from '../types'
 
 export const highlightTextCls = $.css(`
   display: none;
@@ -19,7 +19,7 @@ export const highlightCls = $.css({
   width: '8px',
   height: '4px',
   'border-radius': '1px',
-  'background-color': '#fff',
+  'background-color': 'var(--highlightColor)',
   transform: 'translateX(-3px)',
   transition: 'all 0.2s',
 
@@ -28,9 +28,15 @@ export const highlightCls = $.css({
   }
 })
 
-export default function (player: Player, container: HTMLElement, highlights: Highlight[] = []) {
+export default function (
+  player: Player,
+  container: HTMLElement,
+  highlightsConfig: UiConfig['highlight']
+) {
   let $highlights: HTMLDivElement[] = []
   let active = true
+
+  player.$root.style.setProperty('--highlightColor', highlightsConfig?.color || '#FFF')
 
   function createDto(options: { left: number; text: string }) {
     const dto = $.create(
@@ -69,7 +75,7 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
     }
   }
 
-  bootstrap(highlights)
+  if (highlightsConfig?.source) bootstrap(highlightsConfig.source)
 
   player.on('videosourcechange', () => {
     active = false

@@ -99,7 +99,10 @@ export type UiConfig = {
 
   thumbnails?: Thumbnails
 
-  highlight?: Highlight[]
+  highlight?: {
+    color?: string
+    source?: Highlight[]
+  }
 
   menu?: MenuBar[]
 
