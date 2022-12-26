@@ -19,7 +19,7 @@ export const highlightCls = $.css({
   width: '8px',
   height: '4px',
   'border-radius': '1px',
-  'background-color': 'var(--highlightColor)',
+  'background-color': 'var(--highlight-color)',
   transform: 'translateX(-3px)',
   transition: 'all 0.2s',
 
@@ -36,7 +36,7 @@ export default function (
   let $highlights: HTMLDivElement[] = []
   let active = true
 
-  player.$root.style.setProperty('--highlightColor', highlightsConfig?.color || '#FFF')
+  player.$root.style.setProperty('--highlight-color', highlightsConfig?.color || '#FFF')
 
   function createDto(options: { left: number; text: string }) {
     const dto = $.create(
