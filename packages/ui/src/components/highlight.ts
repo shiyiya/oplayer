@@ -29,7 +29,6 @@ export const highlightCls = $.css({
 })
 
 export default function (player: Player, container: HTMLElement, highlights: Highlight[] = []) {
-  const $dom = document.createDocumentFragment() as unknown as HTMLDivElement
   let $highlights: HTMLDivElement[] = []
   let active = true
 
@@ -44,26 +43,33 @@ export default function (player: Player, container: HTMLElement, highlights: Hig
   }
 
   function createHighlights(highlights: Highlight[], duration: number) {
+    $highlights.forEach((it) => it.remove())
     for (let i = 0; i < highlights.length; i++) {
       const h = highlights[i]!
       const $highlight = createDto({ left: (h.time / duration) * 100, text: h.text })
       $highlights.push($highlight)
-      $.render($highlight, $dom)
+      $.render($highlight, container)
     }
-    $.render($dom, container)
   }
 
   function change(highlights: Highlight[]) {
     active = true
-    $highlights.forEach((it) => it.remove())
-    createHighlights(highlights, player.duration)
+    bootstrap(highlights)
   }
 
-  player.on('loadedmetadata', function durationchange() {
+  function bootstrap(highlights: Highlight[]) {
     if (player.duration !== Infinity && player.duration > 0) {
-      if (active) createHighlights(highlights, player.duration)
+      createHighlights(highlights, player.duration)
+    } else {
+      player.on('loadedmetadata', function durationchange() {
+        if (player.duration !== Infinity && player.duration > 0) {
+          if (active) createHighlights(highlights, player.duration)
+        }
+      })
     }
-  })
+  }
+
+  bootstrap(highlights)
 
   player.on('videosourcechange', () => {
     active = false

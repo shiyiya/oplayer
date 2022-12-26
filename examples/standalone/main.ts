@@ -1,6 +1,9 @@
-//@ts-nocheck
-import Player, { PlayerEvent, isMobile, isIOS, isiPad, isiPhone } from '@oplayer/core'
-import danmaku, { DanmakuItem } from '@oplayer/danmaku'
+import { html, render } from 'lit'
+import { live } from 'lit/directives/live.js'
+import { ref } from 'lit/directives/ref.js'
+
+import Player, { PlayerEvent } from '@oplayer/core'
+import danmaku from '@oplayer/danmaku'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
@@ -9,46 +12,17 @@ import mpegts from '@oplayer/mpegts'
 import shaka from '@oplayer/shaka'
 import { chromecast } from '@oplayer/plugins'
 
-import MP4 from '../../website/static/君の名は.mp4'
-import SRT from '../../website/static/君の名は.srt'
 import DANMAKU from '../../website/static/danmaku.xml'
 import THUMB from '../../website/static/thumbnails.jpg'
 import POSTER from '../../website/static/poster.png'
-import flv from '../../website/static/op.flv'
-
+// import SRT from '../../website/static/君の名は.srt'
 // import SUPER_DANMAKU from '../../website/static/天气之子.xml'
 
-import { html, render } from 'lit'
-import { live } from 'lit/directives/live.js'
-import { ref } from 'lit/directives/ref.js'
-import { played } from '@oplayer/ui/src/components/Progress.style'
-import { $ } from '@oplayer/core'
+import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
+import { MenuBar } from '@oplayer/ui/src/types'
 
-const dataSrcs = [
-  'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
-  'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8',
-  'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-  'https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1_https.mpd',
-  MP4,
-  flv,
-  'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
-  'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
-  'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
-  'https://cdn6.hnzycdn.com:65/20220712/O5XeHGZz/1935kb/hls/index.m3u8',
-  'https://cdn6.hnzycdn.com:65/20220712/xb2EScnz/1672kb/hls/index.m3u8',
-  'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
-  'https://ukzyvod3.ukubf5.com/20220410/yAU8vUFg/2000kb/hls/index.m3u8',
-  'https://media.w3.org/2010/05/sintel/trailer.mp4'
-] as const
-
-const querySrc = new URLSearchParams(window.location.search).get('src')
-let src = querySrc || dataSrcs[0]
-let currentDataSrcId = querySrc ? -1 : 0
-
-const quailitySrcs = [
-  'https://media.w3.org/2010/05/sintel/trailer.mp4',
-  'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
-] as const
+let src = VIDEO_LIST[0]!
+let currentDataSrcId = 0
 
 const player = Player.make('#player', {
   // muted: true,
@@ -84,28 +58,9 @@ const player = Player.make('#player', {
         src:
           'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt' ||
           THUMB,
-        base: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/',
         isVTT: true,
         number: 100
       },
-      highlight: [
-        {
-          time: 12,
-          text: '谁でもいいはずなのに'
-        },
-        {
-          time: 34,
-          text: '夏の想い出がまわる'
-        },
-        {
-          time: 58,
-          text: 'こんなとこにあるはずもないのに'
-        },
-        {
-          time: 88,
-          text: '－－终わり－－'
-        }
-      ],
       icons: {
         progressIndicator: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
         <path d="M16.118 3.667h.382a3.667 3.667 0 013.667 3.667v7.333a3.667 3.667 0 01-3.667 3.667h-11a3.667 3.667 0 01-3.667-3.667V7.333A3.667 3.667 0 015.5 3.666h.382L4.95 2.053a1.1 1.1 0 011.906-1.1l1.567 2.714h5.156L15.146.953a1.101 1.101 0 011.906 1.1l-.934 1.614z"/>
@@ -129,7 +84,7 @@ const player = Player.make('#player', {
     //   autoplay: false,
     //   image:
     //     'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
-    //   // video: dataSrcs[1],
+    //   // video: VIDEO_LIST[1],
     //   duration: 10,
     //   skipDuration: 5,
     //   target: 'https://oplayer.vercel.app',
@@ -138,27 +93,11 @@ const player = Player.make('#player', {
   ])
   .create()
 
-player.plugins.ui?.menu.register({
+player.plugins.ui.highlight(highlight)
+
+player.plugins.ui?.menu.register(<MenuBar>{
   name: 'FORMAT',
-  children: [
-    {
-      name: 'MP4',
-      default: true,
-      value: MP4
-    },
-    {
-      name: 'HLS',
-      value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
-    },
-    {
-      name: 'DASH',
-      value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
-    },
-    {
-      name: 'FLV',
-      value: flv
-    }
-  ],
+  children: FORMAT_MENU,
   onChange({ value, name }, elm) {
     src = value
     elm.innerText = name
@@ -203,8 +142,8 @@ const actions = () => html`<p style="display:flex;">
     <button
       @click=${() => {
         src =
-          dataSrcs[
-            currentDataSrcId + 1 >= dataSrcs.length
+          VIDEO_LIST[
+            currentDataSrcId + 1 >= VIDEO_LIST.length
               ? (currentDataSrcId = 0)
               : (currentDataSrcId += 1)
           ]!
@@ -249,4 +188,5 @@ player.on((e: PlayerEvent) => {
 
 render(meta(), document.getElementById('meta')!)
 
+//@ts-ignore
 window.p = player

@@ -9,7 +9,7 @@ export type Options = {
   /**
    * @default 'dom'
    */
-  engine: 'canvas' | 'dom'
+  engine?: 'canvas' | 'dom'
   /**
    * @default true
    */
