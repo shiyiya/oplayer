@@ -11,7 +11,7 @@ export const isiPhone = /iPhone/gi.test(globalThis.navigator?.userAgent)
 export const isIOS = isiPhone || isiPad
 
 // https://stackoverflow.com/questions/3007480/determine-if-user-navigated-from-mobile-safari
-export const isMobileSafari = isIOS && !/CriOS/i.test(globalThis.navigator?.userAgent)
+// export const isMobileSafari = isIOS && !/CriOS/i.test(globalThis.navigator?.userAgent)
 
 export const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(

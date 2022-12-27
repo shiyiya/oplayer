@@ -1,8 +1,9 @@
 import type Player from '@oplayer/core'
-import { isMobile, isMobileSafari } from '@oplayer/core'
+import { isMobile, isIOS } from '@oplayer/core'
 import { loading } from '../style'
 
-const canplay = isMobileSafari ? 'loadedmetadata' : 'canplay'
+//ios 可能不触发 canplay
+const canplay = isIOS ? 'loadedmetadata' : 'canplay'
 
 const loadingListener = (player: Player) => {
   const add = () => player.$root.classList.add(loading)

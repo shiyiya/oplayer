@@ -3,7 +3,7 @@ import EventEmitter from './event'
 import I18n from './i18n'
 import { isPlainObject } from './utils'
 import $ from './utils/dom'
-import { isIOS, isMobileSafari, isQQBrowser } from './utils/platform'
+import { isIOS, isQQBrowser } from './utils/platform'
 
 import type {
   PlayerEvent,
@@ -414,7 +414,7 @@ export class Player {
         const shouldPlay = keepPlaying && isPlaying
         const isPreloadNone = this.options.preload == 'none'
         if (isPreloadNone && keepTime) this.$video.load()
-        canplay = isPreloadNone ? 'loadstart' : isMobileSafari ? 'loadedmetadata' : 'canplay'
+        canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
         canplayHandler = () => {
           this.off('error', errorHandler)
           if (keepTime) this.seek(currentTime)
