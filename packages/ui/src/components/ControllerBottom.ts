@@ -109,6 +109,12 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     )
   }
 
+  if (config.pictureInPicture) {
+    player.on(['enterpictureinpicture', 'leavepictureinpicture'], () =>
+      switcher($pip, player.isInPip)
+    )
+  }
+
   player.on(['play', 'pause', 'videosourcechange'], () => {
     $play.setAttribute('aria-label', player.isPlaying ? pauseLabel : playLabel)
     switcher($play, player.isPlaying)
@@ -143,7 +149,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         }
         break
       case pipLabel:
-        switcher($pip, !player.isInPip)
         return player.togglePip()
       case fullscreenLabel:
         if (player.isFullscreenEnabled) {

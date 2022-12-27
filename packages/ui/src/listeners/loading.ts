@@ -1,6 +1,8 @@
 import type Player from '@oplayer/core'
-import { isMobile } from '@oplayer/core'
+import { isMobile, isMobileSafari } from '@oplayer/core'
 import { loading } from '../style'
+
+const canplay = isMobileSafari ? 'loadedmetadata' : 'canplay'
 
 const loadingListener = (player: Player) => {
   const add = () => player.$root.classList.add(loading)
@@ -25,7 +27,7 @@ const loadingListener = (player: Player) => {
     detectLoading(player, add, remove)
   } else {
     player.on(['waiting', 'seeking'], add)
-    player.on(['loadedmetadata', 'canplay', 'pause', 'seeked', 'error'], remove)
+    player.on([canplay, 'pause', 'seeked', 'error'], remove)
   }
 }
 
@@ -46,7 +48,7 @@ const detectLoading = (player: Player, add: any, remove: any) => {
   player.on('play', () => (enable = true))
   player.on('pause', () => ((enable = false), remove()))
 
-  player.on('loadedmetadata', remove)
+  player.on(canplay, remove)
 
   player.on(['videosourcechange', 'videoqualitychange'], () => {
     enable = false

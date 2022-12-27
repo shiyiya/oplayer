@@ -3,7 +3,7 @@ import EventEmitter from './event'
 import I18n from './i18n'
 import { isPlainObject } from './utils'
 import $ from './utils/dom'
-import { isIOS, isQQBrowser } from './utils/platform'
+import { isIOS, isMobileSafari, isQQBrowser } from './utils/platform'
 
 import type {
   PlayerEvent,
@@ -400,24 +400,30 @@ export class Player {
     const { isPlaying, currentTime } = this
     const { keepPlaying, keepTime } = options
     this._resetStatus()
+
     return (this._playPromise = new Promise((resolve, reject) => {
-      this.load(source)
-        .then(() => {
-          const shouldPlay = keepPlaying && isPlaying
-          const isPreloadNone = this.options.preload == 'none'
-          if (isPreloadNone && keepTime) this.$video.load()
-          this.on(
-            isPreloadNone ? 'loadstart' : 'canplay',
-            () => {
-              if (keepTime) this.seek(currentTime)
-              if (shouldPlay) this.$video.play()
-              this.isSourceChanging = false
-              resolve()
-            },
-            { once: true }
-          )
-        })
-        .catch(reject)
+      let canplayHandler: any
+      let canplay = 'canplay'
+      const errorHandler = () => {
+        this.isSourceChanging = false
+        canplayHandler && this.off(canplay, canplayHandler)
+        reject()
+      }
+      this.on('error', errorHandler, { once: true })
+      this.load(source).then(() => {
+        const shouldPlay = keepPlaying && isPlaying
+        const isPreloadNone = this.options.preload == 'none'
+        if (isPreloadNone && keepTime) this.$video.load()
+        canplay = isPreloadNone ? 'loadstart' : isMobileSafari ? 'loadedmetadata' : 'canplay'
+        canplayHandler = () => {
+          this.off('error', errorHandler)
+          if (keepTime) this.seek(currentTime)
+          if (shouldPlay) this.$video.play()
+          this.isSourceChanging = false
+          resolve()
+        }
+        this.on(canplay, canplayHandler, { once: true })
+      })
     }))
   }
 

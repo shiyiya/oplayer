@@ -15,7 +15,7 @@ import { chromecast } from '@oplayer/plugins'
 import DANMAKU from '../../website/static/danmaku.xml'
 import THUMB from '../../website/static/thumbnails.jpg'
 import POSTER from '../../website/static/poster.png'
-// import SRT from '../../website/static/君の名は.srt'
+import SRT from '../../website/static/君の名は.srt'
 // import SUPER_DANMAKU from '../../website/static/天气之子.xml'
 
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
@@ -47,13 +47,13 @@ const player = Player.make('#player', {
       theme: { primaryColor: '#00b2ff' },
       highlight: { color: '#000' },
       subtitle: {
-        // source: [
-        //   {
-        //     name: 'Default',
-        //     default: true,
-        //     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-        //   }
-        // ]
+        source: [
+          {
+            name: 'Default',
+            default: true,
+            src: SRT
+          }
+        ]
       },
       thumbnails: {
         src:
