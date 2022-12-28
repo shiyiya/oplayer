@@ -19,14 +19,28 @@ export const maskCls = $.css({
 
 const render = (player: Player, el: HTMLElement, toggleController: Function) => {
   const $dom = $.create(`div.${maskCls}`)
+  let count = 0
+  let timeoutId: number
 
   $dom.addEventListener('click', () => {
     if (hasClass(player.$root, settingShown)) return
-    if (isMobile) {
-      toggleController()
-    } else {
-      player.togglePlay()
+
+    if (count == 0) {
+      if (isMobile) {
+        toggleController()
+      } else {
+        player.togglePlay()
+      }
     }
+
+    count += 1
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = window.setTimeout(() => {
+      if (count == 2) {
+        player.toggleFullScreen()
+      }
+      count = 0
+    }, 200)
   })
 
   $.render($dom, el)
