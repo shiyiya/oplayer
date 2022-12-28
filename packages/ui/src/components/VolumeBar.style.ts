@@ -2,9 +2,10 @@ import { $ } from '@oplayer/core'
 
 export const wrap = $.css`
   width: 2.65em;
+  display: flex;
   height: 7.65em;
-  padding-bottom: 3px;
-  box-sizing: content-box;
+  box-sizing: border-box;
+  flex-direction: column;
 `
 
 export const volumeValue = $.css(`
@@ -17,11 +18,12 @@ export const volumeValue = $.css(`
 `)
 
 export const track = $.css(`
-  position:relative;
+  position: relative;
   display: flex;
   justify-content: center;
-  height: 4.8em;
+  flex: 1;
   cursor: pointer;
+  padding: 5px 0 14px;
 `)
 
 export const sliderWrap = $.css(`
