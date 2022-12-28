@@ -38,9 +38,6 @@ export class Player {
   // hls|dash|etc. instance
   loader: any = null
 
-  //https://developer.chrome.com/blog/play-request-was-interrupted/
-  _playPromise: Promise<void> | undefined
-
   constructor(el: HTMLElement | string, options?: PlayerOptions | string) {
     this.container = typeof el == 'string' ? document.querySelector(el)! : el
     if (!this.container)
@@ -247,15 +244,11 @@ export class Player {
       }
     }
 
-    return (this._playPromise = this.$video.play())
+    return this.$video.play()
   }
 
   pause() {
-    if (this._playPromise?.then) {
-      return this._playPromise.then(() => this.$video.pause())
-    } else {
-      return this.$video.pause()
-    }
+    return this.$video.pause()
   }
 
   togglePlay() {
@@ -369,7 +362,6 @@ export class Player {
   }
 
   _resetStatus() {
-    this._playPromise = undefined
     this.hasError = false
     this.isCustomLoader = false
     this.$video.pause()
@@ -401,7 +393,7 @@ export class Player {
     const { keepPlaying, keepTime } = options
     this._resetStatus()
 
-    return (this._playPromise = new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       let canplayHandler: any
       let canplay = 'canplay'
       const errorHandler = () => {
@@ -410,21 +402,23 @@ export class Player {
         reject()
       }
       this.on('error', errorHandler, { once: true })
-      this.load(source).then(() => {
-        const shouldPlay = keepPlaying && isPlaying
-        const isPreloadNone = this.options.preload == 'none'
-        if (isPreloadNone && keepTime) this.$video.load()
-        canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
-        canplayHandler = () => {
-          this.off('error', errorHandler)
-          if (keepTime) this.seek(currentTime)
-          if (shouldPlay) this.$video.play()
-          this.isSourceChanging = false
-          resolve()
-        }
-        this.on(canplay, canplayHandler, { once: true })
-      })
-    }))
+      this.load(source)
+        .then(() => {
+          const shouldPlay = keepPlaying && isPlaying
+          const isPreloadNone = this.options.preload == 'none'
+          if (isPreloadNone && keepTime) this.$video.load()
+          canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
+          canplayHandler = () => {
+            this.off('error', errorHandler)
+            if (keepTime) this.seek(currentTime)
+            if (shouldPlay) this.$video.play()
+            this.isSourceChanging = false
+            resolve()
+          }
+          this.on(canplay, canplayHandler, { once: true })
+        })
+        .catch(errorHandler)
+    })
   }
 
   destroy() {
