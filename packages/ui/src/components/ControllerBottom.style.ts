@@ -24,8 +24,8 @@ export const dropdown = $.css({
   display: 'flex',
 
   [`& .${expand}`]: {
-    // visibility: 'hidden',
-    // opacity: 0,
+    visibility: 'hidden',
+    opacity: 0,
     'background-color': 'var(--shadow-background-color)'
   }
 })
