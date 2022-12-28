@@ -62,7 +62,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
         settings() {
           if (instance.levels.length > 1) {
             return instance.levels.reduce(
-              (pre, level) => {
+              (pre, level, i) => {
                 let name = (level.name || level.height).toString()
                 if (isFinite(+name)) name += 'p'
                 if (options.withBitrate) {
@@ -71,14 +71,14 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
                   const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
                   name += ` (${number}${useMb ? 'm' : 'k'}bps)`
                 }
-                pre.push({ name, default: instance.currentLevel == level.id, value: level.id })
+                pre.push({ name, default: instance.currentLevel == i, value: i })
                 return pre
               },
               [
                 {
-                  name: `${player.locales.get('Auto')}`,
-                  default: true,
-                  value: (instance.currentLevel == -1) as any
+                  name: player.locales.get('Auto'),
+                  default: instance.autoLevelEnabled,
+                  value: -1
                 }
               ] as SettingItem[]
             )
