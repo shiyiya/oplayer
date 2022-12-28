@@ -6,9 +6,9 @@ import { debounce, removeClass } from '../utils'
 const noticeCls = $.css({
   position: 'absolute',
   display: 'none',
-  top: '1em',
-  left: '1em',
-  right: '1em',
+  top: '0.625em',
+  left: '0.625em',
+  right: '0.625em',
   'z-index': 99,
   'margin-top': 'var(--controller-top-height)',
 
