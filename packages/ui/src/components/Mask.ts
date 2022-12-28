@@ -43,12 +43,11 @@ const render = (player: Player, el: HTMLElement, toggleController: Function) => 
     }, 200)
   })
 
-  if (isMobile) {
+  if (isMobile && !player.options.isLive) {
     let touchedTime = 0
     let touchStartPointerX = 0
     let shouldSeekSec = 0
     const rect = player.$root.getBoundingClientRect()
-    $dom.oncontextmenu = () => false
 
     const moving = (e: TouchEvent) => {
       e.preventDefault()
@@ -80,9 +79,11 @@ const render = (player: Player, el: HTMLElement, toggleController: Function) => 
       $dom.addEventListener(
         'touchend',
         () => {
-          id && clearInterval(id)
-          $dom.removeEventListener('touchmove', moving)
-          player.seek(minmax(player.currentTime + shouldSeekSec, [0, player.duration]))
+          if (id) clearInterval(id)
+          if (touchedTime < 1000) $dom.removeEventListener('touchmove', moving)
+          if (shouldSeekSec) {
+            player.seek(minmax(player.currentTime + shouldSeekSec, [0, player.duration]))
+          }
           touchStartPointerX = shouldSeekSec = touchedTime = 0
         },
         { once: true }
