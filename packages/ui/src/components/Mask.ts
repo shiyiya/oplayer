@@ -72,7 +72,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig, toggleControl
         if (config.slideToSeek == 'long-touch' && touchedTime < 1000) {
           $dom.removeEventListener('touchmove', moving)
         }
-        if (shouldSeekSec) {
+        if (shouldSeekSec != 0) {
           player.seek(minmax(player.currentTime + shouldSeekSec, [0, player.duration]))
         }
         touchStartPointerX = shouldSeekSec = touchedTime = 0

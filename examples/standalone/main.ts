@@ -39,7 +39,7 @@ const player = Player.make('#player', {
 })
   .use([
     ui({
-      slideToSeek: 'long-touch',
+      slideToSeek: 'always',
       // speed: [],
       autoFocus: true,
       screenshot: true,
