@@ -44,7 +44,7 @@ const apply = (player: Player, config: UiConfig) => {
 
   if (config.coverButton) renderCoverButton(player, $root)
   const { exp, cls, toggle } = renderController(player, $root, config)
-  renderMask(player, $root, toggle)
+  renderMask(player, $root, config, toggle)
 
   const setting = renderSetting(player, $root, config)
   const menu = renderMenubar(player, $root, config.menu)

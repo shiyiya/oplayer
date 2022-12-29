@@ -113,6 +113,8 @@ export type UiConfig = {
    */
   showControls?: 'always' | 'played'
 
+  slideToSeek?: 'none' | 'always' | 'long-touch'
+
   errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
 
   icons?: {

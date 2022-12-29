@@ -1,6 +1,9 @@
 import type Player from '@oplayer/core'
+import { isIOS } from '@oplayer/core'
 import { isMobile } from '@oplayer/core'
 import { isLoading } from './listeners'
+
+export const canplay = isIOS ? 'loadedmetadata' : 'canplay'
 
 export function padZero(time: number): string {
   return time < 10 ? `0${time}` : `${time}`
