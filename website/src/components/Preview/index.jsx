@@ -7,7 +7,7 @@ import styles from './styles.module.css'
 
 const plugins = [
   ui({
-    theme: { primaryColor: '#6668ab' },
+    showControls: 'played',
     pictureInPicture: true,
     subtitle: {
       source: [

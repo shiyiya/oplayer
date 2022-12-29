@@ -41,10 +41,11 @@ const player = Player.make('#player', {
     ui({
       // speed: [],
       autoFocus: true,
-      pictureInPicture: true,
       screenshot: true,
       settings: ['loop'],
-      theme: { primaryColor: '#00b2ff' },
+      pictureInPicture: true,
+      // showControls: 'played',
+      // theme: { primaryColor: '#00b2ff' },
       highlight: { color: '#000' },
       subtitle: {
         source: [
@@ -106,13 +107,13 @@ player.plugins.ui?.menu.register(<MenuBar>{
       .changeSource({ src: value })
       // .changeQuality({ src: value })
       .then((_) => {
-        player.plugins.ui.subtitle.updateSource([
-          {
-            name: 'Default',
-            default: true,
-            src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
-          }
-        ])
+        // player.plugins.ui.subtitle.updateSource([
+        //   {
+        //     name: 'Default',
+        //     default: true,
+        //     src: 'https://cc.zorores.com/7f/c1/7fc1657015c5ae073e9db2e51ad0f8a0/eng-2.vtt'
+        //   }
+        // ])
       })
   }
 })
