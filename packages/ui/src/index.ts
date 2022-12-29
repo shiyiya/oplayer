@@ -90,7 +90,7 @@ const defaultConfig: UiConfig = {
   settings: ['loop'],
   keyboard: { focused: true },
   speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
-
+  showControls: 'always',
   theme: { primaryColor: '#6668ab' }
 }
 

@@ -12,7 +12,7 @@ const controllerBottom = $.css({
   bottom: 0,
   'z-index': 97,
   padding: '0 1em',
-  transition: 'transform 0.3s ease, padding 0.3s ease',
+  transition: 'transform 0.3s ease, padding 0.3s ease, opacity 0.3s ease',
   '&::before': {
     position: 'absolute',
     content: "''",
@@ -29,6 +29,8 @@ const controllerBottom = $.css({
 })
 
 const CTRL_HIDE_DELAY = 1500
+
+const hidden = $.css(`visibility:hidden;opacity:0;`)
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $dom = $.render($.create(`div.${controllerBottom}`), el)
@@ -50,6 +52,17 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
           }
     }
   })
+
+  if (config.showControls == 'played') {
+    addClass($dom, hidden)
+
+    player.on('error', () => removeClass($dom, hidden))
+    player.on('play', () => removeClass($dom, hidden), { once: true })
+    player.on(['videosourcechange'], () => {
+      addClass($dom, hidden)
+      player.on('play', () => removeClass($dom, hidden), { once: true })
+    })
+  }
 
   const hideCtrl = () => {
     if (

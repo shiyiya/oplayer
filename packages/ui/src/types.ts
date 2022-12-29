@@ -108,6 +108,11 @@ export type UiConfig = {
 
   coverButton?: boolean
 
+  /**
+   * default: always
+   */
+  showControls?: 'always' | 'played'
+
   errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
 
   icons?: {
