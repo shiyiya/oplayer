@@ -9,6 +9,7 @@ const plugins = [
   ui({
     showControls: 'played',
     pictureInPicture: true,
+    slideToSeek: 'always',
     subtitle: {
       source: [
         {

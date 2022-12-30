@@ -1,7 +1,7 @@
 import { $, isMobile } from '@oplayer/core'
 import { root } from './style'
 
-import { Icons, registerKeyboard, registerSpeedSetting } from './functions'
+import { Icons, registerKeyboard, registerSpeedSetting, registerSlide } from './functions'
 import startListening from './listeners'
 
 import renderController from './components/Controller'
@@ -44,12 +44,13 @@ const apply = (player: Player, config: UiConfig) => {
 
   if (config.coverButton) renderCoverButton(player, $root)
   const { exp, cls, toggle } = renderController(player, $root, config)
-  renderMask(player, $root, config, toggle)
+  const $mask = renderMask(player, $root, toggle)
 
   const setting = renderSetting(player, $root, config)
   const menu = renderMenubar(player, $root, config.menu)
   const subtitle = renderSubtitle(player, setting, $root, config.subtitle)
 
+  registerSlide(player, $mask, config)
   registerSpeedSetting(player, config.speed, setting)
   $.render($root, player.$root)
 
@@ -77,7 +78,8 @@ const apply = (player: Player, config: UiConfig) => {
       settingShown,
       controllerHidden,
       root: $root.className,
-      isError: errorCls
+      isError: errorCls,
+      mask: $mask.className
     }
   }
 }

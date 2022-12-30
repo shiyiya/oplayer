@@ -1,9 +1,12 @@
 import type Player from '@oplayer/core'
-import { isIOS } from '@oplayer/core'
-import { isMobile } from '@oplayer/core'
+import { isIOS, isMobile } from '@oplayer/core'
 import { isLoading } from './listeners'
 
 export const canplay = isIOS ? 'loadedmetadata' : 'canplay'
+
+export function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
 
 export function padZero(time: number): string {
   return time < 10 ? `0${time}` : `${time}`
