@@ -3,6 +3,8 @@ import type { PlayerListener, PlayerEvent } from './types'
 export default class EventEmitter {
   events: Record<string, PlayerListener[]> = Object.create(null)
 
+  offQueue: Function[] = []
+
   on(name: string, callback: PlayerListener) {
     if (!this.events[name]) {
       this.events[name] = []
@@ -17,7 +19,20 @@ export default class EventEmitter {
   once(name: string, callback: PlayerListener) {
     const once = (event: PlayerEvent) => {
       callback({ type: name, payload: event.payload })
-      this.off(name, once)
+      /**
+       * 直接移除会修改地址，导致下面 emit 的 foreach 循环变少
+       * eg: 下面只会输出一次hello
+       * const obj = {
+           a: [1, 2, 3],
+            fn() {
+              console.log('hello')
+              obj.a.splice(0, 2)
+          }
+        }
+
+        obj.a.forEach(obj.fn)
+       */
+      this.offQueue.push(() => this.off(name, once))
     }
     this.on(name, once)
   }
@@ -39,12 +54,16 @@ export default class EventEmitter {
   }
 
   emit(name: string, payload: any) {
-    while (this.events[name] && this.events[name]!.length) {
-      this.events[name]!.shift()!({ type: name, payload })
-    }
+    this.events[name]?.forEach((callback) => {
+      callback({ type: name, payload })
+    })
 
-    while (this.events['*'] && this.events['*']!.length) {
-      this.events['*']!.shift()!({ type: name, payload })
+    this.events['*']?.forEach((callback) => {
+      callback({ type: name, payload })
+    })
+
+    while (this.offQueue.length) {
+      this.offQueue.shift()!()
     }
   }
 }

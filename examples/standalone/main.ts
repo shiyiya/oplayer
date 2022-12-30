@@ -28,10 +28,10 @@ const player = Player.make('#player', {
   // muted: true,
   volume: 0.5,
   // isLive: true,
-  // autoplay: true,
+  autoplay: true,
   // preload: 'none',
   source: {
-    src,
+    src: '',
     poster: POSTER,
     title: '君の名は'
   },
@@ -95,6 +95,10 @@ const player = Player.make('#player', {
     // })
   ])
   .create()
+
+setTimeout(() => {
+  player.changeQuality({ src })
+}, 1000)
 
 player.plugins.ui.highlight(highlight)
 
