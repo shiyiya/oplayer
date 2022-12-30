@@ -39,14 +39,12 @@ export default class EventEmitter {
   }
 
   emit(name: string, payload: any) {
-    if (this.events[name]?.length) {
-      this.events[name]!.forEach((callback) => {
-        callback({ type: name, payload })
-      })
+    while (this.events[name] && this.events[name]!.length) {
+      this.events[name]!.shift()!({ type: name, payload })
     }
 
-    this.events['*']?.forEach((callback) => {
-      callback({ type: name, payload })
-    })
+    while (this.events['*'] && this.events['*']!.length) {
+      this.events['*']!.shift()!({ type: name, payload })
+    }
   }
 }

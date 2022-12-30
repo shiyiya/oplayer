@@ -394,30 +394,27 @@ export class Player {
     this._resetStatus()
 
     return new Promise<void>((resolve, reject) => {
-      let canplayHandler: any
-      let canplay = 'canplay'
+      const isPreloadNone = this.options.preload == 'none'
+      let canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
+      const shouldPlay = keepPlaying && isPlaying
       const errorHandler = () => {
         this.isSourceChanging = false
         canplayHandler && this.off(canplay, canplayHandler)
         reject()
       }
       this.on('error', errorHandler, { once: true })
-      this.load(source)
-        .then(() => {
-          const shouldPlay = keepPlaying && isPlaying
-          const isPreloadNone = this.options.preload == 'none'
-          if (isPreloadNone && keepTime) this.$video.load()
-          canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
-          canplayHandler = () => {
-            this.off('error', errorHandler)
-            if (keepTime) this.seek(currentTime)
-            if (shouldPlay) this.$video.play()
-            this.isSourceChanging = false
-            resolve()
-          }
-          this.on(canplay, canplayHandler, { once: true })
-        })
-        .catch(errorHandler)
+
+      const canplayHandler = () => {
+        this.off('error', errorHandler)
+        if (isPreloadNone && keepTime) this.$video.load()
+        if (keepTime) this.seek(currentTime)
+        if (shouldPlay && !this.isPlaying) this.$video.play()
+        this.isSourceChanging = false
+        resolve()
+      }
+      this.on(canplay, canplayHandler, { once: true })
+
+      return this.load(source).catch(errorHandler)
     })
   }
 
