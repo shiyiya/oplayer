@@ -126,7 +126,7 @@ export class Player {
       ] as const
     ).forEach(([target, events]) => {
       events.forEach((eventName) => {
-        this.listeners[eventName] = eventHandler
+        this.listeners[eventName] ??= eventHandler
         target.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
           passive: true
         })
