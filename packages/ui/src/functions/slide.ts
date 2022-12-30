@@ -18,8 +18,8 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
 
         if (config.slideToSeek == 'always') {
           $dom.addEventListener('touchstart', (e) => {
-            startX = (<TouchEvent>e).changedTouches[0]!.clientX
-            startY = (<TouchEvent>e).changedTouches[0]!.clientY
+            const { clientX, clientY } = e.changedTouches[0]!
+            ;[startX, startY] = [clientX, clientY]
           })
           $dom.addEventListener('touchmove', moving)
           $dom.addEventListener('touchend', end)
@@ -27,7 +27,8 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
 
         if (config.slideToSeek == 'long-touch') {
           $dom.addEventListener('touchstart', (e) => {
-            startX = (<TouchEvent>e).changedTouches[0]!.clientX
+            const { clientX, clientY } = e.changedTouches[0]!
+            ;[startX, startY] = [clientX, clientY]
             touchedTimer = window.setInterval(() => {
               touchedTime += 100
               if (touchedTime >= 1000) {
@@ -44,12 +45,10 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
 
         function moving(e: TouchEvent) {
           e.preventDefault()
-          const x = (<TouchEvent>e).changedTouches[0]!.clientX - rect.left
-          const y = (<TouchEvent>e).changedTouches[0]!.clientX - rect.top
-          const dx = x - startX
-          const dy = startY - y
+          const { clientX, clientY } = e.changedTouches[0]!
+          const [dx, dy] = [clientX - startX, startY - clientY]
+          if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return
 
-          // if (Math.abs(dx) + Math.abs(dy) < 4) return
           const angle = getSlideAngle(dx, dy)
           if (
             (angle >= -45 && angle < 45) ||
