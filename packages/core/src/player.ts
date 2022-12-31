@@ -374,8 +374,10 @@ export class Player {
   _resetStatus() {
     this.hasError = false
     this.isCustomLoader = false
-    this.$video.pause() // Possible failure
-    this.emit('pause')
+    if (this.isPlaying) {
+      this.$video.pause() // Possible failure
+      this.emit('pause')
+    }
     //TODO: Cancel req
     // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }

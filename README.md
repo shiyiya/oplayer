@@ -1,8 +1,8 @@
 # OPlayer
 
-Oh! Another HTML5 video player.
+⚡ Oh! Another HTML5 video player.
 
-[Website](https://oplayer.vercel.app) | [Playground](https://oplayer.vercel.app) | [Plugins](#plugins) | [Discord](https://discord.gg/hzjxYyPbKh) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [国内无法访问点我](https://ohplayer.netlify.app)
+[Website](https://oplayer.vercel.app) | [Playground](https://oplayer.vercel.app) | [Plugins](#plugins) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [国内无法访问点我](https://ohplayer.netlify.app)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
 [![GitHub license](https://img.shields.io/github/license/shiyiya/oplayer?style=flat-square)](https://github.com/shiyiya/oplayer/blob/main/LICENSE)
@@ -10,6 +10,7 @@ Oh! Another HTML5 video player.
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](#support)
+[![Discord](https://img.shields.io/discord/1017615537234264185.svg?label=&logo=discord&logoColor=fff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/hzjxYyPbKh)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1dac4911-935b-43a0-a69d-15c98e2668ed/deploy-status)](https://app.netlify.com/sites/ohplayer/deploys)
 
 ![oplayer](./oplayer.png)
@@ -97,6 +98,7 @@ Player.make('#oplayer', {
 
 - [UPV](https://web.月色真美.life) : free animes no ad
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
+- **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/issues/new)**
 
 ## Support
 
@@ -113,11 +115,3 @@ If you think this is super cool, or useful, and want to donate a little, then yo
 
 This project is helped by [Jetbrains](https://www.jetbrains.com/) with their open source program.
 More information [here](https://jb.gg/OpenSourceSupport)
-
-I use these products:
-
-<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/DataGrip_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/WebStorm_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/CodeWithMe_icon.png" width="50" height="50"> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/Toolbox_icon.png" width="45" height="52">
-
-# FAQ
-
-https://stackoverflow.com/questions/14317179/display-a-video-from-a-blob-javascript/14360868#14360868
