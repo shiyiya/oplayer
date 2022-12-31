@@ -23,7 +23,7 @@ export class Player {
   locales: I18n
   eventEmitter = new EventEmitter()
 
-  pluginsFactory: PlayerPlugin[] = []
+  _pluginsFactory: PlayerPlugin[] = []
   plugins: /* ReturnTypePlugins<Plugins> &*/ any = {} as any // TODO: type not work
 
   $root: HTMLElement
@@ -71,7 +71,7 @@ export class Player {
 
   use(plugins: PlayerPlugin[]) {
     plugins.forEach((plugin) => {
-      this.pluginsFactory.push(plugin)
+      this._pluginsFactory.push(plugin)
     })
     return this
   }
@@ -126,10 +126,12 @@ export class Player {
       ] as const
     ).forEach(([target, events]) => {
       events.forEach((eventName) => {
-        this.listeners[eventName] ??= eventHandler
-        target.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
-          passive: true
-        })
+        if (!this.listeners[eventName]) {
+          this.listeners[eventName] = eventHandler
+          target.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
+            passive: true
+          })
+        }
       })
     })
   }
@@ -177,10 +179,14 @@ export class Player {
   }
 
   async load(source: Source) {
-    for await (const plugin of this.pluginsFactory) {
+    this.loader = null
+    for await (const plugin of this._pluginsFactory) {
       if (plugin.load) {
-        const match = await plugin.load(this, source, { loader: this.isCustomLoader })
-        if (match && !this.isCustomLoader) this.isCustomLoader = true
+        const returned = await plugin.load(this, source, { loader: this.isCustomLoader })
+        if (returned != false && !this.isCustomLoader) {
+          this.isCustomLoader = true
+          this.loader = returned
+        }
       }
     }
     if (!this.isCustomLoader) {
@@ -189,15 +195,19 @@ export class Player {
   }
 
   applyPlugins() {
-    this.pluginsFactory.forEach((factory) => {
-      if (factory.apply) {
-        const returnValues = factory.apply(this)
-        if (returnValues) {
-          const key = factory.key || factory.name
-          if (isPlainObject(returnValues)) {
-            this.plugins[key] = Object.assign({}, this.plugins[key], returnValues)
+    this._pluginsFactory.forEach(({ name, key, apply, version }) => {
+      if (apply) {
+        const returned = apply(this)
+        if (returned) {
+          const _key = key || name
+          if (isPlainObject(returned)) {
+            this.plugins[_key] = Object.assign({ name, key, version }, this.plugins[_key], returned)
           } else {
-            this.plugins[key] = returnValues
+            this.plugins[_key] = Object.assign(returned, this.plugins[_key], {
+              _name: name,
+              key,
+              version
+            })
           }
         }
       }
@@ -397,10 +407,10 @@ export class Player {
       const isPreloadNone = this.options.preload == 'none'
       let canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
       const shouldPlay = keepPlaying && isPlaying
-      const errorHandler = () => {
+      const errorHandler = (e: any) => {
         this.isSourceChanging = false
         canplayHandler && this.off(canplay, canplayHandler)
-        reject()
+        reject(e)
       }
       this.on('error', errorHandler, { once: true })
 

@@ -206,7 +206,6 @@ const plugin = ({
         removeSetting(player)
         instance.destroy()
         instance = null
-        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -218,7 +217,6 @@ const plugin = ({
       instance = imported.MediaPlayer().create()
       if (config) instance.updateSettings(config)
       instance.initialize(player.$video, source.src, player.$video.autoplay)
-      player.loader = instance
 
       if (!player.isNativeUI && player.plugins.ui?.setting) {
         generateSetting(player, instance, {
@@ -236,7 +234,7 @@ const plugin = ({
         player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
       })
 
-      return true
+      return instance
     },
     apply: (player) => {
       player.on('destroy', () => {

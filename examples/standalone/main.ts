@@ -28,7 +28,7 @@ const player = Player.make('#player', {
   // muted: true,
   volume: 0.5,
   // isLive: true,
-  autoplay: true,
+  // autoplay: true,
   // preload: 'none',
   source: {
     src: '',
@@ -40,9 +40,10 @@ const player = Player.make('#player', {
   .use([
     ui({
       slideToSeek: 'always',
+      // autoFocus: true,
+      keyboard: { global: true },
       // speed: [],
-      autoFocus: true,
-      screenshot: true,
+      // screenshot: true,
       settings: ['loop'],
       pictureInPicture: true,
       // showControls: 'played',
@@ -97,10 +98,10 @@ const player = Player.make('#player', {
   .create()
 
 setTimeout(() => {
-  player.changeQuality({ src })
+  player.changeQuality({ src, poster: POSTER })
 }, 1000)
 
-player.plugins.ui.highlight(highlight)
+player.plugins.ui?.highlight(highlight)
 
 player.plugins.ui?.menu.register(<MenuBar>{
   name: 'FORMAT',
@@ -196,4 +197,20 @@ player.on((e: PlayerEvent) => {
 render(meta(), document.getElementById('meta')!)
 
 //@ts-ignore
-window.p = player
+window.player = player
+
+player.on('fullscreenchange', () => {
+  if (player.isFullScreen) {
+    if (player.$video.videoWidth > player.$video.videoHeight) {
+      player.$video.style.transform = 'rotate(90deg)'
+      player.$root.querySelector<HTMLDivElement>(
+        `.${player.plugins.ui?.cls.root}`
+      )!.style.transform = 'rotate(90deg)'
+    }
+    //todo：detect mobile orientation
+  } else {
+    player.$video.style.transform = 'none'
+    player.$root.querySelector<HTMLDivElement>(`.${player.plugins.ui?.cls.root}`)!.style.transform =
+      'none'
+  }
+})

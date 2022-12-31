@@ -39,7 +39,7 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
 
   return (
     (source.format === 'auto' || typeof source.format === 'undefined') &&
-    /m3u8|mpd(#|\?|$)/i.test(source.src)
+    (/m3u8(#|\?|$)/i.test(source.src) || /.mpd(#|\?|$)/i.test(source.src))
   )
 }
 
@@ -66,7 +66,6 @@ const plugin = ({
         instance.unload()
         instance.destroy()
         instance = null
-        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -83,7 +82,6 @@ const plugin = ({
       if (!imported.Player.isBrowserSupported()) return false
 
       instance = new imported.Player(player.$video)
-      player.loader = instance
 
       if (ui && !instanceOverlay) {
         instanceOverlay = new imported.ui.Overlay(instance, player.$root, player.$video)
@@ -98,7 +96,7 @@ const plugin = ({
         }
       })
 
-      return true
+      return instance
     },
     apply: (player) => {
       player.on('destroy', () => {

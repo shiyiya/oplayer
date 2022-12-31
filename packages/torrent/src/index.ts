@@ -28,7 +28,6 @@ const torrentPlugin = ({
         client?.remove(source.src)
         client?.destroy()
         $video.preload = prePreload
-        player.loader = null
         return false
       }
 
@@ -36,7 +35,6 @@ const torrentPlugin = ({
 
       prePreload = $video.preload
       client = new webtorrent(config)
-      player.loader = client
 
       $video.preload = 'metadata'
       client.add(source.src, (torrent: any) => {
@@ -44,7 +42,7 @@ const torrentPlugin = ({
         file.renderTo($video, { autoplay: $video.autoplay, controls: false })
       })
 
-      return true
+      return client
     },
     apply: ({ on }) => {
       on('destroy', () => {

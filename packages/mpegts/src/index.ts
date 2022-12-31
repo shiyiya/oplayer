@@ -34,7 +34,6 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
       if (instance) {
         instance.destroy()
         instance = null
-        player.loader = null
       }
 
       if (options.loader || !isMatch) return false
@@ -55,11 +54,10 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
         },
         mpegtsConfig
       )
-      player.loader = instance
       instance.attachMediaElement(player.$video)
       instance.load()
 
-      return true
+      return instance
     },
     apply: (player) => {
       player.on('destroy', () => {

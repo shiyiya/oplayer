@@ -45,7 +45,11 @@ export type PlayerPlugin = {
   key?: string
   version?: string
   apply: (player: Player) => any
-  load?: (player: Player, src: Source, options: { loader: boolean }) => boolean | Promise<boolean>
+  load?: (
+    player: Player,
+    src: Source,
+    options: { loader: boolean }
+  ) => boolean | Promise<false | any>
 }
 
 export type DefaultPlayerEvent = typeof EVENTS[number] | typeof EVENTS[number][]
