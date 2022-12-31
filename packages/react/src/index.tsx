@@ -11,7 +11,7 @@ export interface ReactOPlayerProps extends PlayerOptions {
 }
 
 const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | null>) => {
-  const { playing, duration = 0, aspectRatio = 9 / 16, plugins, onEvent, ...rest } = props
+  const { playing, duration = 0, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
   const isInitialMount = useRef(true)
 
   const player = useRef<Player | null>(null)
@@ -19,15 +19,9 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
 
   const onRefChange = useCallback((node: HTMLDivElement) => {
     if (node !== null) {
-      const instance = Player.make(node, rest)
-        .use(plugins || ([] as any))
-        .create()
-
-      player.current = instance
-      instance.seek(duration / 1000)
-      if (onEvent) {
-        instance!.on(onEvent)
-      }
+      player.current = Player.make(node, rest).use(plugins).create()
+      player.current.seek(duration / 1000)
+      if (onEvent) player.current.on(onEvent)
     }
   }, [])
 
@@ -42,9 +36,8 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
 
   useEffect(() => {
     if (isInitialMount.current) return
-    if (preSource?.src !== rest.source?.src) {
-      player.current?.changeSource(rest.source!)
-      player.current?.setPlaybackRate(rest.playbackRate || 1)
+    if (rest.source?.src && preSource?.src !== rest.source.src) {
+      player.current?.changeSource(rest.source)
     }
     player.current?.setPoster(rest.source?.poster || '')
   }, [rest.source])
