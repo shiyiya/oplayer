@@ -374,7 +374,8 @@ export class Player {
   _resetStatus() {
     this.hasError = false
     this.isCustomLoader = false
-    this.$video.pause()
+    this.$video.pause() // Possible failure
+    this.emit('pause')
     //TODO: Cancel req
     // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }
@@ -399,7 +400,7 @@ export class Player {
   }
 
   _loader(source: Source, options: { keepPlaying: boolean; keepTime?: boolean }) {
-    const { isPlaying, currentTime } = this
+    const { isPlaying, currentTime, volume, playbackRate } = this
     const { keepPlaying, keepTime } = options
     this._resetStatus()
 
@@ -416,6 +417,8 @@ export class Player {
 
       const canplayHandler = () => {
         this.off('error', errorHandler)
+        this.setVolume(volume)
+        this.setPlaybackRate(playbackRate)
         if (isPreloadNone && keepTime) this.$video.load()
         if (keepTime) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
