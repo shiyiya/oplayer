@@ -339,7 +339,9 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
       })
     })
 
-    const index = [config.pictureInPicture, config.fullscreen].filter((it) => Boolean(it)).length
+    const index = [config.pictureInPicture && player.isPipEnabled, config.fullscreen].filter((it) =>
+      Boolean(it)
+    ).length
     const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
     parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
   }
