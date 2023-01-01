@@ -34,7 +34,7 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
               if (touchedTime >= 1000) {
                 clearInterval(touchedTimer)
                 //左右滑动可以调整进度
-                player.emit('notice', { text: 'slid left or right to seek' })
+                player.emit('notice', { text: 'slid left or right to seek', pos: 'center' })
                 $dom.addEventListener('touchmove', moving)
               }
             }, 100)
@@ -60,7 +60,8 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
             player.emit('notice', {
               text: `${formatTime(
                 clamp(player.currentTime + shouldSeekSec, 0, player.duration)
-              )} / ${formatTime(player.duration)}`
+              )} / ${formatTime(player.duration)}`,
+              pos: 'center'
             })
           }
         }

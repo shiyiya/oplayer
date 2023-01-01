@@ -1,6 +1,5 @@
 import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
-import { controllerHidden } from '../style'
 import { debounce, removeClass } from '../utils'
 
 const noticeCls = $.css({
@@ -9,10 +8,10 @@ const noticeCls = $.css({
   top: '0.625em',
   left: '0.625em',
   right: '0.625em',
-  'z-index': 99,
-  'margin-top': 'var(--controller-top-height)',
+  'z-index': 99
+  // 'margin-top': 'var(--controller-top-height)',
 
-  [`@global .${controllerHidden} &`]: { 'margin-top': 0 }
+  // [`@global .${controllerHidden} &`]: { 'margin-top': 0 }
 })
 
 const noticeTextCls = $.css(`
@@ -78,7 +77,7 @@ const render = (player: Player, el: HTMLElement) => {
     delayHide()
   }
 
-  player.on('notice', ({ payload }) => show(payload.text))
+  player.on('notice', ({ payload }) => show(payload.text, payload.pos))
 
   $.render($dom, el)
 
