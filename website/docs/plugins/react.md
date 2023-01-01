@@ -6,21 +6,21 @@ title: oplayer-plugin-react
 
 **注意：不需要重复创建 Player， 播放器大部分内容都支持动态加载**
 
-```tsx
-<!-- 这样会不断创建、销毁播放器 -->
-{loading? <Player src=""> :null}
+```jsx
+function BadExample() {
+  return loading ? <Player src="" /> : null
+}
 
-<!-- 加载时传递`""` -->
-<Player src="">
+function GoodExample() {
+  useEffect(() => {
+    player.current?.changeSource(source)
+  }, [source])
 
-<!-- 加载完成后更改 -->
-useEffect(()=>{
-  player.current?.changeSource(source)
-},[source])
-
+  return <Player src="" />
+}
 ```
 
-## Example ( from [web.月色真美.life](web.月色真美.life) )
+## Example ( from [web.月色真美.life](//web.月色真美.life) )
 
 ```tsx
 import type { PlayerEvent, Player, PlayerOptions } from '@oplayer/core'
@@ -76,3 +76,41 @@ const OPlayer = React.forwardRef(
 export default OPlayer
 ```
 
+```tsx
+// use in page
+function playPage() {
+  const [source, setSource] = useState<any>()
+
+  useEffect(() => {
+    player.current!.isSourceChanging = true
+    player.current!.emit('videosourcechange')
+    fetch(`xxxx`).then((it) => {
+      setSource(it)
+    })
+    //change episode
+  }, [lastEpisode])
+
+  return (
+    <React.Fragment>
+      {/* any yours dom  */}
+
+      {useMemo(() => {
+        return (
+          <ReactPlayer
+            ref={player}
+            autoplay={true}
+            src={source?.url}
+            onEvent={onEvent}
+            duration={lastDuration}
+            isLive={id == 'iptv'}
+            format={id == 'iptv' ? 'm3u8' : 'auto'}
+            poster={state.image || state.anime?.coverImage}
+          />
+        )
+      }, [source])}
+
+      {/* any yours dom  */}
+    </React.Fragment>
+  )
+}
+```
