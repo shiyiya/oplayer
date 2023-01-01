@@ -198,19 +198,3 @@ render(meta(), document.getElementById('meta')!)
 
 //@ts-ignore
 window.player = player
-
-player.on('fullscreenchange', () => {
-  if (player.isFullScreen) {
-    if (player.$video.videoWidth > player.$video.videoHeight) {
-      player.$video.style.transform = 'rotate(90deg)'
-      player.$root.querySelector<HTMLDivElement>(
-        `.${player.plugins.ui?.cls.root}`
-      )!.style.transform = 'rotate(90deg)'
-    }
-    //todo：detect mobile orientation
-  } else {
-    player.$video.style.transform = 'none'
-    player.$root.querySelector<HTMLDivElement>(`.${player.plugins.ui?.cls.root}`)!.style.transform =
-      'none'
-  }
-})

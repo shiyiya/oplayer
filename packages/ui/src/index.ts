@@ -1,7 +1,13 @@
 import { $, isMobile } from '@oplayer/core'
 import { root } from './style'
 
-import { Icons, registerKeyboard, registerSpeedSetting, registerSlide } from './functions'
+import {
+  Icons,
+  registerKeyboard,
+  registerSpeedSetting,
+  registerSlide,
+  registerFullScreenRotation
+} from './functions'
 import startListening from './listeners'
 
 import renderController from './components/Controller'
@@ -52,6 +58,7 @@ const apply = (player: Player, config: UiConfig) => {
 
   registerSlide(player, $mask, config)
   registerSpeedSetting(player, config.speed, setting)
+  registerFullScreenRotation(player, config)
   $.render($root, player.$root)
 
   let keyboard = {}
@@ -89,11 +96,13 @@ const defaultConfig: UiConfig = {
   coverButton: true,
   miniProgressBar: true,
   autoFocus: true,
-  settings: ['loop'],
-  keyboard: { focused: true },
-  speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
+  forceLandscapeOnFullscreen: true,
+
   showControls: 'always',
-  theme: { primaryColor: '#6668ab' }
+  keyboard: { focused: true },
+  settings: ['loop'],
+  theme: { primaryColor: '#6668ab' },
+  speed: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
 }
 
 const snow = (config?: UiConfig): PlayerPlugin => ({

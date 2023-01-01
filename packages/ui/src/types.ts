@@ -109,11 +109,23 @@ export type UiConfig = {
   coverButton?: boolean
 
   /**
-   * default: always
+   * default: 'always'
    */
   showControls?: 'always' | 'played'
 
+  /**
+   * default: 'none'
+   */
   slideToSeek?: 'none' | 'always' | 'long-touch'
+
+  /**
+   * default: true
+   *  Whether or not the device should rotate to landscape mode when the video
+   *  enters fullscreen.  Note that this behavior is based on an experimental
+   *  browser API, and may not work on all platforms.
+   *  Defaults to true.
+   */
+  forceLandscapeOnFullscreen?: boolean
 
   errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
 

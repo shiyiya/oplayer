@@ -304,11 +304,12 @@ export class Player {
     this.$video.loop = loop
   }
 
-  enterFullscreen() {
+  async enterFullscreen() {
+    if (this.isInPip) await this.exitFullscreen()
     if (isIOS) {
-      return (this.$video as any).webkitEnterFullscreen()
+      ;(this.$video as any).webkitEnterFullscreen()
     } else {
-      return this._requestFullscreen.call(this.$root, { navigationUI: 'hide' })
+      this._requestFullscreen.call(this.$root, { navigationUI: 'hide' })
     }
   }
 
