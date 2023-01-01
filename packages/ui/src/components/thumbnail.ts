@@ -8,6 +8,8 @@ export const thumbnailCls = $.css(`
   left: 0;
   bottom: 12px;
   pointer-events: none;
+  transform: translateX(-50%);
+  background-position-y: center;
   border-radius: 3px;
   display: none;`)
 
