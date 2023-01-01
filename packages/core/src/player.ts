@@ -305,7 +305,7 @@ export class Player {
   }
 
   async enterFullscreen() {
-    if (this.isInPip) await this.exitFullscreen()
+    if (this.isInPip) await this.exitPip()
     if (isIOS) {
       ;(this.$video as any).webkitEnterFullscreen()
     } else {
