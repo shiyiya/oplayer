@@ -20,7 +20,6 @@ const loadingListener = (player: Player) => {
   })
 
   player.on(['videoqualitychange', 'videosourcechange'], add)
-  player.on(['videoqualitychanged', 'videosourcechanged'], remove)
 
   if (isMobile) {
     detectLoading(player, add, remove)

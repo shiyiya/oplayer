@@ -389,8 +389,10 @@ export class Player {
     this.isSourceChanging = true
     this.emit('videoqualitychange', source)
 
-    return this._loader(source, { keepPlaying: true, keepTime: true }).then((source) => {
-      if (Boolean(source)) this.emit('videoqualitychanged', source)
+    return this._loader(source, {
+      keepPlaying: true,
+      keepTime: true,
+      event: 'videoqualitychanged'
     })
   }
 
@@ -398,12 +400,16 @@ export class Player {
     this.isSourceChanging = true
     this.emit('videosourcechange', source)
 
-    return this._loader(source, { keepPlaying }).then((source) => {
-      if (Boolean(source)) this.emit('videosourcechanged', source)
+    return this._loader(source, {
+      keepPlaying,
+      event: 'videosourcechanged'
     })
   }
 
-  _loader(source: Source | Promise<Source>, options: { keepPlaying: boolean; keepTime?: boolean }) {
+  _loader(
+    source: Source | Promise<Source>,
+    options: { keepPlaying: boolean; event: string; keepTime?: boolean }
+  ) {
     const { isPlaying, currentTime, volume, playbackRate } = this
     const { keepPlaying, keepTime } = options
     this._resetStatus()
@@ -438,6 +444,10 @@ export class Player {
           return source
         })
         .then((source) => this.load(source))
+        .then((source) => {
+          this.isSourceChanging = false
+          this.emit(options.event, source)
+        })
         .catch(errorHandler)
     })
   }
