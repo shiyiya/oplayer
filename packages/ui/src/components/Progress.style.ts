@@ -1,4 +1,5 @@
 import { $, isMobile } from '@oplayer/core'
+import { controllerHidden } from '../style'
 import { thumbnailCls } from './thumbnail'
 import { vttThumbnailsCls } from './vtt-thumbnails'
 
@@ -25,7 +26,7 @@ export const dot = $.css({
     top: 'calc(-0.7em + 2px)',
     left: '-0.7em',
     bottom: '0',
-    transform: 'scale(0)',
+    transform: isMobile ? 'none' : 'scale(0)',
     transition: 'transform 0.3s ease',
     'z-index': '1'
   },
@@ -59,23 +60,34 @@ export const hit = $.css({
 
 export const progressDragging = $.css('/* progressDragging */')
 
-export const progress = $.css({
-  position: 'relative',
-  'box-sizing': 'border-box',
-  padding: '6px 0px 4px',
-  cursor: 'pointer',
-  width: '100%',
-  'font-size': '0.75em',
-
-  [`&.${progressDragging} .${dot} > * ${!isMobile ? `,&:hover .${dot} > *` : ''}`]: {
-    transform: 'scale(1)'
-  },
-
-  [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}, &.${progressDragging} .${vttThumbnailsCls}`]:
+export const progress = $.css(
+  Object.assign(
     {
-      display: 'block'
-    }
-})
+      position: 'relative',
+      'box-sizing': 'border-box',
+      padding: '6px 0px 4px',
+      cursor: 'pointer',
+      width: '100%',
+      'font-size': '0.75em',
+
+      [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}, &.${progressDragging} .${vttThumbnailsCls}`]:
+        {
+          display: 'block'
+        }
+    },
+    isMobile
+      ? {
+          [`@global .${controllerHidden} .${dot} > *`]: {
+            transform: 'scale(0)'
+          }
+        }
+      : {
+          [`&.${progressDragging} .${dot} > *, &:hover .${dot} > *`]: {
+            transform: 'scale(1)'
+          }
+        }
+  )
+)
 
 export const progressInner = $.css({
   position: 'relative',
