@@ -196,19 +196,21 @@ const plugin = ({
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: MediaPlayerClass | null
 
+  function tryDestroy(player: Player) {
+    if (instance) {
+      removeSetting(player)
+      instance.destroy()
+      instance = null
+    }
+  }
+
   return {
     name: PLUGIN_NAME,
     key: 'dash',
     load: async (player, source, options) => {
-      const isMatch = matcher(player.$video, source)
+      tryDestroy(player)
 
-      if (instance) {
-        removeSetting(player)
-        instance.destroy()
-        instance = null
-      }
-
-      if (options.loader || !isMatch) return false
+      if (options.loader || !matcher(player.$video, source)) return false
 
       imported ??= (await import('dashjs')).default
 
@@ -238,8 +240,7 @@ const plugin = ({
     },
     apply: (player) => {
       player.on('destroy', () => {
-        instance?.destroy()
-        instance = null
+        tryDestroy(player)
       })
 
       return () => imported

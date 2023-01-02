@@ -213,19 +213,21 @@ const plugin = ({
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: Hls | null
 
+  function tryDestroy(player: Player) {
+    if (instance) {
+      removeSetting(player)
+      instance.destroy()
+      instance = null
+    }
+  }
+
   return {
     name: PLUGIN_NAME,
     key: 'hls',
     load: async (player, source, options) => {
-      const isMatch = matcher(player.$video, source)
+      tryDestroy(player)
 
-      if (instance) {
-        removeSetting(player)
-        instance.destroy()
-        instance = null
-      }
-
-      if (options.loader || !isMatch) return false
+      if (options.loader || !matcher(player.$video, source)) return false
 
       imported ??= (await import('hls.js/dist/hls.min.js')).default
 
@@ -258,21 +260,11 @@ const plugin = ({
         }
       })
 
-      //TODO: remove video onReady Listener
-      // onReady is handled by hls.js
-      // instance.on(
-      //   Hls.Events.MANIFEST_PARSED,
-      //   (event: Events.MANIFEST_PARSED, data: ManifestParsedData) => {
-      //     emit('canplay', { type: event, payload: data })
-      //   }
-      // )
-
       return instance
     },
     apply: (player) => {
       player.on('destroy', () => {
-        instance?.destroy()
-        instance = null
+        tryDestroy(player)
       })
 
       return () => imported

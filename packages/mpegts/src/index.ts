@@ -25,18 +25,20 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
   const { mpegtsConfig, matcher = defaultMatcher } = options || {}
   let instance: Mpegts.Player | null
 
+  function tryDestroy() {
+    if (instance) {
+      instance.destroy()
+      instance = null
+    }
+  }
+
   return {
     name: PLUGIN_NAME,
     key: 'mpegts',
     load: async (player, source, options) => {
-      const isMatch = matcher(player.$video, source)
+      tryDestroy()
 
-      if (instance) {
-        instance.destroy()
-        instance = null
-      }
-
-      if (options.loader || !isMatch) return false
+      if (options.loader || !matcher(player.$video, source)) return false
 
       if (!imported) {
         //@ts-ignore
@@ -60,10 +62,7 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
       return instance
     },
     apply: (player) => {
-      player.on('destroy', () => {
-        instance?.destroy()
-        instance = null as any
-      })
+      player.on('destroy', tryDestroy)
 
       return () => imported
     }
