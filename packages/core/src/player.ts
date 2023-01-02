@@ -192,6 +192,8 @@ export class Player {
     if (!this.isCustomLoader) {
       this.$video.src = source.src
     }
+
+    return source
   }
 
   applyPlugins() {
@@ -383,26 +385,25 @@ export class Player {
     // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }
 
-  changeQuality(source: Omit<Source, 'poster'>) {
+  changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {
     this.isSourceChanging = true
     this.emit('videoqualitychange', source)
-    this.options.source = { ...this.options.source, ...source }
-    return this._loader(source, { keepPlaying: true, keepTime: true }).then(() => {
-      this.emit('videoqualitychanged', source)
+
+    return this._loader(source, { keepPlaying: true, keepTime: true }).then((source) => {
+      if (Boolean(source)) this.emit('videoqualitychanged', source)
     })
   }
 
-  changeSource(source: Source, keepPlaying: boolean = true) {
+  changeSource(source: Source | Promise<Source>, keepPlaying: boolean = true) {
     this.isSourceChanging = true
     this.emit('videosourcechange', source)
-    this.$video.poster = source.poster || ''
-    this.options.source = source
-    return this._loader(source, { keepPlaying }).then(() => {
-      this.emit('videosourcechanged', source)
+
+    return this._loader(source, { keepPlaying }).then((source) => {
+      if (Boolean(source)) this.emit('videosourcechanged', source)
     })
   }
 
-  _loader(source: Source, options: { keepPlaying: boolean; keepTime?: boolean }) {
+  _loader(source: Source | Promise<Source>, options: { keepPlaying: boolean; keepTime?: boolean }) {
     const { isPlaying, currentTime, volume, playbackRate } = this
     const { keepPlaying, keepTime } = options
     this._resetStatus()
@@ -430,7 +431,14 @@ export class Player {
       }
       this.on(canplay, canplayHandler, { once: true })
 
-      return this.load(source).catch(errorHandler)
+      return (source instanceof Promise ? source : Promise.resolve(source))
+        .then((source) => {
+          this.$video.poster = source.poster || ''
+          this.options.source = { ...this.options.source, ...source }
+          return source
+        })
+        .then((source) => this.load(source))
+        .catch(errorHandler)
     })
   }
 

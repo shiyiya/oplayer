@@ -98,7 +98,7 @@ const player = Player.make('#player', {
   .create()
 
 setTimeout(() => {
-  player.changeQuality({ src, poster: POSTER })
+  player.changeQuality(Promise.resolve({ src }))
 }, 1000)
 
 player.plugins.ui?.highlight(highlight)
