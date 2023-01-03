@@ -17,6 +17,22 @@ import type {
 
 const players: Player[] = []
 
+const defaultOptions = {
+  autoplay: false,
+  muted: false,
+  loop: false,
+  volume: 1,
+  preload: 'metadata',
+  playbackRate: 1,
+  playsinline: true,
+  lang: 'auto',
+  source: {},
+  videoAttr: {},
+  isLive: false,
+  autopause: true,
+  isNativeUI: () => isQQBrowser
+}
+
 export class Player {
   container: HTMLElement
   options: Required<PlayerOptions>
@@ -44,21 +60,7 @@ export class Player {
       throw new Error((typeof el == 'string' ? el : 'Element') + 'does not exist')
 
     this.options = Object.assign(
-      {
-        autoplay: false,
-        muted: false,
-        loop: false,
-        volume: 1,
-        preload: 'metadata',
-        playbackRate: 1,
-        playsinline: true,
-        lang: 'auto',
-        source: {},
-        videoAttr: {},
-        isLive: false,
-        autopause: true,
-        isNativeUI: () => isQQBrowser // 部分浏览器会劫持 video
-      } as const,
+      defaultOptions,
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
@@ -377,7 +379,6 @@ export class Player {
 
   _resetStatus() {
     this.hasError = false
-    this.loader = undefined
     if (this.isPlaying) {
       this.$video.pause() // Possible failure
       this.emit('pause')
@@ -454,12 +455,17 @@ export class Player {
   destroy() {
     players.splice(players.indexOf(this), 1)
     this.emit('destroy')
-    this.pause()
-    this.isFullScreen && this.exitFullscreen()
-    this.$video.src = ''
-    this.$video.remove()
-    this.container.remove()
+    if (this.isPlaying) this.pause()
+    if (this.isFullScreen) this.exitFullscreen()
+    if (this.isInPip) this.exitPip()
+    if (this.$video.src) URL.revokeObjectURL(this.$video.src)
     this.eventEmitter.offAll()
+    this.container.removeChild(this.$root)
+    //@ts-ignore
+    this.container = this.$root = this.$video = this.loader = undefined
+    this.listeners = Object.create(null)
+    this._pluginsFactory = []
+    this.plugins = {}
   }
 
   get isNativeUI() {
