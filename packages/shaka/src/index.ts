@@ -54,21 +54,22 @@ const plugin = ({
 }: PluginOptions = {}): PlayerPlugin => {
   let instance: Shaka.Player | null
   let instanceOverlay: Shaka.ui.Overlay | null
+  let instanceDestroy: Shaka.Player['destroy'] | null
+
+  async function tryDestroy(player: Player) {
+    if (instance) {
+      player.plugins.ui?.setting.unregister(PLUGIN_NAME)
+      await instanceDestroy?.call(instance)
+      instanceDestroy = null
+      instance = null
+    }
+  }
 
   return {
     name: PLUGIN_NAME,
     key: 'shaka',
-    load: async (player, source, options) => {
-      const isMatch = matcher(player.$video, source)
-
-      if (instance) {
-        player.plugins.ui?.setting.unregister(PLUGIN_NAME)
-        instance.unload()
-        instance.destroy()
-        instance = null
-      }
-
-      if (options.loader || !isMatch) return false
+    load: async (player, source) => {
+      if (!matcher(player.$video, source)) return false
 
       if (!imported) {
         if (ui) {
@@ -96,16 +97,14 @@ const plugin = ({
         }
       })
 
+      instanceDestroy = instance.destroy
+      instance.destroy = () => tryDestroy(player)
+
       return instance
     },
     apply: (player) => {
       player.on('destroy', () => {
-        if (instance) {
-          instanceOverlay?.destroy()
-          instance.unload()
-          instance.destroy()
-          instance = null
-        }
+        tryDestroy(player)
       })
 
       return () => imported

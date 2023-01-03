@@ -6,6 +6,7 @@ import $ from './utils/dom'
 import { isIOS, isQQBrowser } from './utils/platform'
 
 import type {
+  Loader,
   PlayerEvent,
   PlayerEventName,
   PlayerListener,
@@ -32,11 +33,10 @@ export class Player {
     Object.create(null)
 
   hasError: boolean = false
-  isCustomLoader: boolean = false
   isSourceChanging: boolean = false
 
   // hls|dash|etc. instance
-  loader: any = null
+  loader?: Loader
 
   constructor(el: HTMLElement | string, options?: PlayerOptions | string) {
     this.container = typeof el == 'string' ? document.querySelector(el)! : el
@@ -179,17 +179,18 @@ export class Player {
   }
 
   async load(source: Source) {
-    this.loader = null
+    await this.loader?.destroy()
+    this.loader = undefined
     for await (const plugin of this._pluginsFactory) {
       if (plugin.load) {
-        const returned = await plugin.load(this, source, { loader: this.isCustomLoader })
-        if (returned != false && !this.isCustomLoader) {
-          this.isCustomLoader = true
+        const returned = await plugin.load(this, source)
+        if (returned != false && !this.loader) {
           this.loader = returned
+          break
         }
       }
     }
-    if (!this.isCustomLoader) {
+    if (!this.loader) {
       this.$video.src = source.src
     }
 
@@ -376,13 +377,11 @@ export class Player {
 
   _resetStatus() {
     this.hasError = false
-    this.isCustomLoader = false
+    this.loader = undefined
     if (this.isPlaying) {
       this.$video.pause() // Possible failure
       this.emit('pause')
     }
-    //TODO: Cancel req
-    // this.$video.src = URL.createObjectURL(new Blob([new Uint8Array([])], { type: 'video/mp4' }))
   }
 
   changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {

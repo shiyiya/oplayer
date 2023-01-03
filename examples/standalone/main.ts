@@ -104,7 +104,7 @@ setTimeout(() => {
 player.plugins.ui?.highlight(highlight)
 
 player.plugins.ui?.menu.register(<MenuBar>{
-  name: 'FORMAT',
+  name: 'FMT',
   children: FORMAT_MENU,
   onChange({ value, name }, elm) {
     src = value

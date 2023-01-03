@@ -17,22 +17,24 @@ const torrentPlugin = ({
   matcher = defaultMatcher
 }: torrentPluginOptions = {}): PlayerPlugin => {
   let prePreload: HTMLMediaElement['preload']
+  let instanceDestroy: (() => void) | null
+
+  function tryDestroy() {
+    if (client) {
+      instanceDestroy?.call(client)
+      instanceDestroy = null
+      client = null
+    }
+  }
 
   return {
     name: PLUGIN_NAME,
-    load: (player, source, options) => {
-      const isMatch = matcher(source)
-      const { $video } = player
-
-      if (options.loader || !isMatch) {
-        client?.remove(source.src)
-        client?.destroy()
-        $video.preload = prePreload
-        return false
-      }
+    load: (player, source) => {
+      if (!matcher(source)) return false
 
       if (!webtorrent.WEBRTC_SUPPORT) return false
 
+      const { $video } = player
       prePreload = $video.preload
       client = new webtorrent(config)
 
@@ -42,11 +44,20 @@ const torrentPlugin = ({
         file.renderTo($video, { autoplay: $video.autoplay, controls: false })
       })
 
+      instanceDestroy = () => {
+        client.remove(source.src)
+        client.destroy()
+        $video.preload = prePreload
+      }
+      client.destroy = () => {
+        tryDestroy()
+      }
+
       return client
     },
     apply: ({ on }) => {
       on('destroy', () => {
-        client?.destroy()
+        tryDestroy()
       })
 
       return webtorrent

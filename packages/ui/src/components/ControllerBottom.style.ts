@@ -80,7 +80,7 @@ export const controllerBottom = $.css({
   'justify-content': 'space-between',
   'align-items': 'center',
   'padding-bottom': isMobile ? 0 : '4px',
-  'margin-right': isMobile ? '-8px' : '0px',
+  margin: '0 -6px',
 
   [`& .${icon}.${textIcon}`]: {
     width: 'auto',

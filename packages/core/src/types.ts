@@ -23,7 +23,7 @@ export type Source = {
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
 
-export type PlayerOptions = {
+export interface PlayerOptions {
   source?: Source
   autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
   autopause?: boolean //Only allow one player playing at once.
@@ -40,16 +40,17 @@ export type PlayerOptions = {
   isNativeUI?: () => boolean
 }
 
-export type PlayerPlugin = {
+export interface Loader {
+  destroy: () => void | Promise<() => void>
+  [key: string]: any
+}
+
+export interface PlayerPlugin {
   name: string
   key?: string
   version?: string
   apply: (player: Player) => any
-  load?: (
-    player: Player,
-    src: Source,
-    options: { loader: boolean }
-  ) => boolean | Promise<false | any>
+  load?: (player: Player, src: Source) => false | Loader | Promise<false | Loader>
 }
 
 export type DefaultPlayerEvent = typeof EVENTS[number] | typeof EVENTS[number][]
