@@ -432,7 +432,6 @@ export class Player {
         if (isPreloadNone && keepTime) this.$video.load()
         if (keepTime) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
-        this.isSourceChanging = false
         resolve()
       }
       this.on(canplay, canplayHandler, { once: true })
