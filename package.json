@@ -27,7 +27,7 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.7",
+    "@babel/core": "^7.20.12",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-destructuring": "^7.20.7",
@@ -43,7 +43,7 @@
     "cross-env": "^7.0.3",
     "jsdom": "^20.0.3",
     "lint-staged": "^13.1.0",
-    "nx": "^15.4.2",
+    "nx": "^15.4.4",
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "terser": "^5.16.1",

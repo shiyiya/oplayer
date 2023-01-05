@@ -25,6 +25,13 @@ const controllerBottom = $.css({
     transition: 'opacity 0.3s ease',
     'pointer-events': 'none',
     'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
+  },
+
+  [`@global .${controllerHidden} &`]: {
+    padding: 0,
+    'pointer-events': 'none',
+    transform: 'translateY(calc(100% - 8px))',
+    '&::before': { opacity: 0 }
   }
 })
 
@@ -37,21 +44,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const exp = renderProgress(player, $dom, config)
   const { cls } = renderControllerBottom(player, $dom, config)
 
-  $.css({
-    [`@global .${controllerHidden}`]: {
-      cursor: 'none',
-      [`& .${controllerBottom}`]: config.miniProgressBar
-        ? {
-            transform: 'translateY(calc(100% - 8px))',
-            padding: 0,
-            'pointer-events': 'none',
-            '&::before': { opacity: 0 }
-          }
-        : {
-            transform: 'translateY(100%)'
-          }
-    }
-  })
+  if (!config.miniProgressBar) {
+    $.css({
+      [`@global .${controllerHidden} .${controllerBottom}`]: {
+        transform: 'translateY(100%)'
+      }
+    })
+  }
 
   if (config.showControls == 'played') {
     addClass($dom, hidden)
@@ -75,6 +74,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       return
     }
     addClass(player.$root, controllerHidden)
+    player.emit('controllervisibilitychange', true)
   }
 
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -83,6 +83,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     if (hasClass(player.$root, controllerHidden)) {
       cancelHideCtrl()
       removeClass(player.$root, controllerHidden)
+      player.emit('controllervisibilitychange', false)
     }
   }
 
@@ -101,6 +102,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     exp,
     cls,
     toggle() {
+      if (hasClass($dom, hidden)) {
+        player.play()
+        return
+      }
       if (hasClass(player.$root, controllerHidden)) {
         showCtrl()
       } else {

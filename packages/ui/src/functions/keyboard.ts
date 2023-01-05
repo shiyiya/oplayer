@@ -20,7 +20,7 @@ const KEY_FN: Record<string, (player: Player) => void> = {
   },
 
   ArrowLeft: (player: Player) => {
-    if (player.options.isLive) return
+    if (player.options.isLive || player.hasError) return
     const tar = player.currentTime - SEEK_SETUP
     if (tar < 0) {
       player.seek(0)
@@ -33,7 +33,7 @@ const KEY_FN: Record<string, (player: Player) => void> = {
     })
   },
   ArrowRight: (player: Player) => {
-    if (player.options.isLive) return
+    if (player.options.isLive || player.hasError) return
     player.seek(player.currentTime + SEEK_SETUP)
 
     player.emit('notice', {

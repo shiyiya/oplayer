@@ -40,6 +40,7 @@ const player = Player.make('#player', {
   .use([
     ui({
       slideToSeek: 'always',
+      // miniProgressBar: false,
       // autoFocus: true,
       keyboard: { global: true },
       // speed: [],
