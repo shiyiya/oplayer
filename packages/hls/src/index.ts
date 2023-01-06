@@ -54,11 +54,10 @@ const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
 
 const generateSetting = (player: Player, instance: Hls, options: Options = {}) => {
   if (options.qualityControl) {
-    instance.on(imported.Events.LEVEL_SWITCHED, (_event, data) => menuUpdater(data))
     instance.once(imported.Events.MANIFEST_PARSED, () => {
       settingUpdater({
         icon: player.plugins.ui.icons.quality,
-        name: player.locales.get('Quality'),
+        name: 'Quality',
         settings() {
           if (instance.levels.length > 1) {
             return instance.levels.reduce(
@@ -97,13 +96,26 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
         }
       })
     })
+
+    instance.on(
+      imported.Events.LEVEL_SWITCHED,
+      function menuUpdater(_, { level }: LevelSwitchedData) {
+        if (instance.autoLevelEnabled) {
+          const height = instance.levels[level]!.height
+          const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
+          player.plugins.ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+        } else {
+          player.plugins.ui.setting.select(`${PLUGIN_NAME}-Quality`, level + 1, false)
+        }
+      }
+    )
   }
 
   if (options.audioControl)
     instance.on(imported.Events.AUDIO_TRACK_LOADED, () => {
       settingUpdater({
         icon: player.plugins.ui.icons.lang,
-        name: player.locales.get('Language'),
+        name: 'Language',
         settings() {
           if (instance.audioTracks.length > 1) {
             return instance.audioTracks.map(({ name, lang, id }) => ({
@@ -124,7 +136,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
     instance.on(imported.Events.SUBTITLE_TRACK_LOADED, () => {
       settingUpdater({
         icon: player.plugins.ui.icons.subtitle,
-        name: player.locales.get('Subtitle'),
+        name: 'Subtitle',
         settings() {
           if (instance.subtitleTracks.length > 1) {
             return instance.subtitleTracks.reduce(
@@ -170,7 +182,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 
     player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
     player.plugins.ui.setting.register({
-      name,
+      name: player.locales.get(name),
       icon,
       onChange,
       type: 'selector',
@@ -178,27 +190,12 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
       children: settings
     })
   }
-
-  // Update settings menu with the information about current level
-  function menuUpdater({ level }: LevelSwitchedData) {
-    if (!instance.autoLevelEnabled) return
-
-    if (instance.autoLevelEnabled) {
-      const height = instance.levels[level]!.height
-      const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-      player.plugins.ui.setting.updateLabel(PLUGIN_NAME, levelName)
-    } else {
-      player.plugins.ui.setting.select(PLUGIN_NAME, level + 1, false)
-    }
-  }
 }
 
 const removeSetting = (player: Player) => {
-  ;[
-    player.locales.get('Quality'),
-    player.locales.get('Language'),
-    player.locales.get('Subtitle')
-  ].forEach((it) => player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`))
+  ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
+    player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
+  )
 }
 
 const plugin = ({

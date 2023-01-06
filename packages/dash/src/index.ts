@@ -44,6 +44,8 @@ interface SettingItem {
 
 function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrate?: boolean) {
   const bitrateInfoList = instance.getBitrateInfoListFor(type)
+  const isAuto = Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
+  const videoQuality = instance.getQualityFor('video')
   if (bitrateInfoList.length > 1) {
     return bitrateInfoList.map<SettingItem>((it) => {
       let name = it.height + 'p'
@@ -57,9 +59,7 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
 
       return {
         name,
-        default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
-          ? false
-          : instance.getTopBitrateInfoFor(type).qualityIndex == it.qualityIndex,
+        default: isAuto ? false : videoQuality == it.qualityIndex,
         value: it.qualityIndex
       }
     })
@@ -69,10 +69,10 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
 }
 
 const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
-  if (options.qualityControl) {
-    instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
+  instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
+    if (options.qualityControl) {
       settingUpdater({
-        name: player.locales.get('Quality'),
+        name: 'Quality',
         icon: player.plugins.ui.icons.quality,
         settings() {
           const ex = getSettingsByType(instance, 'video', options.withBitrate)
@@ -97,52 +97,65 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
         }
       })
 
-      if (options.audioControl) {
-        settingUpdater({
-          name: player.locales.get('Language'),
-          icon: player.plugins.ui.icons.lang,
-          settings() {
-            return instance.getTracksFor('audio').map<SettingItem>((it) => ({
-              name: it.lang || 'unknown',
-              default: instance.getCurrentTrackFor('audio')?.id == it.id,
-              value: it
-            }))
-          },
-          onChange({ value }) {
-            instance.setCurrentTrack(value)
-          }
-        })
-      }
+      instance.on(
+        imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED,
+        function qualityMenuUpdater(data: QualityChangeRenderedEvent) {
+          if (
+            data.mediaType !== 'video' ||
+            !instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
+          )
+            return
 
-      if (options.textControl) {
-        settingUpdater({
-          name: player.locales.get('Subtitle'),
-          icon: player.plugins.ui.icons.subtitle,
-          settings() {
-            const ex = instance.getTracksFor('text').map<SettingItem>((it) => ({
-              name: it.lang || 'unknown',
-              default: instance.getCurrentTrackFor('text')?.id == it.id,
-              value: it.id
-            }))
-            if (ex.length) {
-              ex.unshift({
-                name: player.locales.get('Off'),
-                default: !instance.isTextEnabled(),
-                value: -1
-              })
-            }
-            return ex
-          },
-          onChange({ value }) {
-            instance.enableText(value != -1)
-            if (value != -1) instance.setTextTrack(value)
-          }
-        })
-      }
-    })
-  }
+          const height = instance.getBitrateInfoListFor('video')[data.newQuality]?.height
+          const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
+          player.plugins.ui?.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+        }
+      )
+    }
 
-  instance.on(imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED, qualityMenuUpdater)
+    if (options.audioControl) {
+      settingUpdater({
+        name: 'Language',
+        icon: player.plugins.ui.icons.lang,
+        settings() {
+          return instance.getTracksFor('audio').map<SettingItem>((it) => ({
+            name: it.lang || 'unknown',
+            default: instance.getCurrentTrackFor('audio')?.id == it.id,
+            value: it
+          }))
+        },
+        onChange({ value }) {
+          instance.setCurrentTrack(value)
+        }
+      })
+    }
+
+    if (options.textControl) {
+      settingUpdater({
+        name: 'Subtitle',
+        icon: player.plugins.ui.icons.subtitle,
+        settings() {
+          const ex = instance.getTracksFor('text').map<SettingItem>((it) => ({
+            name: it.lang || 'unknown',
+            default: instance.getCurrentTrackFor('text')?.id == it.id,
+            value: it.id
+          }))
+          if (ex.length) {
+            ex.unshift({
+              name: player.locales.get('Off'),
+              default: !instance.isTextEnabled(),
+              value: -1
+            })
+          }
+          return ex
+        },
+        onChange({ value }) {
+          instance.enableText(value != -1)
+          if (value != -1) instance.setTextTrack(value)
+        }
+      })
+    }
+  })
 
   function settingUpdater(arg: {
     icon: string
@@ -157,7 +170,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
 
     player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
     player.plugins.ui.setting.register({
-      name,
+      name: player.locales.get(name),
       icon,
       onChange,
       type: 'selector',
@@ -165,24 +178,12 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
       children: settings
     })
   }
-
-  function qualityMenuUpdater(data: QualityChangeRenderedEvent) {
-    const settings = instance.getSettings()
-    if (data.mediaType !== 'video' || !settings.streaming?.abr?.autoSwitchBitrate?.video) return
-
-    const level = instance.getQualityFor('video')
-    const height = instance.getBitrateInfoListFor('video')[level]?.height
-    const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-    player.plugins.ui?.setting.updateLabel(`${PLUGIN_NAME}-video`, levelName)
-  }
 }
 
 const removeSetting = (player: Player) => {
-  ;[
-    player.locales.get('Quality'),
-    player.locales.get('Language'),
-    player.locales.get('Subtitle')
-  ].forEach((it) => player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`))
+  ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
+    player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
+  )
 }
 
 const plugin = ({
