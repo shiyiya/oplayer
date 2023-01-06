@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>oplayer</title>
+    <style>
+      #oplayer {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="oplayer"></div>
+
+    <div
+      id="search"
+      class="hidden block absolute top-4 right-0 left-1/2 w-1/3 -translate-x-1/2"
+      style="z-index: 99"
+    >
+      <div
+        class="bg-white dark:bg-slate-900 relative pointer-events-auto rounded-md overflow-hidden"
+      >
+        <header class="">
+          <input
+            oninput="fetchSearch(this.value)"
+            class="outline-0 h-11 w-full text-sm leading-6 text-slate-400 ring-1 ring-slate-1100/10 shadow-sm py-1.5 pl-2 pr-3 hover:ring-slate-300 dark:bg-slate-800 dark:highlight-white/5 dark:hover:bg-slate-700"
+            aria-autocomplete="both"
+            id="search-input"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            enterkeyhint="go"
+            spellcheck="false"
+            placeholder="Search tv,mv"
+            maxlength="64"
+            type="search"
+            value=""
+          />
+        </header>
+        <section>
+          <ul id="search-list">
+            <li
+              class="h-11 py-1.5 pl-2 pr-3 border-solid border-b border-slate-200 hover:bg-slate-100 cursor-pointer"
+            ></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div
+      id="ep"
+      class="hidden absolute top-4 right-4 bg-indigo-200/50 max-h-[70%] min-w-[320px]"
+      style="z-index: 99"
+    >
+      <span class="absolute top-2 right-2 text-sm cursor-pointer" onclick="toggleEp()">❌</span>
+      <div class="mt-4 p-2">
+        <h2 id="title" class="text-white text-xl mb-6"></h2>
+        <p></p>
+
+        <ul
+          id="ep-list"
+          class="list-none grid grid-cols-4 gap-4 mt-2 text-center text-slate-400 text-sm"
+        >
+          <li
+            class="hidden p-2 border-solid border-2 rounded-sm border-slate-400 cursor-pointer text-white"
+          ></li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      var player = OPlayer.make('#oplayer', {
+        source: { src: '', poster: '' }
+      })
+        .use([
+          OUI({
+            menu: [
+              { name: '剧集', onClick: toggleEp },
+              { name: '搜索', onClick: toggleSearch }
+            ]
+          }),
+          OHls()
+        ])
+        .create()
+
+      var currentMedia, currentList
+      var epList = document.getElementById('ep-list')
+      var searchList = document.getElementById('search-list')
+
+      var s = new URLSearchParams(document.location.search).get('jx')
+      if (s) {
+        search(s).then((_) => {
+          currentMedia = _.data[0]
+          renderEp()
+          toggleEp()
+          player.changeSource({ src: currentMedia.source.eps[0].url })
+        })
+      } else {
+        toggleSearch()
+      }
+
+      epList.addEventListener('click', function (e) {
+        if ((e.target.tagName = 'LI' && e.target.getAttribute('data-src'))) {
+          e.target.classList.add('text-indigo-400 border-indigo-400')
+          Array.from(epList.parentElement.children).forEach((_) => {
+            if (_ != e.target) e.target.classList.remove('text-indigo-400 border-indigo-400')
+          })
+          player.changeSource({ src: e.target.getAttribute('data-src') })
+        }
+      })
+
+      searchList.addEventListener('click', function (e) {
+        if ((e.target.tagName = 'LI' && e.target.getAttribute('data-index'))) {
+          currentMedia = currentList[+e.target.getAttribute('data-index')]
+          player.changeSource({ src: currentMedia.source.eps[0].url })
+          renderEp()
+          toggleEp()
+          toggleSearch()
+        }
+      })
+
+      function fetchSearch(e) {
+        search(e).then((_) => {
+          currentList = _.data || []
+          searchList.innerHTML = currentList
+            .map(
+              (ep, i) =>
+                `<li class="h-11 py-1.5 pl-2 pr-3 border-solid border-b border-slate-200 hover:bg-slate-100 cursor-pointer" data-index=${i}>${ep.name}</li>`
+            )
+            .join('')
+        })
+      }
+
+      function renderEp() {
+        document.getElementById('title').innerHTML = currentMedia.name
+        epList.innerHTML = currentMedia.source.eps
+          .map(
+            (ep, i) =>
+              `<li class="p-1 border-solid border-2 border-slate-400 rounded-sm
+              hover:text-indigo-400 hover:border-indigo-400 cursor-pointer
+              ${i == 0 ? 'text-indigo-400 border-indigo-400' : ''}" data-src="${ep.url}">${
+                ep.name
+              }</li>`
+          )
+          .join('')
+      }
+
+      function search(k) {
+        return fetch(
+          `https://a1.m1907.top:404/api/v?z=a037c5fdaf8efe76bea2b4964f7b3810&jx=${encodeURI(
+            k
+          )}&s1ig=11402&g=`
+        ).then((_) => _.json())
+      }
+
+      function toggleEp() {
+        document.getElementById('ep').classList.toggle('hidden')
+      }
+
+      function toggleSearch() {
+        document.getElementById('search').classList.toggle('hidden')
+      }
+    </script>
+  </body>
+</html>
