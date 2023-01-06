@@ -110,10 +110,10 @@
 
       epList.addEventListener('click', function (e) {
         if ((e.target.tagName = 'LI' && e.target.getAttribute('data-src'))) {
-          e.target.classList.add('text-indigo-400 border-indigo-400')
-          Array.from(epList.parentElement.children).forEach((_) => {
-            if (_ != e.target) e.target.classList.remove('text-indigo-400 border-indigo-400')
+          Array.from(epList.children).forEach((it) => {
+            it.classList.remove('text-indigo-400', 'border-indigo-400')
           })
+          e.target.classList.add('text-indigo-400', 'border-indigo-400')
           player.changeSource({ src: e.target.getAttribute('data-src') })
         }
       })
