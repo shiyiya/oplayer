@@ -128,7 +128,7 @@
         }
       })
 
-      function fetchSearch(e) {
+      var fetchSearch = debounce(function (e) {
         search(e).then((_) => {
           currentList = _.data || []
           searchList.innerHTML = currentList
@@ -138,7 +138,7 @@
             )
             .join('')
         })
-      }
+      })
 
       function renderEp() {
         document.getElementById('title').innerHTML = currentMedia.name
@@ -168,6 +168,16 @@
 
       function toggleSearch() {
         document.getElementById('search').classList.toggle('hidden')
+      }
+
+      function debounce(fn) {
+        var time = null
+        return function () {
+          if (time) clearTimeout(time)
+          time = setTimeout(function () {
+            fn.apply(null, arguments)
+          }, 1500)
+        }
       }
     </script>
   </body>
