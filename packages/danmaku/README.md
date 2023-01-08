@@ -1,6 +1,9 @@
 # oplayer-plugin-danmaku
 
 [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&color=ffa500&label=@oplayer/danmaku)](https://www.npmjs.com/package/@oplayer/danmaku)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/ui?style=flat-square&label=danmaku)
+[![npm dm](https://img.shields.io/npm/dm/@oplayer/danmaku?style=flat-square)](https://www.npmjs.com/package/@oplayer/danmaku)
+[![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/danmaku/badge)](https://www.jsdelivr.com/package/npm/@oplayer/danmaku)
 
 ![](./danmaku.png)
 

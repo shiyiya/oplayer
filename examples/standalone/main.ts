@@ -114,6 +114,7 @@ player.plugins.ui?.menu.register(<MenuBar>{
       .changeSource({ src: value })
       // .changeQuality({ src: value })
       .then((_) => {
+        // GET	https://cc.zorores.com/20/2e/202eaab6dff289a5976399077449654e/eng-2.vtt
         // player.plugins.ui.subtitle.updateSource([
         //   {
         //     name: 'Default',
