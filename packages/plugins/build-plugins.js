@@ -56,7 +56,7 @@ if (process.argv.pop() == '--watch') {
       disableGlobbing: true
     })
     .on('change', () => {
-      buildPlugin('index')
+      buildPlugin('index', true)
     })
 
   async function close() {
