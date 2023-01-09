@@ -35,13 +35,15 @@ import type { Player, PlayerPlugin } from '@oplayer/core'
 import type { UiConfig } from './types'
 
 const apply = (player: Player, config: UiConfig) => {
+  const $root = $.create(`div.${root(config)}`)
+
   if (player.isNativeUI) {
-    renderCoverButton(player, player.$root)
+    renderCoverButton(player, $root)
+    $.render($root, player.$root)
     return
   }
 
   const icons = Icons.setupIcons(player, config.icons)
-  const $root = $.create(`div.${root(config)}`)
   startListening(player, config, $root)
 
   const error = renderError(player, $root, config)
