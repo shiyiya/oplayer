@@ -11,6 +11,7 @@
         height: 100vh;
       }
     </style>
+    <link href="./ep.min.css" rel="stylesheet" />
   </head>
   <body>
     <div id="oplayer"></div>
@@ -75,7 +76,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
       var player = OPlayer.make('#oplayer', {
@@ -95,14 +95,17 @@
       var currentMedia, currentList
       var epList = document.getElementById('ep-list')
       var searchList = document.getElementById('search-list')
+      var sp = new URLSearchParams(document.location.search)
+      var jx = sp.get('jx'), //关键词
+        si = sp.get('si') || 0, //搜索结果下标
+        ep = sp.get('ep') || 0 //集数
 
-      var s = new URLSearchParams(document.location.search).get('jx')
-      if (s) {
-        search(s).then((_) => {
-          currentMedia = _.data[0]
+      if (jx) {
+        search(jx).then(function (resp) {
+          currentMedia = resp.data[si]
           renderEp()
           toggleEp()
-          player.changeSource({ src: currentMedia.source.eps[0].url })
+          player.changeSource({ src: currentMedia.source.eps[ep].url })
         })
       } else {
         toggleSearch()
@@ -114,14 +117,14 @@
             it.classList.remove('text-indigo-400', 'border-indigo-400')
           })
           e.target.classList.add('text-indigo-400', 'border-indigo-400')
-          player.changeSource({ src: e.target.getAttribute('data-src') })
+          changeSource(e.target.getAttribute('data-src'), si, +e.target.getAttribute('data-index'))
         }
       })
 
       searchList.addEventListener('click', function (e) {
         if ((e.target.tagName = 'LI' && e.target.getAttribute('data-index'))) {
           currentMedia = currentList[+e.target.getAttribute('data-index')]
-          player.changeSource({ src: currentMedia.source.eps[0].url })
+          changeSource(currentMedia.source.eps[0].url, +e.target.getAttribute('data-index'), 0)
           renderEp()
           toggleEp()
           toggleSearch()
@@ -129,6 +132,7 @@
       })
 
       var fetchSearch = debounce(function (e) {
+        sp.set('jx', e)
         search(e).then((_) => {
           currentList = _.data || []
           searchList.innerHTML = currentList
@@ -147,19 +151,16 @@
             (ep, i) =>
               `<li class="p-1 border-solid border-2 border-slate-400 rounded-sm
               hover:text-indigo-400 hover:border-indigo-400 cursor-pointer
-              ${i == 0 ? 'text-indigo-400 border-indigo-400' : ''}" data-src="${ep.url}">${
-                ep.name
-              }</li>`
+              ${i == 0 ? 'text-indigo-400 border-indigo-400' : ''}"
+              data-src="${ep.url}" data-index="${i}">${ep.name}</li>`
           )
           .join('')
       }
 
       function search(k) {
-        return fetch(
-          `https://a1.m1907.top:404/api/v?z=a037c5fdaf8efe76bea2b4964f7b3810&jx=${encodeURI(
-            k
-          )}&s1ig=11402&g=`
-        ).then((_) => _.json())
+        return fetch(`http://qianduplay.bgsng.cn/ruku.php/vod?wd=${encodeURI(k)}`).then((_) =>
+          _.json()
+        )
       }
 
       function toggleEp() {
@@ -172,11 +173,22 @@
 
       function debounce(fn) {
         var time = null
-        return function () {
+        return function (e) {
+          var args = arguments
           if (time) clearTimeout(time)
           time = setTimeout(function () {
-            fn.apply(null, arguments)
+            fn.apply(null, args)
           }, 1500)
+        }
+      }
+
+      function changeSource(src, si, ep) {
+        if (OPlayer.isIOS && navigator.userAgent.toLowerCase().indexOf('baidu')) {
+          sp.set('si', si)
+          sp.set('ep', ep)
+          document.location.search = sp.toString()
+        } else {
+          player.changeSource({ src })
         }
       }
     </script>
