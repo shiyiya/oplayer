@@ -102,7 +102,7 @@
 
       if (jx) {
         search(jx).then(function (resp) {
-          currentMedia = resp.data[si]
+          currentMedia = Object.values(resp.data)[si]
           renderEp()
           toggleEp()
           player.changeSource({ src: currentMedia.source.eps[ep].url })
@@ -134,7 +134,7 @@
       var fetchSearch = debounce(function (e) {
         sp.set('jx', e)
         search(e).then((_) => {
-          currentList = _.data || []
+          currentList = Object.values(_.data) || []
           searchList.innerHTML = currentList
             .map(
               (ep, i) =>
@@ -148,11 +148,11 @@
         document.getElementById('title').innerHTML = currentMedia.name
         epList.innerHTML = currentMedia.source.eps
           .map(
-            (ep, i) =>
+            (_ep, i) =>
               `<li class="p-1 border-solid border-2 border-slate-400 rounded-sm
               hover:text-indigo-400 hover:border-indigo-400 cursor-pointer
-              ${i == 0 ? 'text-indigo-400 border-indigo-400' : ''}"
-              data-src="${ep.url}" data-index="${i}">${ep.name}</li>`
+              ${i == +ep ? 'text-indigo-400 border-indigo-400' : ''}"
+              data-src="${_ep.url}" data-index="${i}">${_ep.name}</li>`
           )
           .join('')
       }
