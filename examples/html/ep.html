@@ -18,7 +18,7 @@
 
     <div
       id="search"
-      class="hidden block absolute top-4 right-0 left-1/2 w-1/3 -translate-x-1/2"
+      class="hidden absolute top-4 right-0 left-1/2 w-1/3 -translate-x-1/2"
       style="z-index: 99"
     >
       <div
@@ -78,9 +78,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
 
     <script>
-      var player = OPlayer.make('#oplayer', {
-        source: { src: '', poster: '' }
-      })
+      var player = OPlayer.make('#oplayer')
         .use([
           OUI({
             menu: [
@@ -158,7 +156,7 @@
       }
 
       function search(k) {
-        return fetch(`http://qianduplay.bgsng.cn/ruku.php/vod?wd=${encodeURI(k)}`).then((_) =>
+        return fetch(`https://qianduplay.bgsng.cn/ruku.php/vod?wd=${encodeURI(k)}`).then((_) =>
           _.json()
         )
       }
@@ -186,7 +184,14 @@
         if (OPlayer.isIOS && navigator.userAgent.toLowerCase().indexOf('baidu')) {
           sp.set('si', si)
           sp.set('ep', ep)
-          document.location.search = sp.toString()
+          if (window.top == window) {
+            document.location.search = sp.toString()
+          } else {
+            window.parent.postMessage(
+              { command: 'refresh', src: document.location.pathname + '?' + sp.toString() },
+              '*'
+            )
+          }
         } else {
           player.changeSource({ src })
         }
