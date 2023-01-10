@@ -9,7 +9,7 @@
   "scripts": {
     "start": "vite --host",
     "preview": "vite preview",
-    "build": "vite build && cp ../script.html ../../docs/"
+    "build": "vite build"
   },
   "dependencies": {
     "@oplayer/ad": "workspace:*",
