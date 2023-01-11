@@ -8,7 +8,7 @@ import {
   registerSlide,
   registerFullScreenRotation
 } from './functions'
-import startListening from './listeners'
+import startListening, { loadingListener } from './listeners'
 
 import renderController from './components/Controller'
 import renderCoverButton from './components/CoverButton'
@@ -38,7 +38,9 @@ const apply = (player: Player, config: UiConfig) => {
   const $root = $.create(`div.${root(config)}`)
 
   if (player.isNativeUI) {
+    loadingListener(player, false)
     renderCoverButton(player, $root)
+    renderLoading(player, $root)
     $.render($root, player.$root)
     return
   }

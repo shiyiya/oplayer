@@ -60,14 +60,7 @@ const render = (player: Player, el: HTMLElement) => {
     </button>`
   )
 
-  if (player.isNativeUI) {
-    $dom.style.display = 'block'
-    $dom.addEventListener('click', () => (player.play(), $dom.remove()), { once: true })
-  } else {
-    $dom.addEventListener('click', () => player.togglePlay())
-  }
-
-  $.render($dom, el)
+  $.render($dom, el).addEventListener('click', () => player.play())
 }
 
 export default render

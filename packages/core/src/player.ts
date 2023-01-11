@@ -45,7 +45,7 @@ export class Player {
 
   $root: HTMLElement
   $video: HTMLVideoElement
-  listeners: Record<typeof EVENTS[number] | 'fullscreenchange' | 'fullscreenerror', Function> =
+  listeners: Record<(typeof EVENTS)[number] | 'fullscreenchange' | 'fullscreenerror', Function> =
     Object.create(null)
 
   hasError: boolean = false
@@ -89,8 +89,10 @@ export class Player {
 
   initEvent() {
     const errorHandler = (payload: ErrorEvent) => {
-      this.hasError = true
-      this.emit('error', payload)
+      if (this.$video.error) {
+        this.hasError = true
+        this.emit('error', payload)
+      }
     }
     this.listeners['error'] = errorHandler
     this.$video.addEventListener('error', (e) => this.listeners['error'](e))
