@@ -40,7 +40,7 @@ const player = Player.make('#player', {
 })
   .use([
     ui({
-      controlBar: true,
+      controlBar: { back: true },
       topSetting: true,
       slideToSeek: 'always',
       // miniProgressBar: false,

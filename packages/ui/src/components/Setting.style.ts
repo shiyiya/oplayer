@@ -47,7 +47,7 @@ export const nextIcon = $.css(`
 `)
 
 // <
-export const BackIcon = $.css(`
+export const backIcon = $.css(`
   width: 2em;
   height: 2em;
   transform: rotate(180deg);

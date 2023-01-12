@@ -17,11 +17,11 @@ import {
   yesIcon,
   switcherCls,
   switcherContainer,
-  BackIcon,
+  backIcon,
   backRow
 } from './Setting.style'
 
-const arrowSvg = (className = nextIcon) =>
+export const arrowSvg = (className = nextIcon) =>
   `<svg class="${className}" viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
 
 // Selector Options
@@ -48,7 +48,7 @@ export const nexter = (name: string, icon: string = '') =>
 
 export const back = (name: string) =>
   `<div class="${backRow}">
-      ${arrowSvg(BackIcon)}
+      ${arrowSvg(backIcon)}
       <span>${name}</span>
     </div>
 `

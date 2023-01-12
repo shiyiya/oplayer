@@ -125,7 +125,7 @@ export type UiConfig = {
   /**
    * default: false
    */
-  controlBar?: boolean
+  controlBar?: boolean | { back: boolean } // | boolean
 
   /**
    * default: false
