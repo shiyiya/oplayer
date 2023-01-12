@@ -38,7 +38,9 @@ export const controlBar = $.css({
   }
 })
 
-export const controlBarTitle = $.css('font-size:1.25em;margin: 0 0.25em;')
+export const controlBarTitle = $.css(
+  'font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;'
+)
 
 export const controlBarBackIcon = $.css(
   `width: 2em;
