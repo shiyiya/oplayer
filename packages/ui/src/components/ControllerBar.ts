@@ -48,7 +48,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     },
     `
   <div>
-    <h2 class='${controlBarTitle}'>${player.options.source.title}</h2>
+    <h2 class='${controlBarTitle}'>${player.options.source?.title}</h2>
   </div>
 
   <div></div>`
