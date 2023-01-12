@@ -125,12 +125,13 @@ export type UiConfig = {
   /**
    * default: false
    */
-  topSetting?: boolean
+  controlBar?: boolean
 
   /**
    * default: false
+   * required -> controlBar: true
    */
-  controlBar?: boolean
+  topSetting?: boolean
 
   thumbnails?: Thumbnails
 

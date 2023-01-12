@@ -47,7 +47,7 @@ const player = Player.make('#player', {
       // autoFocus: true,
       keyboard: { global: true },
       // speed: [],
-      // screenshot: true,
+      screenshot: true,
       settings: ['loop'],
       pictureInPicture: true,
       // showControls: 'played',

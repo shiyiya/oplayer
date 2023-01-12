@@ -248,8 +248,9 @@ function createPanel(
 }
 
 export default function (player: Player, $el: HTMLElement, config: UiConfig) {
+  const topEnabled = config.controlBar && config.topSetting
   const options = config.settings || []
-  const $dom = $.create(`div.${setting(config.topSetting ? 'top' : 'bottom')}`, {
+  const $dom = $.create(`div.${setting(topEnabled ? 'top' : 'bottom')}`, {
     'aria-label': 'Setting'
   })
   let panels: Panel[] = []
@@ -347,7 +348,7 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
       Boolean
     ).length
 
-    if (config.topSetting) {
+    if (topEnabled) {
       const parent = $el.querySelector<HTMLDivElement>(`.${controlBar}`)!.children[1]!
       parent.insertBefore(settingButton, parent.children[parent.children.length]!)
     } else {

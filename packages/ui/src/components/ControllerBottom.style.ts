@@ -15,7 +15,6 @@ export const expand = $.css(`
     position: absolute;
     top: 0;
     right: 50%;
-    z-index: 10;
     border-radius: 2px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
@@ -24,15 +23,9 @@ export const expand = $.css(`
 `)
 
 export const expandBottom = $.css(`
-    position: absolute;
     top: 100%;
     right: 50%;
-    z-index: 10;
-    border-radius: 2px;
-    box-sizing: border-box;
-    transform: translate(50%, 0%);
-    transition: visibility 0s, opacity 0.1s linear;
-    font-size: 0.875em;
+    transform: translateX(50%);
 `)
 
 export const dropdown = $.css({
@@ -55,6 +48,10 @@ export const dropdownHoverable = $.css({
       visibility: 'visible',
       opacity: 1
     }
+  },
+  ['&[data-dropdown-pos=top]:hover']: {
+    'padding-bottom': '0.5em',
+    'margin-bottom': '-0.5em'
   }
 })
 

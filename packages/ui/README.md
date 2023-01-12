@@ -39,6 +39,8 @@ OUI({
   showControls: 'always', // 'played'
   slideToSeek: 'none', // 'always' | 'long-touch'
   forceLandscapeOnFullscreen: true,
+  controlBar: false, //appbar
+  topSetting: false, //show setting icon on appbar
   subtitle: {
     color: 'hotpink',
     fontSize: 20,
@@ -86,6 +88,7 @@ OUI({
     {
       name: 'Quality(清晰度)',
       key: 'Quality', // for select Optional
+      position: 'bottom', // or top
       children: [
         {
           name: 'FHD',

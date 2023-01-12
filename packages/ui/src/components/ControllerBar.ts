@@ -36,7 +36,7 @@ export const controlBar = $.css({
 })
 
 export const controlBarTitle = $.css(
-  'font-size:1.5em;margin: 0 0.25em;user-select: text;cursor: text;'
+  'font-size:1.25em;margin: 0 0.25em;user-select: text;cursor: text;'
 )
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
