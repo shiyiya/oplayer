@@ -30,7 +30,7 @@ export const controlBar = $.css({
     'background-image': 'linear-gradient(rgba(0, 0, 0, .3), transparent)'
   },
 
-  '& > div:nth-child(1)': { cursor: 'pointer' },
+  '& > div:nth-child(1)': { cursor: 'pointer', overflow: 'hidden' },
 
   [`@global .${controllerHidden} &`]: {
     transform: 'translateY(calc(-100%))',
@@ -39,7 +39,7 @@ export const controlBar = $.css({
 })
 
 export const controlBarTitle = $.css(
-  'font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;'
+  'font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
 )
 
 export const controlBarBackIcon = $.css(
