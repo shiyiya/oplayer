@@ -54,7 +54,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   <div></div>`
   )
 
-  const $controlBarTitle = $dom.getElementsByClassName(controlBarTitle)![0]!
+  const $controlBarTitle = $dom.querySelector<HTMLElement>(`.${controlBarTitle}`)!
 
   player.on('videosourcechanged', ({ payload }) => {
     $controlBarTitle.innerText = payload.title || ''
