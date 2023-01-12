@@ -2,10 +2,14 @@ import { $, isMobile } from '@oplayer/core'
 import { icon } from '../style'
 
 export const time = $.css`
-  padding: ${isMobile ? 0 : '0px 0.5em'};
   font-variant-numeric: tabular-nums;
   font-size: 0.875em;
+  margin-top: 2px;
 `
+
+export const live = $.css(
+  `width:0.5em;height:0.5em;background-color:var(--primary-color);border-radius:50%;margin-right:0.5em`
+)
 
 export const expand = $.css(`
     position: absolute;
@@ -15,6 +19,18 @@ export const expand = $.css(`
     border-radius: 2px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
+    transition: visibility 0s, opacity 0.1s linear;
+    font-size: 0.875em;
+`)
+
+export const expandBottom = $.css(`
+    position: absolute;
+    top: 100%;
+    right: 50%;
+    z-index: 10;
+    border-radius: 2px;
+    box-sizing: border-box;
+    transform: translate(50%, 0%);
     transition: visibility 0s, opacity 0.1s linear;
     font-size: 0.875em;
 `)

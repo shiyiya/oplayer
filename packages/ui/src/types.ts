@@ -22,6 +22,7 @@ export type MenuBar<
     value?: any
   }
 > = {
+  position?: 'top' | 'bottom'
   name: string
   icon?: string
   children: T[]
@@ -120,6 +121,16 @@ export type UiConfig = {
    * default: ['loop']
    */
   settings?: (Setting | 'loop')[]
+
+  /**
+   * default: false
+   */
+  topSetting?: boolean
+
+  /**
+   * default: false
+   */
+  controlBar?: boolean
 
   thumbnails?: Thumbnails
 

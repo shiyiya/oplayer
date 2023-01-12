@@ -2,6 +2,7 @@ import Player, { $ } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
 import type { Setting, UiConfig } from '../types'
+import { controlBar } from './ControllerBar'
 import { controllerBottom } from './ControllerBottom.style'
 import {
   activeCls,
@@ -248,7 +249,9 @@ function createPanel(
 
 export default function (player: Player, $el: HTMLElement, config: UiConfig) {
   const options = config.settings || []
-  const $dom = $.create(`div.${setting}`, { 'aria-label': 'Setting' })
+  const $dom = $.create(`div.${setting(config.topSetting ? 'top' : 'bottom')}`, {
+    'aria-label': 'Setting'
+  })
   let panels: Panel[] = []
   let hasRendered = false
   const defaultSettingMap = {
@@ -316,7 +319,8 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
       'button',
       {
         class: `${icon} ${tooltip}`,
-        'aria-label': player.locales.get('Setting')
+        'aria-label': player.locales.get('Setting'),
+        'data-tooltip-pos': config.topSetting ? 'bottom-right' : ''
       },
       `${Icons.get('setting')}`
     )
@@ -342,8 +346,14 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
     const index = [config.pictureInPicture && player.isPipEnabled, config.fullscreen].filter(
       Boolean
     ).length
-    const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
-    parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
+
+    if (config.topSetting) {
+      const parent = $el.querySelector<HTMLDivElement>(`.${controlBar}`)!.children[1]!
+      parent.insertBefore(settingButton, parent.children[parent.children.length]!)
+    } else {
+      const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
+      parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
+    }
   }
 
   return { register, unregister, updateLabel, select }

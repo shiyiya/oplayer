@@ -53,15 +53,16 @@ const apply = (player: Player, config: UiConfig) => {
   renderLoading(player, $root)
 
   if (config.coverButton) renderCoverButton(player, $root)
-  const { exp, cls, toggle } = renderController(player, $root, config)
+  const { cls, toggle } = renderController(player, $root, config)
   const $mask = renderMask(player, $root, toggle)
 
   const setting = renderSetting(player, $root, config)
+  registerSpeedSetting(player, config.speed, setting)
+
   const menu = renderMenubar(player, $root, config.menu)
   const subtitle = renderSubtitle(player, setting, $root, config.subtitle)
 
   registerSlide(player, $mask, config)
-  registerSpeedSetting(player, config.speed, setting)
   registerFullScreenRotation(player, config)
   $.render($root, player.$root)
 
@@ -78,7 +79,6 @@ const apply = (player: Player, config: UiConfig) => {
     menu,
     subtitle,
     keyboard,
-    ...exp,
     cls: {
       ...cls,
       loading,

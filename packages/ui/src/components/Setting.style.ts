@@ -2,30 +2,31 @@ import { $ } from '@oplayer/core'
 
 export const activeCls = $.css('display: block;')
 
-export const setting = $.css({
-  'z-index': '98',
-  'max-height': '75%',
-  'border-radius': '3px',
-  display: 'block',
-  position: 'absolute',
-  right: '1em',
-  bottom: '2.5em',
-  overflow: 'auto',
-  'background-color': 'var(--shadow-background-color)',
-  fill: '#fff',
+export const setting = (position: 'top' | 'bottom') =>
+  $.css({
+    'z-index': '98',
+    'max-height': '75%',
+    'border-radius': '3px',
+    display: 'block',
+    position: 'absolute',
+    right: '1em',
+    [position]: position == 'top' ? '3em' : '2.5em',
+    overflow: 'auto',
+    'background-color': 'var(--shadow-background-color)',
+    fill: '#fff',
 
-  '&::-webkit-scrollbar': { width: '2px' },
+    '&::-webkit-scrollbar': { width: '2px' },
 
-  '&::-webkit-scrollbar-thumb': {
-    background: 'var(--primary-color)'
-  },
+    '&::-webkit-scrollbar-thumb': {
+      background: 'var(--primary-color)'
+    },
 
-  // panel
-  '& > div': { display: 'none', 'font-size': '0.875em' },
+    // panel
+    '& > div': { display: 'none', 'font-size': '0.875em' },
 
-  // active panel
-  [`& > div.${activeCls}`]: { display: 'block' }
-})
+    // active panel
+    [`& > div.${activeCls}`]: { display: 'block' }
+  })
 
 export const panelCls = $.css('min-width: 15.5em;')
 

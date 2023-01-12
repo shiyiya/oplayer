@@ -3,16 +3,16 @@ import { controllerHidden, error, settingShown } from '../style'
 import type { UiConfig } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBottom from './ControllerBottom'
-import renderProgress from './Progress'
+import renderControllerBar from './ControllerBar'
 
-const controllerBottom = $.css({
+const controllerBottomWrap = $.css({
   position: 'absolute',
   left: 0,
   right: 0,
   bottom: 0,
   'z-index': 97,
   padding: '0 1em',
-  transition: 'transform 0.3s ease, padding 0.3s ease, opacity 0.3s ease',
+  transition: 'transform 0.3s ease, padding 0.3s ease',
   '&::before': {
     position: 'absolute',
     content: "''",
@@ -40,13 +40,13 @@ const CTRL_HIDE_DELAY = 1500
 const hidden = $.css(`visibility:hidden;opacity:0;`)
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  const $dom = $.render($.create(`div.${controllerBottom}`), el)
-  const exp = renderProgress(player, $dom, config)
-  const { cls } = renderControllerBottom(player, $dom, config)
+  const $dom = $.render($.create(`div.${controllerBottomWrap}`), el)
+  const controllerBar = renderControllerBar(player, el, config)
+  const controllerBottom = renderControllerBottom(player, $dom, config)
 
   if (!config.miniProgressBar) {
     $.css({
-      [`@global .${controllerHidden} .${controllerBottom}`]: {
+      [`@global .${controllerHidden} .${controllerBottomWrap}`]: {
         transform: 'translateY(100%)'
       }
     })
@@ -99,8 +99,10 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   }
 
   return {
-    exp,
-    cls,
+    cls: {
+      ...controllerBar.cls,
+      ...controllerBottom.cls
+    },
     toggle() {
       if (hasClass($dom, hidden)) {
         player.play()

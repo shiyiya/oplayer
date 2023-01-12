@@ -3,6 +3,7 @@ import { Icons } from '../functions/icons'
 import { icon, off, on, tooltip, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
+import renderProgress from './Progress'
 
 import type { Player } from '@oplayer/core'
 import type { UiConfig } from '../types'
@@ -12,10 +13,13 @@ import {
   dropdown,
   dropdownHoverable,
   expand,
-  time
+  time,
+  live
 } from './ControllerBottom.style'
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
+  const progressExpo = renderProgress(player, el, config)
+
   const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel] = [
     player.locales.get('Play'),
     player.locales.get('Pause'),
@@ -35,6 +39,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         ${Icons.get('play')}
         ${Icons.get('pause')}
       </button>
+
+      ${player.options.isLive ? `<span class="${live}"></span>` : ''}
 
       <span class=${time}>${
       player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
@@ -167,7 +173,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   $.render($dom, el)
 
-  return { cls: { controllerBottom } }
+  return { cls: { controllerBottom }, ...progressExpo }
 }
 
 export default render

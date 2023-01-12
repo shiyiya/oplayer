@@ -92,6 +92,11 @@ export const tooltip = isMobile
           right: 0,
           left: 'auto',
           transform: 'translateY(0) scale(1)'
+        },
+
+        '&[data-tooltip-pos=bottom-right]::after': {
+          right: 0,
+          transform: 'translateY(0) scale(1)'
         }
       },
 
@@ -118,5 +123,15 @@ export const tooltip = isMobile
         left: 'auto',
         transform: 'translateY(10px) scale(.8)',
         'transform-origin': '100% 100%'
+      },
+
+      '&[data-tooltip-pos=bottom-right]::after': {
+        right: 0,
+        top: '100%',
+        bottom: 'unset',
+        left: 'auto',
+        'margin-top': '0.5em',
+        transform: 'translateY(-10px) scale(.8)',
+        'transform-origin': '100% 0'
       }
     })

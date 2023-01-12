@@ -36,9 +36,12 @@ const player = Player.make('#player', {
     title: '君の名は'
   },
   videoAttr: { crossorigin: 'anonymous' } // screenshot
+  // isNativeUI: () => true
 })
   .use([
     ui({
+      controlBar: true,
+      topSetting: true,
       slideToSeek: 'always',
       // miniProgressBar: false,
       // autoFocus: true,
@@ -82,7 +85,7 @@ const player = Player.make('#player', {
     chromecast,
     danmaku({
       enable: false,
-      displaySender: true,
+      // displaySender: true,
       source: DANMAKU //SUPER_DANMAKU
     })
     // ad({
@@ -99,13 +102,14 @@ const player = Player.make('#player', {
   .create()
 
 setTimeout(() => {
-  player.changeQuality(Promise.resolve({ src }))
+  player.changeQuality(Promise.resolve({ src, title: 'sdkadnlaks' }))
 }, 1000)
 
-player.plugins.ui?.highlight(highlight)
+player.plugins.ui?.highlight?.(highlight)
 
 player.plugins.ui?.menu.register(<MenuBar>{
   name: 'FMT',
+  position: 'top',
   children: FORMAT_MENU,
   onChange({ value, name }, elm) {
     src = value
