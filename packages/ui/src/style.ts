@@ -15,12 +15,13 @@ export const controllerHidden = $.css('cursor: none;')
 
 export const error = $.cls('error')
 
-export const root = ({ theme }: UiConfig) => {
+export const root = (config: UiConfig) => {
   return $.css(
     Object.assign(
       {
-        '--primary-color': `${theme!.primaryColor}`,
+        '--primary-color': `${config.theme!.primaryColor}`,
         '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
+        '--safe-top': config.topSetting ? '3em' : 0,
 
         position: 'absolute',
         top: '0',
