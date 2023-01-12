@@ -78,7 +78,7 @@ importers:
       '@oplayer/shaka': workspace:*
       '@oplayer/ui': workspace:*
       hls.js: ^1.2.9
-      lit: ^2.6.0
+      lit: ^2.6.1
     dependencies:
       '@oplayer/ad': link:../../packages/ad
       '@oplayer/core': link:../../packages/core
@@ -90,7 +90,7 @@ importers:
       '@oplayer/shaka': link:../../packages/shaka
       '@oplayer/ui': link:../../packages/ui
       hls.js: 1.2.9
-      lit: 2.6.0
+      lit: 2.6.1
 
   packages/ad:
     specifiers:
@@ -786,8 +786,8 @@ packages:
     resolution: {integrity: sha512-ic93MBXfApIFTrup4a70M/+ddD8xdt2zxxj9sRwHQzhS9ag/syqkD8JPdTXsc1gUy2K8TTirhlCqyTEM/sifNw==}
     dev: false
 
-  /@lit/reactive-element/1.6.0:
-    resolution: {integrity: sha512-33H04h4tx9NVEADti0haZTNxssCnqZlMlyjri5k9kwDWAe2W1iENroZt7VWwmsPhlWUD8sSoPXSHqd0DdL29Pw==}
+  /@lit/reactive-element/1.6.1:
+    resolution: {integrity: sha512-va15kYZr7KZNNPZdxONGQzpUr+4sxVu7V/VG7a8mRfPPXUyhEYj5RzXCQmGrlP3tAh0L3HHm5AjBMFYRqlM9SA==}
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.0.0
     dev: false
@@ -1170,7 +1170,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001442
+      caniuse-lite: 1.0.30001443
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1399,7 +1399,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001442
+      caniuse-lite: 1.0.30001443
       electron-to-chromium: 1.4.284
       node-releases: 2.0.8
       update-browserslist-db: 1.0.10_browserslist@4.21.4
@@ -1479,8 +1479,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /caniuse-lite/1.0.30001442:
-    resolution: {integrity: sha512-239m03Pqy0hwxYPYR5JwOIxRJfLTWtle9FV8zosfV5pHg+/51uD4nxcUlM8+mWWGfwKtt8lJNHnD3cWw9VZ6ow==}
+  /caniuse-lite/1.0.30001443:
+    resolution: {integrity: sha512-jUo8svymO8+Mkj3qbUbVjR8zv8LUGpGkUM/jKvc9SO2BvjCI980dp9fQbf/dyLs6RascPzgR4nhAKFA4OHeSaA==}
     dev: true
 
   /chai/4.3.7:
@@ -2375,7 +2375,7 @@ packages:
     resolution: {integrity: sha512-wdRazMMeM2pl8hq1lFG8fzix8p1VLAJunTTE2RADiFBwbUfZwybUm6IwPrmMS7qTthiayr166NoXeqWe3hfR5w==}
     dependencies:
       fast-readable-async-iterator: 1.1.1
-      streamx: 2.13.0
+      streamx: 2.13.1
     dev: true
 
   /fast-deep-equal/2.0.1:
@@ -3301,22 +3301,22 @@ packages:
   /lit-element/3.2.2:
     resolution: {integrity: sha512-6ZgxBR9KNroqKb6+htkyBwD90XGRiqKDHVrW/Eh0EZ+l+iC+u+v+w3/BA5NGi4nizAVHGYvQBHUDuSmLjPp7NQ==}
     dependencies:
-      '@lit/reactive-element': 1.6.0
-      lit-html: 2.6.0
+      '@lit/reactive-element': 1.6.1
+      lit-html: 2.6.1
     dev: false
 
-  /lit-html/2.6.0:
-    resolution: {integrity: sha512-slNAAYfvC7LxeryDOnPFl5uTpxGYGJ6UR9SFmfY+gQ+sf30z1atDPXlgjcSTtwymNdlwDhfGjq+EemQRXp9z1g==}
+  /lit-html/2.6.1:
+    resolution: {integrity: sha512-Z3iw+E+3KKFn9t2YKNjsXNEu/LRLI98mtH/C6lnFg7kvaqPIzPn124Yd4eT/43lyqrejpc5Wb6BHq3fdv4S8Rw==}
     dependencies:
       '@types/trusted-types': 2.0.2
     dev: false
 
-  /lit/2.6.0:
-    resolution: {integrity: sha512-GUKVozhomdYlFVuB4UNipbPB5RcXNX4ns43uDA1gSTZN1oHe7mnj05fpYbESxXfxg/Gn905HTIzymCFrr/cn3A==}
+  /lit/2.6.1:
+    resolution: {integrity: sha512-DT87LD64f8acR7uVp7kZfhLRrHkfC/N4BVzAtnw9Yg8087mbBJ//qedwdwX0kzDbxgPccWRW6mFwGbRQIxy0pw==}
     dependencies:
-      '@lit/reactive-element': 1.6.0
+      '@lit/reactive-element': 1.6.1
       lit-element: 3.2.2
-      lit-html: 2.6.0
+      lit-html: 2.6.1
     dev: false
 
   /load-ip-set/2.2.1:
@@ -4600,7 +4600,7 @@ packages:
     resolution: {integrity: sha512-Ax+TbUOho84bWUc3AKqWtkIvAIVws7d6QI4oJkgH4yQ5Yil+lR3vjd/7qd51dHKGzS5bFxg0++QwyNRN7s6rZA==}
     dependencies:
       limiter: 1.1.5
-      streamx: 2.13.0
+      streamx: 2.13.1
     dev: true
 
   /speedometer/1.1.0:
@@ -4640,8 +4640,8 @@ packages:
       once: 1.4.0
     dev: true
 
-  /streamx/2.13.0:
-    resolution: {integrity: sha512-9jD4uoX0juNSIcv4PazT+97FpM4Mww3cp7PM23HRTLANhgb7K7n1mB45guH/kT5F4enl04kApOM3EeoUXSPfvw==}
+  /streamx/2.13.1:
+    resolution: {integrity: sha512-d/2GPGFS/6SruJEd4Z8GMdioELQxeDXIUTCxDG633xDZjqnYbNPT13751N3nEbCGKbIhet9pEjE15prE1A4Gqg==}
     dependencies:
       fast-fifo: 1.1.0
       queue-tick: 1.0.1
@@ -5291,7 +5291,7 @@ packages:
       simple-sha1: 3.1.0
       speed-limiter: 1.0.2
       stream-with-known-length-to-buffer: 1.0.4
-      streamx: 2.13.0
+      streamx: 2.13.1
       throughput: 1.0.1
       torrent-discovery: 9.4.15
       torrent-piece: 2.0.1

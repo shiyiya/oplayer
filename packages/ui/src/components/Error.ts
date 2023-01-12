@@ -16,10 +16,6 @@ const errorCls = $.css(`
   z-index: 97;
   align-items: center;
   padding: 0 10px;
-  -moz-user-select: text;
-  -webkit-user-select: text;
-  -ms-user-select: text;
-  user-select: all;
   word-break: break-all;
   justify-content: center;
 `)
@@ -64,8 +60,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     }
 
     $dom.innerText = message || 'UNKNOWN_ERROR'
-    addClass($dom, showCls)
     player.$root.classList.add(error)
+    addClass($dom, showCls)
   }
 
   function clear() {
