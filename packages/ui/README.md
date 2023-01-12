@@ -39,7 +39,7 @@ OUI({
   showControls: 'always', // 'played'
   slideToSeek: 'none', // 'always' | 'long-touch'
   forceLandscapeOnFullscreen: true,
-  controlBar: false, //appbar
+  controlBar: false, // | {back: true} // appbar
   topSetting: false, //show setting icon on appbar
   subtitle: {
     color: 'hotpink',
