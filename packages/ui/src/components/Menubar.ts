@@ -21,7 +21,7 @@ const _select = (elm: HTMLElement) => {
 
 export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
   const menus: MenuBar[] = []
-  const $top = elm.querySelector(`.${controlBar}`)!.children[1]! as HTMLDivElement
+  const $top = elm.querySelector(`.${controlBar}`)!?.children?.[1]! as HTMLDivElement
   const $end = elm.querySelector(`.${controllerBottom}`)?.children?.[1]! as HTMLDivElement
   const $targets = [$top, $end].filter(Boolean)
 
@@ -87,7 +87,7 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
 
     menus.push(menu)
     if (isTop) {
-      $top.insertAdjacentHTML('afterbegin', $menu)
+      $top?.insertAdjacentHTML('afterbegin', $menu)
     } else {
       $end.insertAdjacentHTML('afterbegin', $menu)
     }

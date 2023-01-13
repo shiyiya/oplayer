@@ -40,7 +40,7 @@ const player = Player.make('#player', {
 })
   .use([
     ui({
-      controlBar: { back: true },
+      controlBar: { back: 'always' },
       topSetting: true,
       slideToSeek: 'always',
       // miniProgressBar: false,
@@ -102,7 +102,7 @@ const player = Player.make('#player', {
   .create()
 
 setTimeout(() => {
-  player.changeQuality(Promise.resolve({ src, title: 'sdkadnlaks' }))
+  player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
 }, 1000)
 
 player.plugins.ui?.highlight?.(highlight)

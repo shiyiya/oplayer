@@ -31,7 +31,7 @@
   - Danmaku
   - Screenshot
   - Hotkeys
-  - Thumbnails
+  - Thumbnails (vtt or img)
   - Subtitle
   - Highlight Marker
 

@@ -5,7 +5,7 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/ui?style=flat-square)](https://www.npmjs.com/package/@oplayer/ui)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/ui/badge)](https://www.jsdelivr.com/package/npm/@oplayer/ui)
 
-![](../../oplayer.png)
+![oplayer-mobile](./oplayer-ui-mobile.png)
 
 ## Basic
 
@@ -39,7 +39,7 @@ OUI({
   showControls: 'always', // 'played'
   slideToSeek: 'none', // 'always' | 'long-touch'
   forceLandscapeOnFullscreen: true,
-  controlBar: false, // | {back: true} // appbar
+  controlBar: false, // | { back:  'always' | 'fullscreen' } // appbar
   topSetting: false, //show setting icon on appbar
   subtitle: {
     color: 'hotpink',

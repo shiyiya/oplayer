@@ -1,4 +1,4 @@
-import { $ } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 
 import type { Player } from '@oplayer/core'
 import type { UiConfig } from '../types'
@@ -38,30 +38,34 @@ export const controlBar = $.css({
   }
 })
 
-export const controlBarTitle = $.css(
+const controlBarTitle = $.css(
   'font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
 )
 
-export const controlBarBackIcon = $.css(
+const controlBarBackIcon = $.css(
   `width: 2em;
    height: 2em;
    scale: 1.2;
-   margin-left: -8px;
+   margin: 4px -4px 0 -8px;
    transform: rotate(180deg);`
 )
 
+const hiddenBack = $.css('display:none')
+
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   if (!config.controlBar) return {}
-  //@ts-ignore
-  const backEnabled = config.controlBar?.back
+  const back = config.controlBar?.back
+  const backEnabled = back && isMobile
   const $dom = $.create(
     'div',
     {
       class: `${controlBar} ${controllerBottom}`
     },
-    `<div role='button'>
-      ${backEnabled ? arrowSvg(controlBarBackIcon) : ''}
-      <h2 class='${controlBarTitle}'>${player.options.source?.title}</h2>
+    `<div>
+      <span role='button' class="${back == 'fullscreen' ? hiddenBack : ''}">${
+      backEnabled ? arrowSvg(controlBarBackIcon) : ''
+    }</span>
+      <h2 class='${controlBarTitle}'>${player.options?.source?.title}</h2>
     </div>
     <div></div>`
   )
@@ -69,9 +73,22 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const $controlBarTitle = $dom.querySelector<HTMLElement>(`.${controlBarTitle}`)!
 
   if (backEnabled) {
-    $dom.children[0]?.addEventListener('click', (e) => {
+    const $controlBarBack = $controlBarTitle.previousElementSibling!
+
+    $controlBarBack.addEventListener('click', (e) => {
+      if (player.isFullScreen) player.exitFullscreen()
       player.emit('backward', e)
     })
+
+    if (back == 'fullscreen') {
+      player.on('fullscreenchange', () => {
+        if (player.isFullScreen) {
+          $controlBarBack.classList.remove(hiddenBack)
+        } else {
+          $controlBarBack.classList.remove(hiddenBack)
+        }
+      })
+    }
   }
 
   player.on('videosourcechanged', ({ payload }) => {

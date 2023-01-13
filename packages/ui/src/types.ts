@@ -124,8 +124,9 @@ export type UiConfig = {
 
   /**
    * default: false
+   * back only work on mobile
    */
-  controlBar?: boolean | { back: boolean } // | boolean
+  controlBar?: { back?: 'always' | 'fullscreen' } // | boolean
 
   /**
    * default: false
