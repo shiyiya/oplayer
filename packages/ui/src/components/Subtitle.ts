@@ -76,7 +76,9 @@ class Subtitle {
           shadow ||
           '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
         bottom: `${bottom || '5%'}`,
-        'font-size': `${(fontSize || (isMobile ? 14 : 16)) / 16}em`,
+        // 1em = 16px
+        // fullscreen should be bigger ?
+        'font-size': `${(fontSize || (isMobile ? 16 : 24)) / 16}em`,
 
         '& > p': { margin: 0 }
       })}`,
