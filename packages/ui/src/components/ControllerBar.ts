@@ -8,13 +8,13 @@ import { arrowSvg } from './Setting'
 
 export const controlBar = $.css({
   position: 'absolute',
-  left: 0,
   top: 0,
+  left: 0,
   right: 0,
   'z-index': 97,
-  padding: '0.5em 1em',
-  height: 'auto',
+  padding: '0.5em 1em 0',
   transition: 'transform 0.3s ease',
+  height: 'var(--control-bar-height)',
 
   '&::before': {
     position: 'absolute',
@@ -38,16 +38,12 @@ export const controlBar = $.css({
   }
 })
 
-const controlBarTitle = $.css(
-  'font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
+const controlBarBackIcon = $.css(
+  'width: 2.5em;height: 2.5em;margin:0 -10px;transform: rotate(180deg);'
 )
 
-const controlBarBackIcon = $.css(
-  `width: 2em;
-   height: 2em;
-   scale: 1.2;
-   margin: 4px -4px 0 -8px;
-   transform: rotate(180deg);`
+const controlBarTitle = $.css(
+  'flex:1;font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
 )
 
 const hiddenBack = $.css('display:none')
@@ -62,9 +58,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
       class: `${controlBar} ${controllerBottom}`
     },
     `<div>
-      <span role='button' class="${back == 'fullscreen' ? hiddenBack : ''}">${
-      backEnabled ? arrowSvg(controlBarBackIcon) : ''
-    }</span>
+    ${
+      backEnabled
+        ? `<span role='button' class="${controlBarBackIcon} ${
+            back == 'fullscreen' ? hiddenBack : ''
+          }">${arrowSvg('')}</span>`
+        : ''
+    }
       <h2 class='${controlBarTitle}'>${player.options?.source?.title}</h2>
     </div>
     <div></div>`
@@ -85,7 +85,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         if (player.isFullScreen) {
           $controlBarBack.classList.remove(hiddenBack)
         } else {
-          $controlBarBack.classList.remove(hiddenBack)
+          $controlBarBack.classList.add(hiddenBack)
         }
       })
     }

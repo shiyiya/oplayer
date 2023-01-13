@@ -10,7 +10,7 @@ export const setting = (position: 'top' | 'bottom') =>
     display: 'block',
     position: 'absolute',
     right: '1em',
-    [position]: position == 'top' ? 'var(--safe-top)' : '2.5em',
+    [position]: position == 'top' ? 'var(--control-bar-height)' : '2.5em',
     overflow: 'auto',
     'background-color': 'var(--shadow-background-color)',
     fill: '#fff',

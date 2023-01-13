@@ -1,6 +1,7 @@
 import { UiConfig } from '../types'
 import Player, { isMobile } from '@oplayer/core'
-import { canplay, clamp, formatTime } from '../utils'
+import { canplay, clamp, formatTime, hasClass } from '../utils'
+import { settingShown } from '../style'
 
 const FULL_SLIDE_DURATION = 60
 
@@ -18,6 +19,7 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
 
         if (config.slideToSeek == 'always') {
           $dom.addEventListener('touchstart', (e) => {
+            if (hasClass(player.$root, settingShown)) return
             const { clientX, clientY } = e.changedTouches[0]!
             ;[startX, startY] = [clientX, clientY]
           })
@@ -27,6 +29,7 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
 
         if (config.slideToSeek == 'long-touch') {
           $dom.addEventListener('touchstart', (e) => {
+            if (hasClass(player.$root, settingShown)) return
             const { clientX, clientY } = e.changedTouches[0]!
             ;[startX, startY] = [clientX, clientY]
             touchedTimer = window.setInterval(() => {
@@ -44,6 +47,7 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
         }
 
         function moving(e: TouchEvent) {
+          if (startX == 0 && startY == 0) return
           e.preventDefault()
           const { clientX, clientY } = e.changedTouches[0]!
           const [dx, dy] = [clientX - startX, startY - clientY]
@@ -67,6 +71,7 @@ export default function (player: Player, $dom: HTMLDivElement, config: UiConfig)
         }
 
         function end() {
+          if (startX == 0 && startY == 0) return
           if (config.slideToSeek == 'long-touch' && touchedTime < 1000) {
             if (touchedTimer) clearInterval(touchedTimer)
             $dom.removeEventListener('touchmove', moving)
