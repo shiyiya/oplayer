@@ -1,6 +1,6 @@
 ---
-name: "Issue: \U0001F4AC Questions / Help"
-about: "Issue: \U0001F4AC Questions / Help"
+name: "\U0001F4AC Questions / Help"
+about: "If you have questions, please read full readme first"
 title: ''
 labels: ''
 assignees: ''
