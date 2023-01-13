@@ -21,7 +21,7 @@ export const root = (config: UiConfig) => {
       {
         '--primary-color': `${config.theme!.primaryColor}`,
         '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
-        '--safe-top': config.topSetting ? '2em' : 0,
+        '--safe-top': config.topSetting ? '2.5em' : 0,
 
         position: 'absolute',
         top: '0',
