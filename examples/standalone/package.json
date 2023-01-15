@@ -21,7 +21,7 @@
     "@oplayer/plugins": "workspace:*",
     "@oplayer/shaka": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "hls.js": "^1.2.9",
+    "hls.js": "^1.3.0",
     "lit": "^2.6.1"
   }
 }

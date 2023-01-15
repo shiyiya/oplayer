@@ -43,12 +43,21 @@ class Subtitle {
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
   }
 
+  /**
+   * change subtitle source
+   * @deprecated use `changeSource`
+   */
   updateSource(payload: SubtitleSource[]) {
+    this.changeSource(payload)
+  }
+
+  changeSource(payload: SubtitleSource[]) {
     this.options.source = payload
     this.processDefault()
 
     this.load()
     this.loadSetting()
+    this.player.emit('subtitlesourcechange', payload)
   }
 
   processDefault() {
@@ -78,7 +87,7 @@ class Subtitle {
         bottom: `${bottom || '5%'}`,
         // 1em = 16px
         // fullscreen should be bigger ?
-        'font-size': `${(fontSize || (isMobile ? 16 : 24)) / 16}em`,
+        'font-size': `${(fontSize || (isMobile ? 16 : 20)) / 16}em`,
 
         '& > p': { margin: 0 }
       })}`,

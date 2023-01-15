@@ -43,7 +43,7 @@ const controlBarBackIcon = $.css(
 )
 
 const controlBarTitle = $.css(
-  'flex:1;font-size:1.25em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
+  'flex:1;font-size:1em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
 )
 
 const hiddenBack = $.css('display:none')
