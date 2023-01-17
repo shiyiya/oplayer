@@ -9,7 +9,6 @@ import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import ad from '@oplayer/ad'
 import mpegts from '@oplayer/mpegts'
-import shaka from '@oplayer/shaka'
 import { chromecast } from '@oplayer/plugins'
 
 import DANMAKU from '../../website/static/danmaku.xml'
@@ -81,7 +80,6 @@ const player = Player.make('#player', {
     hls(),
     dash(),
     mpegts(),
-    shaka({ ui: false }),
     chromecast,
     danmaku({
       enable: false,
