@@ -86,7 +86,6 @@ Player.make('#oplayer', {
 - [![npm](https://img.shields.io/npm/v/@oplayer/hls?style=flat-square&color=0066dc&label=@oplayer/hls)](./packages/hls)
 - [![npm](https://img.shields.io/npm/v/@oplayer/dash?style=flat-square&color=208af9&label=@oplayer/dash)](./packages/dash)
 - [![npm](https://img.shields.io/npm/v/@oplayer/mpegts?style=flat-square&color=044F67&label=@oplayer/mpegts)](./packages/mpegts)
-- [![npm](https://img.shields.io/npm/v/@oplayer/shaka?style=flat-square&color=fcbc05&label=@oplayer/shaka)](./packages/shaka)
 - [![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&color=ef334c&label=@oplayer/torrent)](./packages/torrent)
 - [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&color=ffa500&label=@oplayer/danmaku)](./packages/danmaku)
 - [![npm](https://img.shields.io/npm/v/@oplayer/ad?style=flat-square&color=8b0000&label=@oplayer/ad)](./packages/ad)
