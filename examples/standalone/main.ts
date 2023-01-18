@@ -2,25 +2,25 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
+import ad from '@oplayer/ad'
 import Player, { PlayerEvent } from '@oplayer/core'
 import danmaku from '@oplayer/danmaku'
-import ui from '@oplayer/ui'
-import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
-import ad from '@oplayer/ad'
+import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
-import { chromecast } from '@oplayer/plugins'
+import ui from '@oplayer/ui'
 
 import DANMAKU from '../../website/static/danmaku.xml'
-import THUMB from '../../website/static/thumbnails.jpg'
 import POSTER from '../../website/static/poster.png'
+import THUMB from '../../website/static/thumbnails.jpg'
 import SRT from '../../website/static/君の名は.srt'
 // import SUPER_DANMAKU from '../../website/static/天气之子.xml'
 
-import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import { MenuBar } from '@oplayer/ui/src/types'
+import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
+import emptyBuffer from './emptyBuffer'
 
-let src = VIDEO_LIST[0]!
+let src = VIDEO_LIST[1]!
 let currentDataSrcId = 0
 
 const player = Player.make('#player', {
@@ -80,7 +80,6 @@ const player = Player.make('#player', {
     hls(),
     dash(),
     mpegts(),
-    chromecast,
     danmaku({
       enable: false,
       // displaySender: true,
@@ -98,6 +97,12 @@ const player = Player.make('#player', {
     // })
   ])
   .create()
+
+function stopLoad() {
+  player.loader?.destroy()
+  const u8 = Uint8Array.from(emptyBuffer)
+  player.$video.src = URL.createObjectURL(new Blob([u8.buffer]))
+}
 
 setTimeout(() => {
   player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
@@ -159,11 +164,19 @@ const actions = () => html`<p style="display:flex;">
               ? (currentDataSrcId = 0)
               : (currentDataSrcId += 1)
           ]!
-        player.changeSource({ src })
+
+        player.changeSource(
+          new Promise((r) => {
+            stopLoad()
+            r({ src })
+          })
+        )
       }}
     >
       Queue
     </button>
+
+    <button @click=${stopLoad}>StopLoad</button>
   </p>
 
   <textarea readonly ${ref((f) => (logs = f as any))}></textarea> `
