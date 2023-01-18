@@ -44,7 +44,7 @@ const detectLoading = (player: Player, add: any, remove: any) => {
   })
 
   player.on('play', () => (enable = true))
-  player.on('pause', () => ((enable = false), remove()))
+  player.on(['pause', 'error'], () => ((enable = false), remove()))
 
   player.on(canplay, remove)
 

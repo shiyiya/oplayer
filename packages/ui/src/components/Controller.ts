@@ -80,8 +80,8 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
 
   const showCtrl = () => {
+    cancelHideCtrl()
     if (hasClass(player.$root, controllerHidden)) {
-      cancelHideCtrl()
       removeClass(player.$root, controllerHidden)
       player.emit('controllervisibilitychange', false)
     }
