@@ -77,7 +77,7 @@ function createRow({
 }: Omit<Setting, 'onChange' | 'children' | 'value'> & { index?: number; switcherLabe?: string }) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
-    role: type == 'selector' || 'back' ? 'menuitem' : 'menuitemradio',
+    role: Boolean(type) ? 'menuitem' : 'menuitemradio',
     'aria-haspopup': type == 'selector'
   })
   const res = {
