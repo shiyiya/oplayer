@@ -31,7 +31,8 @@ const styles = $.css(
         background: 'var(--primary-color)',
         opacity: 0.9,
         padding: '1em',
-
+        transition: 'transform .2s ease-in-out',
+        '&:active': { transform: 'scale(.85)' },
         '& > *': {
           position: 'relative',
           width: '1.5em',

@@ -108,7 +108,7 @@ export const settingItemCls = $.css({
     'background-color': 'rgba(255, 255, 255, 0.1)'
   },
 
-  [`&[data-selected='true']`]: {
+  [`&[aria-checked='true']`]: {
     [`& .${yesIcon}`]: { display: 'block' },
     [`&[data-index]`]: {
       'background-color': 'rgba(255, 255, 255, 0.1)'

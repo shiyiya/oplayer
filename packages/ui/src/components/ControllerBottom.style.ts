@@ -73,7 +73,7 @@ export const dropItem = $.css({
     'pointer-events': 'none'
   },
 
-  '&[data-selected=true]': {
+  '&[aria-checked=true]': {
     color: 'var(--primary-color)'
   },
 
@@ -108,11 +108,14 @@ export const controllerBottom = $.css({
     'line-height': '1.5em',
     'box-sizing': 'content-box',
 
-    ['& > *']: {
+    '& > *': {
       height: '1.5em',
       width: '1.5em',
-      'pointer-events': 'none'
-    }
+      'pointer-events': 'none',
+      transition: 'transform .2s ease-in-out'
+    },
+
+    '&:active > *': { transform: 'scale(.85)' }
   },
 
   // left & right

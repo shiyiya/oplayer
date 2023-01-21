@@ -16,7 +16,7 @@ export default function registerSpeedSetting(
       name: player.locales.get('Speed'),
       icon: Icons.get('playbackRate'),
       children: speeds.map((speed) => ({
-        name: +speed == 1 ? 'Normal' : speed + 'x',
+        name: +speed == 1 ? player.locales.get('Normal') : speed + 'x',
         value: +speed,
         default: player.playbackRate == +speed
       })),

@@ -33,7 +33,8 @@ export const root = (config: UiConfig) => {
 
         '&, & > *': {
           '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
-        }
+        },
+        '& [hidden]': { display: 'none' }
       },
       !isMobile && {
         [`&.${fullscreen}`]: { 'font-size': '22px' },
@@ -102,6 +103,7 @@ export const tooltip = isMobile
       },
 
       '&::after': {
+        'line-height': '1.25em',
         position: 'absolute',
         content: 'attr(aria-label)',
         bottom: '100%',

@@ -76,7 +76,9 @@ function createRow({
   index
 }: Omit<Setting, 'onChange' | 'children' | 'value'> & { index?: number; switcherLabe?: string }) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
-    'data-key': key
+    'data-key': key,
+    role: type == 'selector' || 'back' ? 'menuitem' : 'menuitemradio',
+    'aria-haspopup': type == 'selector'
   })
   const res = {
     $row: $item,
@@ -86,7 +88,7 @@ function createRow({
   switch (type) {
     case 'switcher':
       $item.innerHTML = switcher(name, icon)
-      $item.setAttribute('data-selected', selected || false)
+      $item.setAttribute('aria-checked', selected || false)
       break
     case 'selector':
       $item.innerHTML = nexter(name, icon)
@@ -97,7 +99,7 @@ function createRow({
       break
     default: // select option 不用 type
       $item.innerHTML = selectorOption(name, icon)
-      $item.setAttribute('data-selected', selected || false)
+      $item.setAttribute('aria-checked', selected || false)
       if (typeof index == 'number') {
         $item.setAttribute('data-index', index.toString())
       }
@@ -141,7 +143,8 @@ function createPanel(
   } else {
     //创建新的选项面板
     panel.$ref = $.create(`div.${panels[0] && isSelectorOptionsPanel ? subPanelCls : panelCls}`, {
-      'data-key': key
+      'data-key': key,
+      role: 'menu'
     })
     panel.key = key
     panels.push(panel)
@@ -208,15 +211,15 @@ function createPanel(
         optionPanel.select = (i: number, shouldBeCallFn: boolean) => {
           if (i == -1) {
             optionPanel
-              .$ref!.querySelector<HTMLDivElement>('[data-selected=true]')
-              ?.setAttribute('data-selected', 'false')
+              .$ref!.querySelector<HTMLDivElement>('[aria-checked=true]')
+              ?.setAttribute('aria-checked', 'false')
             return
           }
 
-          const $targets = optionPanel.$ref.querySelectorAll('[data-selected]')
-          if ($targets.item(i).getAttribute('data-selected') != 'true') {
-            $targets.forEach((it) => it.setAttribute('data-selected', 'false'))
-            $targets.item(i).setAttribute('data-selected', 'true')
+          const $targets = optionPanel.$ref.querySelectorAll('[aria-checked]')
+          if ($targets.item(i).getAttribute('aria-checked') != 'true') {
+            $targets.forEach((it) => it.setAttribute('aria-checked', 'false'))
+            $targets.item(i).setAttribute('aria-checked', 'true')
             const value = children[i]
             $label.innerText = value!.name
             if (shouldBeCallFn) onChange?.(value, { index: i })
@@ -236,8 +239,8 @@ function createPanel(
       if (type == 'switcher') {
         //@ts-ignore
         $row.select = function (shouldBeCallFn: boolean) {
-          const selected = this.getAttribute('data-selected') == 'true'
-          this.setAttribute('data-selected', `${!selected}`)
+          const selected = this.getAttribute('aria-checked') == 'true'
+          this.setAttribute('aria-checked', `${!selected}`)
           if (shouldBeCallFn) onChange?.(!selected)
         }
         //@ts-ignore
@@ -300,7 +303,7 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
       }
     } else {
       $dom
-        .querySelector<HTMLSpanElement & { select: Function }>(`[data-key="${key}"][data-selected]`)
+        .querySelector<HTMLSpanElement & { select: Function }>(`[data-key="${key}"][aria-checked]`)
         ?.select(shouldBeCallFn)
     }
   }
@@ -322,7 +325,7 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
       'button',
       {
         class: `${icon} ${tooltip}`,
-        'aria-label': player.locales.get('Setting'),
+        'aria-label': player.locales.get('Settings'),
         'data-tooltip-pos': config.topSetting ? 'bottom-right' : ''
       },
       `${Icons.get('setting')}`

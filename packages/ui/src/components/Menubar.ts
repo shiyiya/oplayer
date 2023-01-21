@@ -14,9 +14,9 @@ import { siblings } from '../utils'
 import { controlBar } from './ControllerBar'
 
 const _select = (elm: HTMLElement) => {
-  const selected = elm.getAttribute('data-selected') == 'true'
-  elm.setAttribute('data-selected', `${!selected}`)
-  siblings(elm, (it) => it.setAttribute('data-selected', `${selected}`))
+  const selected = elm.getAttribute('aria-checked') == 'true'
+  elm.setAttribute('aria-checked', `${!selected}`)
+  siblings(elm, (it) => it.setAttribute('aria-checked', `${selected}`))
 }
 
 export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
@@ -32,7 +32,7 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     const label = elm.getAttribute('aria-label')
     const target = menus.find((it) => it.name == label)
 
-    if (!target || elm.getAttribute('data-selected') == 'true') return
+    if (!target || elm.getAttribute('aria-checked') == 'true') return
 
     if (elm.tagName.toUpperCase() == 'SPAN') {
       _select(elm)
@@ -67,14 +67,16 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
         menu.position
       }" aria-label="${name}">
         ${$button}
-        <div class='${expand} ${isTop ? expandBottom : ''}'>
+        <div class='${expand} ${isTop ? expandBottom : ''}' role='menu'>
           ${children
             .map(
               (it, i) =>
                 `<span
+                  role="menuitemradio"
+                  aria-haspopup="false"
                   aria-label="${name}"
                   class="${dropItem}"
-                  data-selected="${Boolean(it.default)}"
+                  aria-checked="${Boolean(it.default)}"
                   data-index="${i}"
                 >${it.name}</span>`
             )

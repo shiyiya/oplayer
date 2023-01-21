@@ -34,7 +34,8 @@ const player = Player.make('#player', {
     poster: POSTER,
     title: '君の名は'
   },
-  videoAttr: { crossorigin: 'anonymous' } // screenshot
+  videoAttr: { crossorigin: 'anonymous' }, // screenshot
+  lang: 'en'
   // isNativeUI: () => true
 })
   .use([
