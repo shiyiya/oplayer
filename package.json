@@ -37,20 +37,20 @@
     "@changesets/cli": "^2.26.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@types/node": "^18.11.18",
-    "@vitejs/plugin-react": "^2.2.0",
+    "@vitejs/plugin-react": "^3.0.1",
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
-    "jsdom": "^20.0.3",
+    "jsdom": "^21.0.0",
     "lint-staged": "^13.1.0",
-    "nx": "^15.5.1",
+    "nx": "^15.5.3",
     "prettier": "^2.8.3",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.1.1",
     "terser": "^5.16.1",
     "tslib": "^2.4.1",
     "typescript": "^4.9.4",
-    "vite": "^3.2.5",
-    "vite-plugin-banner": "^0.6.1",
-    "vitest": "^0.25.8"
+    "vite": "^4.0.4",
+    "vite-plugin-banner": "^0.7.0",
+    "vitest": "^0.27.3"
   }
 }
