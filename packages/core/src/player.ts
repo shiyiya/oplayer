@@ -537,7 +537,7 @@ export class Player {
   }
 }
 
-if (typeof window !== undefined) {
+if (globalThis.window) {
   console.log(
     '%cOPlayer%c v%s\n %c\nOh! Another HTML5 video player.\nhttps://github.com/shiyiya/oplayer\n',
     'font-size:32px;',
