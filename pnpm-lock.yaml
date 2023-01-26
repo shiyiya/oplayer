@@ -18,11 +18,11 @@ importers:
       babel-plugin-syntax-trailing-function-commas: ^6.22.0
       concurrently: ^7.6.0
       cross-env: ^7.0.3
-      jsdom: ^21.0.0
+      jsdom: ^21.1.0
       lint-staged: ^13.1.0
-      nx: ^15.5.3
+      nx: ^15.6.2
       prettier: ^2.8.3
-      rimraf: ^4.1.1
+      rimraf: ^4.1.2
       terser: ^5.16.1
       tslib: ^2.4.1
       typescript: ^4.9.4
@@ -44,17 +44,17 @@ importers:
       babel-plugin-syntax-trailing-function-commas: 6.22.0
       concurrently: 7.6.0
       cross-env: 7.0.3
-      jsdom: 21.0.0
+      jsdom: 21.1.0
       lint-staged: 13.1.0
-      nx: 15.5.3
+      nx: 15.6.2
       prettier: 2.8.3
-      rimraf: 4.1.1
+      rimraf: 4.1.2
       terser: 5.16.1
       tslib: 2.4.1
       typescript: 4.9.4
       vite: 4.0.4_qfz55zahqkp66vn23sxaaw3yfe
       vite-plugin-banner: 0.7.0
-      vitest: 0.27.3_jsdom@21.0.0+terser@5.16.1
+      vitest: 0.27.3_jsdom@21.1.0+terser@5.16.1
 
   examples/html:
     specifiers:
@@ -960,21 +960,21 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@nrwl/cli/15.5.3:
-    resolution: {integrity: sha512-NWf9CWswvdYM6YzXuweaZPAZ2erMtQrrHZdgFbUGeojZBZ+b4TCGzLWNodZj4yQOa/eTwlyPMYO2LEw9CoapDQ==}
+  /@nrwl/cli/15.6.2:
+    resolution: {integrity: sha512-7U9hYVTwXqPZSqRxYTDO+wCudASuknqTAY6151RrpT4HDK5BpkMxC96HW/wvhrzaLf+7dLHAimr2b+vR2xnqRA==}
     dependencies:
-      nx: 15.5.3
+      nx: 15.6.2
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
       - debug
     dev: true
 
-  /@nrwl/tao/15.5.3:
-    resolution: {integrity: sha512-vgPLIW9IoBfQ4IkHRT5RC4LqNwFBK5jmHYmFIRgbIeFRudFBbnpmOaKRME0OwN7qJ6964PVVbzahAPvYVD02xw==}
+  /@nrwl/tao/15.6.2:
+    resolution: {integrity: sha512-jG8Csd43uyFf1XUc02k1XoK89n3FsvXM9EXdFadKLbiw5/7c0dZ0AYK8+JFgRpk67/7T0qaxtw8YlKdkuf/uJg==}
     hasBin: true
     dependencies:
-      nx: 15.5.3
+      nx: 15.6.2
     transitivePeerDependencies:
       - '@swc-node/register'
       - '@swc/core'
@@ -1136,7 +1136,7 @@ packages:
   /acorn-globals/7.0.1:
     resolution: {integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==}
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.8.2
       acorn-walk: 8.2.0
     dev: true
 
@@ -1164,8 +1164,8 @@ packages:
     hasBin: true
     dev: true
 
-  /acorn/8.8.1:
-    resolution: {integrity: sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==}
+  /acorn/8.8.2:
+    resolution: {integrity: sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
@@ -1295,7 +1295,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001446
+      caniuse-lite: 1.0.30001448
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1308,8 +1308,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /axios/1.2.3:
-    resolution: {integrity: sha512-pdDkMYJeuXLZ6Xj/Q5J3Phpe+jbGdsSzlQaFVkMQzRUL05+6+tetX8TV3p4HrU4kzuO9bt+io/yGQxuyxA/xcw==}
+  /axios/1.2.4:
+    resolution: {integrity: sha512-lIQuCfBJvZB/Bv7+RWUqEJqNShGOVpk9v7P0ZWx5Ip0qY6u7JBAU6dzQPMLasU9vHL2uD8av/1FDJXj7n6c39w==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
@@ -1524,7 +1524,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001446
+      caniuse-lite: 1.0.30001448
       electron-to-chromium: 1.4.284
       node-releases: 2.0.8
       update-browserslist-db: 1.0.10_browserslist@4.21.4
@@ -1609,8 +1609,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /caniuse-lite/1.0.30001446:
-    resolution: {integrity: sha512-fEoga4PrImGcwUUGEol/PoFCSBnSkA9drgdkxXkJLsUBOnJ8rs3zDv6ApqYXGQFOyMPsjh79naWhF4DAxbF8rw==}
+  /caniuse-lite/1.0.30001448:
+    resolution: {integrity: sha512-tq2YI+MJnooG96XpbTRYkBxLxklZPOdLmNIOdIhvf7SNJan6u5vCKum8iT7ZfCt70m1GPkuC7P3TtX6UuhupuA==}
     dev: true
 
   /chai/4.3.7:
@@ -1950,7 +1950,7 @@ packages:
       html-entities: 1.4.0
       imsc: 1.1.3
       localforage: 1.10.0
-      ua-parser-js: 1.0.32
+      ua-parser-js: 1.0.33
     dev: true
 
   /data-urls/3.0.2:
@@ -3040,8 +3040,8 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jsdom/21.0.0:
-    resolution: {integrity: sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==}
+  /jsdom/21.1.0:
+    resolution: {integrity: sha512-m0lzlP7qOtthD918nenK3hdItSd2I+V3W9IrBcB36sqDwG+KnUs66IF5GY7laGWUnlM9vTsD0W1QwSEBYWWcJg==}
     engines: {node: '>=14'}
     peerDependencies:
       canvas: ^2.5.0
@@ -3050,7 +3050,7 @@ packages:
         optional: true
     dependencies:
       abab: 2.0.6
-      acorn: 8.8.1
+      acorn: 8.8.2
       acorn-globals: 7.0.1
       cssom: 0.5.0
       cssstyle: 2.3.0
@@ -3512,7 +3512,7 @@ packages:
   /mlly/1.1.0:
     resolution: {integrity: sha512-cwzBrBfwGC1gYJyfcy8TcZU1f+dbH/T+TuOhtYP2wLv/Fb51/uV7HJQfBPtEupZ2ORLRU1EKFS/QfS3eo9+kBQ==}
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.8.2
       pathe: 1.1.0
       pkg-types: 1.0.1
       ufo: 1.0.1
@@ -3614,8 +3614,8 @@ packages:
     resolution: {integrity: sha512-90yv+6538zuvUMnN+zCr8LuV6bPFdq50304114vJYJ8RDyK8D5O9Phpbd6SZWgI7PwzmmfN1upeOJlvybDSgCw==}
     dev: true
 
-  /nx/15.5.3:
-    resolution: {integrity: sha512-PHB8VbiBLP108xb+yR8IGEsYWr7OcmDDOjHL+73oP4lVjyPgT8wdTMe6tI5LdBgv+KZ+0kiThK3ckvcPsfgvLQ==}
+  /nx/15.6.2:
+    resolution: {integrity: sha512-F6O2mRf6fWVVpkekvmN2erlJZ8jFVRO+PlAKxHBd8pFGtqkh53VXtU0r7/93qgRjC1zz9VVd8BKEB+xuQ2FbDQ==}
     hasBin: true
     requiresBuild: true
     peerDependencies:
@@ -3627,13 +3627,13 @@ packages:
       '@swc/core':
         optional: true
     dependencies:
-      '@nrwl/cli': 15.5.3
-      '@nrwl/tao': 15.5.3
+      '@nrwl/cli': 15.6.2
+      '@nrwl/tao': 15.6.2
       '@parcel/watcher': 2.0.4
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.36
       '@zkochan/js-yaml': 0.0.6
-      axios: 1.2.3
+      axios: 1.2.4
       chalk: 4.1.2
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
@@ -4253,8 +4253,8 @@ packages:
       glob: 7.1.4
     dev: true
 
-  /rimraf/4.1.1:
-    resolution: {integrity: sha512-Z4Y81w8atcvaJuJuBB88VpADRH66okZAuEm+Jtaufa+s7rZmIz+Hik2G53kGaNytE7lsfXyWktTmfVz0H9xuDg==}
+  /rimraf/4.1.2:
+    resolution: {integrity: sha512-BlIbgFryTbw3Dz6hyoWFhKk+unCcHMSkZGrTFVAx2WmttdBSonsdtRlwiuTbDqTKr+UlXIUqJVS4QT5tUzGENQ==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -4691,7 +4691,7 @@ packages:
   /strip-literal/1.0.0:
     resolution: {integrity: sha512-5o4LsH1lzBzO9UFH63AJ2ad2/S2AVx6NtjOcaz+VTT2h1RiRvbipW72z8M/lxEhcPHDBQwpDrnTF7sXy/7OwCQ==}
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.8.2
     dev: true
 
   /strong-log-transformer/2.1.0:
@@ -4790,7 +4790,7 @@ packages:
     hasBin: true
     dependencies:
       '@jridgewell/source-map': 0.3.2
-      acorn: 8.8.1
+      acorn: 8.8.2
       commander: 2.20.3
       source-map-support: 0.5.21
     dev: true
@@ -4977,8 +4977,8 @@ packages:
     hasBin: true
     dev: true
 
-  /ua-parser-js/1.0.32:
-    resolution: {integrity: sha512-dXVsz3M4j+5tTiovFVyVqssXBu5HM47//YSOeZ9fQkdDKkfzv2v3PP1jmH6FUyPW+yCSn7aBVK1fGGKNhowdDA==}
+  /ua-parser-js/1.0.33:
+    resolution: {integrity: sha512-RqshF7TPTE0XLYAqmjlu5cLLuGdKrNu9O1KLA/qp39QtbZwuzwv1dT46DZSopoUMsYgXpB3Cv8a03FI8b74oFQ==}
     dev: true
 
   /ufo/1.0.1:
@@ -5171,7 +5171,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.27.3_jsdom@21.0.0+terser@5.16.1:
+  /vitest/0.27.3_jsdom@21.1.0+terser@5.16.1:
     resolution: {integrity: sha512-Ld3UVgRVhJUtqvQ3dW89GxiApFAgBsWJZBCWzK+gA3w2yG68csXlGZZ4WDJURf+8ecNfgrScga6xY+8YSOpiMg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -5196,12 +5196,12 @@ packages:
       '@types/chai': 4.3.4
       '@types/chai-subset': 1.3.3
       '@types/node': 18.11.18
-      acorn: 8.8.1
+      acorn: 8.8.2
       acorn-walk: 8.2.0
       cac: 6.7.14
       chai: 4.3.7
       debug: 4.3.4
-      jsdom: 21.0.0
+      jsdom: 21.1.0
       local-pkg: 0.4.3
       picocolors: 1.0.0
       source-map: 0.6.1
