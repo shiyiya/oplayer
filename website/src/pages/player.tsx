@@ -19,6 +19,10 @@ export default () => {
       .use([ui(), hls(), dash(), mpegts()])
       .create()
       .on(console.log)
+
+    if (document.location.search.substring(1)) {
+      setIsFirst(false)
+    }
   }, [])
 
   return (
