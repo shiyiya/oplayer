@@ -7,6 +7,37 @@
 
 Hls plugin for oplayer
 
+## Install
+
+```bash
+# npm
+npm i @oplayer/hls
+# yarn
+yarn add @oplayer/hls
+# pnpm
+yarn add @oplayer/hls
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+<!--  hls.js FIRST  -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
+
+<div id="oplayer" />
+
+<script>
+  OPlayer.make('#oplayer', {
+    source: {
+      src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      poster: 'https://oplayer.vercel.app/poster.png'
+    }
+  })
+    .use([OHls()])
+    .create()
+</script>
+```
+
 ## Usage
 
 ```ts
@@ -18,14 +49,33 @@ const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
   ) &&
   (source.format === 'm3u8' || /m3u8(#|\?|$)/i.test(source.src))
 
-type hlsPluginOptions = {
-  hlsConfig?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, source: Source) => boolean
+type Options = {
+  config?: Partial<HlsConfig>
+  matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
+  /**
+   * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
+   * default: true
+   */
+  qualityControl?: boolean
+  /**
+   *  control how the stream quality is switched. default: immediate
+   *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
+   *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
+   */
+  qualitySwitch?: 'immediate' | 'smooth'
+  /**
+   * @default: false
+   */
+  withBitrate?: boolean
+  audioControl?: boolean
+  textControl?: boolean
+  /**
+   * @default false
+   */
+  showWarning?: boolean
 }
 
 import hls from '@oplayer/hls'
 
-const options: hlsPluginOptions
-
-Player.make(...).use([hls(options)]).create()
+Player.make(...).use([hls()]).create()
 ```

@@ -12,7 +12,7 @@ type PluginOptions = {
 
 type Options = {
   /**
-   * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
+   * enable quality control for the stream.
    * default: true
    */
   qualityControl?: boolean
@@ -22,7 +22,13 @@ type Options = {
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
   qualitySwitch?: 'immediate' | 'smooth'
+  /**
+   * @default: true
+   */
   audioControl?: boolean
+  /**
+   * @default: true
+   */
   textControl?: boolean
   /**
    * @default: false

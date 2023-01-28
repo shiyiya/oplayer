@@ -28,7 +28,13 @@ type Options = {
    * @default: false
    */
   withBitrate?: boolean
+  /**
+   * @default: true
+   */
   audioControl?: boolean
+  /**
+   * @default: true
+   */
   textControl?: boolean
   /**
    * @default false

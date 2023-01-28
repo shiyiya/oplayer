@@ -40,7 +40,7 @@
 ### 1. Use the module manager to import:
 
 ```bash
-npm i @oplayer/core @oplayer/ui @oplayer/hls hls.js
+npm i @oplayer/core @oplayer/ui @oplayer/hls
 ```
 
 ```ts

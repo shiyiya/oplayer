@@ -6,14 +6,14 @@ const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 //@ts-ignore
 let imported: typeof Mpegts = globalThis.mpegts
 
-type PluginOptions = {
-  mpegtsConfig?: Partial<Mpegts.Config> & { debug: boolean }
+type Options = {
+  config?: Partial<Mpegts.Config>
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
 }
 
 const REG = /flv|ts|m2ts(#|\?|$)/i
 
-const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
+const defaultMatcher: Options['matcher'] = (_, source) => {
   if (source.format && ['flv', 'm2ts', 'mpegts'].includes(source.format)) {
     return true
   }
@@ -21,8 +21,8 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
   return (source.format === 'auto' || typeof source.format === 'undefined') && REG.test(source.src)
 }
 
-const plugin = (options?: PluginOptions): PlayerPlugin => {
-  const { mpegtsConfig, matcher = defaultMatcher } = options || {}
+const plugin = (options?: Options): PlayerPlugin => {
+  const { config, matcher = defaultMatcher } = options || {}
   let instance: Mpegts.Player | null
   let instanceDestroy: Mpegts.Player['destroy'] | null
 
@@ -43,7 +43,7 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
       if (!imported) {
         //@ts-ignore
         imported = (await import('mpegts.js/dist/mpegts.js')).default
-        imported.LoggingControl.enableAll = Boolean(mpegtsConfig?.debug)
+        // imported.LoggingControl.enableAll = Boolean(config?.debug)
       }
 
       if (!imported.isSupported()) return false
@@ -54,7 +54,7 @@ const plugin = (options?: PluginOptions): PlayerPlugin => {
           isLive: player.options.isLive,
           type: source.format || REG.exec(source.src)?.[0]! // could also be mpegts, m2ts, flv
         },
-        mpegtsConfig
+        config
       )
       instance.attachMediaElement(player.$video)
       instance.load()
