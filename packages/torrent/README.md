@@ -1,6 +1,6 @@
 # oplayer-plugin-torrent
 
-[![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&label=@oplayer/torrent)](https://www.npmjs.com/package/@oplayer/torrent)
+[![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&label=@oplayer/torrent)](https://www.npmjs.com/package/@oplayer/torrent)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/torrent?style=flat-square)
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/torrent?style=flat-square)](https://www.npmjs.com/package/@oplayer/torrent)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/torrent/badge)](https://www.jsdelivr.com/package/npm/@oplayer/torrent)
