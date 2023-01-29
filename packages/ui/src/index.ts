@@ -110,8 +110,10 @@ const defaultConfig: UiConfig = {
 }
 
 const snow = (config?: UiConfig): PlayerPlugin => ({
-  name: 'oplayer-theme-ui',
   key: 'ui',
+  //@ts-ignore
+  version: __VERSION__,
+  name: 'oplayer-theme-ui',
   apply: (player) => apply(player, Object.assign(defaultConfig, config))
 })
 

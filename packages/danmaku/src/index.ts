@@ -11,6 +11,8 @@ export * from './types'
 export default (options = {} as Options): PlayerPlugin => ({
   key: 'danmaku',
   name: 'oplayer-plugin-danmaku',
+  //@ts-ignore
+  version: __VERSION__,
   apply: (player: Player) => {
     if (player.isNativeUI) return
 

@@ -48,6 +48,8 @@ export default ({
   onSkip
 }: Options): PlayerPlugin => ({
   name: 'oplayer-plugin-ad',
+  //@ts-ignore
+  version: __VERSION__,
   apply: (player) => {
     if (autoplay) {
       bootstrap()

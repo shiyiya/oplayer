@@ -204,12 +204,16 @@ export class Player {
         if (returned) {
           const _key = key || name
           if (isPlainObject(returned)) {
-            this.plugins[_key] = Object.assign({ name, key, version }, this.plugins[_key], returned)
+            this.plugins[_key] = Object.assign(
+              { displayName: name, key, version },
+              this.plugins[_key],
+              returned
+            )
           } else {
             this.plugins[_key] = Object.assign(returned, this.plugins[_key], {
-              _name: name,
               key,
-              version
+              version,
+              displayName: name
             })
           }
         }

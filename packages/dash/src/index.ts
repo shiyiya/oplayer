@@ -216,6 +216,8 @@ const plugin = ({
   return {
     name: PLUGIN_NAME,
     key: 'dash',
+    //@ts-ignore
+    version: __VERSION__,
     load: async (player, source) => {
       if (!matcher(player.$video, source)) return false
 

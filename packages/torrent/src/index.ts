@@ -28,7 +28,10 @@ const torrentPlugin = ({
   }
 
   return {
+    key: 'torrent',
     name: PLUGIN_NAME,
+    //@ts-ignore
+    version: __VERSION__,
     load: (player, source) => {
       if (!matcher(source)) return false
 

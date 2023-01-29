@@ -35,8 +35,10 @@ const plugin = (options?: Options): PlayerPlugin => {
   }
 
   return {
-    name: PLUGIN_NAME,
     key: 'mpegts',
+    name: PLUGIN_NAME,
+    //@ts-ignore
+    version: __VERSION__,
     load: async (player, source) => {
       if (!matcher(player.$video, source)) return false
 

@@ -227,8 +227,10 @@ const plugin = ({
   }
 
   return {
-    name: PLUGIN_NAME,
     key: 'hls',
+    name: PLUGIN_NAME,
+    //@ts-ignore
+    version: __VERSION__,
     load: async (player, source) => {
       if (!matcher(player.$video, source)) return false
 
