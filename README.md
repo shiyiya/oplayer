@@ -4,12 +4,11 @@
 
 [Website](https://oplayer.vercel.app) | [Playground](https://oplayer.vercel.app) | [Plugins](#plugins) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [国内无法访问点我](https://ohplayer.netlify.app)
 
-[![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&color=fb3e44)](https://www.npmjs.com/package/@oplayer/core)
-[![GitHub license](https://img.shields.io/github/license/shiyiya/oplayer?style=flat-square)](https://github.com/shiyiya/oplayer/blob/main/LICENSE)
+[![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
+[![GitHub license](https://img.shields.io/github/license/shiyiya/oplayer?style=flat-square)](https://github.com/shiyiya/oplayer/blob/main/LICENSE)
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
-[![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat-square)](#support)
 [![Discord](https://img.shields.io/discord/1017615537234264185.svg?label=&logo=discord&logoColor=fff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/hzjxYyPbKh)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1dac4911-935b-43a0-a69d-15c98e2668ed/deploy-status)](https://app.netlify.com/sites/ohplayer/deploys)
 
@@ -82,14 +81,14 @@ Player.make('#oplayer', {
 
 ## Plugins
 
-- [![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&color=6668ab&label=@oplayer/ui)](./packages/ui)
-- [![npm](https://img.shields.io/npm/v/@oplayer/hls?style=flat-square&color=0066dc&label=@oplayer/hls)](./packages/hls)
-- [![npm](https://img.shields.io/npm/v/@oplayer/dash?style=flat-square&color=208af9&label=@oplayer/dash)](./packages/dash)
-- [![npm](https://img.shields.io/npm/v/@oplayer/mpegts?style=flat-square&color=044F67&label=@oplayer/mpegts)](./packages/mpegts)
-- [![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&color=ef334c&label=@oplayer/torrent)](./packages/torrent)
-- [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&color=ffa500&label=@oplayer/danmaku)](./packages/danmaku)
-- [![npm](https://img.shields.io/npm/v/@oplayer/ad?style=flat-square&color=8b0000&label=@oplayer/ad)](./packages/ad)
-- [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&color=61dafb&label=@oplayer/react)](./packages/react)
+- [![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&label=@oplayer/ui)](./packages/ui)
+- [![npm](https://img.shields.io/npm/v/@oplayer/hls?style=flat-square&label=@oplayer/hls)](./packages/hls)
+- [![npm](https://img.shields.io/npm/v/@oplayer/dash?style=flat-square&label=@oplayer/dash)](./packages/dash)
+- [![npm](https://img.shields.io/npm/v/@oplayer/mpegts?style=flat-square&label=@oplayer/mpegts)](./packages/mpegts)
+- [![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&label=@oplayer/torrent)](./packages/torrent)
+- [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&label=@oplayer/danmaku)](./packages/danmaku)
+- [![npm](https://img.shields.io/npm/v/@oplayer/ad?style=flat-square&label=@oplayer/vast)](./packages/vast)
+- [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&label=@oplayer/react)](./packages/react)
 - [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
 - [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
 
@@ -103,12 +102,8 @@ Player.make('#oplayer', {
 
 If you think this is super cool, or useful, and want to donate a little, then you are also super cool!
 
-|                                                                                                                           |                                                       |
-| ------------------------------------------------------------------------------------------------------------------------: | ----------------------------------------------------- |
-| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$1 tip](https://www.paypal.com/paypalme/ShiYiYa/1)   |
-| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$5 tip](https://www.paypal.com/paypalme/ShiYiYa/5)   |
-| <img src="https://user-images.githubusercontent.com/2817396/149629283-6002944f-9253-4e35-917d-89b476deae4e.png" width=20> | [$10 tip](https://www.paypal.com/paypalme/ShiYiYa/10) |
-|                                                                             [微信](https://www.oaii.me/wechat_donate.png) | [WeChat Pay](https://www.oaii.me/wechat_donate.png)   |
+- [Paypal](https://www.paypal.com/paypalme/ShiYiYa)
+- [WeChat Pay](https://www.oaii.me/wechat_donate.png)
 
 ## Jetbrains <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="35" height="35">
 
