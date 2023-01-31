@@ -17,9 +17,9 @@
 ## Feature
 
 - Streaming formats
-  - [HLS](https://github.com/video-dev/hls.js)
+  - [HLS](https://github.com/video-dev/hls.js) (track, subtitles, audio track selection)
+  - [MPEG DASH](https://github.com/Dash-Industry-Forum/dash.js) (track, subtitles (also segmented), audio track selection)
   - [FLV](https://github.com/xqq/mpegts.js)
-  - [MPEG DASH](https://github.com/Dash-Industry-Forum/dash.js)
   - [WebTorrent](https://github.com/webtorrent/webtorrent)
   - Any other custom streaming formats
 - Media formats
@@ -31,8 +31,9 @@
   - Screenshot
   - Hotkeys
   - Thumbnails (vtt or img)
-  - Subtitle
+  - Subtitles (formats: SRT, WEBVTT with HTML tags support; subtitles from HLS; multiple subtitles for video)
   - Highlight Marker
+  -  ... and much more!
 
 ## Usage
 
