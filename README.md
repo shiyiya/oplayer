@@ -2,12 +2,12 @@
 
 ⚡ Oh! Another HTML5 video player.
 
-[Website](https://oplayer.vercel.app) | [Playground](https://oplayer.vercel.app) | [Plugins](#plugins) | [QQGroup](https://jq.qq.com/?_wv=1027&k=YzsRgkXB) | [国内无法访问点我](https://ohplayer.netlify.app)
+https://oplayer.vercel.app ・ https://ohplayer.netlify.app
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/core?style=flat-square&label=core)
 [![GitHub license](https://img.shields.io/github/license/shiyiya/oplayer?style=flat-square)](https://github.com/shiyiya/oplayer/blob/main/LICENSE)
-[![npm dm](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
+[![npm dt](https://img.shields.io/npm/dt/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![Discord](https://img.shields.io/discord/1017615537234264185.svg?label=&logo=discord&logoColor=fff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/hzjxYyPbKh)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1dac4911-935b-43a0-a69d-15c98e2668ed/deploy-status)](https://app.netlify.com/sites/ohplayer/deploys)
@@ -22,10 +22,6 @@
   - [FLV](https://github.com/xqq/mpegts.js)
   - [WebTorrent](https://github.com/webtorrent/webtorrent)
   - Any other custom streaming formats
-- Media formats
-  - MP4 H.264
-  - WebM
-  - Ogg Theora Vorbis
 - Features
   - Danmaku
   - Screenshot
@@ -33,7 +29,7 @@
   - Thumbnails (vtt or img)
   - Subtitles (formats: SRT, WEBVTT with HTML tags support; subtitles from HLS; multiple subtitles for video)
   - Highlight Marker
-  -  ... and much more!
+  - ... and much more!
 
 ## Usage
 
@@ -88,10 +84,11 @@ Player.make('#oplayer', {
 - [![npm](https://img.shields.io/npm/v/@oplayer/mpegts?style=flat-square&label=@oplayer/mpegts)](./packages/mpegts)
 - [![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&label=@oplayer/torrent)](./packages/torrent)
 - [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&label=@oplayer/danmaku)](./packages/danmaku)
-- [![npm](https://img.shields.io/npm/v/@oplayer/ad?style=flat-square&label=@oplayer/vast)](./packages/vast)
+- [![npm](https://img.shields.io/npm/v/@oplayer/vast?style=flat-square&label=@oplayer/vast)](./packages/vast)
 - [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&label=@oplayer/react)](./packages/react)
 - [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
 - [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
+- [QQ 群](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 ## Who use OPlayer?
 

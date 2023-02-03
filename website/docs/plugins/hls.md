@@ -6,6 +6,8 @@ title: oplayer-plugin-hls
 npm install --save @oplayer/hls hls.js
 ```
 
+More Info: https://github.com/shiyiya/oplayer/tree/main/packages/hls
+
 ## 使用
 
 <Tabs>

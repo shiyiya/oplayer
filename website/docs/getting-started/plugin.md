@@ -9,7 +9,7 @@ title: Plugin
 - [@oplayer/dash](../plugins/dash)
 - [@oplayer/torrent](../plugins/torrent)
 - [@oplayer/danmaku](../plugins/danmaku)
-- [@oplayer/ad](../plugins/ad)
+- [@oplayer/vast](../plugins/vast)
 - [@oplayer/react](../plugins/react)
 
 - [WordPress](https://github.com/shiyiya/WordPress-Plugin-OPlayer)

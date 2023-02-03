@@ -6,6 +6,8 @@ title: oplayer-plugin-dash
 npm install --save @oplayer/dash dashjs
 ```
 
+More Info: https://github.com/shiyiya/oplayer/tree/main/packages/dash
+
 ## 使用
 
 <Tabs>

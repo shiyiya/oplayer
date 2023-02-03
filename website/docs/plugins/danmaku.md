@@ -6,6 +6,8 @@ title: oplayer-plugin-danmaku
 npm install --save @oplayer/danmaku
 ```
 
+More Info: https://github.com/shiyiya/oplayer/tree/main/packages/danmaku
+
 ## 使用
 
 <Tabs>

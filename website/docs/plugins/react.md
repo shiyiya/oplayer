@@ -6,6 +6,8 @@ title: oplayer-plugin-react
 
 **注意：不需要重复创建 Player， 播放器大部分内容都支持动态加载**
 
+More Info: https://github.com/shiyiya/oplayer/tree/main/packages/react
+
 ```jsx
 function BadExample() {
   return loading ? <Player src="" /> : null
@@ -53,7 +55,10 @@ const plugins = [
 ]
 
 const OPlayer = React.forwardRef(
-  ({ playerIsPlaying, src, poster, format, duration, onEvent, autoplay, ...rest }: OPlayerProps, ref) => {
+  (
+    { playerIsPlaying, src, poster, format, duration, onEvent, autoplay, ...rest }: OPlayerProps,
+    ref
+  ) => {
     const _ref = useRef<Player>(null)
 
     useImperativeHandle(ref, () => _ref.current)

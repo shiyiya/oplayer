@@ -6,6 +6,8 @@ title: oplayer-plugin-torrent
 npm install --save @oplayer/torrent
 ```
 
+More Info: https://github.com/shiyiya/oplayer/tree/main/packages/torrent
+
 ## 使用
 
 <Tabs>
