@@ -12,7 +12,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@oplayer/ad": "workspace:*",
     "@oplayer/core": "workspace:*",
     "@oplayer/danmaku": "workspace:*",
     "@oplayer/dash": "workspace:*",
