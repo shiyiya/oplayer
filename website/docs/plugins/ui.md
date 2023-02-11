@@ -7,7 +7,7 @@ description: ''
 npm install --save @oplayer/ui
 ```
 
-More Info: https://github.com/shiyiya/oplayer/tree/main/packages/torrent
+More Info: https://github.com/shiyiya/oplayer/tree/main/packages/ui
 
 import CodeBlock from '../../src/components/CodeBlock'
 
