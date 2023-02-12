@@ -9,7 +9,7 @@
   <body>
     <iframe
       id="player"
-      style="margin: 0 auto; display: block; max-width: 100%; min-width: 1024px; aspect-ratio: 16/9"
+      style="margin: 0 auto; display: block; max-width: 100%; min-width: 1024px; border: none"
       src="./ep.html"
     ></iframe>
 
@@ -17,6 +17,8 @@
       window.onmessage = function ({ data }) {
         if (data.command == 'refresh') {
           document.querySelector('#player').src = data.src
+        } else if (data.command == 'adjustHeight') {
+          document.querySelector('#player').style.height = data.height + 'px'
         }
       }
     </script>

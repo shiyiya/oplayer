@@ -7,8 +7,8 @@
     <title>oplayer</title>
     <style>
       #oplayer {
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        aspect-ratio: 16/9;
       }
     </style>
     <link href="./ep.min.css" rel="stylesheet" />
@@ -195,6 +195,11 @@
         } else {
           player.changeSource({ src })
         }
+      }
+
+      window.onload = function (params) {
+        const h = document.documentElement.offsetHeight || document.body.offsetHeight
+        window.parent.postMessage({ command: 'adjustHeight', height: h }, '*')
       }
     </script>
   </body>
