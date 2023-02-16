@@ -61,7 +61,7 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
   return mergeDeep<BuildOptions>(
     {
       minify: 'terser',
-      sourcemap: true,
+      sourcemap: false,
       commonjsOptions: {
         sourceMap: false
       },

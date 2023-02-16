@@ -16,7 +16,8 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build && tsc --emitDeclarationOnly && sed -i 's/\\/\\/# sourceMappingURL=index.min.js.map//' ./dist/index.min.js"
+    "build:all": "vite build --config vite.all.config.ts",
+    "build": "vite build && tsc --emitDeclarationOnly && pnpm run build:all"
   },
   "files": [
     "dist",

@@ -20,7 +20,7 @@ async function buildPlugin(name, dev) {
   await build({
     build: {
       emptyOutDir: false,
-      sourcemap: true,
+      sourcemap: false,
       lib: {
         entry: plugins[name],
         formats: dev ? ['es'] : ['es', 'umd'],
