@@ -7,6 +7,30 @@
 
 ![](./danmaku.png)
 
+## Install
+
+```bash
+npm i @oplayer/core @oplayer/danmaku
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js"></script>
+
+<div id="oplayer" />
+
+<script>
+  OPlayer.make('#oplayer', {
+    source: {
+      src: 'https://oplayer.vercel.app/君の名は.mp4',
+      poster: 'https://oplayer.vercel.app/poster.png'
+    }
+  })
+    .use([ODanmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' })])
+    .create()
+</script>
+```
+
 ## Usage
 
 ```ts

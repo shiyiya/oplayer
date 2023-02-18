@@ -5,17 +5,12 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/dash?style=flat-square)](https://www.npmjs.com/package/@oplayer/dash)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/dash/badge)](https://www.jsdelivr.com/package/npm/@oplayer/dash)
 
-dash plugin for oplayer
+[MPEG DASH](https://github.com/Dash-Industry-Forum/dash.js) plugin for oplayer
 
 ## Install
 
 ```bash
-# npm
-npm i @oplayer/dash
-# yarn
-yarn add @oplayer/dash
-# pnpm
-yarn add @oplayer/dash
+npm i @oplayer/core @oplayer/dash
 ```
 
 ```html

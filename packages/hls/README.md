@@ -5,17 +5,12 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/hls?style=flat-square)](https://www.npmjs.com/package/@oplayer/hls)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/hls/badge)](https://www.jsdelivr.com/package/npm/@oplayer/hls)
 
-Hls plugin for oplayer
+[HLS](https://github.com/video-dev/hls.js) plugin for oplayer
 
 ## Install
 
 ```bash
-# npm
-npm i @oplayer/hls
-# yarn
-yarn add @oplayer/hls
-# pnpm
-yarn add @oplayer/hls
+npm i @oplayer/core @oplayer/hls
 ```
 
 ```html

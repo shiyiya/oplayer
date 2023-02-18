@@ -17,10 +17,10 @@ https://oplayer.vercel.app ・ https://ohplayer.netlify.app
 ## Feature
 
 - Streaming formats
-  - [HLS](https://github.com/video-dev/hls.js) (track, subtitles, audio track selection)
-  - [MPEG DASH](https://github.com/Dash-Industry-Forum/dash.js) (track, subtitles (also segmented), audio track selection)
-  - [FLV](https://github.com/xqq/mpegts.js)
-  - [WebTorrent](https://github.com/webtorrent/webtorrent)
+  - [HLS](./packages/hls) (track, subtitles, audio track selection)
+  - [MPEG DASH](./packages/dash) (track, subtitles (also segmented), audio track selection)
+  - [FLV](./packages/mpegts)
+  - [WebTorrent](./packages/torrent)
   - Any other custom streaming formats
 - Features
   - Danmaku

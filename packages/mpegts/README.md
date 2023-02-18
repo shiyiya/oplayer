@@ -5,17 +5,12 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/mpegts?style=flat-square)](https://www.npmjs.com/package/@oplayer/mpegts)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/mpegts/badge)](https://www.jsdelivr.com/package/npm/@oplayer/mpegts)
 
-mpegts.js plugin for oplayer
+[FLV](https://github.com/xqq/mpegts.js) plugin for oplayer
 
 ## Install
 
 ```bash
-# npm
-npm i @oplayer/mpegts
-# yarn
-yarn add @oplayer/mpegts
-# pnpm
-yarn add @oplayer/mpegts
+npm i @oplayer/core @oplayer/mpegts
 ```
 
 ```html

@@ -7,6 +7,17 @@
 
 ![oplayer-mobile](./oplayer-ui-mobile.png)
 
+## Install
+
+```bash
+npm i @oplayer/core @oplayer/ui
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
+```
+
 ## Basic
 
 ```js
