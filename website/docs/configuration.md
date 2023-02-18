@@ -3,9 +3,9 @@ title: Configuration
 ---
 
 :::tip
-oplayer 大部分功能都通过插件的方式实现，点击查看 [插件列表](./plugin)。
+oplayer 大部分功能都通过插件的方式实现，点击查看 [插件列表](./plugins)。
 
-是的，默认 `@oplayer/core` 也不提供用户界面 UI，可安装 [@oplayer/ui](../plugins/ui) 插件，该插件提供了一套基础 UI。
+是的，默认 `@oplayer/core` 也不提供用户界面 UI，可安装 [@oplayer/ui](https://github.com/shiyiya/oplayer/tree/main/packages/plugins/ui) 插件，该插件提供了一套基础 UI。
 :::
 
 More Info: https://github.com/shiyiya/oplayer/tree/main/packages/core
