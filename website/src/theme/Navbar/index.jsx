@@ -7,7 +7,6 @@
 import { useThemeConfig } from '@docusaurus/theme-common'
 import clsx from 'clsx'
 import React, { useCallback, useEffect, useState } from 'react'
-import { FaGithub } from 'react-icons/all'
 import { useLocation } from 'react-router-dom'
 import styles from './styles.module.css'
 
