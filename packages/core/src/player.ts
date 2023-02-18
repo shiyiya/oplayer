@@ -422,10 +422,10 @@ export class Player {
       const shouldPlay = keepPlaying && isPlaying
       const errorHandler = (e: any) => {
         this.isSourceChanging = false
-        canplayHandler && this.off(canplay, canplayHandler)
+        this.emit('videosourceerror', e)
+        this.off(canplay, canplayHandler)
         reject(e)
       }
-      this.on('error', errorHandler, { once: true })
 
       const canplayHandler = () => {
         this.off('error', errorHandler)
@@ -436,12 +436,16 @@ export class Player {
         if (shouldPlay && !this.isPlaying) this.$video.play()
         resolve()
       }
-      this.on(canplay, canplayHandler, { once: true })
 
       return (source instanceof Promise ? source : Promise.resolve(source))
         .then((source) => {
+          if (!source.src) throw new Error('Empty Source')
+
           this.$video.poster = source.poster || ''
           this.options.source = { ...this.options.source, ...source }
+          this.on('error', errorHandler, { once: true })
+          this.on(canplay, canplayHandler, { once: true })
+
           return source
         })
         .then((source) => this.load(source))
