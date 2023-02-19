@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/ui",
-  "version": "1.2.16",
+  "version": "1.2.17",
   "description": "ui plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -15,7 +15,8 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build": "vite build && tsc --emitDeclarationOnly"
+    "build": "vite build && tsc --emitDeclarationOnly && pnpm run build:extra",
+    "build:extra": "vite build --config vite.core.config.ts"
   },
   "files": [
     "dist",

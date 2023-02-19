@@ -30,27 +30,20 @@
     </style>
   </head>
   <body>
-    <a href="https://github.com/shiyiya/oplayer/blob/main/examples/script.html" target="_blank"
+    <a href="https://github.com/shiyiya/oplayer/blob/main/examples/html/script.html" target="_blank"
       ><h3>source code</h3></a
     >
 
     <div id="oplayer" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
-    <!-- <script src="../packages/core/dist/index.min.js"></script>
-    <script src="../packages/ui/dist/index.min.js"></script> -->
-
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
-    <!-- <script src="../packages/hls/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script>
-    <!-- <script src="../packages/dash/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@latest/dist/index.min.js"></script>
-    <!-- <script src="../packages/mpegts/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js"></script>
 
@@ -64,7 +57,7 @@
         }
       })
         .use([
-          OUI(),
+          OPlayer.ui(),
           OHls(),
           ODash(),
           OMpegts(),

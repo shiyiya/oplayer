@@ -57,8 +57,7 @@ Player.make('#oplayer', {
 ### 2. Use the script tag to introduce:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
 
 <div id="oplayer" />
@@ -70,13 +69,14 @@ Player.make('#oplayer', {
       poster: 'https://oplayer.vercel.app/poster.png'
     }
   })
-    .use([OUI(), OHls()])
+    .use([OPlayer.ui(), OHls()])
     .create()
 </script>
 ```
 
 ## Plugins
 
+- [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&label=@oplayer/core)](./packages/core)
 - [![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&label=@oplayer/ui)](./packages/ui)
 - [![npm](https://img.shields.io/npm/v/@oplayer/hls?style=flat-square&label=@oplayer/hls)](./packages/hls)
 - [![npm](https://img.shields.io/npm/v/@oplayer/dash?style=flat-square&label=@oplayer/dash)](./packages/dash)

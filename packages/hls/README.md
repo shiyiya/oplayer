@@ -15,7 +15,14 @@ npm i @oplayer/core @oplayer/hls
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
+
+<!-- 1 -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.index.js"></script>
+
+<!-- or -->
+<!-- hls + hls plugin -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script> -->
 
 <div id="oplayer" />
 
