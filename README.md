@@ -57,7 +57,7 @@ Player.make('#oplayer', {
 ### 2. Use the script tag to introduce:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
 
 <div id="oplayer" />

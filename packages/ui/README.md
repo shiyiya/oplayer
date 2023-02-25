@@ -18,7 +18,7 @@ npm i @oplayer/core @oplayer/ui
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.core.js"></script>
 
 <!-- core + ui -->
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
 <script>
   var OUI = OPlayer.ui
 </script>
