@@ -1,6 +1,14 @@
 import type { PlayerEvent, PlayerOptions, PlayerPlugin, Source } from '@oplayer/core'
 import Player from '@oplayer/core'
-import { forwardRef, Ref, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+  forwardRef,
+  Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef
+} from 'react'
 
 export interface ReactOPlayerProps extends PlayerOptions {
   playing?: boolean
@@ -71,27 +79,35 @@ const ReactOPlayer = forwardRef(
 
     useImperativeHandle(ref, () => player.current, [])
 
-    return (
-      <div
-        style={{
-          width: '100%',
-          paddingTop: `${aspectRatio * 100}%`,
-          backgroundColor: '#f4f4f4',
-          position: 'relative'
-        }}
-      >
+    const child = useMemo(() => {
+      if (aspectRatio == 0) {
+        return <div style={{ height: '100%', width: '100%' }} ref={onRefChange}></div>
+      }
+
+      return (
         <div
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
             width: '100%',
-            height: '100%'
+            paddingTop: `${aspectRatio * 100}%`,
+            backgroundColor: '#f4f4f4',
+            position: 'relative'
           }}
-          ref={onRefChange}
-        ></div>
-      </div>
-    )
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%'
+            }}
+            ref={onRefChange}
+          ></div>
+        </div>
+      )
+    }, [aspectRatio])
+
+    return child
   }
 )
 
