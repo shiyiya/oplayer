@@ -51,9 +51,10 @@ export interface PlayerPlugin {
   version?: string
   apply: (player: Player) => any
   load?: (player: Player, src: Source) => false | Loader | Promise<false | Loader>
+  destroy?: () => void | Promise<() => void>
 }
 
-export type DefaultPlayerEvent = typeof EVENTS[number] | typeof EVENTS[number][]
+export type DefaultPlayerEvent = (typeof EVENTS)[number] | (typeof EVENTS)[number][]
 
 export type PlayerEventName = DefaultPlayerEvent | string | string[]
 

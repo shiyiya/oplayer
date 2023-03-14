@@ -20,7 +20,7 @@ export interface ReactOPlayerProps extends PlayerOptions {
 
 const ReactOPlayer = forwardRef(
   (props: ReactOPlayerProps & { source?: Source | Promise<Source> }, ref: Ref<Player | null>) => {
-    const { playing, duration = 0, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
+    const { playing, duration, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
     const isInitialMount = useRef(true)
 
     const player = useRef<Player | null>(null)
@@ -29,7 +29,7 @@ const ReactOPlayer = forwardRef(
     const onRefChange = useCallback((node: HTMLDivElement) => {
       if (node !== null) {
         player.current = Player.make(node, rest).use(plugins).create()
-        player.current.seek(duration / 1000)
+        if (typeof duration == 'number') player.current.seek(duration / 1000)
         if (onEvent) player.current.on(onEvent)
       }
     }, [])
@@ -54,7 +54,7 @@ const ReactOPlayer = forwardRef(
     }, [rest.source])
 
     useEffect(() => {
-      if (isInitialMount.current) return
+      if (isInitialMount.current || typeof duration != 'number') return
       player.current?.seek(duration / 1000)
     }, [duration])
 
@@ -79,7 +79,7 @@ const ReactOPlayer = forwardRef(
 
     useImperativeHandle(ref, () => player.current, [])
 
-    const child = useMemo(() => {
+    return useMemo(() => {
       if (aspectRatio == 0) {
         return <div style={{ height: '100%', width: '100%' }} ref={onRefChange}></div>
       }
@@ -105,9 +105,7 @@ const ReactOPlayer = forwardRef(
           ></div>
         </div>
       )
-    }, [aspectRatio])
-
-    return child
+    }, [])
   }
 )
 
