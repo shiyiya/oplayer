@@ -2,7 +2,6 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
-import ad from '@oplayer/ad'
 import Player, { PlayerEvent } from '@oplayer/core'
 import danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
@@ -19,6 +18,7 @@ import SRT from '../../website/static/君の名は.srt'
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
+import { Hello } from '@oplayer/plugins'
 
 let src = VIDEO_LIST[1]!
 let currentDataSrcId = 0
@@ -85,7 +85,8 @@ const player = Player.make('#player', {
       enable: false,
       // displaySender: true,
       source: DANMAKU //SUPER_DANMAKU
-    })
+    }),
+    new Hello()
     // ad({
     //   autoplay: false,
     //   image:
@@ -133,6 +134,8 @@ player.plugins.ui?.menu.register(<MenuBar>{
       })
   }
 })
+
+player.plugins.hello.say('world')
 
 console.log(player.plugins)
 

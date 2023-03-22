@@ -41,7 +41,7 @@ export interface PlayerOptions {
 }
 
 export interface Loader {
-  destroy: () => void | Promise<() => void>
+  destroy: () => void | Promise<void>
   [key: string]: any
 }
 
@@ -50,8 +50,10 @@ export interface PlayerPlugin {
   key?: string
   version?: string
   apply: (player: Player) => any
+  destroy?: () => void | Promise<void>
+
   load?: (player: Player, src: Source) => false | Loader | Promise<false | Loader>
-  destroy?: () => void | Promise<() => void>
+  unload?: () => void | Promise<void>
 }
 
 export type DefaultPlayerEvent = (typeof EVENTS)[number] | (typeof EVENTS)[number][]

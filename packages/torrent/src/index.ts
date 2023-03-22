@@ -1,70 +1,63 @@
 import webtorrent from 'webtorrent/webtorrent.min.js'
-import type { PlayerPlugin, Source } from '@oplayer/core'
+import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 
-let client: any
-const PLUGIN_NAME = 'oplayer-plugin-torrent'
-
-type torrentPluginOptions = {
+export type PluginOptions = {
   config?: Record<string, any>
   matcher?: (src: Source) => boolean
 }
 
-const defaultMatcher: torrentPluginOptions['matcher'] = (source) =>
-  /magnet:?[^\"]+/.test(source.src) || /.*\.torrent/.test(source.src)
+class TorrentPlugin implements PlayerPlugin {
+  key = 'torrent'
+  name = 'oplayer-plugin-torrent'
+  //@ts-ignore
+  version = __VERSION__
 
-const torrentPlugin = ({
-  config = {},
-  matcher = defaultMatcher
-}: torrentPluginOptions = {}): PlayerPlugin => {
-  let prePreload: HTMLMediaElement['preload']
-  let instanceDestroy: (() => void) | null
+  static defaultMatcher: PluginOptions['matcher'] = (source) =>
+    /magnet:?[^\"]+/.test(source.src) || /.*\.torrent/.test(source.src)
 
-  function tryDestroy() {
-    if (client) {
-      instanceDestroy?.call(client)
-      instanceDestroy = null
-      client = null
-    }
+  player: Player
+
+  instance: any
+
+  prePreload?: HTMLMediaElement['preload']
+
+  constructor(public options: PluginOptions) {}
+
+  apply(player: Player) {
+    this.player = player
   }
 
-  return {
-    key: 'torrent',
-    name: PLUGIN_NAME,
-    //@ts-ignore
-    version: __VERSION__,
-    load: (player, source) => {
-      if (!matcher(source)) return false
+  async load({ $video }: Player, source: Source) {
+    const { config = {}, matcher = TorrentPlugin.defaultMatcher } = this.options
 
-      if (!webtorrent.WEBRTC_SUPPORT) return false
+    if (!matcher!(source)) return false
 
-      const { $video } = player
-      prePreload = $video.preload
-      client = new webtorrent(config)
+    if (!webtorrent.WEBRTC_SUPPORT) return false
 
-      $video.preload = 'metadata'
-      client.add(source.src, (torrent: any) => {
-        const file = torrent.files.find((file: any) => file.name.endsWith('.mp4'))
-        file.renderTo($video, { autoplay: $video.autoplay, controls: false })
-      })
+    this.prePreload ??= $video.preload
+    this.instance = new webtorrent(config)
+    $video.preload = 'metadata'
 
-      instanceDestroy = () => {
-        client.remove(source.src)
-        client.destroy()
-        $video.preload = prePreload
-      }
-      client.destroy = () => {
-        tryDestroy()
-      }
+    //TODO: source list
+    this.instance.add(source.src, (torrent: any) => {
+      const file = torrent.files.find((file: any) => file.name.endsWith('.mp4'))
+      file.renderTo($video, { autoplay: $video.autoplay, controls: false })
+    })
 
-      return client
-    },
-    apply: ({ on }) => {
-      on('destroy', () => {
-        tryDestroy()
-      })
+    return this
+  }
 
-      return webtorrent
-    }
+  async unload() {
+    if (this.instance) await this.instance.destroy()
+    if (this.prePreload) this.player.$video.preload = this.prePreload
+    this.prePreload = undefined
+  }
+
+  async destroy() {
+    await this.unload()
   }
 }
-export default torrentPlugin
+
+export default function create(options: PluginOptions) {
+  return new TorrentPlugin(options)
+}

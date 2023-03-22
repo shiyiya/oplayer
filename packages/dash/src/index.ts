@@ -3,8 +3,6 @@ import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEv
 
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
-let imported: typeof import('dashjs') = globalThis.dashjs
-
 type PluginOptions = {
   config?: MediaPlayerSettingClass
   matcher?: (video: HTMLVideoElement, source: Source) => boolean
@@ -42,18 +40,12 @@ const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
   ((source.format === 'auto' || typeof source.format === 'undefined') &&
     /.mpd(#|\?|$)/i.test(source.src))
 
-interface SettingItem {
-  name: string
-  default: boolean
-  value: any
-}
-
 function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrate?: boolean) {
   const bitrateInfoList = instance.getBitrateInfoListFor(type)
   const isAuto = Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
   const videoQuality = instance.getQualityFor('video')
   if (bitrateInfoList.length > 1) {
-    return bitrateInfoList.map<SettingItem>((it) => {
+    return bitrateInfoList.map((it) => {
       let name = it.height + 'p'
 
       if (withBitrate) {
@@ -75,7 +67,7 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
 }
 
 const generateSetting = (player: Player, instance: MediaPlayerClass, options: Options) => {
-  instance.on(imported.MediaPlayer.events.STREAM_INITIALIZED, function () {
+  instance.on(DashPlugin.library.MediaPlayer.events.STREAM_INITIALIZED, function () {
     if (options.qualityControl) {
       settingUpdater({
         name: 'Quality',
@@ -104,7 +96,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
       })
 
       instance.on(
-        imported.MediaPlayer.events.QUALITY_CHANGE_RENDERED,
+        DashPlugin.library.MediaPlayer.events.QUALITY_CHANGE_RENDERED,
         function qualityMenuUpdater(data: QualityChangeRenderedEvent) {
           if (
             data.mediaType !== 'video' ||
@@ -124,7 +116,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
         name: 'Language',
         icon: player.plugins.ui.icons.lang,
         settings() {
-          return instance.getTracksFor('audio').map<SettingItem>((it) => ({
+          return instance.getTracksFor('audio').map((it) => ({
             name: it.lang || 'unknown',
             default: instance.getCurrentTrackFor('audio')?.id == it.id,
             value: it
@@ -141,7 +133,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
         name: 'Subtitle',
         icon: player.plugins.ui.icons.subtitle,
         settings() {
-          const ex = instance.getTracksFor('text').map<SettingItem>((it) => ({
+          const ex = instance.getTracksFor('text').map((it) => ({
             name: it.lang || 'unknown',
             default: instance.getCurrentTrackFor('text')?.id == it.id,
             value: it.id
@@ -150,7 +142,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
             ex.unshift({
               name: player.locales.get('Off'),
               default: !instance.isTextEnabled(),
-              value: -1
+              value: -1 as any
             })
           }
           return ex
@@ -166,7 +158,11 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
   function settingUpdater(arg: {
     icon: string
     name: string
-    settings: () => SettingItem[]
+    settings: () => {
+      name: string
+      default: boolean
+      value: any
+    }[]
     onChange: (it: { value: any }) => void
   }) {
     const settings = arg.settings()
@@ -192,74 +188,80 @@ const removeSetting = (player: Player) => {
   )
 }
 
-const plugin = ({
-  config,
-  withBitrate = false,
-  qualityControl = true,
-  qualitySwitch = 'immediate',
-  audioControl = true,
-  textControl = true,
-  matcher = defaultMatcher
-}: PluginOptions = {}): PlayerPlugin => {
-  let instance: MediaPlayerClass | null
-  let instanceDestroy: MediaPlayerClass['destroy'] | null
+class DashPlugin implements PlayerPlugin {
+  key = 'hls'
+  name = PLUGIN_NAME
+  //@ts-ignore
+  version = __VERSION__
 
-  function tryDestroy(player: Player) {
-    if (instance) {
-      removeSetting(player)
-      instanceDestroy?.call(instance)
-      instanceDestroy = null
-      instance = null
-    }
+  static defaultMatcher: PluginOptions['matcher'] = defaultMatcher
+
+  player: Player
+
+  //@ts-ignore
+  static library: typeof import('dashjs') = globalThis.Hls
+
+  instance: MediaPlayerClass
+
+  constructor(public options: PluginOptions) {}
+
+  apply(player: Player) {
+    this.player = player
   }
 
-  return {
-    name: PLUGIN_NAME,
-    key: 'dash',
-    //@ts-ignore
-    version: __VERSION__,
-    load: async (player, source) => {
-      if (!matcher(player.$video, source)) return false
+  async load({ $video }: Player, source: Source) {
+    const { matcher = DashPlugin.defaultMatcher } = this.options
 
-      imported ??= (await import('dashjs')).default
+    if (!matcher!($video, source)) return false
 
-      if (!imported.supportsMediaSource()) return false
+    const {
+      config,
+      withBitrate = false,
+      qualityControl = true,
+      qualitySwitch = 'immediate',
+      audioControl = true,
+      textControl = true
+    } = this.options
 
-      instance = imported.MediaPlayer().create()
-      if (config) instance.updateSettings(config)
-      instance.initialize(player.$video, source.src, player.$video.autoplay)
+    DashPlugin.library ??= (await import('dashjs')).default
 
-      if (!player.isNativeUI && player.plugins.ui?.setting) {
-        generateSetting(player, instance, {
-          qualityControl,
-          qualitySwitch,
-          withBitrate,
-          audioControl,
-          textControl
-        })
-      }
+    if (!DashPlugin.library.supportsMediaSource()) return false
 
-      instance.on(imported.MediaPlayer.events.ERROR, (event: any) => {
-        const err = event.event || event.error
-        const message = event.event ? event.event.message || event.type : undefined
-        player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
+    this.instance = DashPlugin.library.MediaPlayer().create()
+
+    const { instance, player } = this
+    if (config) instance.updateSettings(config)
+    instance.initialize(player.$video, source.src, player.$video.autoplay)
+
+    if (!player.isNativeUI && player.plugins.ui?.setting) {
+      generateSetting(player, instance, {
+        qualityControl,
+        qualitySwitch,
+        withBitrate,
+        audioControl,
+        textControl
       })
-
-      instanceDestroy = instance.destroy
-      instance.destroy = () => {
-        tryDestroy(player)
-      }
-
-      return instance
-    },
-    apply: (player) => {
-      player.on('destroy', () => {
-        tryDestroy(player)
-      })
-
-      return () => imported
     }
+
+    instance.on(DashPlugin.library.MediaPlayer.events.ERROR, function (event: any) {
+      const err = event.event || event.error
+      const message = event.event ? event.event.message || event.type : undefined
+      player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
+    })
+
+    return this
+  }
+
+  async unload() {
+    removeSetting(this.player)
+    this.instance.destroy()
+  }
+
+  async destroy() {
+    await this.unload()
   }
 }
 
-export default plugin
+export default function create(options: PluginOptions = {}): PlayerPlugin {
+  return new DashPlugin(options)
+}

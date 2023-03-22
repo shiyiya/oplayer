@@ -4,7 +4,7 @@
   "description": "ui plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/src/index.d.ts",
   "sideEffects": false,
   "author": "shiyiya",
   "homepage": "https://github.com/shiyiya/oplayer",

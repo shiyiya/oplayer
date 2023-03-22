@@ -1,15 +1,12 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import type Hls from 'hls.js'
+import Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
-//@ts-ignore
-let imported: typeof import('hls.js/dist/hls.min.js') = globalThis.Hls
-
 type PluginOptions = {
   config?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
+  matcher?: (video: HTMLVideoElement, source: Source) => boolean
 } & Options
 
 type Options = {
@@ -36,16 +33,6 @@ type Options = {
    * @default: true
    */
   textControl?: boolean
-  /**
-   * @default false
-   */
-  showWarning?: boolean
-}
-
-interface SettingItem {
-  name: string
-  default: boolean
-  value: any
 }
 
 const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
@@ -60,7 +47,7 @@ const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
 
 const generateSetting = (player: Player, instance: Hls, options: Options = {}) => {
   if (options.qualityControl) {
-    instance.once(imported.Events.MANIFEST_PARSED, () => {
+    instance.once(HlsPlugin.library.Events.MANIFEST_PARSED, () => {
       settingUpdater({
         icon: player.plugins.ui.icons.quality,
         name: 'Quality',
@@ -79,16 +66,9 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
                 pre.push({ name, default: instance.currentLevel == i, value: i })
                 return pre
               },
-              [
-                {
-                  name: player.locales.get('Auto'),
-                  default: instance.autoLevelEnabled,
-                  value: -1
-                }
-              ] as SettingItem[]
+              [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
             )
           }
-
           return []
         },
         onChange(it) {
@@ -104,7 +84,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
     })
 
     instance.on(
-      imported.Events.LEVEL_SWITCHED,
+      HlsPlugin.library.Events.LEVEL_SWITCHED,
       function menuUpdater(_, { level }: LevelSwitchedData) {
         if (instance.autoLevelEnabled) {
           const height = instance.levels[level]!.height
@@ -118,7 +98,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   }
 
   if (options.audioControl)
-    instance.on(imported.Events.AUDIO_TRACK_LOADED, () => {
+    instance.on(HlsPlugin.library.Events.AUDIO_TRACK_LOADED, () => {
       settingUpdater({
         icon: player.plugins.ui.icons.lang,
         name: 'Language',
@@ -139,7 +119,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
     })
 
   if (options.textControl)
-    instance.on(imported.Events.SUBTITLE_TRACK_LOADED, () => {
+    instance.on(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
       settingUpdater({
         icon: player.plugins.ui.icons.subtitle,
         name: 'Subtitle',
@@ -147,22 +127,14 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
           if (instance.subtitleTracks.length > 1) {
             return instance.subtitleTracks.reduce(
               (pre, { name, lang, id }) => {
-                return (
-                  pre.push({
-                    name: lang || name,
-                    default: instance.subtitleTrack == id,
-                    value: id
-                  }),
-                  pre
-                )
+                pre.push({
+                  name: lang || name,
+                  default: instance.subtitleTrack == id,
+                  value: id
+                })
+                return pre
               },
-              [
-                {
-                  name: player.locales.get('Off'),
-                  default: !instance.subtitleDisplay,
-                  value: -1
-                }
-              ]
+              [{ name: player.locales.get('Off'), default: !instance.subtitleDisplay, value: -1 }]
             )
           }
           return []
@@ -178,11 +150,11 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   function settingUpdater(arg: {
     icon: string
     name: string
-    settings: () => SettingItem[]
+    settings: () => { name: string; default: boolean; value: any }[] | void
     onChange: (it: { value: any }) => void
   }) {
     const settings = arg.settings()
-    if (settings.length < 2) return
+    if (settings && settings.length < 2) return
 
     const { name, icon, onChange } = arg
 
@@ -204,82 +176,83 @@ const removeSetting = (player: Player) => {
   )
 }
 
-const plugin = ({
-  config,
-  showWarning = false,
-  withBitrate = false,
-  qualityControl = true,
-  qualitySwitch = 'immediate',
-  audioControl = true,
-  textControl = true,
-  matcher = defaultMatcher
-}: PluginOptions = {}): PlayerPlugin => {
-  let instance: Hls | null
-  let instanceDestroy: Hls['destroy'] | null
+class HlsPlugin implements PlayerPlugin {
+  key = 'hls'
+  name = PLUGIN_NAME
+  //@ts-ignore
+  version = __VERSION__
 
-  function tryDestroy(player: Player) {
-    if (instance) {
-      removeSetting(player)
-      instanceDestroy?.call(instance)
-      instanceDestroy = null
-      instance = null
-    }
+  static defaultMatcher: PluginOptions['matcher'] = defaultMatcher
+
+  //@ts-ignore
+  static library: typeof import('hls.js/dist/hls.min.js') = globalThis.Hls
+
+  player: Player
+
+  instance: Hls
+
+  constructor(public options: PluginOptions) {}
+
+  apply(player: Player) {
+    this.player = player
   }
 
-  return {
-    key: 'hls',
-    name: PLUGIN_NAME,
-    //@ts-ignore
-    version: __VERSION__,
-    load: async (player, source) => {
-      if (!matcher(player.$video, source)) return false
+  async load({ $video }: Player, source: Source) {
+    const { matcher = HlsPlugin.defaultMatcher } = this.options
 
-      imported ??= (await import('hls.js/dist/hls.min.js')).default
+    if (!matcher!($video, source)) return false
 
-      if (!imported.isSupported()) return false
+    const {
+      config,
+      withBitrate = false,
+      qualityControl = true,
+      qualitySwitch = 'immediate',
+      audioControl = true,
+      textControl = true
+    } = this.options
 
-      instance = new imported(config)
-      instance.loadSource(source.src)
-      instance.attachMedia(player.$video)
+    HlsPlugin.library ??= (await import('hls.js/dist/hls.min.js')).default
 
-      if (!player.isNativeUI && player.plugins.ui?.setting) {
-        generateSetting(player, instance, {
-          qualityControl,
-          qualitySwitch,
-          withBitrate,
-          audioControl,
-          textControl
-        })
-      }
+    if (!HlsPlugin.library.isSupported()) return false
 
-      instance.on(imported.Events.ERROR, function (_, data) {
-        const { type, details, fatal } = data
+    this.instance = new HlsPlugin.library(config)
 
-        if (fatal) {
-          player.hasError = true
-          player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
-        } else {
-          if (showWarning) {
-            player.emit('notice', { ...data, pluginName: PLUGIN_NAME, text: type + ': ' + details })
-          }
-        }
+    const { instance, player } = this
+    this.instance.loadSource(source.src)
+    this.instance.attachMedia(player.$video)
+
+    if (!player.isNativeUI && player.plugins.ui?.setting) {
+      generateSetting(player, instance, {
+        qualityControl,
+        qualitySwitch,
+        withBitrate,
+        audioControl,
+        textControl
       })
-
-      instanceDestroy = instance.destroy
-      instance.destroy = () => {
-        tryDestroy(player)
-      }
-
-      return instance
-    },
-    apply: (player) => {
-      player.on('destroy', () => {
-        tryDestroy(player)
-      })
-
-      return () => imported
     }
+
+    instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
+      const { type, details, fatal } = data
+
+      if (fatal) {
+        player.hasError = true
+        player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
+      }
+    })
+
+    return this
+  }
+
+  async unload() {
+    removeSetting(this.player)
+    this.instance.destroy()
+  }
+
+  async destroy() {
+    await this.unload()
   }
 }
 
-export default plugin
+export default function create(options: PluginOptions = {}): PlayerPlugin {
+  return new HlsPlugin(options)
+}

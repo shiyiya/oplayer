@@ -85,7 +85,7 @@ class Player {
   plugins: any
   $root: HTMLElement
   $video: HTMLVideoElement
-  listeners: Record<typeof EVENTS[number] | 'fullscreenchange' | 'fullscreenerror', Function>
+  listeners: Record<(typeof EVENTS)[number] | 'fullscreenchange' | 'fullscreenerror', Function>
   hasError: boolean
   isSourceChanging: boolean
   loader?: Loader
@@ -160,6 +160,8 @@ class Player {
 
 ## Events
 
+'abort' | 'canplay' | 'canplaythrough' | 'durationchange' | 'emptied' | 'ended' | 'error' | 'loadeddata' | 'loadedmetadata' | 'loadstart' | 'pause' | 'play' | 'playing' | 'progress' | 'ratechange' | 'seeked' | 'seeking' | 'stalled' | 'suspend' | 'timeupdate' | 'volumechange' | 'waiting' | 'encrypted' | 'waitingforkey' | 'enterpictureinpicture' | 'leavepictureinpicture' | 'fullscreenchange | 'fullscreenerror | 'loadedplugin | 'videoqualitychange' | 'videosourcechange' | 'destroy'
+
 ```js
 const listener = (event) => {
   console.log(event)
@@ -180,53 +182,40 @@ player.off('play', listener)
 player.emit('cool', { msg: "It's pretty cool!" })
 ```
 
-- 'abort',
-- 'canplay',
-- 'canplaythrough',
-- 'durationchange',
-- 'emptied',
-- 'ended',
-- 'error',
-- 'loadeddata',
-- 'loadedmetadata',
-- 'loadstart',
-- 'pause',
-- 'play',
-- 'playing',
-- 'progress',
-- 'ratechange',
-- 'seeked',
-- 'seeking',
-- 'stalled',
-- 'suspend',
-- 'timeupdate',
-- 'volumechange',
-- 'waiting',
-- 'encrypted',
-- 'waitingforkey',
-- 'enterpictureinpicture',
-- 'leavepictureinpicture'
-
-- 'fullscreenchange'
-- 'fullscreenerror'
-- 'loadedplugin'
-- 'videoqualitychange',
-- 'videosourcechange',
-- 'destroy'
-
 ## Plugin
 
 ```js
-const helloPlugin = {
-  name: 'hello-world',
+class HelloPlugin {
+  key = 'hello'
+  name = 'oplayer-plugin-hello'
+  version = 'v0.0.1'
+
   apply(player) {
+    this.say()
+
     player.on('play', () => {
       console.log('enjoy the video!')
     })
+  }
 
-    player.on('destroy', () => {
-      console.log('bye bye!')
-    })
+  say(who = this.name) {
+    console.log(`hello! ${who}`)
+  }
+
+  destroy() {
+    console.log('bye bye!')
   }
 }
+
+const player = Player.make('#player', {
+  source: {
+    title: '君の名は',
+    src: '/君の名は.mp4',
+    poster: '/poster.png'
+  }
+})
+  .use([new HelloPlugin()])
+  .create()
+
+player.plugins.hello.say('world')
 ```

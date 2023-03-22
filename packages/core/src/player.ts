@@ -181,7 +181,7 @@ export class Player {
   async load(source: Source) {
     await this.loader?.destroy()
     this.loader = undefined
-    for await (const plugin of this._pluginsFactory) {
+    for (const plugin of this._pluginsFactory) {
       if (plugin.load) {
         const returned = await plugin.load(this, source)
         if (returned != false && !this.loader) {
@@ -198,25 +198,27 @@ export class Player {
   }
 
   applyPlugins() {
-    this._pluginsFactory.forEach(({ name, key, apply, version }) => {
-      if (apply) {
-        const returned = apply(this)
-        if (returned) {
-          const _key = key || name
-          if (isPlainObject(returned)) {
-            this.plugins[_key] = Object.assign(
-              { displayName: name, key, version },
-              this.plugins[_key],
-              returned
-            )
-          } else {
-            this.plugins[_key] = Object.assign(returned, this.plugins[_key], {
-              key,
-              version,
-              displayName: name
-            })
-          }
+    this._pluginsFactory.forEach((plugin) => {
+      const { name, key, version } = plugin
+      const returned = plugin.apply(this)
+      const _key = key || name
+
+      if (returned && isPlainObject(plugin)) {
+        if (isPlainObject(returned)) {
+          this.plugins[_key] = Object.assign(
+            { displayName: name, key, version },
+            this.plugins[_key],
+            returned
+          )
+        } else {
+          this.plugins[_key] = Object.assign(returned, this.plugins[_key], {
+            key,
+            version,
+            displayName: name
+          })
         }
+      } else {
+        this.plugins[_key] = plugin
       }
     })
   }

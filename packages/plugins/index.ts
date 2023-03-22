@@ -1,4 +1,4 @@
 import chromecast from './src/chromecast'
-import test from './src/test'
+import Hello from './src/hello'
 
-export { chromecast, test }
+export { chromecast, Hello }

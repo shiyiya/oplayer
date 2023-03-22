@@ -67,6 +67,8 @@ if (process.argv.pop() == '--watch') {
   process.on('SIGINT', close)
   process.on('SIGTERM', close)
 } else {
+  fs.rmSync('./dist', { recursive: true, force: true })
+
   const bundles = Object.keys(plugins).map((name) => () => buildPlugin(name))
 
   runInQueue(bundles).then(() => {

@@ -19,6 +19,6 @@
     "@oplayer/mpegts": "workspace:*",
     "@oplayer/plugins": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "lit": "^2.6.1"
+    "lit": "^2.7.0"
   }
 }
