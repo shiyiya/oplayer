@@ -1,5 +1,11 @@
 import { PlayerPlugin, $ } from '@oplayer/core'
 
+declare global {
+  interface Window {
+    chrome: any
+  }
+}
+
 export default <PlayerPlugin>{
   name: 'oplayer-plugin-chromecast',
   apply(player) {

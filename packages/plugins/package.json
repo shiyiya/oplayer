@@ -4,9 +4,10 @@
   "description": "oplayer's plugin",
   "type": "module",
   "main": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "node build-plugins.js --watch",
-    "build": "node build-plugins.js"
+    "build": "node build-plugins.js && tsc --emitDeclarationOnly"
   },
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0"

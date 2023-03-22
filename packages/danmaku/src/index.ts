@@ -1,9 +1,10 @@
+/// <reference path="../../../types.d.ts" />
+
 import { $, isIOS, isMobile, Player, PlayerPlugin } from '@oplayer/core'
 import Danmaku from 'danmaku'
 import { danmakuParseFromUrl, getMode } from './danmaku-parse'
 import type { Comment, Options } from './types'
 
-//@ts-ignore
 import danmakuSvg from './danmaku.svg?raw'
 
 export * from './types'
@@ -11,7 +12,6 @@ export * from './types'
 export default (options = {} as Options): PlayerPlugin => ({
   key: 'danmaku',
   name: 'oplayer-plugin-danmaku',
-  //@ts-ignore
   version: __VERSION__,
   apply: (player: Player) => {
     if (player.isNativeUI) return

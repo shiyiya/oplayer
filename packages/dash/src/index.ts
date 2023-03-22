@@ -189,7 +189,7 @@ const removeSetting = (player: Player) => {
 }
 
 class DashPlugin implements PlayerPlugin {
-  key = 'hls'
+  key = 'dash'
   name = PLUGIN_NAME
   //@ts-ignore
   version = __VERSION__
@@ -199,7 +199,7 @@ class DashPlugin implements PlayerPlugin {
   player: Player
 
   //@ts-ignore
-  static library: typeof import('dashjs') = globalThis.Hls
+  static library: typeof import('dashjs') = globalThis.dashjs
 
   instance: MediaPlayerClass
 

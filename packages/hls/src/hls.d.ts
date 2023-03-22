@@ -7,8 +7,3 @@ declare module 'hls.js/dist/hls.light.min.js' {
   import Hls from 'hls.js'
   export = Hls
 }
-
-declare module '*.svg?raw' {
-  const svg: string
-  export = svg
-}

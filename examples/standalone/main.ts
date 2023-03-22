@@ -1,3 +1,4 @@
+/// <reference path="../../types.d.ts" />
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
