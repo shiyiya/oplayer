@@ -1,27 +1,26 @@
-import Player, { $ } from '@oplayer/core'
-import type { Thumbnails } from '../types'
+import { PlayerPlugin } from '@oplayer/core'
+import { $, Player } from '@oplayer/core'
 
-const noop = () => {}
+type Thumbnails = {
+  src: string
+  number: number
+  width?: number
+  height?: number
+  isVTT?: boolean
+}
 
-export const vttThumbnailsCls = $.css(`
-  position: absolute;
-  left: 0;
-  bottom: 12px;
-  pointer-events: none;
-  border-radius: 3px;
-  display: none;`)
+type Def = { start: number; end: number; css: any }
 
-export default function (player: Player, container: HTMLElement, options?: Thumbnails) {
-  if (!options) return { update: noop, hide: noop, init: noop }
-
-  type Def = { start: number; end: number; css: any }
+function plugin(player: Player, options: Thumbnails) {
+  const { $progress } = player.plugins.ui
+  const container = $progress.firstElementChild
 
   let vttData = [] as Def[]
   let cache = {} as any
   let lastStyle: Def
   let isActive = false
   let src = options.src
-  const $dom = $.render($.create(`div.${vttThumbnailsCls}`), container)
+  const $dom = $.render($.create(`div.${player.plugins.ui.vttThumbnailsCls}`), container)
 
   $dom.style.width = (options?.width || 160) + 'px'
   $dom.style.height = (options?.height || 90) + 'px'
@@ -163,8 +162,8 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     }
   }
 
-  const updateThumbnailStyle = (percent: number) => {
-    if (!isActive) return
+  const updateThumbnailStyle = (percent?: number) => {
+    if (!isActive || !percent) return
     const duration = player.duration
     const time = percent * duration
     const currentStyle = getStyleForTime(time)
@@ -222,9 +221,11 @@ export default function (player: Player, container: HTMLElement, options?: Thumb
     }
   }
 
-  return {
-    init: () => {},
-    update: updateThumbnailStyle,
-    change: bootstrap
-  }
+  player.plugins.ui.progressHoverCallback.push(updateThumbnailStyle)
+  player.plugins.ui.changThumbnails = ({ src }: any) => bootstrap(src)
 }
+
+export default (options: Thumbnails): PlayerPlugin => ({
+  name: 'oplayer-vtt-thumbnails',
+  apply: (player) => plugin(player, options)
+})

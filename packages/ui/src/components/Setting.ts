@@ -1,7 +1,7 @@
 import Player, { $ } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
-import type { Setting, UiConfig } from '../types'
+import type { Setting, UIInterface } from '../types'
 import { controlBar } from './ControllerBar'
 import { controllerBottom } from './ControllerBottom.style'
 import {
@@ -252,7 +252,9 @@ function createPanel(
   return panel
 }
 
-export default function (player: Player, $el: HTMLElement, config: UiConfig) {
+export default function (it: UIInterface) {
+  const { player, $root: $el, config } = it
+
   const topEnabled = config.controlBar && config.topSetting
   const options = config.settings || []
   const $dom = $.create(`div.${setting(topEnabled ? 'top' : 'bottom')}`, {
@@ -273,11 +275,11 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
 
   bootstrap(options.map((it) => (typeof it == 'string' ? defaultSettingMap[it] : it)) as Setting[])
 
-  function register(payload: Setting | Setting[]) {
+  it.setting.register = function register(payload: Setting | Setting[]) {
     bootstrap(Array.isArray(payload) ? payload : [payload])
   }
 
-  function unregister(key: string) {
+  it.setting.unregister = function unregister(key: string) {
     if (!hasRendered) return
     panels[0]?.$ref.querySelector(`[data-key=${key}]`)?.remove()
     panels = panels.filter((p) =>
@@ -285,13 +287,17 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
     )
   }
 
-  function updateLabel(key: string, text: string) {
+  it.setting.updateLabel = function updateLabel(key: string, text: string) {
     if (!hasRendered) return
     const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
     if ($item) $item.innerText = text
   }
 
-  function select(key: string, value: boolean | number, shouldBeCallFn: Boolean = true) {
+  it.setting.select = function select(
+    key: string,
+    value: boolean | number,
+    shouldBeCallFn: Boolean = true
+  ) {
     if (!hasRendered) return
     if (typeof value == 'number') {
       for (let i = 0; i < panels.length; i++) {
@@ -361,6 +367,4 @@ export default function (player: Player, $el: HTMLElement, config: UiConfig) {
       parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
     }
   }
-
-  return { register, unregister, updateLabel, select }
 }

@@ -1,3 +1,7 @@
+import Player, { PlayerPlugin } from '@oplayer/core'
+import type { ICONS_MAP } from './functions/icons'
+import type { Subtitle as SubtitleInstance } from './components/Subtitle'
+
 export type SubtitleSource = {
   default?: boolean
   name?: string
@@ -73,7 +77,7 @@ export type UiConfig = {
   /**
    * default: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
    */
-  speed?: string[]
+  speeds?: string[]
   /**
    * default: false
    */
@@ -172,3 +176,55 @@ export type ErrorPayload =
       message: string
       code?: number
     }
+
+export interface UIInterface extends PlayerPlugin {
+  config: UiConfig
+
+  player: Player
+
+  icons: typeof ICONS_MAP
+
+  subtitle: SubtitleInstance
+
+  keybord: {
+    register: (payload: Record<string, (e: any) => void>) => void
+    unregister: (keys: string[]) => void
+  }
+
+  setting: {
+    register: (payload: Setting | Setting[]) => void
+    unregister: (key: string) => void
+    updateLabel: (key: string, text: string) => void
+    select: (key: string, value: boolean | number, shouldBeCallFn?: Boolean) => void
+  }
+
+  menu: {
+    register: (menu: MenuBar) => void
+    unregister: (key: string) => void
+    select: (name: string, index: number) => void
+  }
+
+  toggleController: () => void
+
+  changHighlightSource: (highlights: Highlight[]) => void
+
+  changThumbnails: (src: Thumbnails) => void
+
+  progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[]
+
+  $root: HTMLDivElement
+
+  $coverButton?: HTMLDivElement // 可配置无
+
+  $controllerBar?: HTMLDivElement
+
+  $controllerBottom: HTMLDivElement
+
+  $progress?: HTMLDivElement //live 无
+
+  $mask: HTMLDivElement
+
+  $setting: HTMLDivElement
+
+  $subtitle: HTMLDivElement
+}

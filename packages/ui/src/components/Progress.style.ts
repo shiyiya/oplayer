@@ -1,7 +1,6 @@
 import { $, isMobile } from '@oplayer/core'
 import { controllerHidden } from '../style'
-import { thumbnailCls } from './thumbnail'
-import { vttThumbnailsCls } from './vtt-thumbnails'
+import { thumbnailCls, vttThumbnailsCls } from './Thumbnail'
 
 export const buffered = $.css({
   'background-color': 'hsla(0, 0%, 100%, 0.4)'

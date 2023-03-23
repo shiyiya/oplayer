@@ -1,12 +1,11 @@
 import { $, isIOS, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
-import { icon, off, on, tooltip, webFullScreen } from '../style'
+import { controllerHidden, icon, off, on, tooltip, webFullScreen } from '../style'
 import { formatTime, screenShot, toggleClass } from '../utils'
 import renderVolumeBar from './VolumeBar'
 import renderProgress from './Progress'
 
-import type { Player } from '@oplayer/core'
-import type { UiConfig } from '../types'
+import type { UIInterface } from '../types'
 
 import {
   controllerBottom,
@@ -17,8 +16,50 @@ import {
   live
 } from './ControllerBottom.style'
 
-const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  const progressExpo = renderProgress(player, el, config)
+const controllerBottomWrap = $.css({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  'z-index': 97,
+  padding: '0 1em',
+  transition: 'transform 0.3s ease, padding 0.3s ease',
+  '&::before': {
+    position: 'absolute',
+    content: "''",
+    width: '100%',
+    display: 'block',
+    bottom: 0,
+    left: 0,
+    'z-index': -1,
+    top: '-1em',
+    transition: 'opacity 0.3s ease',
+    'pointer-events': 'none',
+    'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
+  },
+
+  [`@global .${controllerHidden} &`]: {
+    padding: 0,
+    'pointer-events': 'none',
+    transform: 'translateY(calc(100% - 8px))',
+    '&::before': { opacity: 0 }
+  }
+})
+
+const render = (it: UIInterface) => {
+  const { player, $root, config } = it
+
+  const el = $.render($.create(`div.${controllerBottomWrap}`), $root)
+
+  if (!config.miniProgressBar) {
+    $.css({
+      [`@global .${controllerHidden} .${controllerBottomWrap}`]: {
+        transform: 'translateY(100%)'
+      }
+    })
+  }
+
+  renderProgress(it, el)
 
   const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel] = [
     player.locales.get('Play'),
@@ -28,7 +69,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     player.locales.get(player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen')
   ]
 
-  const $dom = $.create(
+  const $dom = (it.$controllerBottom = $.create(
     `div.${controllerBottom}`,
     {},
     `<div>
@@ -85,7 +126,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
           : ''
       }
     </div>`
-  )
+  ))
 
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label=Volume]')!
   // IOS只能使用物理按键控制音量大小
@@ -172,8 +213,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   })
 
   $.render($dom, el)
-
-  return { cls: { controllerBottom }, ...progressExpo }
 }
 
 export default render

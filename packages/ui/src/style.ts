@@ -11,7 +11,9 @@ export const fullscreen = $.cls('fullscreen')
 
 export const settingShown = $.cls('settingShown')
 
-export const controllerHidden = $.css('cursor: none;')
+export const controllerHidden = $.css({
+  [`.${playing}`]: { cursor: 'none' }
+})
 
 export const error = $.cls('error')
 

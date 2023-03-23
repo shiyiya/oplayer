@@ -1,11 +1,9 @@
-import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions'
-import { UiConfig } from '../types'
+import { UIInterface } from '../types'
 import { DRAG_EVENT_MAP, formatTime } from '../utils'
 import renderHighlight, { highlightCls } from './highlight'
-import renderThumbnail from './thumbnail'
-import renderVTTThumbnail from './vtt-thumbnails'
+import renderThumbnail, { vttThumbnailsCls } from './Thumbnail'
 import {
   buffered,
   dot,
@@ -16,10 +14,12 @@ import {
   progressInner
 } from './Progress.style'
 
-const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  if (player.options.isLive) return {}
+const render = (it: UIInterface, el: HTMLElement) => {
+  const { player, config } = it
 
-  const $dom = $.create(
+  if (player.options.isLive) return
+
+  const $dom = (it.$progress = $.create(
     `div.${progress}`,
     {},
     `<div class=${progressInner}>
@@ -30,17 +30,20 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         ${Icons.get('progressIndicator') || `<span />`}
       </div>
   </div>`
-  )
+  ))
   const firstElement = $dom.firstElementChild! as HTMLDivElement
-  const {
-    init: initThumbnail,
-    update: thumbnailUpdater,
-    change
-  } = config.thumbnails?.isVTT
-    ? renderVTTThumbnail(player, firstElement, config.thumbnails)
-    : renderThumbnail(player, firstElement, config.thumbnails)
 
-  const highlight = renderHighlight(player, firstElement, config.highlight)
+  if (config.thumbnails) {
+    if (config.thumbnails.isVTT) {
+      //@ts-ignore
+      it.vttThumbnailsCls = vttThumbnailsCls
+      console.warn('vtt thumbnails support by @oplayer/pluins')
+    } else {
+      renderThumbnail(it, firstElement)
+    }
+  }
+
+  renderHighlight(it, firstElement)
 
   const $buffered = $dom.querySelector<HTMLDivElement>(`.${buffered}`)!
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
@@ -71,12 +74,13 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
     isDargMoving = true
     $dom.classList.add(progressDragging)
-    initThumbnail()
-    thumbnailUpdater(sync(e))
+    const rate = sync(e)
+    it.progressHoverCallback.forEach((cb) => cb(rate))
 
     function moving(e: MouseEvent | TouchEvent) {
       e.preventDefault()
-      thumbnailUpdater(sync(e))
+      const rate = sync(e)
+      it.progressHoverCallback.forEach((cb) => cb(rate))
     }
 
     document.addEventListener(DRAG_EVENT_MAP.dragMove, moving, { passive: false })
@@ -95,7 +99,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   if (!isMobile) {
     $dom.addEventListener('mouseenter', () => {
       if (isDargMoving) return
-      initThumbnail()
+      it.progressHoverCallback.forEach((cb) => cb())
     })
 
     $dom.addEventListener(
@@ -112,7 +116,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
         const rate = getSlidingValue(e)
         $hit.innerText = formatTime(player.duration * rate)
         $hit.style.left = `${rate * 100}%`
-        thumbnailUpdater(rate)
+        it.progressHoverCallback.forEach((cb) => cb(rate))
       },
       { passive: false }
     )
@@ -144,8 +148,6 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
   })
 
   $.render($dom, el)
-
-  return { highlight, thumbnails: change }
 }
 
 export default render

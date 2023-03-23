@@ -1,6 +1,6 @@
-import type Player from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { settingShown } from '../style'
+import { UIInterface } from '../types'
 import { hasClass } from '../utils'
 
 export const maskCls = $.css({
@@ -17,15 +17,17 @@ export const maskCls = $.css({
   }
 })
 
-const render = (player: Player, el: HTMLElement, toggleController: Function) => {
-  const $dom = $.create(`div.${maskCls}`)
+const render = (it: UIInterface) => {
+  const { player, $root: el } = it
+
+  const $dom = (it.$mask = $.create(`div.${maskCls}`))
   let count = 0
   let timeoutId: number
 
   $dom.addEventListener('click', () => {
     if (hasClass(player.$root, settingShown)) return
     if (isMobile) {
-      toggleController()
+      it.toggleController()
     } else {
       //pc 双击全屏
       if (count == 0) player.togglePlay()
@@ -39,7 +41,7 @@ const render = (player: Player, el: HTMLElement, toggleController: Function) => 
     count += 1
   })
 
-  return $.render($dom, el)
+  $.render($dom, el)
 }
 
 export default render

@@ -1,11 +1,13 @@
-import { UiConfig } from '../types'
-import Player, { isMobile } from '@oplayer/core'
+import { UIInterface } from '../types'
+import { isMobile } from '@oplayer/core'
 import { canplay, clamp, formatTime, hasClass } from '../utils'
 import { settingShown } from '../style'
 
 const FULL_SLIDE_DURATION = 60
 
-export default function (player: Player, $dom: HTMLDivElement, config: UiConfig) {
+export default function (it: UIInterface) {
+  const { player, config, $mask: $dom } = it
+
   if (isMobile && !player.options.isLive && config.slideToSeek && config.slideToSeek != 'none') {
     player.on(
       canplay,

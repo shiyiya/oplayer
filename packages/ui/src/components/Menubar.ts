@@ -1,4 +1,3 @@
-import type Player from '@oplayer/core'
 import {
   controllerBottom,
   dropdown,
@@ -9,7 +8,7 @@ import {
   textIcon
 } from '../components/ControllerBottom.style'
 import { icon as iconCls, tooltip } from '../style'
-import type { MenuBar } from '../types'
+import type { MenuBar, UIInterface } from '../types'
 import { siblings } from '../utils'
 import { controlBar } from './ControllerBar'
 
@@ -19,13 +18,16 @@ const _select = (elm: HTMLElement) => {
   siblings(elm, (it) => it.setAttribute('aria-checked', `${selected}`))
 }
 
-export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
+export default (it: UIInterface) => {
+  const {
+    $root: elm,
+    config: { menu: initialState }
+  } = it
+
   const menus: MenuBar[] = []
   const $top = elm.querySelector(`.${controlBar}`)!?.children?.[1]! as HTMLDivElement
   const $end = elm.querySelector(`.${controllerBottom}`)?.children?.[1]! as HTMLDivElement
   const $targets = [$top, $end].filter(Boolean)
-
-  if (initialState) initialState.forEach((it) => register(it))
 
   function clickHandler(e: Event) {
     const elm: HTMLElement = e.target as HTMLElement
@@ -49,7 +51,7 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     it.addEventListener('click', clickHandler)
   })
 
-  function register(menu: MenuBar) {
+  it.menu.register = function register(menu: MenuBar) {
     const isTop = menu.position == 'top' && $targets.length == 2
     const { name, icon, children } = menu
     let $menu: string = ''
@@ -95,18 +97,18 @@ export default (_: Player, elm: HTMLElement, initialState?: MenuBar[]) => {
     }
   }
 
-  function unregister(name: string) {
+  it.menu.unregister = function unregister(name: string) {
     $targets.forEach((it) => {
       it.querySelector(`button[aria-label=${name}]`)?.remove()
       it.querySelector(`div[aria-label=${name}]`)?.remove()
     })
   }
 
-  function select(name: string, index: number) {
+  it.menu.select = function select(name: string, index: number) {
     $targets.forEach((it) => {
       _select(it.querySelector(`.${expand} > span[aria-label=${name}]:nth-child(${index + 1})`)!)
     })
   }
 
-  return { register, unregister, select }
+  if (initialState) initialState.forEach((menu) => it.menu.register(menu))
 }

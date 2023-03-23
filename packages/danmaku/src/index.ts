@@ -302,7 +302,7 @@ export default (options = {} as Options): PlayerPlugin => ({
         }
       }
 
-      const parent = document.querySelector(`.${player.plugins.ui.cls.controllerBottom}`)!
+      const parent = player.plugins.ui.$controllerBottom
       const $input = $tpl.querySelector<HTMLInputElement>(`.${input}`)!
       parent.insertBefore($tpl, parent.children[1]!)
 
@@ -323,7 +323,7 @@ export default (options = {} as Options): PlayerPlugin => ({
           }
           if (options.onEmit?.(comment) || true) {
             const primaryColor = window
-              .getComputedStyle(player.$root.querySelector(`.${player.plugins.ui.cls.root}`)!)
+              .getComputedStyle(player.plugins.ui.$root)
               .getPropertyValue('--primary-color')
 
             //@ts-ignore

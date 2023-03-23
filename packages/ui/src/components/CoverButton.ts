@@ -62,6 +62,8 @@ const render = (player: Player, el: HTMLElement) => {
   )
 
   $.render($dom, el).addEventListener('click', () => player.play())
+
+  return $dom
 }
 
 export default render

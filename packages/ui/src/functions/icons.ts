@@ -16,10 +16,9 @@ import subtitleSvg from '../icons/subtitles.svg?raw'
 import qualitySvg from '../icons/quality.svg?raw'
 import langSvg from '../icons/lang.svg?raw'
 
-import type { Player } from '@oplayer/core'
 import type { UiConfig } from '../types'
 
-const ICONS_MAP = {
+export const ICONS_MAP = {
   play: playSvg,
   pause: pauseSvg,
   volume: [volumeSvg, volumeOffSvg],
@@ -37,7 +36,7 @@ const ICONS_MAP = {
 }
 
 export namespace Icons {
-  export const setupIcons = (_: Player, icons: UiConfig['icons']) => {
+  export const setupIcons = (icons: UiConfig['icons']) => {
     for (const key in icons) {
       if (Object.prototype.hasOwnProperty.call(icons, key)) {
         ICONS_MAP[key as keyof UiConfig['icons']] = icons[key as keyof UiConfig['icons']]

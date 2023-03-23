@@ -1,16 +1,23 @@
 import type { Player } from '@oplayer/core'
 import { $, isIOS, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
-import type { Setting, Subtitle as SubtitleConfig, SubtitleSource } from '../types'
+import type { Setting, Subtitle as SubtitleConfig, SubtitleSource, UIInterface } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 
 const SETTING_KEY = 'Subtitle'
 
-export default function (player: Player, setting: any, el: HTMLElement, options?: SubtitleConfig) {
-  return new Subtitle(player, setting, el, options)
+export default function (it: UIInterface) {
+  const {
+    player,
+    $root: el,
+    config: { subtitle },
+    setting
+  } = it
+
+  return (it.subtitle = new Subtitle(player, setting, el, subtitle))
 }
 
-class Subtitle {
+export class Subtitle {
   options: SubtitleConfig & { source: SubtitleSource[] }
 
   $track?: HTMLTrackElement

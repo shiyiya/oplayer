@@ -1,5 +1,5 @@
-import Player, { $ } from '@oplayer/core'
-import type { Highlight, UiConfig } from '../types'
+import { $ } from '@oplayer/core'
+import type { Highlight, UIInterface } from '../types'
 
 export const highlightTextCls = $.css(`
   display: none;
@@ -28,11 +28,12 @@ export const highlightCls = $.css({
   }
 })
 
-export default function (
-  player: Player,
-  container: HTMLElement,
-  highlightsConfig: UiConfig['highlight']
-) {
+export default function (it: UIInterface, container: HTMLElement) {
+  const {
+    player,
+    config: { highlight: highlightsConfig }
+  } = it
+
   let $highlights: HTMLDivElement[] = []
   let active = true
 
@@ -82,5 +83,5 @@ export default function (
     $highlights.forEach((it) => it.remove())
   })
 
-  return change
+  it.changHighlightSource = change
 }

@@ -1,14 +1,15 @@
-import type { Player } from '@oplayer/core'
-import { Setting, UiConfig } from '../types'
+import { Setting, UIInterface } from '../types'
 import { Icons } from './icons'
 
 const KEY = 'speed'
 
-export default function registerSpeedSetting(
-  player: Player,
-  speeds: UiConfig['speed'],
-  setting: any
-) {
+export default function registerSpeedSetting(it: UIInterface) {
+  const {
+    player,
+    config: { speeds },
+    setting
+  } = it
+
   if (speeds?.length) {
     setting.register(<Setting>{
       key: KEY,

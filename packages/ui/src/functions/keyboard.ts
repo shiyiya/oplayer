@@ -1,7 +1,7 @@
 import type { Player } from '@oplayer/core'
 import { isFocused } from '../listeners/focus'
 import { webFullScreen } from '../style'
-import { UiConfig } from '../types'
+import { UIInterface } from '../types'
 import { formatTime, screenShot } from '../utils'
 
 const VOLUME_SETUP = 10 //10% 0.1 有精度问题
@@ -58,7 +58,9 @@ const KEY_FN: Record<string, (player: Player) => void> = {
   s: screenShot
 }
 
-export default function (player: Player, config: UiConfig) {
+export default function (it: UIInterface) {
+  const { player, config } = it
+
   let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {
@@ -90,7 +92,7 @@ export default function (player: Player, config: UiConfig) {
     }, 200)
   }
 
-  function register(payload: any) {
+  it.keybord.register = function register(payload: any) {
     for (const key in payload) {
       if (Object.prototype.hasOwnProperty.call(payload, key)) {
         KEY_FN[key] = payload[key]
@@ -98,7 +100,7 @@ export default function (player: Player, config: UiConfig) {
     }
   }
 
-  function unRegister(payload: string[]) {
+  it.keybord.unregister = function unregister(payload: string[]) {
     payload.forEach((k) => {
       delete KEY_FN[k]
     })
@@ -108,6 +110,4 @@ export default function (player: Player, config: UiConfig) {
   player.on('destroy', () => {
     document.removeEventListener('keydown', keydown)
   })
-
-  return { register, unRegister }
 }
