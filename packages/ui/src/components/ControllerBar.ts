@@ -1,7 +1,7 @@
 import { $, isMobile } from '@oplayer/core'
 
 import type { UIInterface } from '../types'
-import { controllerHidden } from '../style'
+import { controllerHidden, hidden } from '../style'
 import { controllerBottom } from './ControllerBottom.style'
 import { arrowSvg } from './Setting'
 
@@ -45,10 +45,8 @@ const controlBarTitle = $.css(
   'flex:1;font-size:1em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
 )
 
-const hiddenBack = $.css('display:none')
-
-const render = (it: UIInterface) => {
-  const { player, $root: el, config } = it
+const render = (it: UIInterface, el: HTMLDivElement) => {
+  const { player, config } = it
 
   if (!config.controlBar) return
 
@@ -64,7 +62,7 @@ const render = (it: UIInterface) => {
     ${
       backEnabled
         ? `<span role='button' class="${controlBarBackIcon} ${
-            back == 'fullscreen' ? hiddenBack : ''
+            back == 'fullscreen' ? hidden : ''
           }">${arrowSvg('')}</span>`
         : ''
     }
@@ -86,9 +84,9 @@ const render = (it: UIInterface) => {
     if (back == 'fullscreen') {
       player.on('fullscreenchange', () => {
         if (player.isFullScreen) {
-          $controlBarBack.classList.remove(hiddenBack)
+          $controlBarBack.classList.remove(hidden)
         } else {
-          $controlBarBack.classList.add(hiddenBack)
+          $controlBarBack.classList.add(hidden)
         }
       })
     }

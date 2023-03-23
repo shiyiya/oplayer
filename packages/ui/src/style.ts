@@ -11,6 +11,8 @@ export const fullscreen = $.cls('fullscreen')
 
 export const settingShown = $.cls('settingShown')
 
+export const hidden = $.css('display:none')
+
 export const controllerHidden = $.css({
   [`.${playing}`]: { cursor: 'none' }
 })

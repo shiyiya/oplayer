@@ -19,7 +19,7 @@ import SRT from '../../website/static/君の名は.srt'
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
-import { Hello } from '@oplayer/plugins'
+import { Hello, VttThumbnails } from '@oplayer/plugins'
 
 let src = VIDEO_LIST[1]!
 let currentDataSrcId = 0
@@ -51,7 +51,7 @@ const player = Player.make('#player', {
       screenshot: true,
       settings: ['loop'],
       pictureInPicture: true,
-      // showControls: 'played',
+      showControls: 'played',
       // theme: { primaryColor: '#00b2ff' },
       highlight: { color: '#000' },
       subtitle: {
@@ -64,10 +64,7 @@ const player = Player.make('#player', {
         ]
       },
       thumbnails: {
-        src:
-          'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt' ||
-          THUMB,
-        isVTT: true,
+        src: THUMB,
         number: 100
       },
       icons: {
@@ -78,6 +75,9 @@ const player = Player.make('#player', {
     </svg>`,
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
+    }),
+    VttThumbnails({
+      src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
     }),
     hls(),
     dash(),

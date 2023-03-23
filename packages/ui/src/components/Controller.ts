@@ -1,5 +1,5 @@
-import { isMobile } from '@oplayer/core'
-import { controllerHidden, error, settingShown } from '../style'
+import { $, isMobile } from '@oplayer/core'
+import { controllerHidden, error, hidden, settingShown } from '../style'
 import type { UIInterface } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBar from './ControllerBar'
@@ -8,21 +8,23 @@ import renderControllerBottom from './ControllerBottom'
 const CTRL_HIDE_DELAY = 1500
 
 const render = (it: UIInterface) => {
-  const { player, config } = it
-  let played = false
+  const { player, config, $root } = it
 
-  renderControllerBar(it)
-  renderControllerBottom(it)
+  const $controller = $.create('div')
+
+  renderControllerBar(it, $controller)
+  renderControllerBottom(it, $controller)
 
   if (config.showControls == 'played') {
-    addClass(player.$root, controllerHidden)
+    addClass($controller, hidden)
 
-    player.on('play', () => {
-      played = true
-    })
-    player.on(['videosourcechange'], () => {
-      played = false
-    })
+    player.on(
+      'play',
+      () => {
+        removeClass($controller, hidden)
+      },
+      { once: true }
+    )
   }
 
   const hideCtrl = () => {
@@ -42,7 +44,6 @@ const render = (it: UIInterface) => {
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
 
   const showCtrl = () => {
-    if (config.showControls == 'played' && !played) return
     cancelHideCtrl()
     if (hasClass(player.$root, controllerHidden)) {
       removeClass(player.$root, controllerHidden)
@@ -62,12 +63,18 @@ const render = (it: UIInterface) => {
   }
 
   it.toggleController = function toggle() {
+    if (hasClass($controller, hidden)) {
+      player.play()
+      return
+    }
     if (hasClass(player.$root, controllerHidden)) {
       showCtrl()
     } else {
       hideCtrl()
     }
   }
+
+  $.render($controller, $root)
 }
 
 export default render

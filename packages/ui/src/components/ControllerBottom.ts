@@ -46,10 +46,10 @@ const controllerBottomWrap = $.css({
   }
 })
 
-const render = (it: UIInterface) => {
-  const { player, $root, config } = it
+const render = (it: UIInterface, $el: HTMLDivElement) => {
+  const { player, config } = it
 
-  const el = $.render($.create(`div.${controllerBottomWrap}`), $root)
+  const el = $.render($.create(`div.${controllerBottomWrap}`), $el)
 
   if (!config.miniProgressBar) {
     $.css({

@@ -3,10 +3,8 @@ import { $, Player } from '@oplayer/core'
 
 type Thumbnails = {
   src: string
-  number: number
   width?: number
   height?: number
-  isVTT?: boolean
 }
 
 type Def = { start: number; end: number; css: any }
