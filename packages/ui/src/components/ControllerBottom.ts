@@ -16,7 +16,7 @@ import {
   live
 } from './ControllerBottom.style'
 
-const controllerBottomWrap = $.css({
+export const controllerBottomWrap = $.css({
   position: 'absolute',
   left: 0,
   right: 0,

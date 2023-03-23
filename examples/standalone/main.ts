@@ -3,7 +3,7 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
-import Player, { PlayerEvent } from '@oplayer/core'
+import Player, { isMobile, PlayerEvent } from '@oplayer/core'
 import danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
@@ -42,7 +42,7 @@ const player = Player.make('#player', {
   .use([
     ui({
       controlBar: { back: 'always' },
-      topSetting: true,
+      topSetting: isMobile,
       slideToSeek: 'always',
       // miniProgressBar: false,
       // autoFocus: true,
@@ -51,7 +51,7 @@ const player = Player.make('#player', {
       screenshot: true,
       settings: ['loop'],
       pictureInPicture: true,
-      showControls: 'played',
+      // showControls: 'played',
       // theme: { primaryColor: '#00b2ff' },
       highlight: { color: '#000' },
       subtitle: {
@@ -76,9 +76,9 @@ const player = Player.make('#player', {
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
-    VttThumbnails({
-      src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
-    }),
+    // VttThumbnails({
+    //   src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
+    // }),
     hls(),
     dash(),
     mpegts(),

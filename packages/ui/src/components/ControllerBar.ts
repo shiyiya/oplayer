@@ -2,7 +2,7 @@ import { $, isMobile } from '@oplayer/core'
 
 import type { UIInterface } from '../types'
 import { controllerHidden, hidden } from '../style'
-import { controllerBottom } from './ControllerBottom.style'
+import { controllerBottom, dropdown, expand } from './ControllerBottom.style'
 import { arrowSvg } from './Setting'
 
 export const controlBar = $.css({
@@ -30,6 +30,10 @@ export const controlBar = $.css({
   },
 
   '& > div:nth-child(1)': { cursor: 'pointer', overflow: 'hidden' },
+
+  [`& > div:nth-child(2) .${dropdown}:last-child .${expand}`]: {
+    right: '100%'
+  },
 
   [`@global .${controllerHidden} &`]: {
     transform: 'translateY(calc(-100%))',

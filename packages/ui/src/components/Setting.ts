@@ -3,6 +3,7 @@ import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
 import type { Setting, UIInterface } from '../types'
 import { controlBar } from './ControllerBar'
+import { controllerBottomWrap } from './ControllerBottom'
 import { controllerBottom } from './ControllerBottom.style'
 import {
   activeCls,
@@ -363,7 +364,10 @@ export default function (it: UIInterface) {
       const parent = $el.querySelector<HTMLDivElement>(`.${controlBar}`)!.children[1]!
       parent.insertBefore(settingButton, parent.children[parent.children.length]!)
     } else {
-      const parent = $el.querySelector<HTMLDivElement>(`.${controllerBottom}`)!.children[1]!
+      const parent = $el.querySelector<HTMLDivElement>(
+        `.${controllerBottomWrap} .${controllerBottom}`
+      )!.children[1]!
+
       parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
     }
   }
