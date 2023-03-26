@@ -1,5 +1,4 @@
 import {
-  controllerBottom,
   dropdown,
   dropdownHoverable,
   dropItem,
@@ -10,7 +9,6 @@ import {
 import { icon as iconCls, tooltip } from '../style'
 import type { MenuBar, UIInterface } from '../types'
 import { siblings } from '../utils'
-import { controlBar } from './ControllerBar'
 
 const _select = (elm: HTMLElement) => {
   const selected = elm.getAttribute('aria-checked') == 'true'
@@ -20,14 +18,13 @@ const _select = (elm: HTMLElement) => {
 
 export default (it: UIInterface) => {
   const {
-    $root: elm,
     config: { menu: initialState }
   } = it
 
   const menus: MenuBar[] = []
-  const $top = elm.querySelector(`.${controlBar}`)!?.children?.[1]! as HTMLDivElement
-  const $end = elm.querySelector(`.${controllerBottom}`)?.children?.[1]! as HTMLDivElement
-  const $targets = [$top, $end].filter(Boolean)
+  const $top = it.$controllerBar?.children[1]
+  const $end = it.$controllerBottom.children[1]!
+  const $targets = [$top, $end].filter(Boolean) as HTMLDivElement[]
 
   function clickHandler(e: Event) {
     const elm: HTMLElement = e.target as HTMLElement
@@ -58,7 +55,7 @@ export default (it: UIInterface) => {
     const $button = `
     <button
       aria-label="${name}"
-      data-tooltip-pos="${isTop ? 'bottom-right' : ''}"
+      ${isTop ? 'data-tooltip-pos="bottom-right"' : ''}
       class="${iconCls} ${!icon ? textIcon : ''} ${!menu.children ? tooltip : ''}"
       type="button"
     >${icon || name}</button>`
