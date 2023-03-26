@@ -32,7 +32,8 @@ export const ICONS_MAP = {
   progressIndicator: null,
   loadingIndicator: null,
   quality: qualitySvg,
-  lang: langSvg
+  lang: langSvg,
+  chromecast: null
 }
 
 export namespace Icons {
@@ -46,6 +47,6 @@ export namespace Icons {
     return ICONS_MAP
   }
 
-  export const get = <K extends keyof typeof ICONS_MAP>(name: K): (typeof ICONS_MAP)[K] =>
+  export const get = <K extends keyof typeof ICONS_MAP>(name: K): typeof ICONS_MAP[K] =>
     ICONS_MAP[name]!
 }
