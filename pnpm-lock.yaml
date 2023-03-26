@@ -56,13 +56,13 @@ importers:
 
   examples/standalone:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
-      '@oplayer/danmaku': workspace:1.2.20-alpha.0
-      '@oplayer/dash': workspace:1.2.20-alpha.0
-      '@oplayer/hls': workspace:1.2.20-alpha.0
-      '@oplayer/mpegts': workspace:1.2.20-alpha.0
-      '@oplayer/plugins': workspace:1.0.0-alpha.0
-      '@oplayer/ui': workspace:1.2.20-alpha.1
+      '@oplayer/core': workspace:*
+      '@oplayer/danmaku': workspace:*
+      '@oplayer/dash': workspace:*
+      '@oplayer/hls': workspace:*
+      '@oplayer/mpegts': workspace:*
+      '@oplayer/plugins': workspace:*
+      '@oplayer/ui': workspace:*
       lit: ^2.7.0
     dependencies:
       '@oplayer/core': link:../../packages/core
@@ -79,7 +79,7 @@ importers:
 
   packages/danmaku:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       danmaku: ^2.0.4
     dependencies:
       danmaku: 2.0.4
@@ -88,7 +88,7 @@ importers:
 
   packages/dash:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       dashjs: ^4.6.0
     devDependencies:
       '@oplayer/core': link:../core
@@ -96,7 +96,7 @@ importers:
 
   packages/hls:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       hls.js: ^1.3.5
     devDependencies:
       '@oplayer/core': link:../core
@@ -104,7 +104,7 @@ importers:
 
   packages/mpegts:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       mpegts.js: ^1.7.2
     devDependencies:
       '@oplayer/core': link:../core
@@ -112,7 +112,7 @@ importers:
 
   packages/plugins:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       chokidar: ^3.5.3
       glob: ^8.1.0
     devDependencies:
@@ -122,7 +122,7 @@ importers:
 
   packages/react:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       '@types/react': ^18.0.29
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -134,7 +134,7 @@ importers:
 
   packages/torrent:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
       webtorrent: ^1.9.7
     devDependencies:
       '@oplayer/core': link:../core
@@ -142,7 +142,7 @@ importers:
 
   packages/ui:
     specifiers:
-      '@oplayer/core': workspace:1.2.20-alpha.0
+      '@oplayer/core': workspace:*
     devDependencies:
       '@oplayer/core': link:../core
 
