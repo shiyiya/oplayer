@@ -19,6 +19,7 @@
     <script>
       const search = new URLSearchParams(document.location.search)
 
+      const src = decodeURI(search.get('src'))
       const subtitle = search.get('subtitle')
         ? {
             subtitle: {
@@ -35,7 +36,8 @@
 
       var player = OPlayer.make('#oplayer', {
         source: {
-          src: decodeURI(search.get('src'))
+          src,
+          format: src.includes('bilibili') ? 'dash' : 'auto'
         }
       })
         .use([OUI({ subtitle }), OHls(), ODash()])
