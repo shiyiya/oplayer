@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start streaming now using OPlayer - Free HTML5 Player</title>
+  </head>
+  <body style="margin: 0">
+    <div id="oplayer" style="width: 100vw; height: 100vh"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
+
+    <script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script>
+
+    <script>
+      const search = new URLSearchParams(document.location.search)
+
+      const subtitle = search.get('subtitle')
+        ? {
+            subtitle: {
+              source: [
+                {
+                  name: 'Default',
+                  default: true,
+                  src: decodeURI(search.get('subtitle'))
+                }
+              ]
+            }
+          }
+        : undefined
+
+      var player = OPlayer.make('#oplayer', {
+        source: {
+          src: decodeURI(search.get('src'))
+        }
+      })
+        .use([OUI({ subtitle }), OHls(), ODash()])
+        .create()
+    </script>
+  </body>
+</html>
