@@ -28,7 +28,7 @@ export default () => {
   return (
     <Layout
       title="Start streaming now using OPlayer - Free HTML5 Player"
-      description="Start streaming now using OPlayer. Embed M3U8 and HLS streams on your website using Free HTML5 Player. Live Stream Now!"
+      description="Start streaming now using OPlayer. Embed HLS,dash,flv,mpegts,mp4 on your website using Free HTML5 Player. Live Stream Now!"
     >
       <div className="container">
         <div className="form">
