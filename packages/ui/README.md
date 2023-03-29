@@ -131,25 +131,25 @@ OUI({
 
 ## Methods
 
-All methods on `player.plugins.ui`
+All methods on `player.context.ui`
 
 ```js
 // - Update subtitle
-player.plugins.ui.subtitle.updateSource([])
+player.context.ui.subtitle.updateSource([])
 
 // - Update highlight
-player.plugins.ui.highlight([])
+player.context.ui.highlight([])
 
 // - Update thumbnails
-player.plugins.ui.thumbnails('src')
+player.context.ui.thumbnails('src')
 
 // - Register menu
-player.plugins.ui.menu.register({})
-player.plugins.ui.menu.unregister('key')
-player.plugins.ui.menu.select('key', 'index')
+player.context.ui.menu.register({})
+player.context.ui.menu.unregister('key')
+player.context.ui.menu.select('key', 'index')
 
 // - Display error
-player.plugins.ui.menu.error({ message: 'msg', code: 'number' })
+player.context.ui.menu.error({ message: 'msg', code: 'number' })
 ```
 
 ## keyboard

@@ -140,7 +140,7 @@ class UI implements UIInterface {
   destroy() {}
 
   /**
-   * @deprecated usechangHighlightSource
+   * @deprecated use changHighlightSource
    */
   highlight(highlights: Highlight[]) {
     return this.changHighlightSource(highlights)

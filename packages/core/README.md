@@ -196,6 +196,8 @@ class HelloPlugin {
     player.on('play', () => {
       console.log('enjoy the video!')
     })
+
+    return this
   }
 
   say(who = this.name) {
@@ -217,5 +219,5 @@ const player = Player.make('#player', {
   .use([new HelloPlugin()])
   .create()
 
-player.plugins.hello.say('world')
+player.context.hello.say('world')
 ```

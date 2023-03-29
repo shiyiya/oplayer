@@ -49,7 +49,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.MANIFEST_PARSED, () => {
       settingUpdater({
-        icon: player.plugins.ui.icons.quality,
+        icon: player.context.ui.icons.quality,
         name: 'Quality',
         settings() {
           if (instance.levels.length > 1) {
@@ -89,9 +89,9 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
         if (instance.autoLevelEnabled) {
           const height = instance.levels[level]!.height
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-          player.plugins.ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+          player.context.ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         } else {
-          player.plugins.ui.setting.select(`${PLUGIN_NAME}-Quality`, level + 1, false)
+          player.context.ui.setting.select(`${PLUGIN_NAME}-Quality`, level + 1, false)
         }
       }
     )
@@ -100,7 +100,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   if (options.audioControl)
     instance.on(HlsPlugin.library.Events.AUDIO_TRACK_LOADED, () => {
       settingUpdater({
-        icon: player.plugins.ui.icons.lang,
+        icon: player.context.ui.icons.lang,
         name: 'Language',
         settings() {
           if (instance.audioTracks.length > 1) {
@@ -121,7 +121,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
   if (options.textControl)
     instance.on(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
       settingUpdater({
-        icon: player.plugins.ui.icons.subtitle,
+        icon: player.context.ui.icons.subtitle,
         name: 'Subtitle',
         settings() {
           if (instance.subtitleTracks.length > 1) {
@@ -158,8 +158,8 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 
     const { name, icon, onChange } = arg
 
-    player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
-    player.plugins.ui.setting.register({
+    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
+    player.context.ui.setting.register({
       name: player.locales.get(name),
       icon,
       onChange,
@@ -172,7 +172,7 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 
 const removeSetting = (player: Player) => {
   ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-    player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
+    player.context.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
   )
 }
 
@@ -221,7 +221,7 @@ class HlsPlugin implements PlayerPlugin {
     this.instance.loadSource(source.src)
     this.instance.attachMedia(player.$video)
 
-    if (!player.isNativeUI && player.plugins.ui?.setting) {
+    if (!player.isNativeUI && player.context.ui?.setting) {
       generateSetting(player, instance, {
         qualityControl,
         qualitySwitch,

@@ -71,7 +71,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     if (options.qualityControl) {
       settingUpdater({
         name: 'Quality',
-        icon: player.plugins.ui.icons.quality,
+        icon: player.context.ui.icons.quality,
         settings() {
           const ex = getSettingsByType(instance, 'video', options.withBitrate)
 
@@ -106,7 +106,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
 
           const height = instance.getBitrateInfoListFor('video')[data.newQuality]?.height
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-          player.plugins.ui?.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+          player.context.ui?.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         }
       )
     }
@@ -114,7 +114,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     if (options.audioControl) {
       settingUpdater({
         name: 'Language',
-        icon: player.plugins.ui.icons.lang,
+        icon: player.context.ui.icons.lang,
         settings() {
           return instance.getTracksFor('audio').map((it) => ({
             name: it.lang || 'unknown',
@@ -131,7 +131,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
     if (options.textControl) {
       settingUpdater({
         name: 'Subtitle',
-        icon: player.plugins.ui.icons.subtitle,
+        icon: player.context.ui.icons.subtitle,
         settings() {
           const ex = instance.getTracksFor('text').map((it) => ({
             name: it.lang || 'unknown',
@@ -170,8 +170,8 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
 
     const { name, icon, onChange } = arg
 
-    player.plugins.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
-    player.plugins.ui.setting.register({
+    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
+    player.context.ui.setting.register({
       name: player.locales.get(name),
       icon,
       onChange,
@@ -184,7 +184,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Op
 
 const removeSetting = (player: Player) => {
   ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-    player.plugins.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
+    player.context.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
   )
 }
 
@@ -233,7 +233,7 @@ class DashPlugin implements PlayerPlugin {
     if (config) instance.updateSettings(config)
     instance.initialize(player.$video, source.src, player.$video.autoplay)
 
-    if (!player.isNativeUI && player.plugins.ui?.setting) {
+    if (!player.isNativeUI && player.context.ui?.setting) {
       generateSetting(player, instance, {
         qualityControl,
         qualitySwitch,

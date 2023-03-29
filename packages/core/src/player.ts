@@ -3,7 +3,6 @@
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import EventEmitter from './event'
 import I18n from './i18n'
-import { isPlainObject } from './utils'
 import $ from './utils/dom'
 import { isIOS, isQQBrowser } from './utils/platform'
 
@@ -35,15 +34,15 @@ const defaultOptions = {
   isNativeUI: () => isQQBrowser
 }
 
-export class Player {
+export class Player<Context extends Record<string, any> = Record<string, any>> {
   container: HTMLElement
   options: Required<PlayerOptions>
 
   locales: I18n
   eventEmitter = new EventEmitter()
 
-  _pluginsFactory: PlayerPlugin[] = []
-  plugins: /* ReturnTypePlugins<Plugins> &*/ any = {} as any // TODO: type not work
+  plugins: PlayerPlugin[] = []
+  context: Context = {} as Context
 
   $root: HTMLElement
   $video: HTMLVideoElement
@@ -69,13 +68,16 @@ export class Player {
     this.locales = new I18n(this.options.lang)
   }
 
-  static make(el: HTMLElement | string, options?: PlayerOptions | string) {
-    return new Player(el, options)
+  static make<Context extends Record<string, any> = Record<string, any>>(
+    el: HTMLElement | string,
+    options?: PlayerOptions | string
+  ) {
+    return new Player<Context>(el, options)
   }
 
   use(plugins: PlayerPlugin[]) {
     plugins.forEach((plugin) => {
-      this._pluginsFactory.push(plugin)
+      this.plugins.push(plugin)
     })
     return this
   }
@@ -83,7 +85,7 @@ export class Player {
   create() {
     this.render()
     this.initEvent()
-    this.applyPlugins()
+    this.plugins.forEach(this.applyPlugin.bind(this))
     if (this.options.source.src) this.load(this.options.source)
     players.push(this)
     return this
@@ -183,7 +185,7 @@ export class Player {
   async load(source: Source) {
     await this.loader?.destroy()
     this.loader = undefined
-    for (const plugin of this._pluginsFactory) {
+    for (const plugin of this.plugins) {
       if (plugin.load) {
         const returned = await plugin.load(this, source)
         if (returned != false && !this.loader) {
@@ -199,30 +201,14 @@ export class Player {
     return source
   }
 
-  applyPlugins() {
-    this._pluginsFactory.forEach((plugin) => {
-      const { name, key, version } = plugin
-      const returned = plugin.apply(this)
-      const _key = key || name
+  applyPlugin(plugin: PlayerPlugin) {
+    const returned = plugin.apply(this)
 
-      if (returned && isPlainObject(plugin)) {
-        if (isPlainObject(returned)) {
-          this.plugins[_key] = Object.assign(
-            { displayName: name, key, version },
-            this.plugins[_key],
-            returned
-          )
-        } else {
-          this.plugins[_key] = Object.assign(returned, this.plugins[_key], {
-            key,
-            version,
-            displayName: name
-          })
-        }
-      } else {
-        this.plugins[_key] = plugin
-      }
-    })
+    const { name, key } = plugin
+    if (returned) {
+      //@ts-ignore
+      this.context[key || name] = returned
+    }
   }
 
   on(name: PlayerEventName | PlayerListener, listener?: PlayerListener, options = { once: false }) {
@@ -473,8 +459,8 @@ export class Player {
     //@ts-ignore
     this.container = this.$root = this.$video = this.loader = undefined
     this.listeners = Object.create(null)
-    this._pluginsFactory = []
-    this.plugins = {}
+    this.plugins = []
+    this.context = {} as Context
   }
 
   get isNativeUI() {

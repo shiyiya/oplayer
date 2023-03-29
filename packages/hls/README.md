@@ -69,10 +69,6 @@ type Options = {
   withBitrate?: boolean
   audioControl?: boolean
   textControl?: boolean
-  /**
-   * @default false
-   */
-  showWarning?: boolean
 }
 
 import hls from '@oplayer/hls'

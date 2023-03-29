@@ -10,7 +10,7 @@ type Thumbnails = {
 type Def = { start: number; end: number; css: any }
 
 function plugin(player: Player, options: Thumbnails) {
-  const { $progress } = player.plugins.ui
+  const { $progress } = player.context.ui
   const container = $progress.firstElementChild
 
   let vttData = [] as Def[]
@@ -18,7 +18,7 @@ function plugin(player: Player, options: Thumbnails) {
   let lastStyle: Def
   let isActive = false
   let src = options.src
-  const $dom = $.render($.create(`div.${player.plugins.ui.vttThumbnailsCls}`), container)
+  const $dom = $.render($.create(`div.${player.context.ui.vttThumbnailsCls}`), container)
 
   $dom.style.width = (options?.width || 160) + 'px'
   $dom.style.height = (options?.height || 90) + 'px'
@@ -219,8 +219,8 @@ function plugin(player: Player, options: Thumbnails) {
     }
   }
 
-  player.plugins.ui.progressHoverCallback.push(updateThumbnailStyle)
-  player.plugins.ui.changThumbnails = ({ src }: any) => bootstrap(src)
+  player.context.ui.progressHoverCallback.push(updateThumbnailStyle)
+  player.context.ui.changThumbnails = ({ src }: any) => bootstrap(src)
 }
 
 export default (options: Thumbnails): PlayerPlugin => ({

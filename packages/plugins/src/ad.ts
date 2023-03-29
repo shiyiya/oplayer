@@ -30,7 +30,7 @@ type Options = {
   video?: string
   image?: string
   autoplay?: boolean
-  plugins?: PlayerPlugin
+  plugins?: PlayerPlugin[]
   skipDuration?: number
   duration: number
   target?: string

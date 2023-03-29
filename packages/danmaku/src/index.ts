@@ -94,7 +94,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     }
 
     function registerSetting() {
-      player.plugins.ui?.setting.register({
+      player.context.ui?.setting.register({
         name: player.locales.get('Danmaku'),
         type: 'selector',
         default: true,
@@ -170,7 +170,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     danmaku!.bootstrap = bootstrap
 
     function registerInput() {
-      if (!player.plugins.ui) return
+      if (!player.context.ui) return
       const {
         inputBar,
         inputBarWrap,
@@ -302,7 +302,7 @@ export default (options = {} as Options): PlayerPlugin => ({
         }
       }
 
-      const parent = player.plugins.ui.$controllerBottom
+      const parent = player.context.ui.$controllerBottom
       const $input = $tpl.querySelector<HTMLInputElement>(`.${input}`)!
       parent.insertBefore($tpl, parent.children[1]!)
 
@@ -323,7 +323,7 @@ export default (options = {} as Options): PlayerPlugin => ({
           }
           if (options.onEmit?.(comment) || true) {
             const primaryColor = window
-              .getComputedStyle(player.plugins.ui.$root)
+              .getComputedStyle(player.context.ui.$root)
               .getPropertyValue('--primary-color')
 
             //@ts-ignore

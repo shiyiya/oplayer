@@ -6,11 +6,11 @@ export default class HelloPlugin implements PlayerPlugin {
   name = 'oplayer-plugin-hello'
 
   apply(player: Player) {
-    this.say()
-
     player.on('play', () => {
       console.log('enjoy the video!')
     })
+
+    return this
   }
 
   say(who = this.name) {

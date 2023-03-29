@@ -43,7 +43,7 @@ const player = Player.make('#oplayer', {
   ])
   .create()
 
-player.plugins.ui.menu.register({
+player.context.ui.menu.register({
   name: 'FORMAT',
   children: [
     {

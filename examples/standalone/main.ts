@@ -3,7 +3,7 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
-import Player, { isMobile, PlayerEvent } from '@oplayer/core'
+import { Player, isMobile, PlayerEvent } from '@oplayer/core'
 import danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
@@ -19,12 +19,21 @@ import SRT from '../../website/static/君の名は.srt'
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
-import { Hello, VttThumbnails } from '@oplayer/plugins'
+import { Hello, vttThumbnails, ad } from '@oplayer/plugins'
+
+interface Ctx {
+  ui: ReturnType<typeof ui>
+  hello: Hello
+  hls: ReturnType<typeof hls>
+  dash: ReturnType<typeof dash>
+  mpegts: ReturnType<typeof mpegts>
+  danmaku: ReturnType<typeof danmaku>
+}
 
 let src = VIDEO_LIST[1]!
 let currentDataSrcId = 0
 
-const player = Player.make('#player', {
+const player = Player.make<Ctx>('#player', {
   // muted: true,
   volume: 0.5,
   // isLive: true,
@@ -76,9 +85,6 @@ const player = Player.make('#player', {
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
-    // VttThumbnails({
-    //   src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
-    // }),
     hls(),
     dash(),
     mpegts(),
@@ -88,18 +94,30 @@ const player = Player.make('#player', {
       source: DANMAKU //SUPER_DANMAKU
     }),
     new Hello()
-    // ad({
-    //   autoplay: false,
-    //   image:
-    //     'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
-    //   // video: VIDEO_LIST[1],
-    //   duration: 10,
-    //   skipDuration: 5,
-    //   target: 'https://oplayer.vercel.app',
-    //   plugins: [hls({ qualityControl: false })]
-    // })
   ])
   .create()
+
+//@ts-ignore
+if (false) {
+  player.applyPlugin(
+    vttThumbnails({
+      src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
+    })
+  )
+
+  player.applyPlugin(
+    ad({
+      autoplay: false,
+      image:
+        'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
+      // video: VIDEO_LIST[1],
+      duration: 10,
+      skipDuration: 5,
+      target: 'https://oplayer.vercel.app',
+      plugins: [hls({ qualityControl: false })]
+    })
+  )
+}
 
 function stopLoad() {
   player.loader?.destroy()
@@ -111,9 +129,9 @@ setTimeout(() => {
   player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
 }, 1000)
 
-player.plugins.ui?.highlight?.(highlight)
+player.context.ui?.changHighlightSource?.(highlight)
 
-player.plugins.ui?.menu.register(<MenuBar>{
+player.context.ui?.menu.register(<MenuBar>{
   name: 'FMT',
   position: 'top',
   children: FORMAT_MENU,
@@ -125,7 +143,7 @@ player.plugins.ui?.menu.register(<MenuBar>{
       // .changeQuality({ src: value })
       .then((_) => {
         // GET	https://cc.zorores.com/20/2e/202eaab6dff289a5976399077449654e/eng-2.vtt
-        // player.plugins.ui.subtitle.updateSource([
+        // player.context.ui.subtitle.updateSource([
         //   {
         //     name: 'Default',
         //     default: true,
@@ -136,9 +154,9 @@ player.plugins.ui?.menu.register(<MenuBar>{
   }
 })
 
-player.plugins.hello.say('world')
-
 console.log(player.plugins)
+
+player.context.hello.say()
 
 const meta = () => html`
   <div>
