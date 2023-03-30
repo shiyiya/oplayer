@@ -35,13 +35,14 @@ const render = (it: UIInterface, el: HTMLElement) => {
 
   if (config.thumbnails) {
     if (config.thumbnails.isVTT) {
-      //@ts-ignore
-      it.vttThumbnailsCls = vttThumbnailsCls
       console.warn('vtt thumbnails support by @oplayer/pluins')
     } else {
       renderThumbnail(it, firstElement)
     }
   }
+
+  //@ts-ignore
+  it.vttThumbnailsCls = vttThumbnailsCls
 
   renderHighlight(it, firstElement)
 

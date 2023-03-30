@@ -147,6 +147,6 @@ class UI implements UIInterface {
   }
 }
 
-export default function create(config: UiConfig) {
-  return new UI(config)
+export default function create(config?: UiConfig) {
+  return new UI(config!)
 }
