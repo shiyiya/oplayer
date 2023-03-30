@@ -1,11 +1,6 @@
 import react from '@vitejs/plugin-react'
-import { viteConfig } from '../../vite.config'
+import { defineConfig } from 'vite'
 
-export default viteConfig('react', {
-  plugins: [react()],
-  build: {
-    lib: {
-      entry: './src/index.tsx'
-    }
-  }
+export default defineConfig({
+  plugins: [react()]
 })
