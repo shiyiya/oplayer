@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": ">=12",
-    "pnpm": ">=7"
+    "node": ">=16",
+    "pnpm": ">=8"
   },
   "author": "shiyiya",
   "keywords": [

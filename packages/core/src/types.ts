@@ -40,7 +40,7 @@ export interface PlayerOptions {
   isNativeUI?: () => boolean
 }
 
-export interface Loader {
+export interface Destroyable {
   destroy: () => void | Promise<void>
   [key: string]: any
 }
@@ -52,7 +52,7 @@ export interface PlayerPlugin {
   apply: (player: Player) => any
   destroy?: () => void | Promise<void>
 
-  load?: (player: Player, src: Source) => false | Loader | Promise<false | Loader>
+  load?: (player: Player, src: Source) => false | Destroyable | Promise<false | Destroyable>
   unload?: () => void | Promise<void>
 }
 

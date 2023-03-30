@@ -7,7 +7,7 @@ import $ from './utils/dom'
 import { isIOS, isQQBrowser } from './utils/platform'
 
 import type {
-  Loader,
+  Destroyable,
   PlayerEvent,
   PlayerEventName,
   PlayerListener,
@@ -43,6 +43,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   plugins: PlayerPlugin[] = []
   context: Context = {} as Context
+  // hls|dash|etc. instance
+  loader?: Destroyable
 
   $root: HTMLElement
   $video: HTMLVideoElement
@@ -51,9 +53,6 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   hasError: boolean = false
   isSourceChanging: boolean = false
-
-  // hls|dash|etc. instance
-  loader?: Loader
 
   constructor(el: HTMLElement | string, options?: PlayerOptions | string) {
     this.container = typeof el == 'string' ? document.querySelector(el)! : el
