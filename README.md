@@ -85,7 +85,10 @@ Player.make('#oplayer', {
 - [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&label=@oplayer/danmaku)](./packages/danmaku)
 - [![npm](https://img.shields.io/npm/v/@oplayer/vast?style=flat-square&label=@oplayer/vast)](./packages/vast)
 - [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&label=@oplayer/react)](./packages/react)
+- [![npm](https://img.shields.io/npm/v/@oplayer/plugins?style=flat-square&label=@oplayer/plugins)](./packages/plugins)
+
 - [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
+- [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
 - [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
 - [QQ 群](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 

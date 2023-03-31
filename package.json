@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": ">=16",
-    "pnpm": ">=8"
+    "pnpm": ">=7"
   },
   "author": "shiyiya",
   "keywords": [
@@ -42,7 +42,7 @@
     "cross-env": "^7.0.3",
     "jsdom": "^21.1.1",
     "lint-staged": "^13.2.0",
-    "nx": "^15.8.9",
+    "nx": "^15.9.1",
     "rimraf": "^4.4.1",
     "terser": "^5.16.8",
     "tslib": "^2.5.0",
