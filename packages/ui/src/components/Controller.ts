@@ -38,7 +38,7 @@ const render = (it: UIInterface) => {
       return
     }
     addClass(player.$root, controllerHidden)
-    player.emit('controllervisibilitychange', true)
+    player.emit('controllervisibilitychange', false)
   }
 
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -47,12 +47,13 @@ const render = (it: UIInterface) => {
     cancelHideCtrl()
     if (hasClass(player.$root, controllerHidden)) {
       removeClass(player.$root, controllerHidden)
-      player.emit('controllervisibilitychange', false)
+      player.emit('controllervisibilitychange', true)
     }
   }
 
   player.on('play', debounceHideCtrl)
   player.on(['pause', 'videosourcechange'], showCtrl)
+  player.on('destroy', cancelHideCtrl)
 
   if (!isMobile) {
     player.$root.addEventListener('mousemove', () => {

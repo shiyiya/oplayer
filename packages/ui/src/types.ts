@@ -122,7 +122,7 @@ export type UiConfig = {
 
   subtitle?: Subtitle
   /**
-   * default: ['loop']
+   * default: ['loop', 'speed']
    */
   settings?: (Setting | 'loop')[]
 
