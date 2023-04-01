@@ -90,7 +90,7 @@ class UI implements UIInterface {
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[] = []
 
   constructor(public config: UiConfig) {
-    this.config = Object.assign(defaultConfig, config)
+    this.config = Object.assign({}, defaultConfig, config)
   }
 
   apply(player: Player) {

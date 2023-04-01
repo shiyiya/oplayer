@@ -94,14 +94,15 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     const errorHandler = (payload: ErrorEvent) => {
       if (this.$video.error) {
         this.hasError = true
-        this.emit('error', payload)
+        this.eventEmitter.emit('error', payload)
       }
     }
     this.listeners['error'] = errorHandler
     this.$video.addEventListener('error', (e) => this.listeners['error'](e))
 
-    const eventHandler = (eventName: string, payload: Event) =>
+    const eventHandler = (eventName: string, payload: Event) => {
       this.eventEmitter.emit(eventName, payload)
+    }
 
     ;(
       [
@@ -122,7 +123,13 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         const polyfillName = eventName[0]
         this.listeners[polyfillName] = eventHandler
         eventName.forEach((name) => {
-          target.addEventListener(name, (e) => this.listeners[polyfillName](polyfillName, e))
+          target.addEventListener(
+            name,
+            (e) => {
+              this.listeners[polyfillName](polyfillName, e)
+            },
+            { passive: true }
+          )
         })
       })
     })
@@ -135,9 +142,13 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       events.forEach((eventName) => {
         if (!this.listeners[eventName]) {
           this.listeners[eventName] = eventHandler
-          target.addEventListener(eventName, (e) => this.listeners[eventName](eventName, e), {
-            passive: true
-          })
+          target.addEventListener(
+            eventName,
+            (e) => {
+              this.listeners?.[eventName](eventName, e)
+            },
+            { passive: true }
+          )
         }
       })
     })
@@ -448,18 +459,20 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   destroy() {
     players.splice(players.indexOf(this), 1)
-    this.emit('destroy')
-    if (this.isPlaying) this.pause()
-    if (this.isFullScreen) this.exitFullscreen()
-    if (this.isInPip) this.exitPip()
-    if (this.$video.src) URL.revokeObjectURL(this.$video.src)
-    this.eventEmitter.offAll()
-    this.container.removeChild(this.$root)
-    //@ts-ignore
-    this.container = this.$root = this.$video = this.loader = undefined
-    this.listeners = Object.create(null)
-    this.plugins = []
-    this.context = {} as Context
+
+    const { eventEmitter, container, $root, $video, isPlaying, isFullScreen, isInPip } = this
+
+    eventEmitter.emit('destroy')
+    eventEmitter.offAll()
+
+    if (isPlaying) this.pause()
+    if (isFullScreen) this.exitFullscreen()
+    if (isInPip) this.exitPip()
+    if ($video.src) URL.revokeObjectURL($video.src)
+
+    container.removeChild($root)
+    // prettier-ignore
+    this.eventEmitter = this.locales = this.options = this.listeners =  this.context = this.plugins = this.container = this.$root = this.$video = this.loader = undefined as any
   }
 
   get isNativeUI() {

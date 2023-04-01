@@ -38,7 +38,6 @@ export default function (it: UIInterface, container: HTMLElement) {
       $dom.style.height = `${thumbnails.height}px`
       $dom.style.backgroundImage = `url(${thumbnails.src})`
     } else {
-      if (!isInitialized) return
       const [halfWidth, cw] = [thumbnails.width / 2, container.clientWidth]
       const [minRate, maxRate] = [halfWidth / cw, (cw - halfWidth) / cw]
       $dom.style.left = (rate < minRate ? minRate : rate > maxRate ? maxRate : rate) * 100 + '%'

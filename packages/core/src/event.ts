@@ -53,7 +53,7 @@ export default class EventEmitter {
     this.events = Object.create(null)
   }
 
-  emit(name: string, payload: any) {
+  emit(name: string, payload?: any) {
     this.events[name]?.forEach((callback) => {
       callback({ type: name, payload })
     })
