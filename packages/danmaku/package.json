@@ -30,7 +30,7 @@
     "IE 11"
   ],
   "dependencies": {
-    "danmaku": "^2.0.5"
+    "danmaku": "github:weizhenye/Danmaku"
   },
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0"
