@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '@theme/Layout'
 import Playground from '@agney/playground'
+import Head from '@docusaurus/Head'
 import '@reach/tabs/styles.css'
 
 const code = `
@@ -74,6 +75,9 @@ player.context.ui.menu.register({
 export default () => {
   return (
     <Layout title="Oh! Another HTML5 video player" description="Oh! Another HTML5 video player">
+      <Head>
+        <meta name="referrer" content="no-referrer" />
+      </Head>
       <Playground
         initialSnippet={{
           markup: `

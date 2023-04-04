@@ -69,8 +69,8 @@ const config = {
           // },
           {
             to: '/player',
-            docId: 'Play',
-            label: 'Play',
+            docId: 'Player',
+            label: 'Player',
             position: 'left'
           },
           {

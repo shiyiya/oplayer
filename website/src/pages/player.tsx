@@ -1,4 +1,5 @@
 import Layout from '@theme/Layout'
+import Head from '@docusaurus/Head'
 import React, { useEffect, useRef, useState } from 'react'
 import { Player } from '../../../packages/core/dist/index.es'
 import dash from '../../../packages/dash/dist/index.es'
@@ -34,6 +35,9 @@ export default () => {
       title="Start streaming now using OPlayer - Free HTML5 Player"
       description="Start streaming now using OPlayer. Embed HLS,dash,flv,mpegts,mp4 on your website using Free HTML5 Player. Live Stream Now!"
     >
+      <Head>
+        <meta name="referrer" content="no-referrer" />
+      </Head>
       <div className="container">
         <div className="form">
           <input
