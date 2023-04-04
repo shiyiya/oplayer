@@ -9,6 +9,7 @@ import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
+import torrent from '@oplayer/torrent'
 
 import DANMAKU from '../../website/static/danmaku.xml'
 import POSTER from '../../website/static/poster.png'
@@ -40,6 +41,7 @@ const player = Player.make<Ctx>('#player', {
   // autoplay: true,
   // preload: 'none',
   source: {
+    // magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent
     src: '',
     poster: POSTER,
     title: '君の名は'
@@ -85,6 +87,7 @@ const player = Player.make<Ctx>('#player', {
         loadingIndicator: `<img style='max-height: 40%' src='https://user-images.githubusercontent.com/40481418/135559343-98e82c95-1a67-4083-8ecb-763f6e62577e.gif'/>`
       }
     }),
+    torrent(),
     hls(),
     dash(),
     mpegts(),

@@ -18,7 +18,8 @@
     "@oplayer/hls": "workspace:*",
     "@oplayer/mpegts": "workspace:*",
     "@oplayer/plugins": "workspace:*",
+    "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "lit": "^2.7.0"
+    "lit": "^2.7.1"
   }
 }

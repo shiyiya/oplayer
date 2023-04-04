@@ -30,13 +30,12 @@
     "IE 11"
   ],
   "dependencies": {
-    "danmaku": "^2.0.4"
+    "danmaku": "^2.0.5"
   },
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0"
   },
   "devDependencies": {
-    "@oplayer/core": "workspace:*",
-    "danmaku": "^2.0.2"
+    "@oplayer/core": "workspace:*"
   }
 }

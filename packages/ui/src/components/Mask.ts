@@ -33,7 +33,10 @@ const render = (it: UIInterface) => {
       if (count == 0) player.togglePlay()
       if (timeoutId) clearTimeout(timeoutId)
       timeoutId = window.setTimeout(() => {
-        if (count == 2) player.toggleFullScreen()
+        if (count == 2) {
+          player.togglePlay()
+          player.toggleFullScreen()
+        }
         count = 0
       }, 200)
     }

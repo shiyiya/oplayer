@@ -58,6 +58,6 @@ class TorrentPlugin implements PlayerPlugin {
   }
 }
 
-export default function create(options: PluginOptions) {
+export default function create(options: PluginOptions = {}) {
   return new TorrentPlugin(options)
 }

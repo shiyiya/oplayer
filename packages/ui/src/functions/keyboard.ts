@@ -4,7 +4,7 @@ import { webFullScreen } from '../style'
 import { UIInterface } from '../types'
 import { formatTime, screenShot } from '../utils'
 
-const VOLUME_SETUP = 10 //10% 0.1 有精度问题
+const VOLUME_SETUP = 10
 const SEEK_SETUP = 5
 
 const KEY_FN: Record<string, (player: Player) => void> = {
@@ -46,9 +46,7 @@ const KEY_FN: Record<string, (player: Player) => void> = {
   Escape: (player: Player) => {
     if (player.isFullScreen) {
       player.exitFullscreen()
-      return
-    }
-    if (player.$root.classList.contains(webFullScreen)) {
+    } else if (player.$root.classList.contains(webFullScreen)) {
       player.emit('fullscreenchange', { isWeb: true })
     }
   },
@@ -60,8 +58,6 @@ const KEY_FN: Record<string, (player: Player) => void> = {
 
 export default function (it: UIInterface) {
   const { player, config } = it
-
-  let preKey: string | undefined
 
   function keydown(e: KeyboardEvent) {
     if (
@@ -77,19 +73,8 @@ export default function (it: UIInterface) {
 
     if (KEY_FN[key]) {
       e.preventDefault()
-      KEY_FN[key!]!(player)
+      KEY_FN[key]!(player)
     }
-
-    //double key
-    if (preKey && preKey === key && KEY_FN[`${preKey}+${key}`]) {
-      e.preventDefault()
-      KEY_FN[`${preKey}+${key}`]!(player)
-    }
-
-    preKey = key
-    setTimeout(() => {
-      preKey = undefined
-    }, 200)
   }
 
   it.keybord.register = function register(payload: any) {

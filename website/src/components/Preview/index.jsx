@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import Translate from '@docusaurus/Translate'
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment'
 import ReactPlayer from '../Player'
 import ui from '../../../../packages/ui/dist/index.es'
+import danmaku from '../../../../packages/danmaku/dist/index.es'
+
 import styles from './styles.module.css'
 
 const plugins = [
@@ -39,19 +40,12 @@ const plugins = [
         }
       ]
     }
-  })
+  }),
+  danmaku({ source: '/danmaku.xml', fontSize: 0.75 })
 ]
 
 const Preview = () => {
   const player = useRef()
-
-  useEffect(() => {
-    if (ExecutionEnvironment.canUseDOM && player.current) {
-      require('../../../../packages/danmaku/dist/index.es')
-        .default({ source: '/danmaku.xml', fontSize: 0.75 })
-        .apply(player.current)
-    }
-  }, [])
 
   return (
     <div className={styles.Container} id="preview">
