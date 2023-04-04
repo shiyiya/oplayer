@@ -23,6 +23,10 @@ export default () => {
     if (document.location.search.substring(1)) {
       setIsFirst(false)
     }
+
+    return () => {
+      player.current.destroy()
+    }
   }, [])
 
   return (
