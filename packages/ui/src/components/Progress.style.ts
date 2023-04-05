@@ -100,7 +100,6 @@ export const progressInner = $.css({
     left: '0',
     top: '0',
     bottom: '0',
-    'will-change': 'width',
     'pointer-events': 'none',
     'border-radius': '2px'
   }

@@ -19,7 +19,7 @@ const loadingListener = (player: Player, detect = true) => {
     if (player.$video.preload == 'none') remove()
   })
 
-  player.on(['videoqualitychange', 'videosourcechange'], add)
+  player.on(['videoqualitychange', 'videosourcechange', 'stalled'], add)
 
   if (isMobile && detect) {
     detectLoading(player, add, remove)
@@ -53,27 +53,35 @@ const detectLoading = (player: Player, add: any, remove: any) => {
     lastTime = currentTime = 0
   })
 
-  const timer = setInterval(() => {
-    if (enable) {
-      currentTime = player.currentTime
-
-      // loading
-      if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
-        add()
-        bufferingDetected = true
-      }
-
-      if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
-        remove()
-        bufferingDetected = false
-      }
-      lastTime = currentTime
+  const requestAnimationFrame =
+    window.requestAnimationFrame ||
+    (window as any).mozRequestAnimationFrame ||
+    (window as any).webkitRequestAnimationFrame ||
+    function (cb) {
+      return setTimeout(cb, 50 / 3)
     }
-  }, 100)
 
-  player.on('destroy', () => {
-    clearInterval(timer)
-  })
+  ;(function raf() {
+    return requestAnimationFrame(() => {
+      if (enable) {
+        currentTime = player.currentTime
+
+        // loading
+        if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
+          add()
+          bufferingDetected = true
+        }
+
+        if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
+          remove()
+          bufferingDetected = false
+        }
+        lastTime = currentTime
+      }
+
+      if (player.$video) raf()
+    })
+  })()
 }
 
 const isLoading = (player: Player) => player.$root.classList.contains(loading)
