@@ -408,6 +408,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     })
   }
 
+  //TODO: cancel previous promise
   _loader(
     source: Source | Promise<Source>,
     options: { keepPlaying: boolean; event: string; keepTime?: boolean }
@@ -442,7 +443,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
           if (!source.src) throw new Error('Empty Source')
 
           this.$video.poster = source.poster || ''
-          this.options.source = { ...this.options.source, ...source }
+          Object.assign(this.options.source, source)
           this.on('error', errorHandler, { once: true })
           this.on(canplay, canplayHandler, { once: true })
 
@@ -460,10 +461,23 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   destroy() {
     players.splice(players.indexOf(this), 1)
 
-    const { eventEmitter, container, $root, $video, isPlaying, isFullScreen, isInPip } = this
+    const {
+      eventEmitter,
+      loader,
+      plugins,
+      container,
+      $root,
+      $video,
+      isPlaying,
+      isFullScreen,
+      isInPip
+    } = this
 
     eventEmitter.emit('destroy')
     eventEmitter.offAll()
+
+    loader?.destroy()
+    plugins.forEach((it) => !it.load && it.destroy?.())
 
     if (isPlaying) this.pause()
     if (isFullScreen) this.exitFullscreen()

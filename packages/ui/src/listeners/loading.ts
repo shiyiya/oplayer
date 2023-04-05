@@ -29,7 +29,6 @@ const loadingListener = (player: Player, detect = true) => {
   }
 }
 
-// 主动检测是否loading 手机上事件都不靠谱
 const detectLoading = (player: Player, add: any, remove: any) => {
   let lastTime = 0
   let currentTime = 0
