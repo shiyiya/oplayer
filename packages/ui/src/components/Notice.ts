@@ -1,7 +1,7 @@
-import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import { controllerHidden } from '../style'
 import { debounce, removeClass } from '../utils'
+import { UIInterface } from '../types'
 
 const noticeCls = $.css({
   position: 'absolute',
@@ -62,7 +62,8 @@ const NOTICE_HIDE_DELAY = 2000
 
 const noticeShowCls = $.css('display:block;')
 
-const render = (player: Player, el: HTMLElement) => {
+const render = (it: UIInterface) => {
+  const { player, $root: el } = it
   const $dom = $.create(
     `div.${noticeCls}`,
     { 'aria-label': 'Notice' },
@@ -79,6 +80,8 @@ const render = (player: Player, el: HTMLElement) => {
   }
 
   player.on('notice', ({ payload }) => show(payload.text, payload.pos))
+
+  it.notice = show
 
   $.render($dom, el)
 

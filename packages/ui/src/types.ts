@@ -186,6 +186,20 @@ export interface UIInterface extends PlayerPlugin {
 
   subtitle: SubtitleInstance
 
+  notice: (
+    text: string,
+    position?:
+      | 'top'
+      | 'bottom'
+      | 'left'
+      | 'right'
+      | 'center'
+      | 'top-left'
+      | 'top-center'
+      | 'top-right'
+      | 'left-bottom'
+  ) => void
+
   keybord: {
     register: (payload: Record<string, (e: any) => void>) => void
     unregister: (keys: string[]) => void

@@ -12,7 +12,6 @@ export interface HlsPluginOptions {
    * config for hls.js
    *
    * @type {Partial<HlsConfig>}
-   * @memberof HlsPluginOptions
    */
   config?: Partial<HlsConfig>
   /**
@@ -81,7 +80,7 @@ class HlsPlugin implements PlayerPlugin {
     matcher: defaultMatcher
   }
 
-  constructor(options: HlsPluginOptions) {
+  constructor(options?: HlsPluginOptions) {
     Object.assign(this.options, options)
   }
 
@@ -143,7 +142,7 @@ class HlsPlugin implements PlayerPlugin {
 
 HlsPlugin.library = (globalThis as any).Hls
 
-export default function create(options: HlsPluginOptions = {}): PlayerPlugin {
+export default function create(options?: HlsPluginOptions): PlayerPlugin {
   return new HlsPlugin(options)
 }
 

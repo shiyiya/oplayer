@@ -63,6 +63,20 @@ class UI implements UIInterface {
 
   subtitle: Subtitle
 
+  notice: (
+    text: string,
+    position?:
+      | 'top'
+      | 'bottom'
+      | 'left'
+      | 'right'
+      | 'center'
+      | 'top-left'
+      | 'top-center'
+      | 'top-right'
+      | 'left-bottom'
+  ) => void
+
   keybord: {
     register: (payload: Record<string, (e: any) => void>) => void
     unregister: (keys: string[]) => void
@@ -111,7 +125,7 @@ class UI implements UIInterface {
     startListening(player, config, $root)
 
     renderError(player, $root, config)
-    renderNotice(player, $root)
+    renderNotice(this)
     renderLoading(player, $root)
 
     if (config.coverButton) this.$coverButton = renderCoverButton(player, $root)

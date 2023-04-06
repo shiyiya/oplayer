@@ -36,23 +36,10 @@ npm i @oplayer/core @oplayer/mpegts
 ## Usage
 
 ```ts
-// type def
-const REG = /flv|ts|m2ts(#|\?|$)/i
+export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
-const defaultMatcher: Options['matcher'] = (_, source) => {
-  if (source.format && ['flv', 'm2ts', 'mpegts'].includes(source.format)) {
-    return true
-  }
-
-  return (source.format === 'auto' || typeof source.format === 'undefined') && REG.test(source.src)
-}
-
-type Options = {
+export type MpegtsPluginOptions = {
   config?: Partial<Mpegts.Config>
-  matcher?: (video: HTMLVideoElement, source: Source) => boolean
+  matcher?: Matcher
 }
-
-import mpegts from '@oplayer/mpegts'
-
-Player.make(...).use([mpegts()]).create()
 ```

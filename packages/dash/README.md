@@ -36,29 +36,31 @@ npm i @oplayer/core @oplayer/dash
 ## Usage
 
 ```ts
-// type def
-const defaultMatcher: PluginOptions['matcher'] = (_, source) =>
-  source.format === 'dash' ||
-  source.format === 'mpd' ||
-  ((source.format === 'auto' || typeof source.format === 'undefined') &&
-    /.mpd(#|\?|$)/i.test(source.src))
+export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
-
-type Options = {
-  config?: MediaPlayerSettingClass
-  matcher?: (video: HTMLVideoElement, source: Source) => boolean
+export interface DashPluginOptions {
+  matcher?: Matcher
   /**
-   * enable quality control for the stream.
-   * default: true
+   * config for dashjs
+   *
+   * @type {MediaPlayerSettingClass}
+   */
+  config?: MediaPlayerSettingClass
+  /**
+   * enable quality control for the stream, does not apply to the native (iPhone) clients.
+   * @default: true
    */
   qualityControl?: boolean
   /**
-   *  control how the stream quality is switched.
-   *  @default: immediate
+   *  control how the stream quality is switched. default: immediate
    *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
    *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
    */
   qualitySwitch?: 'immediate' | 'smooth'
+  /**
+   * @default: false
+   */
+  withBitrate?: boolean
   /**
    * @default: true
    */
@@ -67,13 +69,5 @@ type Options = {
    * @default: true
    */
   textControl?: boolean
-  /**
-   * @default: false
-   */
-  withBitrate?: boolean
 }
-
-import dash from '@oplayer/dash'
-
-Player.make(...).use([dash()]).create()
 ```

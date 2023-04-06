@@ -1,17 +1,18 @@
-/// <reference path="../../../types.d.ts" />
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
 import type Mpegts from 'mpegts.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 
-type PluginOptions = {
+export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
+
+export type MpegtsPluginOptions = {
   config?: Partial<Mpegts.Config>
-  matcher?: (video: HTMLVideoElement, source: Source) => boolean
+  matcher?: Matcher
 }
 
 const REG = /flv|ts|m2ts(#|\?|$)/i
 
-const defaultMatcher: PluginOptions['matcher'] = (_, source) => {
+const defaultMatcher: Matcher = (_, source) => {
   if (source.format && ['flv', 'm2ts', 'mpegts'].includes(source.format)) {
     return true
   }
@@ -24,27 +25,29 @@ class MpegtsPlugin implements PlayerPlugin {
   name = PLUGIN_NAME
   version = __VERSION__
 
-  static defaultMatcher: PluginOptions['matcher'] = defaultMatcher
-
-  //@ts-ignore
-  static library: typeof Mpegts = globalThis.mpegts
+  static library: typeof Mpegts = (globalThis as any).mpegts
 
   player: Player
 
-  instance: Mpegts.Player
+  instance?: Mpegts.Player
 
-  constructor(public options: PluginOptions) {}
+  options: Required<MpegtsPluginOptions> = {
+    config: undefined as any,
+    matcher: defaultMatcher
+  }
+
+  constructor(options?: MpegtsPluginOptions) {
+    Object.assign(this.options, options)
+  }
 
   apply(player: Player) {
     this.player = player
   }
 
   async load({ $video, options }: Player, source: Source) {
-    const { matcher = MpegtsPlugin.defaultMatcher } = this.options
+    const { matcher } = this.options
 
-    if (!matcher!($video, source)) return false
-
-    const { config } = this.options
+    if (!matcher($video, source)) return false
 
     //@ts-ignore
     MpegtsPlugin.library ??= (await import('mpegts.js/dist/mpegts.js')).default
@@ -57,11 +60,11 @@ class MpegtsPlugin implements PlayerPlugin {
         isLive: options.isLive,
         type: source.format || REG.exec(source.src)?.[0]! // could also be mpegts, m2ts, flv
       },
-      config
+      this.options.config
     )
 
     const { player, instance } = this
-    instance.attachMediaElement(player.$video)
+    instance.attachMediaElement($video)
     instance.load()
 
     instance.on(MpegtsPlugin.library.Events.ERROR, function (_, data) {
@@ -76,15 +79,11 @@ class MpegtsPlugin implements PlayerPlugin {
     return this
   }
 
-  async unload() {
-    this.instance.destroy()
-  }
-
-  async destroy() {
-    await this.unload()
+  destroy() {
+    this.instance?.destroy()
   }
 }
 
-export default function create(options: PluginOptions = {}): PlayerPlugin {
+export default function create(options?: MpegtsPluginOptions): PlayerPlugin {
   return new MpegtsPlugin(options)
 }
