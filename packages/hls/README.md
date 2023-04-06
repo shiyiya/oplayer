@@ -42,16 +42,22 @@ npm i @oplayer/core @oplayer/hls
 
 ```ts
 // type def
-const defaultMatcher: hlsPluginOptions['matcher'] = (video, source) =>
-  !(
-    Boolean(video.canPlayType('application/x-mpegURL')) ||
-    Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
-  ) &&
-  (source.format === 'm3u8' || /m3u8(#|\?|$)/i.test(source.src))
+export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
-type Options = {
+export interface HlsPluginOptions {
+  matcher?: Matcher
+  /**
+   * config for hls.js
+   *
+   * @type {Partial<HlsConfig>}
+   * @memberof HlsPluginOptions
+   */
   config?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, source: Source, force?: boolean) => boolean
+  /**
+   * force use hls.js
+   * @type {boolean} false
+   */
+  forceHLS?: boolean
   /**
    * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
    * default: true
@@ -67,11 +73,13 @@ type Options = {
    * @default: false
    */
   withBitrate?: boolean
+  /**
+   * @default: true
+   */
   audioControl?: boolean
+  /**
+   * @default: true
+   */
   textControl?: boolean
 }
-
-import hls from '@oplayer/hls'
-
-Player.make(...).use([hls()]).create()
 ```

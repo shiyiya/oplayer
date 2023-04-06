@@ -1,15 +1,25 @@
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import Hls from 'hls.js'
+import type Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
-type PluginOptions = {
-  config?: Partial<HlsConfig>
-  matcher?: (video: HTMLVideoElement, source: Source) => boolean
-} & Options
+export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
-type Options = {
+export interface HlsPluginOptions {
+  matcher?: Matcher
+  /**
+   * config for hls.js
+   *
+   * @type {Partial<HlsConfig>}
+   * @memberof HlsPluginOptions
+   */
+  config?: Partial<HlsConfig>
+  /**
+   * force use hls.js
+   * @type {boolean} false
+   */
+  forceHLS?: boolean
   /**
    * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
    * default: true
@@ -35,21 +45,114 @@ type Options = {
   textControl?: boolean
 }
 
-const defaultMatcher: PluginOptions['matcher'] = (video, source) =>
-  !(
-    Boolean(video.canPlayType('application/x-mpegURL')) ||
-    Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
-  ) &&
-  (source.format === 'hls' ||
+const defaultMatcher: Matcher = (video, source, forceHLS) => {
+  return (
+    source.format === 'hls' ||
     source.format === 'm3u8' ||
     ((source.format === 'auto' || typeof source.format === 'undefined') &&
-      /m3u8(#|\?|$)/i.test(source.src)))
+      /m3u8(#|\?|$)/i.test(source.src) &&
+      (forceHLS ||
+        !(
+          Boolean(video.canPlayType('application/x-mpegURL')) ||
+          Boolean(video.canPlayType('application/vnd.apple.mpegURL'))
+        )))
+  )
+}
 
-const generateSetting = (player: Player, instance: Hls, options: Options = {}) => {
+class HlsPlugin implements PlayerPlugin {
+  key = 'hls'
+  name = PLUGIN_NAME
+  version = __VERSION__
+
+  static library: typeof import('hls.js/dist/hls.min.js')
+
+  player: Player
+
+  instance?: Hls
+
+  options: Required<HlsPluginOptions> = {
+    config: {},
+    forceHLS: false,
+    textControl: true,
+    audioControl: true,
+    qualityControl: true,
+    withBitrate: false,
+    qualitySwitch: 'immediate',
+    matcher: defaultMatcher
+  }
+
+  constructor(options: HlsPluginOptions) {
+    Object.assign(this.options, options)
+  }
+
+  apply(player: Player) {
+    this.player = player
+  }
+
+  async load({ $video }: Player, source: Source) {
+    const { matcher, forceHLS } = this.options
+
+    if (!matcher($video, source, forceHLS)) return false
+
+    HlsPlugin.library ??= (await import('hls.js/dist/hls.min.js')).default
+
+    if (!HlsPlugin.library.isSupported()) return false
+
+    const { config, withBitrate, qualityControl, qualitySwitch, audioControl, textControl } =
+      this.options
+
+    this.instance = new HlsPlugin.library(config)
+
+    const { instance, player } = this
+
+    instance.loadSource(source.src)
+    instance.attachMedia(player.$video)
+    instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
+      const { type, details, fatal } = data
+
+      if (fatal) {
+        player.hasError = true
+        player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
+      }
+    })
+
+    if (player.context.ui?.setting) {
+      generateSetting(player, instance, {
+        qualityControl,
+        qualitySwitch,
+        withBitrate,
+        audioControl,
+        textControl
+      })
+    }
+
+    return this
+  }
+
+  unload() {
+    this.instance?.stopLoad()
+  }
+
+  destroy() {
+    if (this.instance) {
+      if (this.player.context.ui?.setting) removeSetting(this.player)
+      this.instance.destroy()
+    }
+  }
+}
+
+HlsPlugin.library = (globalThis as any).Hls
+
+export default function create(options: HlsPluginOptions = {}): PlayerPlugin {
+  return new HlsPlugin(options)
+}
+
+const generateSetting = (player: Player, instance: Hls, options: HlsPluginOptions = {}) => {
+  const ui = player.context.ui
   if (options.qualityControl) {
-    instance.once(HlsPlugin.library.Events.MANIFEST_PARSED, () => {
+    instance.once(HlsPlugin.library!.Events.MANIFEST_PARSED, () => {
       settingUpdater({
-        icon: player.context.ui.icons.quality,
+        icon: ui.icons.quality,
         name: 'Quality',
         settings() {
           if (instance.levels.length > 1) {
@@ -84,23 +187,23 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
     })
 
     instance.on(
-      HlsPlugin.library.Events.LEVEL_SWITCHED,
+      HlsPlugin.library!.Events.LEVEL_SWITCHED,
       function menuUpdater(_, { level }: LevelSwitchedData) {
         if (instance.autoLevelEnabled) {
           const height = instance.levels[level]!.height
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-          player.context.ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+          ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         } else {
-          player.context.ui.setting.select(`${PLUGIN_NAME}-Quality`, level + 1, false)
+          ui.setting.select(`${PLUGIN_NAME}-Quality`, level + 1, false)
         }
       }
     )
   }
 
   if (options.audioControl)
-    instance.on(HlsPlugin.library.Events.AUDIO_TRACK_LOADED, () => {
+    instance.on(HlsPlugin.library!.Events.AUDIO_TRACK_LOADED, () => {
       settingUpdater({
-        icon: player.context.ui.icons.lang,
+        icon: ui.icons.lang,
         name: 'Language',
         settings() {
           if (instance.audioTracks.length > 1) {
@@ -119,9 +222,9 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
     })
 
   if (options.textControl)
-    instance.on(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
+    instance.on(HlsPlugin.library!.Events.SUBTITLE_TRACK_LOADED, () => {
       settingUpdater({
-        icon: player.context.ui.icons.subtitle,
+        icon: ui.icons.subtitle,
         name: 'Subtitle',
         settings() {
           if (instance.subtitleTracks.length > 1) {
@@ -172,87 +275,6 @@ const generateSetting = (player: Player, instance: Hls, options: Options = {}) =
 
 const removeSetting = (player: Player) => {
   ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-    player.context.ui?.setting.unregister(`${PLUGIN_NAME}-${it}`)
+    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${it}`)
   )
-}
-
-class HlsPlugin implements PlayerPlugin {
-  key = 'hls'
-  name = PLUGIN_NAME
-  //@ts-ignore
-  version = __VERSION__
-
-  static defaultMatcher: PluginOptions['matcher'] = defaultMatcher
-
-  //@ts-ignore
-  static library: typeof import('hls.js/dist/hls.min.js') = globalThis.Hls
-
-  player: Player
-
-  instance: Hls
-
-  constructor(public options: PluginOptions) {}
-
-  apply(player: Player) {
-    this.player = player
-  }
-
-  async load({ $video }: Player, source: Source) {
-    const { matcher = HlsPlugin.defaultMatcher } = this.options
-
-    if (!matcher!($video, source)) return false
-
-    const {
-      config,
-      withBitrate = false,
-      qualityControl = true,
-      qualitySwitch = 'immediate',
-      audioControl = true,
-      textControl = true
-    } = this.options
-
-    HlsPlugin.library ??= (await import('hls.js/dist/hls.min.js')).default
-
-    if (!HlsPlugin.library.isSupported()) return false
-
-    this.instance = new HlsPlugin.library(config)
-
-    const { instance, player } = this
-    this.instance.loadSource(source.src)
-    this.instance.attachMedia(player.$video)
-
-    if (!player.isNativeUI && player.context.ui?.setting) {
-      generateSetting(player, instance, {
-        qualityControl,
-        qualitySwitch,
-        withBitrate,
-        audioControl,
-        textControl
-      })
-    }
-
-    instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
-      const { type, details, fatal } = data
-
-      if (fatal) {
-        player.hasError = true
-        player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
-      }
-    })
-
-    return this
-  }
-
-  async unload() {
-    removeSetting(this.player)
-    this.instance.destroy()
-  }
-
-  async destroy() {
-    await this.unload()
-  }
-}
-
-export default function create(options: PluginOptions = {}): PlayerPlugin {
-  return new HlsPlugin(options)
 }

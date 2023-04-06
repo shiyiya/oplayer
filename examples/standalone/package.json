@@ -20,6 +20,6 @@
     "@oplayer/plugins": "workspace:*",
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "lit": "^2.7.1"
+    "lit": "^2.7.2"
   }
 }
