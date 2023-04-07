@@ -1,13 +1,25 @@
-import type { Player, PlayerPlugin, Source } from '@oplayer/core'
-import type Hls from 'hls.js'
+import type { Player, PlayerPlugin, RequiredPartial, Source } from '@oplayer/core'
+import Hls from 'hls.js'
 import type { HlsConfig, LevelSwitchedData } from 'hls.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
+// active inactive
+export type Active = (
+  instance: Hls,
+  library: typeof import('hls.js/dist/hls.min.js')
+) => void | ((instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void)
+
 export interface HlsPluginOptions {
   matcher?: Matcher
+  /**
+   * active or inactive(returned fn)
+   *
+   * @type {Active}
+   */
+  active?: Active
   /**
    * config for hls.js
    *
@@ -69,7 +81,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: Required<HlsPluginOptions> = {
+  options: RequiredPartial<HlsPluginOptions, 'active'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -77,7 +89,8 @@ class HlsPlugin implements PlayerPlugin {
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher
+    matcher: defaultMatcher,
+    active: undefined
   }
 
   constructor(options?: HlsPluginOptions) {
@@ -97,15 +110,22 @@ class HlsPlugin implements PlayerPlugin {
 
     if (!HlsPlugin.library.isSupported()) return false
 
-    const { config, withBitrate, qualityControl, qualitySwitch, audioControl, textControl } =
-      this.options
+    const {
+      config,
+      active,
+      withBitrate,
+      qualityControl,
+      qualitySwitch,
+      audioControl,
+      textControl
+    } = this.options
 
     this.instance = new HlsPlugin.library(config)
 
     const { instance, player } = this
 
     instance.loadSource(source.src)
-    instance.attachMedia(player.$video)
+    instance.attachMedia($video)
     instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
       const { type, details, fatal } = data
 
@@ -114,6 +134,11 @@ class HlsPlugin implements PlayerPlugin {
         player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
       }
     })
+
+    if (active) {
+      const returned = active(instance, HlsPlugin.library)
+      if (returned) this.options.active = returned
+    }
 
     if (player.context.ui?.setting) {
       generateSetting(player, instance, {
@@ -134,8 +159,11 @@ class HlsPlugin implements PlayerPlugin {
 
   destroy() {
     if (this.instance) {
-      if (this.player.context.ui?.setting) removeSetting(this.player)
-      this.instance.destroy()
+      // prettier-ignore
+      const { player, instance, options: { active: inactive } } = this
+      if (inactive) inactive(instance!, HlsPlugin.library)
+      if (player.context.ui?.setting) removeSetting(player)
+      instance.destroy()
     }
   }
 }

@@ -66,3 +66,13 @@ export type PlayerEvent<T = any> = {
 }
 
 export type PlayerListener = (event: PlayerEvent) => void
+
+// make any to Required
+export type PartialRequired<T, K extends keyof T> = {
+  [P in K]-?: T[P]
+} & Omit<T, K>
+
+// make all Required then Partial any
+export type RequiredPartial<T, K extends keyof T> = Required<Omit<T, K>> & {
+  [P in K]?: T[P]
+}

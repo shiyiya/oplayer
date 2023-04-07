@@ -38,8 +38,15 @@ npm i @oplayer/core @oplayer/dash
 ```ts
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
+// active inactive
+export type Active = (
+  instance: MediaPlayerClass,
+  library: typeof import('dashjs')
+) => void | ((instance: MediaPlayerClass, library: typeof import('dashjs')) => void)
+
 export interface DashPluginOptions {
   matcher?: Matcher
+  active?: Active
   /**
    * config for dashjs
    *

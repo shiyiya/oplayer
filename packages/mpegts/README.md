@@ -38,8 +38,15 @@ npm i @oplayer/core @oplayer/mpegts
 ```ts
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
+// active inactive
+export type Active = (
+  instance: Mpegts.Player,
+  library: typeof Mpegts
+) => void | ((instance: Mpegts.Player, library: typeof Mpegts) => void)
+
 export type MpegtsPluginOptions = {
   config?: Partial<Mpegts.Config>
   matcher?: Matcher
+  active?: Active
 }
 ```

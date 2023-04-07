@@ -1,13 +1,20 @@
-import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import type { Player, PlayerPlugin, Source, PartialRequired } from '@oplayer/core'
 import type Mpegts from 'mpegts.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-mpegts'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
+// active inactive
+export type Active = (
+  instance: Mpegts.Player,
+  library: typeof Mpegts
+) => void | ((instance: Mpegts.Player, library: typeof Mpegts) => void)
+
 export type MpegtsPluginOptions = {
   config?: Partial<Mpegts.Config>
   matcher?: Matcher
+  active?: Active
 }
 
 const REG = /flv|ts|m2ts(#|\?|$)/i
@@ -31,9 +38,10 @@ class MpegtsPlugin implements PlayerPlugin {
 
   instance?: Mpegts.Player
 
-  options: Required<MpegtsPluginOptions> = {
-    config: undefined as any,
-    matcher: defaultMatcher
+  options: PartialRequired<MpegtsPluginOptions, 'matcher'> = {
+    matcher: defaultMatcher,
+    config: undefined,
+    active: undefined
   }
 
   constructor(options?: MpegtsPluginOptions) {
@@ -63,9 +71,11 @@ class MpegtsPlugin implements PlayerPlugin {
       this.options.config
     )
 
-    const { player, instance } = this
-    instance.attachMediaElement($video)
-    instance.load()
+    const {
+      player,
+      instance,
+      options: { active }
+    } = this
 
     instance.on(MpegtsPlugin.library.Events.ERROR, function (_, data) {
       const { type, details, fatal } = data
@@ -76,11 +86,22 @@ class MpegtsPlugin implements PlayerPlugin {
       }
     })
 
+    instance.attachMediaElement($video)
+    instance.load()
+
+    if (active) {
+      const returned = active(instance, MpegtsPlugin.library)
+      if (returned) this.options.active = returned
+    }
+
     return this
   }
 
   destroy() {
-    this.instance?.destroy()
+    // prettier-ignore
+    const { instance, options: { active: inactive } } = this
+    if (inactive) inactive(instance!, MpegtsPlugin.library)
+    instance?.destroy()
   }
 }
 

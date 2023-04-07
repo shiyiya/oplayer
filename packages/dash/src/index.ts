@@ -1,12 +1,19 @@
-import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import type { Player, PlayerPlugin, RequiredPartial, Source } from '@oplayer/core'
 import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
 
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
+// active inactive
+export type Active = (
+  instance: MediaPlayerClass,
+  library: typeof import('dashjs')
+) => void | ((instance: MediaPlayerClass, library: typeof import('dashjs')) => void)
+
 export interface DashPluginOptions {
   matcher?: Matcher
+  active?: Active
   /**
    * config for dashjs
    *
@@ -55,14 +62,15 @@ class DashPlugin implements PlayerPlugin {
 
   instance?: MediaPlayerClass
 
-  options: Required<DashPluginOptions> = {
-    config: undefined as any,
+  options: RequiredPartial<DashPluginOptions, 'active' | 'config'> = {
     textControl: true,
     audioControl: true,
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher
+    matcher: defaultMatcher,
+    active: undefined,
+    config: undefined
   }
 
   constructor(options?: DashPluginOptions) {
@@ -84,18 +92,31 @@ class DashPlugin implements PlayerPlugin {
 
     this.instance = DashPlugin.library.MediaPlayer().create()
 
+    const {
+      config,
+      active,
+      withBitrate,
+      qualityControl,
+      qualitySwitch,
+      audioControl,
+      textControl
+    } = this.options
+
     const { instance, player } = this
-    const { config, withBitrate, qualityControl, qualitySwitch, audioControl, textControl } =
-      this.options
 
     if (config) instance.updateSettings(config)
-    instance.initialize(player.$video, source.src, player.$video.autoplay)
+    instance.initialize($video, source.src, $video.autoplay)
 
     instance.on(DashPlugin.library.MediaPlayer.events.ERROR, function (event: any) {
       const err = event.event || event.error
       const message = event.event ? event.event.message || event.type : undefined
       player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
     })
+
+    if (active) {
+      const returned = active(instance, DashPlugin.library)
+      if (returned) this.options.active = returned
+    }
 
     if (player.context.ui?.setting) {
       generateSetting(player, instance, {
@@ -112,8 +133,11 @@ class DashPlugin implements PlayerPlugin {
 
   destroy() {
     if (this.instance) {
-      if (this.player.context.ui?.setting) removeSetting(this.player)
-      this.instance.destroy()
+      // prettier-ignore
+      const { player, instance, options: { active: inactive } } = this
+      if (inactive) inactive(instance!, DashPlugin.library)
+      if (player.context.ui?.setting) removeSetting(player)
+      instance.destroy()
     }
   }
 }

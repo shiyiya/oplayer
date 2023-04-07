@@ -41,16 +41,26 @@ npm i @oplayer/core @oplayer/hls
 ## Usage
 
 ```ts
-// type def
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
+
+// active inactive
+export type Active = (
+  instance: Hls,
+  library: typeof import('hls.js/dist/hls.min.js')
+) => void | ((instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void)
 
 export interface HlsPluginOptions {
   matcher?: Matcher
   /**
+   * active or inactive(returned fn)
+   *
+   * @type {Active}
+   */
+  active?: Active
+  /**
    * config for hls.js
    *
    * @type {Partial<HlsConfig>}
-   * @memberof HlsPluginOptions
    */
   config?: Partial<HlsConfig>
   /**
