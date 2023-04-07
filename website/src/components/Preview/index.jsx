@@ -15,7 +15,8 @@ const plugins = [
         {
           name: 'Default',
           default: true,
-          src: '/君の名は.srt'
+          src: '/君の名は.srt',
+          offset: 2
         }
       ]
     },

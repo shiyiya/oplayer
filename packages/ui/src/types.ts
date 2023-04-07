@@ -8,6 +8,10 @@ export type SubtitleSource = {
   src: string
   encoding?: string
   type?: string
+  /**
+   * seconds
+   */
+  offset?: number
 }
 
 export type Subtitle = {

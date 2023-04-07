@@ -30,7 +30,7 @@ interface Ctx {
   danmaku: ReturnType<typeof danmaku>
 }
 
-let src = VIDEO_LIST[1]!
+let src = VIDEO_LIST[0]!
 let currentDataSrcId = 0
 
 const player = Player.make<Ctx>('#player', {
@@ -69,7 +69,8 @@ const player = Player.make<Ctx>('#player', {
           {
             name: 'Default',
             default: true,
-            src: SRT
+            src: SRT,
+            offset: 2
           }
         ]
       },

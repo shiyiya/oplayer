@@ -3,6 +3,7 @@ import { $, isIOS, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource, UIInterface } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
+import { clamp } from '../utils'
 
 const SETTING_KEY = 'Subtitle'
 
@@ -65,6 +66,19 @@ export class Subtitle {
     this.load()
     this.loadSetting()
     this.player.emit('subtitlesourcechange', payload)
+  }
+
+  changeOffset() {
+    const offset = this.currentSubtitle!.offset
+    const cues = this.player.$video.textTracks[0]?.cues
+
+    if (offset && cues) {
+      const duration = this.player.duration
+      Array.from(cues).forEach((cue) => {
+        cue.startTime = clamp(cue.startTime + offset, 0, duration)
+        cue.endTime = clamp(cue.endTime + offset, 0, duration)
+      })
+    }
   }
 
   processDefault() {
@@ -140,7 +154,19 @@ export class Subtitle {
     if (!this.currentSubtitle) return
     if (!this.$track) this.createTrack()
     this.loadSubtitle()
-      .then(() => this.show())
+      .then(() => {
+        this.$track!.addEventListener(`load`, () => {
+          // wait video metadata loaded
+          if (isNaN(this.player.duration)) {
+            this.player.on('loadedmetadata', () => {
+              this.changeOffset()
+            })
+          } else {
+            this.changeOffset()
+          }
+          this.show()
+        })
+      })
       .catch((e) => {
         this.player.emit('notice', { text: (<Error>e).message })
       })
