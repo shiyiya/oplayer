@@ -19,7 +19,7 @@ import SRT from '../../website/static/君の名は.srt'
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
-import { Hello, vttThumbnails, ad } from '@oplayer/plugins'
+import { Hello, vttThumbnails, ad, PlaylistPlugin } from '@oplayer/plugins'
 
 interface Ctx {
   ui: ReturnType<typeof ui>
@@ -96,7 +96,15 @@ const player = Player.make<Ctx>('#player', {
       // displaySender: true,
       source: DANMAKU //SUPER_DANMAKU
     }),
-    new Hello()
+    new Hello(),
+    new PlaylistPlugin({
+      sources: VIDEO_LIST.map((it, idx) => ({
+        src: it,
+        poster: POSTER,
+        duration: idx % 2 == 0 ? '99:09' : '',
+        title: idx % 3 == 0 ? '有趣的视频' : '有趣趣趣趣趣趣的视频'
+      }))
+    })
   ])
   .create()
 

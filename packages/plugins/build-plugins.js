@@ -3,6 +3,7 @@ import path from 'path'
 import { build } from 'vite'
 import glob from 'glob'
 import chokidar from 'chokidar'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 const external = ['@oplayer/core']
 
@@ -28,7 +29,8 @@ async function buildPlugin(name, dev) {
         fileName: (format) => `${pluginName}.${{ es: 'es', umd: 'min' }[format]}.js`
       },
       rollupOptions: { external, output: { dir: 'dist', globals } }
-    }
+    },
+    plugins: [cssInjectedByJsPlugin()]
   })
 
   console.log(`✨ Built ${name}@${version} - ${Date.now() - now}ms!`)
