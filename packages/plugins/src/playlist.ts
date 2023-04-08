@@ -97,7 +97,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   render() {
     const $playlist = `
     <div class="playlist-head">
-      <span>PLAYLIST</span>
+      <span class="playlist-head-title">${this.player.locales.get('PLAYLIST')}</span>
       <div class="playlist-back"><svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg></div>
     </div>
     <div class="playlist-list">
@@ -128,12 +128,14 @@ export default class PlaylistPlugin implements PlayerPlugin {
       position: 'top',
       onClick: () => {
         this.$root.classList.toggle('active')
+        this.$root.querySelector('.playlist-list-item.active')?.scrollIntoView()
       }
     })
   }
 
   renderList() {
-    const child = this.options.sources
+    const sources = this.options.sources
+    const child = sources
       .map(
         (source, idx) => `
   <div class="playlist-list-item" data-index="${idx}">
@@ -146,6 +148,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
       )
       .join('')
 
+    this.$root.querySelector('.playlist-head-title')!.textContent = `${this.player.locales.get(
+      'PLAYLIST'
+    )} (${sources.length})`
     this.$root.querySelector('.playlist-list')!.innerHTML = child
   }
 
