@@ -1,5 +1,5 @@
 import type { Player, Source, PlayerPlugin, PartialRequired } from '@oplayer/core'
-import type { SubtitleSource, Thumbnails, UIInterface } from '@oplayer/ui'
+import type { Highlight, SubtitleSource, Thumbnails, UIInterface } from '@oplayer/ui'
 
 import './playlist.css'
 
@@ -20,6 +20,7 @@ export interface PlaylistSource extends Omit<Source, 'src'> {
   duration?: string
   subtitles?: SubtitleSource[]
   thumbnails?: Thumbnails
+  highlights?: Highlight[]
 }
 
 export default class PlaylistPlugin implements PlayerPlugin {
@@ -54,7 +55,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   changeSource(idx: number) {
     const source = this.options.sources[idx]
     if (!source) return
-    const { src, poster, format, title, subtitles, thumbnails } = source
+    const { src, poster, format, title, subtitles, thumbnails, highlights } = source
     if (src) {
       this.player.changeSource({ src, poster, format, title })
       if (subtitles) {
@@ -62,6 +63,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
       }
       if (thumbnails) {
         this.player.context.ui.changThumbnails(thumbnails)
+      }
+      if (highlights) {
+        this.player.context.ui.changHighlightSource(highlights)
       }
     } else {
       this.options.customFetcher?.(source, idx)

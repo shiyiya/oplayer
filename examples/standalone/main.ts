@@ -66,20 +66,20 @@ const player = Player.make<Ctx>('#player', {
       // showControls: 'played',
       // theme: { primaryColor: '#00b2ff' },
       highlight: { color: '#000' },
-      subtitle: {
-        source: [
-          {
-            name: 'Default',
-            default: true,
-            src: SRT,
-            offset: 2
-          }
-        ]
-      },
-      thumbnails: {
-        src: THUMB,
-        number: 100
-      },
+      // subtitle: {
+      //   source: [
+      //     {
+      //       name: 'Default',
+      //       default: true,
+      //       src: SRT,
+      //       offset: 2
+      //     }
+      //   ]
+      // },
+      // thumbnails: {
+      //   src: THUMB,
+      //   number: 100
+      // },
       icons: {
         progressIndicator: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
         <path d="M16.118 3.667h.382a3.667 3.667 0 013.667 3.667v7.333a3.667 3.667 0 01-3.667 3.667h-11a3.667 3.667 0 01-3.667-3.667V7.333A3.667 3.667 0 015.5 3.666h.382L4.95 2.053a1.1 1.1 0 011.906-1.1l1.567 2.714h5.156L15.146.953a1.101 1.101 0 011.906 1.1l-.934 1.614z"/>
@@ -117,7 +117,8 @@ const player = Player.make<Ctx>('#player', {
               src: SRT,
               offset: 2
             }
-          ]
+          ],
+          highlights: highlight
         },
         {
           title: 'Big Buck Bunny - HLS',
@@ -164,8 +165,6 @@ if (false) {
     })
   )
 }
-
-player.context.ui?.changHighlightSource?.(highlight)
 
 player.context.ui?.menu.register(<MenuBar>{
   name: 'FMT',

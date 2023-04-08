@@ -55,6 +55,7 @@
   overflow: auto;
   height: 100%;
   padding-bottom: 39px;
+  box-sizing: border-box;
 }
 
 .playlist-list::-webkit-scrollbar {

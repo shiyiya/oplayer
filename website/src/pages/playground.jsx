@@ -17,12 +17,7 @@ import { chromecast, PlaylistPlugin } from '/plugins.es.js'
 // preview: https://ohplayer.netlify.app/script.html
 // code: https://github.com/shiyiya/oplayer/blob/main/examples/script.html
 
-const player = Player.make('#oplayer', {
-  source: {
-    src: '/君の名は.mp4',
-    poster: '/poster.png'
-  }
-})
+const player = Player.make('#oplayer')
   .use([
     ui({
       theme:{ primaryColor: 'rgb(231 170 227)' },
