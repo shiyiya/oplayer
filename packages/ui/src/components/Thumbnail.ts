@@ -28,7 +28,7 @@ export default function (it: UIInterface, container: HTMLElement) {
   } = it
 
   let isInitialized = false
-  let thumbnails = Object.assign(defaultThumbnails, options!)
+  let thumbnails = Object.assign({}, defaultThumbnails, options!)
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
 
   function init(rate?: number) {
@@ -48,12 +48,18 @@ export default function (it: UIInterface, container: HTMLElement) {
 
   function change(source: Thumbnails) {
     isInitialized = false
-    thumbnails = Object.assign(defaultThumbnails, source)
+    thumbnails = Object.assign({}, defaultThumbnails, source)
+    it.progressHoverCallback.push(init)
   }
 
   player.on('videosourcechange', () => {
     isInitialized = false
     $dom.style.backgroundImage = 'none'
+
+    it.progressHoverCallback.splice(
+      it.progressHoverCallback.findIndex((it) => it == init),
+      1
+    )
   })
 
   it.progressHoverCallback.push(init)

@@ -40,7 +40,7 @@ Player.make('#oplayer')
           poster: 'https://oplayer.vercel.app/poster.png',
           duration: '01:32',
           thumbnails: {
-            src: '/thumbnails.jpg',
+            src: 'https://oplayer.vercel.app/thumbnails.jpg',
             number: 100
           },
           subtitles: [

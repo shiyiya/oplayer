@@ -36,6 +36,10 @@ function plugin(player: Player, options: Thumbnails) {
   if (options.src) bootstrap(options.src)
 
   player.on('videosourcechange', () => {
+    player.context.ui.progressHoverCallback.splice(
+      player.context.ui.progressHoverCallback.findIndex((it: any) => it == updateThumbnailStyle),
+      1
+    )
     isActive = false
     $dom.style.opacity = '0'
     vttData = []
