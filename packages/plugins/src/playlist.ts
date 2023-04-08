@@ -128,7 +128,11 @@ export default class PlaylistPlugin implements PlayerPlugin {
       position: 'top',
       onClick: () => {
         this.$root.classList.toggle('active')
-        this.$root.querySelector('.playlist-list-item.active')?.scrollIntoView()
+        const list = this.$root.querySelector('.playlist-list')!
+        const active = this.$root.querySelector<HTMLDivElement>('.playlist-list-item.active')
+        if (active && list.scrollHeight > 0) {
+          list.scrollTo(0, active.offsetHeight * this.currentIndex)
+        }
       }
     })
   }
