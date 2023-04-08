@@ -9,7 +9,8 @@ interface Ctx {
 
 export interface PlaylistOptions {
   sources: PlaylistSource[]
-  onSourceChange?: (source: PlaylistSource) => Promise<void | PlaylistSource>
+  onSourceChange?: (source: PlaylistSource, index: number) => void
+  customFetcher?: (source: PlaylistSource, index: number) => Promise<void> | void
   autoNext?: boolean
   initialIndex?: number
 }
@@ -33,7 +34,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   options: PartialRequired<PlaylistOptions, 'autoNext' | 'initialIndex'>
 
-  constructor(options: PlaylistOptions) {
+  constructor(options?: PlaylistOptions) {
     this.options = Object.assign({ autoNext: true, initialIndex: 0 }, options)
   }
 
@@ -63,12 +64,18 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.player.context.ui.changThumbnails(thumbnails)
       }
     } else {
-      this.options.onSourceChange?.(source)
+      this.options.customFetcher?.(source, idx)
     }
 
     this.currentIndex = idx
+    this.options.onSourceChange?.(source, idx)
     this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
     this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
+  }
+
+  changeSourceList(sources: PlaylistSource[]) {
+    this.options.sources = sources
+    this.renderList()
   }
 
   next() {
@@ -76,31 +83,16 @@ export default class PlaylistPlugin implements PlayerPlugin {
   }
 
   previous() {
-    this.changeSource(this.currentIndex + 1)
+    this.changeSource(this.currentIndex - 1)
   }
 
   render() {
-    const sources = this.options.sources
     const $playlist = `
     <div class="playlist-head">
       <span>PLAYLIST</span>
       <div class="playlist-back"><svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg></div>
     </div>
     <div class="playlist-list">
-      ${sources
-        .map(
-          (source, idx) => `
-        <div class="playlist-list-item" data-index="${idx}">
-          <div class="playlist-list-item-thumb" style="background-image: url('${
-            source.poster
-          }');"></div>
-          <div class="playlist-list-item-desc">
-            <p>${source.title}</p>
-            ${source.duration ? `<span>${source.duration}</span>` : ''}
-          </div>
-        </div>`
-        )
-        .join('')}
     </div>`
 
     this.$root = document.createElement('div')
@@ -119,6 +111,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
       }
     }
 
+    this.renderList()
     this.player.context.ui.$root.appendChild(this.$root)
 
     this.player.context.ui.menu.register({
@@ -129,6 +122,23 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.$root.classList.toggle('active')
       }
     })
+  }
+
+  renderList() {
+    const child = this.options.sources
+      .map(
+        (source, idx) => `
+  <div class="playlist-list-item" data-index="${idx}">
+    <div class="playlist-list-item-thumb" style="background-image: url('${source.poster}');"></div>
+    <div class="playlist-list-item-desc">
+      <p>${source.title}</p>
+      ${source.duration ? `<span>${source.duration}</span>` : ''}
+    </div>
+  </div>`
+      )
+      .join('')
+
+    this.$root.querySelector('.playlist-list')!.innerHTML = child
   }
 
   destroy() {}

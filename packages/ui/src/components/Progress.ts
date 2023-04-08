@@ -33,12 +33,10 @@ const render = (it: UIInterface, el: HTMLElement) => {
   ))
   const firstElement = $dom.firstElementChild! as HTMLDivElement
 
-  if (config.thumbnails) {
-    if (config.thumbnails.isVTT) {
-      console.warn('vtt thumbnails support by @oplayer/pluins')
-    } else {
-      renderThumbnail(it, firstElement)
-    }
+  if (config.thumbnails?.isVTT) {
+    console.warn('vtt thumbnails support by @oplayer/pluins')
+  } else {
+    renderThumbnail(it, firstElement)
   }
 
   //@ts-ignore

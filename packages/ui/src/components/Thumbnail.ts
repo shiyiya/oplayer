@@ -28,7 +28,7 @@ export default function (it: UIInterface, container: HTMLElement) {
   } = it
 
   let isInitialized = false
-  let thumbnails = Object.assign({}, defaultThumbnails, options!)
+  let thumbnails: Required<Omit<Thumbnails, 'isVTT'>>
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
 
   function init(rate?: number) {
@@ -52,6 +52,8 @@ export default function (it: UIInterface, container: HTMLElement) {
     it.progressHoverCallback.push(init)
   }
 
+  if (options?.src) change(options)
+
   player.on('videosourcechange', () => {
     isInitialized = false
     $dom.style.backgroundImage = 'none'
@@ -62,6 +64,5 @@ export default function (it: UIInterface, container: HTMLElement) {
     )
   })
 
-  it.progressHoverCallback.push(init)
   it.changThumbnails = change
 }
