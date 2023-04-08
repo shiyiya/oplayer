@@ -52,6 +52,8 @@ export default class PlaylistPlugin implements PlayerPlugin {
     }
 
     this.changeSource(this.options.initialIndex)
+
+    return this
   }
 
   changeSource(idx: number) {

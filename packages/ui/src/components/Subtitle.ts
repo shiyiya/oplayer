@@ -72,8 +72,6 @@ export class Subtitle {
     const offset = this.currentSubtitle!.offset
     const cues = this.player.$video.textTracks[0]?.cues
 
-    console.log(offset)
-
     if (offset && cues) {
       const duration = this.player.duration
       Array.from(cues).forEach((cue) => {

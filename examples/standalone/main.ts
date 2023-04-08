@@ -90,7 +90,7 @@ const player = Player.make<Ctx>('#player', {
       }
     }),
     torrent(),
-    hls(),
+    hls({ forceHLS: true }),
     dash(),
     mpegts(),
     danmaku({

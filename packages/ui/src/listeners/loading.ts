@@ -19,7 +19,7 @@ const loadingListener = (player: Player, detect = true) => {
     if (player.$video.preload == 'none') remove()
   })
 
-  player.on(['videoqualitychange', 'videosourcechange', 'stalled'], add)
+  player.on(['videoqualitychange', 'videosourcechange'], add)
 
   if (isMobile && detect) {
     detectLoading(player, add, remove)
@@ -75,6 +75,7 @@ const detectLoading = (player: Player, add: any, remove: any) => {
           remove()
           bufferingDetected = false
         }
+
         lastTime = currentTime
       }
 
