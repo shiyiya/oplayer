@@ -1,5 +1,3 @@
-/// <reference path="../../../types.d.ts" />
-
 import { $, isIOS, isMobile, Player, PlayerPlugin } from '@oplayer/core'
 import Danmaku from 'danmaku'
 import { danmakuParseFromUrl, getMode } from './danmaku-parse'
@@ -16,7 +14,7 @@ export default (options = {} as Options): PlayerPlugin => ({
   apply: (player: Player) => {
     if (player.isNativeUI) return
 
-    const { speed, opacity, engine, displaySender } = options
+    const { speed = 144, opacity, engine, displaySender } = options
     const $danmaku = $.render($.create('div'), player.$root)
     $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
     if (opacity) $danmaku.style.opacity = `${opacity}`
@@ -29,7 +27,7 @@ export default (options = {} as Options): PlayerPlugin => ({
       engine: engine || 'dom',
       comments: []
     })
-    if (speed) danmaku.speed = speed
+    danmaku.speed = isMobile ? speed / 1.5 : speed
 
     player.on('fullscreenchange', () => {
       if (!isIOS) danmaku.resize()

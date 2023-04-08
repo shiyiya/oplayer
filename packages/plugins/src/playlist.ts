@@ -40,6 +40,8 @@ export default class PlaylistPlugin implements PlayerPlugin {
   }
 
   apply(player: Player) {
+    if (player.isNativeUI) return
+
     this.player = player as Player<Ctx>
     this.render()
 

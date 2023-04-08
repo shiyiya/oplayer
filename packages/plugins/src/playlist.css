@@ -7,11 +7,16 @@
   width: 18em;
   color: #ccc;
   transition: transform 0.3s;
+  background-color: rgba(28, 28, 28, 0.9);
+}
+@media (max-width: 991px) {
+  .playlist {
+    max-width: 60%;
+  }
 }
 
 .playlist.active {
   transform: translateX(-100%);
-  background-color: rgba(28, 28, 28, 0.9);
 }
 
 .playlist.active::before {
