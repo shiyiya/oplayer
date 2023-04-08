@@ -33,8 +33,8 @@ export type MenuBar<
   position?: 'top' | 'bottom'
   name: string
   icon?: string
-  children: T[]
-  onChange: (arg: T, elm: HTMLButtonElement) => void
+  children?: T[]
+  onChange?: (arg: T, elm: HTMLButtonElement) => void
   onClick?: (elm: HTMLButtonElement) => void
 }
 

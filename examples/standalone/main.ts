@@ -15,6 +15,8 @@ import POSTER from '../../website/static/poster.png'
 import THUMB from '../../website/static/thumbnails.jpg'
 import SRT from '../../website/static/君の名は.srt'
 // import SUPER_DANMAKU from '../../website/static/天气之子.xml'
+import FLV from '../../website/static/op.flv'
+import MP4 from '../../website/static/君の名は.mp4'
 
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
@@ -98,15 +100,48 @@ const player = Player.make<Ctx>('#player', {
     }),
     new Hello(),
     new PlaylistPlugin({
-      sources: VIDEO_LIST.map((it, idx) => ({
-        src: it,
-        poster: POSTER,
-        duration: idx % 2 == 0 ? '99:09' : '',
-        title: idx % 3 == 0 ? '有趣的视频' : '有趣趣趣趣趣趣的视频'
-      }))
+      sources: [
+        {
+          title: '君の名は - MP4',
+          poster: POSTER,
+          src: MP4,
+          duration: '01:32',
+          thumbnails: {
+            src: THUMB,
+            number: 100
+          },
+          subtitles: [
+            {
+              name: 'Default',
+              default: true,
+              src: SRT,
+              offset: 2
+            }
+          ]
+        },
+        {
+          title: 'Big Buck Bunny - HLS',
+          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+          duration: '10:34'
+        },
+        {
+          title: 'DASH',
+          src: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
+          duration: '10:34'
+        },
+        {
+          title: 'FLV',
+          src: FLV,
+          duration: '00:17'
+        }
+      ]
     })
   ])
   .create()
+
+setTimeout(() => {
+  player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
+}, 1000)
 
 //@ts-ignore
 if (false) {
@@ -130,16 +165,6 @@ if (false) {
   )
 }
 
-function stopLoad() {
-  player.loader?.destroy()
-  const u8 = Uint8Array.from(emptyBuffer)
-  player.$video.src = URL.createObjectURL(new Blob([u8.buffer]))
-}
-
-setTimeout(() => {
-  player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
-}, 1000)
-
 player.context.ui?.changHighlightSource?.(highlight)
 
 player.context.ui?.menu.register(<MenuBar>{
@@ -154,7 +179,7 @@ player.context.ui?.menu.register(<MenuBar>{
       // .changeQuality({ src: value })
       .then((_) => {
         // GET	https://cc.zorores.com/20/2e/202eaab6dff289a5976399077449654e/eng-2.vtt
-        // player.context.ui.subtitle.updateSource([
+        // player.context.ui.subtitle.changeSource([
         //   {
         //     name: 'Default',
         //     default: true,
@@ -168,6 +193,12 @@ player.context.ui?.menu.register(<MenuBar>{
 console.log(player.context)
 
 player.context.hello.say()
+
+function stopLoad() {
+  player.loader?.destroy()
+  const u8 = Uint8Array.from(emptyBuffer)
+  player.$video.src = URL.createObjectURL(new Blob([u8.buffer]))
+}
 
 const meta = () => html`
   <div>

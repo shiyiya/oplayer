@@ -11,7 +11,7 @@ import hls from '/hls.es.js'
 import dash from '/dash.es.js'
 import mpegts from '/mpegts.es.js'
 import danmaku from '/danmaku.es.js'
-import { chromecast } from '/plugins.es.js'
+import { chromecast, PlaylistPlugin } from '/plugins.es.js'
 
 // html script example:
 // preview: https://ohplayer.netlify.app/script.html
@@ -40,7 +40,44 @@ const player = Player.make('#oplayer', {
     mpegts(),
     chromecast,
     // 海量弹幕 /天气之子.xml
-    danmaku({ enable: false, source: '/danmaku.xml' })
+    danmaku({ enable: false, source: '/danmaku.xml' }),
+    new PlaylistPlugin({
+      sources: [
+        {
+          title: '君の名は - MP4',
+          poster: '/poster.png',
+          src: '/君の名は.mp4',
+          duration: '01:32',
+          thumbnails: {
+            src: '/thumbnails.jpg',
+            number: 100
+          },
+          subtitles: [
+            {
+              name: 'Default',
+              default: true,
+              src: '/君の名は.srt',
+              offset: 2
+            }
+          ]
+        },
+        {
+          title: 'Big Buck Bunny - HLS',
+          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+          duration: '10:34'
+        },
+        {
+          title: 'DASH',
+          src: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
+          duration: '10:34'
+        },
+        {
+          title: 'FLV',
+          src: '/op.flv',
+          duration: '00:17'
+        }
+      ]
+    })
   ])
   .create()
 

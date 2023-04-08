@@ -36,7 +36,7 @@ export default (it: UIInterface) => {
     if (elm.tagName.toUpperCase() == 'SPAN') {
       _select(elm)
       target.onChange?.(
-        target.children[+elm.getAttribute('data-index')!]!,
+        target.children![+elm.getAttribute('data-index')!]!,
         elm.parentElement!.previousElementSibling as HTMLButtonElement
       )
     } else if (elm.tagName.toUpperCase() == 'BUTTON') {
@@ -67,7 +67,7 @@ export default (it: UIInterface) => {
       }" aria-label="${name}">
         ${$button}
         <div class='${expand} ${isTop ? expandBottom : ''}' role='menu'>
-          ${children
+          ${children!
             .map(
               (it, i) =>
                 `<span

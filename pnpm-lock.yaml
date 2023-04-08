@@ -50,8 +50,8 @@ importers:
         specifier: ^21.1.1
         version: 21.1.1
       lint-staged:
-        specifier: ^13.2.0
-        version: 13.2.0
+        specifier: ^13.2.1
+        version: 13.2.1
       nx:
         specifier: ^15.9.2
         version: 15.9.2
@@ -179,14 +179,17 @@ importers:
         specifier: workspace:*
         version: link:../core
       mpegts.js:
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.7.3
+        version: 1.7.3
 
   packages/plugins:
     devDependencies:
       '@oplayer/core':
         specifier: workspace:*
         version: link:../core
+      '@oplayer/ui':
+        specifier: workspace:*
+        version: link:../ui
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -195,7 +198,7 @@ importers:
         version: 8.1.0
       vite-plugin-css-injected-by-js:
         specifier: ^3.1.0
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0
 
   packages/react:
     devDependencies:
@@ -1634,8 +1637,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001474
-      electron-to-chromium: 1.4.355
+      caniuse-lite: 1.0.30001476
+      electron-to-chromium: 1.4.356
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10(browserslist@4.21.5)
     dev: true
@@ -1714,8 +1717,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /caniuse-lite@1.0.30001474:
-    resolution: {integrity: sha512-iaIZ8gVrWfemh5DG3T9/YqarVZoYf0r188IjaGwx68j4Pf0SGY6CQkmJUIE+NZHkkecQGohzXmBGEwWDr9aM3Q==}
+  /caniuse-lite@1.0.30001476:
+    resolution: {integrity: sha512-JmpktFppVSvyUN4gsLS0bShY2L9ZUslHLE72vgemBkS43JD2fOvKTKs+GtRwuxrtRGnwJFW0ye7kWRRlLJS9vQ==}
     dev: true
 
   /chai@4.3.7:
@@ -1928,7 +1931,7 @@ packages:
     dev: true
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
   /concurrently@7.6.0:
@@ -1940,7 +1943,7 @@ packages:
       date-fns: 2.29.3
       lodash: 4.17.21
       rxjs: 7.8.0
-      shell-quote: 1.8.0
+      shell-quote: 1.8.1
       spawn-command: 0.0.2-1
       supports-color: 8.1.1
       tree-kill: 1.2.2
@@ -2166,8 +2169,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.355:
-    resolution: {integrity: sha512-056hxzEE4l667YeOccgjhRr5fTiwZ6EIJ4FpzGps4k3YcS8iAhiaBYUBrv5E2LDQJsussscv9EEUwAYKnv+ZKg==}
+  /electron-to-chromium@1.4.356:
+    resolution: {integrity: sha512-nEftV1dRX3omlxAj42FwqRZT0i4xd2dIg39sog/CnCJeCcL1TRd2Uh0i9Oebgv8Ou0vzTPw++xc+Z20jzS2B6A==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -3135,7 +3138,7 @@ packages:
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.2
+      nwsapi: 2.2.3
       parse5: 7.1.2
       rrweb-cssom: 0.6.0
       saxes: 6.0.0
@@ -3262,8 +3265,8 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: true
 
-  /lint-staged@13.2.0:
-    resolution: {integrity: sha512-GbyK5iWinax5Dfw5obm2g2ccUiZXNGtAS4mCbJ0Lv4rq6iEtfBSjOYdcbOtAIFtM114t0vdpViDDetjVTSd8Vw==}
+  /lint-staged@13.2.1:
+    resolution: {integrity: sha512-8gfzinVXoPfga5Dz/ZOn8I2GOhf81Wvs+KwbEXQn/oWZAvCVS2PivrXfVbFJc93zD16uC0neS47RXHIjXKYZQw==}
     engines: {node: ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -3623,8 +3626,8 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /mpegts.js@1.7.2:
-    resolution: {integrity: sha512-qQ1ELBDC4IAqpULFuFzp3hoQeKwD5BCR3UM9Lk2+kj9jCWcXl19spF7PdzX0ZljghPHAj/VL2ajBbGyMWk2fgA==}
+  /mpegts.js@1.7.3:
+    resolution: {integrity: sha512-kqZ1C1IsbAQN72cK8vMrzKeM7hwrwSBbFAwVAc7PPweOeoZxCANrc7fAVDKMfYUzxdNkMTnec9tVmlxmKZB0TQ==}
     dependencies:
       es6-promise: 4.2.8
       webworkify-webpack: 2.1.5
@@ -3695,8 +3698,8 @@ packages:
       path-key: 4.0.0
     dev: true
 
-  /nwsapi@2.2.2:
-    resolution: {integrity: sha512-90yv+6538zuvUMnN+zCr8LuV6bPFdq50304114vJYJ8RDyK8D5O9Phpbd6SZWgI7PwzmmfN1upeOJlvybDSgCw==}
+  /nwsapi@2.2.3:
+    resolution: {integrity: sha512-jscxIO4/VKScHlbmFBdV1Z6LXnLO+ZR4VMtypudUdfwtKxUN3TQcNFIHLwKtrUbDyHN4/GycY9+oRGZ2XMXYPw==}
     dev: true
 
   /nx@15.9.2:
@@ -4400,8 +4403,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /shell-quote@1.8.0:
-    resolution: {integrity: sha512-QHsz8GgQIGKlRi24yFc6a6lN69Idnx634w49ay6+jA5yFh7a1UY+4Rp6HPx/L/1zcEDPEij8cIsiqR6bQsE5VQ==}
+  /shell-quote@1.8.1:
+    resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
     dev: true
 
   /side-channel@1.0.4:
@@ -5139,12 +5142,10 @@ packages:
     resolution: {integrity: sha512-g0cm0wbrR6b6wR8FWtfD1RSDPacdumKEOAnneXv+NpJ9ez+j6rklRv6lMOO+aPf+Y6Zb8OzgIk0FXBZ6h+DeZQ==}
     dev: true
 
-  /vite-plugin-css-injected-by-js@3.1.0(vite@4.2.1):
+  /vite-plugin-css-injected-by-js@3.1.0:
     resolution: {integrity: sha512-qogCmpocZfcbSAYZQjS88ieIY0PzLUm7RkLFWFgAxkXdz3N6roZbSTNTxeIOj5IxFbZWACUPuVBBoo6qCuXDcw==}
     peerDependencies:
       vite: '>2.0.0-0'
-    dependencies:
-      vite: 4.2.1(@types/node@18.15.11)(terser@5.16.8)
     dev: true
 
   /vite@4.2.1(@types/node@18.15.11)(terser@5.16.8):

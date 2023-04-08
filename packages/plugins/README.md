@@ -4,10 +4,18 @@
 npm i @oplayer/plugins
 ```
 
-#### playlist
+```js
+import { PlaylistPlugin, vttThumbnails, chormecast, ad } from '@oplayer/plugins'
+```
 
-#### vtt thumbnails
+### Playlist
 
-#### chormecast
+![](./playlist.png)
 
-#### ad
+### VTT Thumbnails
+
+![](./vtt.png)
+
+### Chormecast
+
+### Ad

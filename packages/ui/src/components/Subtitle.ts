@@ -72,6 +72,8 @@ export class Subtitle {
     const offset = this.currentSubtitle!.offset
     const cues = this.player.$video.textTracks[0]?.cues
 
+    console.log(offset)
+
     if (offset && cues) {
       const duration = this.player.duration
       Array.from(cues).forEach((cue) => {
@@ -158,9 +160,13 @@ export class Subtitle {
         this.$track!.addEventListener(`load`, () => {
           // wait video metadata loaded
           if (isNaN(this.player.duration)) {
-            this.player.on('loadedmetadata', () => {
-              this.changeOffset()
-            })
+            this.player.on(
+              'loadedmetadata',
+              () => {
+                this.changeOffset()
+              },
+              { once: true }
+            )
           } else {
             this.changeOffset()
           }

@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "mpegts.js": "^1.7.2"
+    "mpegts.js": "^1.7.3"
   }
 }

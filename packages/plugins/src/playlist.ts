@@ -1,22 +1,79 @@
-import type { Player, Source } from '@oplayer/core'
-import { PlayerPlugin } from '@oplayer/core'
+import type { Player, Source, PlayerPlugin } from '@oplayer/core'
+import type { SubtitleSource, Thumbnails, UIInterface } from '@oplayer/ui'
+
 import './playlist.css'
 
+interface Ctx {
+  ui: UIInterface
+}
+
 export interface PlaylistOptions {
-  sources: (Source & { duration?: number; subtitles: []; thumbnails: {} })[]
+  sources: PlaylistSource[]
+  onSourceChange?: (source: PlaylistSource) => Promise<void | PlaylistSource>
+  autoNext?: boolean
+}
+
+export interface PlaylistSource extends Omit<Source, 'src'> {
+  src?: string
+  duration?: string
+  subtitles?: SubtitleSource[]
+  thumbnails?: Thumbnails
 }
 
 export default class PlaylistPlugin implements PlayerPlugin {
   key = 'playlist'
   name = 'oplayer-plugin-playlist'
 
-  player: Player
+  player: Player<Ctx>
 
-  constructor(public options: PlaylistOptions) {}
+  currentIndex: number = 0
+
+  $root: HTMLDivElement
+
+  options: PlaylistOptions
+
+  constructor(options: PlaylistOptions) {
+    this.options = Object.assign({ autoNext: true }, options)
+  }
 
   apply(player: Player) {
-    this.player = player
+    this.player = player as Player<Ctx>
     this.render()
+
+    if (this.options.autoNext) {
+      this.player.on('ended', () => {
+        this.next()
+      })
+    }
+  }
+
+  changeSource(idx: number) {
+    const source = this.options.sources[idx]
+    if (!source) return
+    const { src, poster, format, title, subtitles, thumbnails } = source
+    if (src) {
+      this.player.changeSource({ src, poster, format, title })
+      if (subtitles) {
+        this.player.context.ui.subtitle.changeSource(subtitles)
+      }
+      if (thumbnails) {
+        this.player.context.ui.changThumbnails(thumbnails)
+      }
+    } else {
+      this.options.onSourceChange?.(source)
+    }
+
+    this.currentIndex = idx
+    this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
+    this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
+  }
+
+  next() {
+    this.changeSource(this.currentIndex + 1)
+  }
+
+  previous() {
+    this.changeSource(this.currentIndex + 1)
   }
 
   render() {
@@ -31,42 +88,42 @@ export default class PlaylistPlugin implements PlayerPlugin {
         .map(
           (source, idx) => `
         <div class="playlist-list-item" data-index="${idx}">
-          <div class="playlist-list-item-thumb" style="background-image: url('${source.poster}');"></div>
+          <div class="playlist-list-item-thumb" style="background-image: url('${
+            source.poster
+          }');"></div>
           <div class="playlist-list-item-desc">
             <p>${source.title}</p>
-            <span>${source.duration}</span>
+            ${source.duration ? `<span>${source.duration}</span>` : ''}
           </div>
         </div>`
         )
         .join('')}
     </div>`
 
-    const wrap = document.createElement('div')
-    wrap.innerHTML = $playlist
-    wrap.className = 'playlist active'
+    this.$root = document.createElement('div')
+    this.$root.innerHTML = $playlist
+    this.$root.className = 'playlist'
 
-    wrap.onclick = (e) => {
+    this.$root.onclick = (e) => {
       const target = e.target as HTMLDivElement
 
       if (target.classList.contains('playlist-list-item')) {
-        this.player.changeSource(sources[+target.getAttribute('data-index')!])
-        wrap.querySelector('.playlist-list-item.active')?.classList.remove('active')
-        target.classList.add('active')
+        this.changeSource(+target.getAttribute('data-index')!)
       } else if (target.classList.contains('playlist-back')) {
-        wrap.classList.remove('active')
-      } else if (target == wrap && target.classList.contains('active')) {
+        this.$root.classList.remove('active')
+      } else if (target == this.$root && target.classList.contains('active')) {
         target.classList.remove('active')
       }
     }
 
-    this.player.context.ui.$root.appendChild(wrap)
+    this.player.context.ui.$root.appendChild(this.$root)
 
     this.player.context.ui.menu.register({
-      name: 'playlist',
-      icon: `<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1548" data-spm-anchor-id="a313x.7781069.0.i1" width="200" height="200"><path d="M213.333333 426.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666666s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666666z m0-170.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666666H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667z m0 341.333333h256c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666667z m384 37.546667v180.48c0 16.64 17.92 26.88 32.426667 18.346667l150.613333-90.453334c13.653333-8.106667 13.653333-28.16 0-36.693333l-150.613333-90.453333a21.674667 21.674667 0 0 0-32.426667 18.773333z"></path></svg>`,
+      name: 'Playlist',
+      icon: `<svg style=" transform: scale(1.2);" viewBox="0 0 1024 1024"><path d="M213.333333 426.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666666s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666666z m0-170.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666666H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667z m0 341.333333h256c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666667z m384 37.546667v180.48c0 16.64 17.92 26.88 32.426667 18.346667l150.613333-90.453334c13.653333-8.106667 13.653333-28.16 0-36.693333l-150.613333-90.453333a21.674667 21.674667 0 0 0-32.426667 18.773333z"></path></svg>`,
       position: 'top',
-      onClick() {
-        wrap.classList.toggle('active')
+      onClick: () => {
+        this.$root.classList.toggle('active')
       }
     })
   }

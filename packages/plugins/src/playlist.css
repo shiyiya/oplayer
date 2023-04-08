@@ -105,4 +105,10 @@
 
 .playlist-list-item-desc > p {
   margin: 0 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
 }

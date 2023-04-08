@@ -41,7 +41,7 @@
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
     "jsdom": "^21.1.1",
-    "lint-staged": "^13.2.0",
+    "lint-staged": "^13.2.1",
     "nx": "^15.9.2",
     "rimraf": "^4.4.1",
     "terser": "^5.16.8",
