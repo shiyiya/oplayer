@@ -29,6 +29,7 @@ https://oplayer.vercel.app ・ https://ohplayer.netlify.app
   - Thumbnails (spirit or vtt)
   - Subtitles (formats: SRT, WEBVTT with HTML tags support; subtitles from HLS; multiple subtitles for video)
   - Highlight Marker
+  - [Playlist](./packages/plugins/README.md#Playlist)
   - ... and much more!
 
 ## Usage

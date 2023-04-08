@@ -1,4 +1,4 @@
-import type { Player, Source, PlayerPlugin } from '@oplayer/core'
+import type { Player, Source, PlayerPlugin, PartialRequired } from '@oplayer/core'
 import type { SubtitleSource, Thumbnails, UIInterface } from '@oplayer/ui'
 
 import './playlist.css'
@@ -11,6 +11,7 @@ export interface PlaylistOptions {
   sources: PlaylistSource[]
   onSourceChange?: (source: PlaylistSource) => Promise<void | PlaylistSource>
   autoNext?: boolean
+  initialIndex?: number
 }
 
 export interface PlaylistSource extends Omit<Source, 'src'> {
@@ -30,10 +31,10 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   $root: HTMLDivElement
 
-  options: PlaylistOptions
+  options: PartialRequired<PlaylistOptions, 'autoNext' | 'initialIndex'>
 
   constructor(options: PlaylistOptions) {
-    this.options = Object.assign({ autoNext: true }, options)
+    this.options = Object.assign({ autoNext: true, initialIndex: 0 }, options)
   }
 
   apply(player: Player) {
@@ -45,6 +46,8 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.next()
       })
     }
+
+    this.changeSource(this.options.initialIndex)
   }
 
   changeSource(idx: number) {
