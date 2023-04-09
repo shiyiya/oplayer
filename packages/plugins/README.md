@@ -31,8 +31,9 @@ import { PlaylistPlugin, vttThumbnails, chormecast, ad } from '@oplayer/plugins'
 Player.make('#oplayer')
   .use([
     new PlaylistPlugin({
-      initialIndex: 0,
-      autoNext: true,
+      initialIndex: 0, // default
+      autoNext: true, // default
+      autoHide: true, // default
       sources: [
         {
           title: '君の名は - MP4',
@@ -71,6 +72,12 @@ Player.make('#oplayer')
     })
   ])
   .create()
+
+player.context.playlist.next() // play next
+player.context.playlist.previous() // play previous
+player.context.playlist.showUI() // show list UI
+player.context.playlist.hideUI() // hide list UI
+player.context.playlist.changeSourceList([]) //change playlist sources
 ```
 
 ![](./playlist.png)

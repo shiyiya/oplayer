@@ -12,6 +12,7 @@ export interface PlaylistOptions {
   onSourceChange?: (source: PlaylistSource, index: number) => void
   customFetcher?: (source: PlaylistSource, index: number) => Promise<void> | void
   autoNext?: boolean
+  autoHide?: boolean
   initialIndex?: number
 }
 
@@ -33,10 +34,10 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   $root: HTMLDivElement
 
-  options: PartialRequired<PlaylistOptions, 'autoNext' | 'initialIndex'>
+  options: PartialRequired<PlaylistOptions, 'autoNext' | 'initialIndex' | 'autoHide'>
 
   constructor(options?: PlaylistOptions) {
-    this.options = Object.assign({ autoNext: true, initialIndex: 0 }, options)
+    this.options = Object.assign({ autoNext: true, initialIndex: 0, autoHide: true }, options)
   }
 
   apply(player: Player) {
@@ -77,13 +78,16 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
     this.currentIndex = idx
     this.options.onSourceChange?.(source, idx)
+    this.player.emit('playlistsourcechange', { source, id: idx })
     this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
     this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
+    if (this.options.autoHide) this.hideUI()
   }
 
   changeSourceList(sources: PlaylistSource[]) {
     this.options.sources = sources
-    this.renderList()
+    this.renderList(sources)
+    this.changeSource(this.options.initialIndex)
   }
 
   next() {
@@ -92,6 +96,14 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   previous() {
     this.changeSource(this.currentIndex - 1)
+  }
+
+  showUI() {
+    this.$root.classList.add('active')
+  }
+
+  hideUI() {
+    this.$root.classList.remove('active')
   }
 
   render() {
@@ -112,22 +124,23 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
       if (target.classList.contains('playlist-list-item')) {
         this.changeSource(+target.getAttribute('data-index')!)
-      } else if (target.classList.contains('playlist-back')) {
-        this.$root.classList.remove('active')
-      } else if (target == this.$root && target.classList.contains('active')) {
-        target.classList.remove('active')
+      } else if (
+        target.classList.contains('playlist-back') ||
+        (target == this.$root && target.classList.contains('active'))
+      ) {
+        this.hideUI()
       }
     }
 
-    this.renderList()
+    this.renderList(this.options.sources)
     this.player.context.ui.$root.appendChild(this.$root)
 
     this.player.context.ui.menu.register({
       name: 'Playlist',
-      icon: `<svg style=" transform: scale(1.2);" viewBox="0 0 1024 1024"><path d="M213.333333 426.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666666s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666666z m0-170.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666666H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667z m0 341.333333h256c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666667z m384 37.546667v180.48c0 16.64 17.92 26.88 32.426667 18.346667l150.613333-90.453334c13.653333-8.106667 13.653333-28.16 0-36.693333l-150.613333-90.453333a21.674667 21.674667 0 0 0-32.426667 18.773333z"></path></svg>`,
+      icon: `<svg style="transform: scale(1.2);" viewBox="0 0 1024 1024"><path d="M213.333333 426.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666666s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666666z m0-170.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666666H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667z m0 341.333333h256c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666667z m384 37.546667v180.48c0 16.64 17.92 26.88 32.426667 18.346667l150.613333-90.453334c13.653333-8.106667 13.653333-28.16 0-36.693333l-150.613333-90.453333a21.674667 21.674667 0 0 0-32.426667 18.773333z"></path></svg>`,
       position: 'top',
       onClick: () => {
-        this.$root.classList.toggle('active')
+        this.showUI()
         const list = this.$root.querySelector('.playlist-list')!
         const active = this.$root.querySelector<HTMLDivElement>('.playlist-list-item.active')
         if (active && list.scrollHeight > 0) {
@@ -137,8 +150,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     })
   }
 
-  renderList() {
-    const sources = this.options.sources
+  renderList(sources: PlaylistSource[]) {
     const child = sources
       .map(
         (source, idx) => `
