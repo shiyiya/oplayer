@@ -9,8 +9,10 @@ interface Ctx {
 
 export interface PlaylistOptions {
   sources: PlaylistSource[]
-  onSourceChange?: (source: PlaylistSource, index: number) => void
-  customFetcher?: (source: PlaylistSource, index: number) => Promise<void> | void
+  customFetcher?: (
+    source: PlaylistSource,
+    index: number
+  ) => Promise<PlaylistSource> | PlaylistSource
   autoNext?: boolean
   autoHide?: boolean
   initialIndex?: number
@@ -57,27 +59,40 @@ export default class PlaylistPlugin implements PlayerPlugin {
     return this
   }
 
-  changeSource(idx: number) {
-    const source = this.options.sources[idx]
-    if (!source) return
+  get isWaiting() {
+    return this.$root.classList.contains('wait')
+  }
+
+  async changeSource(idx: number) {
+    if (!this.options.sources[idx] || this.isWaiting) return
+
+    this.$root.classList.add('.wait')
+    let source: PlaylistSource = this.options.sources[idx]!
+    if (!source.src && this.options.customFetcher) {
+      try {
+        source = await this.options.customFetcher?.(source, idx)
+      } catch (e) {
+        // fail
+        return
+      }
+    }
+
     const { src, poster, format, title, subtitles, thumbnails, highlights } = source
-    if (src) {
-      this.player.changeSource({ src, poster, format, title })
-      if (subtitles) {
-        this.player.context.ui.subtitle.changeSource(subtitles)
-      }
-      if (thumbnails) {
-        this.player.context.ui.changThumbnails(thumbnails)
-      }
-      if (highlights) {
-        this.player.context.ui.changHighlightSource(highlights)
-      }
-    } else {
-      this.options.customFetcher?.(source, idx)
+
+    if (!src) return this.player.context.ui.notice('Empty Source')
+    this.player.changeSource({ src, poster, format, title })
+    if (subtitles) {
+      this.player.context.ui.subtitle.changeSource(subtitles)
+    }
+    if (thumbnails) {
+      this.player.context.ui.changThumbnails(thumbnails)
+    }
+    if (highlights) {
+      this.player.context.ui.changHighlightSource(highlights)
     }
 
     this.currentIndex = idx
-    this.options.onSourceChange?.(source, idx)
+    this.$root.classList.remove('.wait')
     this.player.emit('playlistsourcechange', { source, id: idx })
     this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
     this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')

@@ -19,6 +19,10 @@
   transform: translateX(-100%);
 }
 
+.playlist.wait {
+  cursor: wait;
+}
+
 .playlist.active::before {
   content: '';
   position: absolute;
