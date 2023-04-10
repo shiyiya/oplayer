@@ -100,6 +100,7 @@ const player = Player.make<Ctx>('#player', {
     }),
     new Hello(),
     new PlaylistPlugin({
+      initialIndex: 1,
       sources: [
         {
           title: '君の名は - MP4',
@@ -123,7 +124,24 @@ const player = Player.make<Ctx>('#player', {
         {
           title: 'Big Buck Bunny - HLS',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-          duration: '10:34'
+          duration: '10:34',
+          thumbnails: {
+            src: [
+              '//i0.hdslb.com/bfs/videoshot/28627454.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-1.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-2.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-3.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-4.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-5.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-6.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-7.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-8.jpg',
+              '//i0.hdslb.com/bfs/videoshot/28627454-9.jpg'
+            ],
+            x: 10,
+            y: 10,
+            number: 972
+          }
         },
         {
           title: 'DASH',
