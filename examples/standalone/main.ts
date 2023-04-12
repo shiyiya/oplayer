@@ -22,6 +22,7 @@ import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
 import { Hello, vttThumbnails, ad, PlaylistPlugin } from '@oplayer/plugins'
+import gridThumb1 from '../../website/static/28627454.jpg'
 
 interface Ctx {
   ui: ReturnType<typeof ui>
@@ -127,16 +128,17 @@ const player = Player.make<Ctx>('#player', {
           duration: '10:34',
           thumbnails: {
             src: [
-              '//i0.hdslb.com/bfs/videoshot/28627454.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-1.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-2.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-3.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-4.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-5.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-6.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-7.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-8.jpg',
-              '//i0.hdslb.com/bfs/videoshot/28627454-9.jpg'
+              gridThumb1,
+              // 'https://i0.hdslb.com/bfs/videoshot/28627454.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-1.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-2.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-3.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-4.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-5.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-6.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-7.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-8.jpg',
+              'https://i0.hdslb.com/bfs/videoshot/28627454-9.jpg'
             ],
             x: 10,
             y: 10,
@@ -158,9 +160,9 @@ const player = Player.make<Ctx>('#player', {
   ])
   .create()
 
-setTimeout(() => {
-  player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
-}, 1000)
+// setTimeout(() => {
+//   player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
+// }, 1000)
 
 //@ts-ignore
 if (false) {
