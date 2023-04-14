@@ -18,5 +18,10 @@ export default withNextra({
     config.resolve.extensionAlias = {
       '.js': ['.js', '.ts', '.tsx']
     }
+    // https://github.com/vercel/next.js/issues/33693
+    config.infrastructureLogging = {
+      level: 'error'
+    }
+    return config
   }
 })

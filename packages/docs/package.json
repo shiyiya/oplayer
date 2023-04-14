@@ -2,7 +2,7 @@
   "name": "@oplayer/docs",
   "private": true,
   "type": "module",
-  "license": "MPL-2.0",
+  "license": "MIT",
   "scripts": {
     "dev:start": "next",
     "build": "next build && next export",

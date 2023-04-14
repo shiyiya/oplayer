@@ -9,6 +9,10 @@
   "danmaku": "@oplayer/danmaku",
   "react": "@oplayer/react",
   "plugins": "@oplayer/plugins",
+  "wp_plugin": {
+    "title": "WorldPress",
+    "href": "https://github.com/shiyiya/WordPress-Plugin-OPlayer"
+  },
   "-- Loaders": {
     "type": "separator",
     "title": "Loaders"
@@ -24,15 +28,23 @@
       "layout": "full"
     }
   },
-  "playground": {
-    "title": "Playground",
+  "-- More": {
+    "type": "separator",
+    "title": "More"
+  },
+  "qq": {
+    "title": "QQ",
+    "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB"
+  },
+  "player": {
+    "title": "Player",
     "type": "page",
     "theme": {
       "layout": "full"
     }
   },
-  "player": {
-    "title": "Player",
+  "playground": {
+    "title": "Playground",
     "type": "page",
     "theme": {
       "layout": "full"
