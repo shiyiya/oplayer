@@ -30,5 +30,12 @@
     "theme": {
       "layout": "full"
     }
+  },
+  "player": {
+    "title": "Player",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
   }
 }

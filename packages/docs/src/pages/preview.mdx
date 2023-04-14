@@ -2,18 +2,47 @@ import React from 'react'
 import Player from '@oplayer/react'
 import hls from '@oplayer/hls'
 import ui from '@oplayer/ui'
-import { vttThumbnails } from '@oplayer/plugins'
 
-<Player
-  source={{
-    src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    poster: 'https://oplayer.vercel.app/poster.png'
-  }}
-  plugins={[
-    ui(),
-    hls(),
-    vttThumbnails({
-      src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
-    })
-  ]}
-/>
+<div style={{ marginTop: '40px' }}>
+  <Player
+    source={{
+      src: '/君の名は.mp4',
+      poster: '/poster.png'
+    }}
+    plugins={[
+      ui({
+        thumbnails: {
+          src: '/thumbnails.jpg',
+          number: 100
+        },
+        subtitles: [
+          {
+            name: 'Default',
+            default: true,
+            src: '/君の名は.srt',
+            offset: 2
+          }
+        ],
+        highlight: [
+          {
+            time: 12,
+            text: '谁でもいいはずなのに'
+          },
+          {
+            time: 34,
+            text: '夏の想い出がまわる'
+          },
+          {
+            time: 58,
+            text: 'こんなとこにあるはずもないのに'
+          },
+          {
+            time: 88,
+            text: '－－终わり－－'
+          }
+        ]
+      }),
+      hls()
+    ]}
+  />
+</div>
