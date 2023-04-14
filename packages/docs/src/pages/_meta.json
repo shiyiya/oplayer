@@ -11,7 +11,8 @@
   "plugins": "@oplayer/plugins",
   "wp_plugin": {
     "title": "WorldPress",
-    "href": "https://github.com/shiyiya/WordPress-Plugin-OPlayer"
+    "href": "https://github.com/shiyiya/WordPress-Plugin-OPlayer",
+    "newWindow": true
   },
   "-- Loaders": {
     "type": "separator",
@@ -34,7 +35,8 @@
   },
   "qq": {
     "title": "QQ",
-    "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB"
+    "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB",
+    "newWindow": true
   },
   "player": {
     "title": "Player",

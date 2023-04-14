@@ -34,28 +34,9 @@ https://oplayer.vercel.app ・ https://ohplayer.netlify.app
 
 ## Usage
 
-### 1. Use the module manager to import:
-
 ```bash
 npm i @oplayer/core @oplayer/ui @oplayer/hls
 ```
-
-```ts
-import Player from '@oplayer/core'
-import ui from '@oplayer/ui'
-import hls from '@oplayer/hls'
-
-Player.make('#oplayer', {
-  source: {
-    src: 'https://oplayer.vercel.app/君の名は.mp4',
-    poster: 'https://oplayer.vercel.app/poster.png'
-  }
-})
-  .use([ui(), hls()])
-  .create()
-```
-
-### 2. Use the script tag to introduce:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
@@ -74,24 +55,6 @@ Player.make('#oplayer', {
     .create()
 </script>
 ```
-
-## Plugins
-
-- [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square&label=@oplayer/core)](./packages/core)
-- [![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&label=@oplayer/ui)](./packages/ui)
-- [![npm](https://img.shields.io/npm/v/@oplayer/hls?style=flat-square&label=@oplayer/hls)](./packages/hls)
-- [![npm](https://img.shields.io/npm/v/@oplayer/dash?style=flat-square&label=@oplayer/dash)](./packages/dash)
-- [![npm](https://img.shields.io/npm/v/@oplayer/mpegts?style=flat-square&label=@oplayer/mpegts)](./packages/mpegts)
-- [![npm](https://img.shields.io/npm/v/@oplayer/torrent?style=flat-square&label=@oplayer/torrent)](./packages/torrent)
-- [![npm](https://img.shields.io/npm/v/@oplayer/danmaku?style=flat-square&label=@oplayer/danmaku)](./packages/danmaku)
-- [![npm](https://img.shields.io/npm/v/@oplayer/vast?style=flat-square&label=@oplayer/vast)](./packages/vast)
-- [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&label=@oplayer/react)](./packages/react)
-- [![npm](https://img.shields.io/npm/v/@oplayer/plugins?style=flat-square&label=@oplayer/plugins)](./packages/plugins)
-
-- [WordPress-Plugin](https://github.com/shiyiya/WordPress-Plugin-OPlayer)
-- [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
-- [Others Plugin](https://github.com/shiyiya/oplayer/issues/41)
-- [QQ 群](https://jq.qq.com/?_wv=1027&k=YzsRgkXB)
 
 ## Who use OPlayer?
 
