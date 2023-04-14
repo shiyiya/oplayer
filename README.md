@@ -12,7 +12,7 @@ https://oplayer.vercel.app ・ https://ohplayer.netlify.app
 [![Discord](https://img.shields.io/discord/1017615537234264185.svg?label=&logo=discord&logoColor=fff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/hzjxYyPbKh)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1dac4911-935b-43a0-a69d-15c98e2668ed/deploy-status)](https://app.netlify.com/sites/ohplayer/deploys)
 
-![oplayer](./oplayer.png)
+![oplayer](https://github.com/shiyiya/oplayer/raw/main/oplayer.png)
 
 ## Feature
 

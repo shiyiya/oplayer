@@ -5,7 +5,7 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/ui?style=flat-square)](https://www.npmjs.com/package/@oplayer/ui)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/ui/badge)](https://www.jsdelivr.com/package/npm/@oplayer/ui)
 
-![oplayer-mobile](./oplayer-ui-mobile.png)
+![oplayer-mobile](https://github.com/shiyiya/oplayer/raw/main/packages/ui/oplayer-ui-mobile.png)
 
 ## Install
 

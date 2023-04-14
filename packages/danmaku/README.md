@@ -5,7 +5,7 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/danmaku?style=flat-square)](https://www.npmjs.com/package/@oplayer/danmaku)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/danmaku/badge)](https://www.jsdelivr.com/package/npm/@oplayer/danmaku)
 
-![](./danmaku.png)
+![](https://github.com/shiyiya/oplayer/raw/main/packages/danmaku/danmaku.png)
 
 ## Install
 
