@@ -19,7 +19,7 @@
     "@oplayer/plugins": "workspace:*",
     "@oplayer/react": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "@types/react": "^18.0.33",
+    "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

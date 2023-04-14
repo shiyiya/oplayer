@@ -1,5 +1,6 @@
 import { $ } from '@oplayer/core'
 import type { Thumbnails, UIInterface } from '../types'
+import { PartialRequired } from '@oplayer/core'
 
 export const thumbnailCls = $.css(`
   position: absolute;
@@ -28,7 +29,7 @@ export default function (it: UIInterface, container: HTMLElement) {
   } = it
 
   let isInitialized = false
-  let thumbnails: Required<Omit<Thumbnails, 'isVTT'>>
+  let thumbnails: PartialRequired<Thumbnails, 'width' | 'height'>
   const $dom = $.render($.create(`div.${thumbnailCls}`), container)
 
   function init(rate?: number) {
@@ -36,19 +37,38 @@ export default function (it: UIInterface, container: HTMLElement) {
       isInitialized = true
       $dom.style.width = `${thumbnails.width}px`
       $dom.style.height = `${thumbnails.height}px`
-      $dom.style.backgroundImage = `url(${thumbnails.src})`
+      if (!Array.isArray(thumbnails.src)) $dom.style.backgroundImage = `url(${thumbnails.src})`
     } else {
       const [halfWidth, cw] = [thumbnails.width / 2, container.clientWidth]
       const [minRate, maxRate] = [halfWidth / cw, (cw - halfWidth) / cw]
       $dom.style.left = (rate < minRate ? minRate : rate > maxRate ? maxRate : rate) * 100 + '%'
-      const index = ~~(rate * 100) * thumbnails.number
-      $dom.style.backgroundPositionX = `${-index}%`
+
+      if (Array.isArray(thumbnails.src)) {
+        // n*x * n*y
+        const index = Math.ceil(thumbnails.number * rate)
+        const srcIdx = Math.ceil(thumbnails.src.length * rate) - 1
+
+        const gridIdx = Math.ceil(index % (thumbnails.x! * thumbnails.y!))
+        const gridX = Math.ceil(gridIdx % thumbnails.x!) - 1
+        const gridY = Math.ceil(gridIdx / thumbnails.x!) - 1
+
+        $dom.style.backgroundImage = `url(${thumbnails.src[srcIdx]})`
+        $dom.style.backgroundPosition = `${-gridX}00% ${-gridY}00%`
+      } else {
+        // n*x 0*y
+        const index = Math.floor(rate * thumbnails.number)
+        $dom.style.backgroundPositionX = `-${index}00%`
+      }
     }
   }
 
   function change(source: Thumbnails) {
     isInitialized = false
     thumbnails = Object.assign({}, defaultThumbnails, source)
+    // n*x * n*y
+    if (thumbnails.y && !Array.isArray(thumbnails.src)) {
+      thumbnails.src = [thumbnails.src]
+    }
     it.progressHoverCallback.push(init)
   }
 

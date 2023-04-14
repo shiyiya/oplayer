@@ -54,8 +54,10 @@ export type Setting<T = any> = {
 }
 
 export type Thumbnails = {
-  src: string
+  src: string[] | string
   number: number
+  x?: number
+  y?: number
   width?: number
   height?: number
   isVTT?: boolean
