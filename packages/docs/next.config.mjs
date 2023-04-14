@@ -11,6 +11,9 @@ const withNextra = nextra({
 
 export default withNextra({
   // reactStrictMode: true,
+  images: {
+    unoptimized: true
+  },
   webpack: (config) => {
     config.resolve.extensionAlias = {
       '.js': ['.js', '.ts', '.tsx']
