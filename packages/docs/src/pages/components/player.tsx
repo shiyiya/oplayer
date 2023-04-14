@@ -15,7 +15,7 @@ export default () => {
     player.current = Player.make('#oplayer', {
       source: { src: document.location.search.substring(1) }
     })
-      .use([ui(), hls(), dash(), mpegts()])
+      .use([ui(), hls({ forceHLS: true }), dash(), mpegts()])
       .create()
       .on(console.log)
 
