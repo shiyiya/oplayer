@@ -1,0 +1,20 @@
+{
+  "index": "Introduction",
+  "guide": "Guide",
+  "-- Plugins": {
+    "type": "separator",
+    "title": "Plugins"
+  },
+  "ui": "@oplayer/ui",
+  "danmaku": "@oplayer/danmaku",
+  "plugins": "@oplayer/plugins",
+  "react": "@oplayer/react",
+  "-- Loaders": {
+    "type": "separator",
+    "title": "Loaders"
+  },
+  "hls": "@oplayer/hls",
+  "dash": "@oplayer/dash",
+  "mepgts": "@oplayer/mepgts",
+  "torrent": "@oplayer/torrent"
+}

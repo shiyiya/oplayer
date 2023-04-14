@@ -1,0 +1,31 @@
+{
+  "name": "@rich-data/docs",
+  "private": true,
+  "type": "module",
+  "license": "MPL-2.0",
+  "scripts": {
+    "dev:start": "next",
+    "build": "next build",
+    "start": "next dev"
+  },
+  "dependencies": {
+    "next": "=13.2.3",
+    "nextra": "^2.3.0",
+    "nextra-theme-docs": "^2.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@oplayer/core": "workspace:*",
+    "@oplayer/danmaku": "workspace:*",
+    "@oplayer/dash": "workspace:*",
+    "@oplayer/hls": "workspace:*",
+    "@oplayer/mpegts": "workspace:*",
+    "@oplayer/plugins": "workspace:*",
+    "@oplayer/torrent": "workspace:*",
+    "@oplayer/ui": "workspace:*",
+    "@oplayer/react": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11"
+  }
+}

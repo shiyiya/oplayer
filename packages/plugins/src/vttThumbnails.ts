@@ -31,6 +31,9 @@ function plugin(player: Player, options: Thumbnails) {
         isActive = true
         $dom.style.opacity = '1'
       })
+      .catch((err) => {
+        player.emit('notice', { text: 'Failed to load vtt thumbnails', reason: err })
+      })
   }
 
   if (options.src) bootstrap(options.src)
