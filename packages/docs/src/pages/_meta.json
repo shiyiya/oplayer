@@ -7,8 +7,8 @@
   },
   "ui": "@oplayer/ui",
   "danmaku": "@oplayer/danmaku",
-  "plugins": "@oplayer/plugins",
   "react": "@oplayer/react",
+  "plugins": "@oplayer/plugins",
   "-- Loaders": {
     "type": "separator",
     "title": "Loaders"
@@ -16,5 +16,19 @@
   "hls": "@oplayer/hls",
   "dash": "@oplayer/dash",
   "mpegts": "@oplayer/mpegts",
-  "torrent": "@oplayer/torrent"
+  "torrent": "@oplayer/torrent",
+  "preview": {
+    "title": "Preview",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "playground": {
+    "title": "Playground",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  }
 }
