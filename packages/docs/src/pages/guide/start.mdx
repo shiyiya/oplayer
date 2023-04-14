@@ -1,17 +1,15 @@
-# Install
+## Install
 
 import { Callout, Tab, Tabs, Steps } from 'nextra-theme-docs'
 
 <Tabs items={['pnpm', 'script']}>
-  <Tab>npm i @oplayer/core @oplayer/ui</Tab>
+  <Tab>```npm i @oplayer/core @oplayer/ui```</Tab>
   <Tab>
     ```html
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
     ```
   </Tab>
 </Tabs>
-
-# Get Started
 
 ## Start as New Project
 
@@ -52,7 +50,7 @@ poster: 'https://oplayer.vercel.app/poster.png'
 ````
   </Tab>
   <Tab>
-    ```html
+    ```html filename="app.html"
   <script>
   OPlayer.make('#oplayer', {
     source: {
