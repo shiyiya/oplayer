@@ -158,13 +158,9 @@ export class Subtitle {
         this.$track!.addEventListener(`load`, () => {
           // wait video metadata loaded
           if (isNaN(this.player.duration)) {
-            this.player.on(
-              'loadedmetadata',
-              () => {
-                this.changeOffset()
-              },
-              { once: true }
-            )
+            this.player.once('loadedmetadata', () => {
+              this.changeOffset()
+            })
           } else {
             this.changeOffset()
           }

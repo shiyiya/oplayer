@@ -50,7 +50,7 @@ player.on('play', listener)
 player.on(['play', 'pause'], listener)
 
 // only once
-player.on('play', listener, { once: true })
+player.once('play', listener)
 
 // remove listener
 player.off('play', listener)

@@ -75,7 +75,6 @@ class Player {
     }
   ): this
   off(name: PlayerEventName, listener: PlayerListener): void
-  offAny(name: PlayerEventName): void
   emit(name: PlayerEventName, payload?: PlayerEvent['payload']): void
   setPoster(poster: string): void
   play(): Promise<void> | undefined

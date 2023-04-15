@@ -38,7 +38,7 @@ const detectLoading = (player: Player, add: any, remove: any) => {
   player.on('seeking', () => {
     if (!player.isPlaying) {
       add()
-      player.on('seeked', remove, { once: true })
+      player.once('seeked', remove)
     }
   })
 

@@ -221,13 +221,9 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     }
   }
 
-  on(name: PlayerEventName | PlayerListener, listener?: PlayerListener, options = { once: false }) {
+  on(name: PlayerEventName | PlayerListener, listener?: PlayerListener) {
     if (typeof name === 'string') {
-      if (options.once) {
-        this.eventEmitter.once(name, listener!)
-      } else {
-        this.eventEmitter.on(name, listener!)
-      }
+      this.eventEmitter.on(name, listener!)
     } else if (Array.isArray(name)) {
       this.eventEmitter.onAny(name as string[], listener!)
     } else if (typeof name === 'function') {
@@ -236,12 +232,12 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     return this
   }
 
-  off(name: PlayerEventName, listener: PlayerListener) {
-    this.eventEmitter.off(name as string, listener)
+  once(name: PlayerEventName | PlayerListener, listener?: PlayerListener) {
+    this.eventEmitter.once(name as string, listener!)
   }
 
-  offAny(name: PlayerEventName) {
-    this.eventEmitter.offAny(name as string)
+  off(name: PlayerEventName, listener: PlayerListener) {
+    this.eventEmitter.off(name as string, listener)
   }
 
   emit(name: PlayerEventName, payload?: PlayerEvent['payload']) {
@@ -423,7 +419,6 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       const shouldPlay = keepPlaying && isPlaying
       const errorHandler = (e: any) => {
         this.isSourceChanging = false
-        this.emit('videosourceerror', e)
         this.off(canplay, canplayHandler)
         reject(e)
       }
@@ -444,8 +439,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
           this.$video.poster = source.poster || ''
           Object.assign(this.options.source, source)
-          this.on('error', errorHandler, { once: true })
-          this.on(canplay, canplayHandler, { once: true })
+          this.once('error', errorHandler)
+          this.once(canplay, canplayHandler)
 
           return source
         })

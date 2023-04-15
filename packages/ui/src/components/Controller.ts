@@ -18,13 +18,9 @@ const render = (it: UIInterface) => {
   if (config.showControls == 'played') {
     addClass($controller, hidden)
 
-    player.on(
-      'play',
-      () => {
-        removeClass($controller, hidden)
-      },
-      { once: true }
-    )
+    player.once('play', () => {
+      removeClass($controller, hidden)
+    })
   }
 
   const hideCtrl = () => {

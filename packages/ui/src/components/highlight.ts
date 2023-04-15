@@ -68,13 +68,9 @@ export default function (it: UIInterface, container: HTMLElement) {
     if (player.duration !== Infinity && player.duration > 0) {
       createHighlights(highlights, player.duration)
     } else {
-      player.on(
-        'loadedmetadata',
-        function durationchange() {
-          if (active) createHighlights(highlights, player.duration)
-        },
-        { once: true }
-      )
+      player.once('loadedmetadata', function durationchange() {
+        if (active) createHighlights(highlights, player.duration)
+      })
     }
   }
 
