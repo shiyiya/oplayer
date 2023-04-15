@@ -77,7 +77,7 @@ class UI implements UIInterface {
       | 'left-bottom'
   ) => void
 
-  keybord: {
+  keyboard: {
     register: (payload: Record<string, (e: any) => void>) => void
     unregister: (keys: string[]) => void
   } = {} as any
