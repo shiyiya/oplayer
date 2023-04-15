@@ -74,6 +74,8 @@ export default {
           type="image/png"
           media="(prefers-color-scheme: dark)"
         /> */}
+
+        <script src="https://oplayer.vercel.app/_vercel/insights/script.js" defer={true}></script>
       </>
     )
   }
