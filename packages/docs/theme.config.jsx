@@ -21,6 +21,7 @@ export default {
       </svg>
     )
   },
+  footer: { text: null },
   editLink: {
     text: 'Edit this page on GitHub →'
   },

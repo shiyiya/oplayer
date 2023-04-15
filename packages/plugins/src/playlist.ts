@@ -66,7 +66,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   async changeSource(idx: number) {
     if (!this.options.sources[idx] || this.isWaiting) return
 
-    this.$root.classList.add('.wait')
+    this.$root.classList.add('wait')
     let source: PlaylistSource = this.options.sources[idx]!
     if (!source.src && this.options.customFetcher) {
       try {
@@ -92,7 +92,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     }
 
     this.currentIndex = idx
-    this.$root.classList.remove('.wait')
+    this.$root.classList.remove('wait')
     this.player.emit('playlistsourcechange', { source, id: idx })
     this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
     this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')

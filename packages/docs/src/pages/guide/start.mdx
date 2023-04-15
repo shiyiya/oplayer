@@ -1,69 +1,47 @@
-## Install
-
-import { Callout, Tab, Tabs, Steps } from 'nextra-theme-docs'
-
-<Tabs items={['pnpm', 'script']}>
-  <Tab>```npm i @oplayer/core @oplayer/ui```</Tab>
-  <Tab>
-    ```html
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
-    ```
-  </Tab>
-</Tabs>
+import { Callout, Tab, Tabs } from 'nextra-theme-docs'
 
 ## Start as New Project
 
-<Steps>
 ### Install
 
-<Tabs items={['pnpm', 'script']}>
-  <Tab>npm i @oplayer/core @oplayer/ui</Tab>
+<Tabs items={['npm', 'script']}>
   <Tab>
-    ```html
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
-    ```
-  </Tab>
-</Tabs>
+```shell
+npm i @oplayer/core @oplayer/ui
+```
 
-<Callout>`@oplayer/ui` provider a basic skin.</Callout>
-
-### Ready to Go!
-
-Now, you can create player to streaming video`:
-
-<Tabs items={['vanilla', 'script']}>
-  <Tab>
-  ```js filename="app.js"
+```js filename="app.js"
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
-import hls from '@oplayer/hls'
 
 Player.make('#oplayer', {
-source: {
-src: 'https://oplayer.vercel.app/君の名は.mp4',
-poster: 'https://oplayer.vercel.app/poster.png'
-}
+  source: {
+    src: 'https://oplayer.vercel.app/君の名は.mp4',
+    poster: 'https://oplayer.vercel.app/poster.png'
+  }
 })
-.use([ui(), hls()])
-.create()
+  .use([ui()])
+  .create()
+```
 
-````
   </Tab>
+
   <Tab>
-    ```html filename="app.html"
-  <script>
+```html filename="app.html"
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
+<script>
   OPlayer.make('#oplayer', {
     source: {
       src: 'https://oplayer.vercel.app/君の名は.mp4',
       poster: 'https://oplayer.vercel.app/poster.png'
     }
   })
-    .use([OPlayer.ui(), OHls()])
+    .use([OPlayer.ui()])
     .create()
 </script>
-    ```
-  </Tab>
+```
+
+</Tab>
 </Tabs>
 
-</Steps>
-````
+<Callout>`@Oplayer/ui provides a basic set of skin styles.</Callout>
