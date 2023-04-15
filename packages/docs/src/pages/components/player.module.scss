@@ -6,11 +6,7 @@
 
   :global {
     #oplayer {
-      margin: 0 auto;
-      aspect-ratio: 16/9;
-      border-radius: 4px;
       overflow: hidden;
-      background-color: #eee;
 
       &[aria-disabled='true'] > div {
         visibility: hidden;
@@ -19,30 +15,14 @@
 
     .form {
       display: flex;
-      margin: 0 auto;
-
-      input {
-        width: 100%;
-        height: 46px;
-        border: 2px hsl(var(--nextra-primary-hue) 100% 94% / var(--tw-bg-opacity)) solid;
-        border-radius: 4px 0 0 4px;
-        padding: 0 20px;
-        line-height: normal;
-      }
 
       button {
-        outline: none;
-        background: hsl(var(--nextra-primary-hue) 100% 32% / var(--tw-text-opacity));
-        border: 0;
+        background: #000;
         width: 100px;
-        border-radius: 0 4px 4px 0;
-        height: 46px;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 16px;
-        line-height: 20px;
+        border-radius: 4px;
+        height: 36px;
         color: #fff;
-        cursor: pointer;
+        font-weight: bold;
       }
     }
 
