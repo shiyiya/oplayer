@@ -11,7 +11,7 @@ import { Callout } from 'nextra-theme-docs'
 Player.make(/* container */ '#app', {
   /** Configuration **/
   /** Here's where to fill in the configuration **/
-  mute: true
+  muted: true
   // and more ...
 }).create()
 ```
@@ -113,8 +113,6 @@ class Player {
   get currentTime(): number
   get volume(): number
   get playbackRate(): number
-  get _requestFullscreen(): Element['requestFullscreen']
-  get _exitFullscreen(): Document['exitFullscreen']
   static get version(): string
 }
 ```
