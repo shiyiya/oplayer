@@ -1,0 +1,208 @@
+# OPlayer UI
+
+[![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&label=@oplayer/ui)](https://www.npmjs.com/package/@oplayer/ui)
+
+![oplayer-mobile](https://github.com/shiyiya/oplayer/raw/main/packages/ui/oplayer-ui-mobile.png)
+
+## Install
+
+```bash
+npm i @oplayer/core @oplayer/ui
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.core.js"></script>
+
+<!-- core + ui -->
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
+<script>
+  var OUI = OPlayer.ui
+</script>
+```
+
+## Basic
+
+```js
+const player = Player.make('#player', {
+  source: {
+    title: '君の名は',
+    src: 'https://oplayer.vercel.app/君の名は.mp4',
+    poster: 'https://oplayer.vercel.app/poster.png'
+  }
+})
+  .use([OUI()])
+  .create()
+```
+
+## Full-Options
+
+```js
+OUI({
+  /* Default value, Optional */
+  fullscreen: true,
+  coverButton: true,
+  miniProgressBar: true,
+  autoFocus: true,
+  forceLandscapeOnFullscreen: true,
+  screenshot: false,
+  pictureInPicture: false,
+  showControls: 'always', // 'played'
+  keyboard: { focused: true, global: false },
+  settings: ['loop'],
+  theme: { primaryColor: '#6668ab' },
+  speeds: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
+  slideToSeek: 'none', // 'always' | 'long-touch'
+  controlBar: false, // | { back:  'always' | 'fullscreen' } // appbar
+  topSetting: false, //show setting icon on appbar
+ /* Default value, Optional */
+
+  /* Custom options */
+  subtitle: {
+    color: 'hotpink',
+    fontSize: 20,
+    fontFamily: '',
+    source: [
+      {
+        name: 'Japanese',
+        default: true,
+        src: 'https://oplayer.vercel.app/君の名は.srt'
+      },
+      {
+        name: 'English',
+        default: false,
+        src: 'https://oplayer.vercel.app/君の名は.srt'
+      }
+    ]
+  }
+})
+```
+
+## Thumbnails
+
+```js
+// single
+thumbnails = {
+  number: 100,
+  src: 'https://oplayer.vercel.app/thumbnails.jpg'
+}
+// multipe & gride
+thumbnails = {
+  src: [
+    'https://oplayer.vercel.app/thumbnails.jpg',
+    'https://oplayer.vercel.app/thumbnails-1.jpg',
+    'https://oplayer.vercel.app/thumbnails-2.jpg'
+  ],
+  x: 10,
+  y: 10
+  number: 287,
+}
+```
+
+## Custom icons
+
+```js
+{
+  icons: {
+    play: '',
+    pause: '',
+    volume: ['', ''], //on off
+    fullscreen: ['', ''], //on off
+    pip: '',
+    setting: '',
+    screenshot: '',
+    playbackRate: '',
+    loop: '',
+    progressIndicator: '',
+    loadingIndicator: ''
+  }
+}
+```
+
+## Add custom menu
+
+```js
+{
+  menu: [
+    {
+      name: 'Quality(清晰度)',
+      key: 'Quality', // for select
+      position: 'bottom', // or top
+      children: [
+        {
+          name: 'FHD',
+          default: true,
+          value: 'https://oplayer.vercel.app/君の名は.mp4'
+        },
+        {
+          name: 'HD',
+          value: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+        },
+        {
+          name: 'SD',
+          value: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'
+        }
+      ],
+      onChange({ value }) {
+        player.changeQuality({ src: value })
+      }
+    }
+  ]
+}
+```
+
+## Highlight
+
+```js
+{
+  highlight: {
+    color: '#fff', //default
+    source: [
+      { time: 12, text: '谁でもいいはずなのに' },
+      { time: 34, text: '夏の想い出がまわる' },
+      { time: 58, text: 'こんなとこにあるはずもないのに' },
+      { time: 88, text: '－－终わり－－' }
+    ]
+  }
+}
+```
+
+## Methods
+
+All methods on `player.context.ui`
+
+```js
+// - Update subtitle
+player.context.ui.subtitle.updateSource([])
+
+// - Update highlight
+player.context.ui.highlight([])
+
+// - Update thumbnails
+player.context.ui.thumbnails('src')
+
+// - Register menu
+player.context.ui.menu.register({})
+player.context.ui.menu.unregister('key')
+player.context.ui.menu.select('key', 'index')
+
+// - Display error
+player.context.ui.menu.error({ message: 'msg', code: 'number' })
+player.context.ui.menu.notice('hello')
+```
+
+## keyboard
+
+- `↑` volume +10%
+- `↓` volume -10%
+- `←` seek -5s
+- `→` seek +5s
+- `space` play or pause
+- `s` catch a screenshot
+- `f` toggle full-screen
+
+## Events
+
+```ts
+type UIEventName = 'controllervisibilitychange' | 'backward'
+```

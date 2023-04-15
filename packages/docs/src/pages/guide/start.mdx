@@ -1,0 +1,47 @@
+import { Callout, Tab, Tabs } from 'nextra-theme-docs'
+
+## Start as New Project
+
+### Install
+
+<Tabs items={['npm', 'script']}>
+  <Tab>
+```shell
+npm i @oplayer/core @oplayer/ui
+```
+
+```js filename="app.js"
+import Player from '@oplayer/core'
+import ui from '@oplayer/ui'
+
+Player.make('#oplayer', {
+  source: {
+    src: 'https://oplayer.vercel.app/君の名は.mp4',
+    poster: 'https://oplayer.vercel.app/poster.png'
+  }
+})
+  .use([ui()])
+  .create()
+```
+
+  </Tab>
+
+  <Tab>
+```html filename="app.html"
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
+<script>
+  OPlayer.make('#oplayer', {
+    source: {
+      src: 'https://oplayer.vercel.app/君の名は.mp4',
+      poster: 'https://oplayer.vercel.app/poster.png'
+    }
+  })
+    .use([OPlayer.ui()])
+    .create()
+</script>
+```
+
+</Tab>
+</Tabs>
+
+<Callout>`@Oplayer/ui provides a basic set of skin styles.</Callout>

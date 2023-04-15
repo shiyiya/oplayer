@@ -1,0 +1,33 @@
+{
+  "name": "@oplayer/docs",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev:start": "next",
+    "build": "next build && next export",
+    "start": "next dev"
+  },
+  "dependencies": {
+    "@oplayer/core": "workspace:*",
+    "@oplayer/danmaku": "workspace:*",
+    "@oplayer/dash": "workspace:*",
+    "@oplayer/hls": "workspace:*",
+    "@oplayer/mpegts": "workspace:*",
+    "@oplayer/plugins": "workspace:*",
+    "@oplayer/react": "workspace:*",
+    "@oplayer/torrent": "workspace:*",
+    "@oplayer/ui": "workspace:*",
+    "mdx-embed": "^1.1.2",
+    "next": "^13.3.0",
+    "nextra": "^2.3.0",
+    "nextra-theme-docs": "^2.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.35",
+    "@types/react-dom": "^18.0.11",
+    "sass": "^1.62.0"
+  }
+}

@@ -1,0 +1,78 @@
+import React from 'react'
+import Player from '@oplayer/react'
+import hls from '@oplayer/hls'
+import dash from '@oplayer/dash'
+import mpegts from '@oplayer/mpegts'
+import ui from '@oplayer/ui'
+import danmaku from '@oplayer/danmaku'
+import { PlaylistPlugin } from '@oplayer/plugins'
+
+<div className="nx-rounded-md nx-overflow-hidden nx-mt-5">
+  <Player
+    plugins={[
+      ui({ pictureInPicture: true }),
+      hls({ forceHLS: true }),
+      dash(),
+      mpegts(),
+      danmaku({ source: '/danmaku.xml', fontSize: 0.75 }),
+      new PlaylistPlugin({
+        initialIndex: 0,
+        autoNext: true,
+        sources: [
+          {
+            title: '君の名は - MP4',
+            src: '/君の名は.mp4',
+            poster: '/poster.png',
+            duration: '01:32',
+            thumbnails: {
+              src: '/thumbnails.jpg',
+              number: 100
+            },
+            subtitles: [
+              {
+                name: 'Default',
+                default: true,
+                src: '/君の名は.srt',
+                offset: 2
+              }
+            ],
+            highlights: [
+              {
+                time: 12,
+                text: '谁でもいいはずなのに'
+              },
+              {
+                time: 34,
+                text: '夏の想い出がまわる'
+              },
+              {
+                time: 58,
+                text: 'こんなとこにあるはずもないのに'
+              },
+              {
+                time: 88,
+                text: '－－终わり－－'
+              }
+            ]
+          },
+          {
+            title: 'Big Buck Bunny - HLS',
+            src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+            duration: '10:34'
+          },
+          {
+            title: 'DASH',
+            src: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
+            duration: '10:34'
+          },
+          {
+            title: 'FLV',
+            src: '/op.flv',
+            duration: '00:17'
+          }
+        ]
+      }),
+    ]}
+  />
+
+</div>

@@ -1,0 +1,15 @@
+## VTT thumbnails
+
+**requirement `@oplayer/ui`**
+
+```shell
+npm i @oplayer/ui @oplayer/plugins
+```
+
+```jsx
+import Player from '@oplayer/react'
+import ui from '@oplayer/ui'
+import { vttThumbnails } from '@oplayer/plugins'
+
+Player.make('#player').use([ui(), vttThumbnails]).create()
+```

@@ -7,3 +7,5 @@ node_modules
 *debug.log
 
 dist
+.next
+out

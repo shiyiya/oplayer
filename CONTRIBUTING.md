@@ -13,7 +13,7 @@ npm i -g pnpm
 ## Clone & Install
 
 ```bash
-git clonegit@github.com:shiyiya/oplayer.git
+git clonegit@github.com:shiyiya/oplayer.git --depth=1
 cd oplayer
 pnpm i
 ```
@@ -32,7 +32,7 @@ pnpm i
    pnpm run start
    ```
 
-   - standalone: http://localhost:5173/
+   - standalone: http://localhost:3000/
 
 3. Make your changes...
 

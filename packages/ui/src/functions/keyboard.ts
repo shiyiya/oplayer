@@ -77,7 +77,7 @@ export default function (it: UIInterface) {
     }
   }
 
-  it.keybord.register = function register(payload: any) {
+  it.keyboard.register = function register(payload: any) {
     for (const key in payload) {
       if (Object.prototype.hasOwnProperty.call(payload, key)) {
         KEY_FN[key] = payload[key]
@@ -85,7 +85,7 @@ export default function (it: UIInterface) {
     }
   }
 
-  it.keybord.unregister = function unregister(payload: string[]) {
+  it.keyboard.unregister = function unregister(payload: string[]) {
     payload.forEach((k) => {
       delete KEY_FN[k]
     })

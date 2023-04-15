@@ -32,14 +32,14 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   player: Player<Ctx>
 
-  currentIndex: number = 0
+  currentIndex: number
 
   $root: HTMLDivElement
 
-  options: PartialRequired<PlaylistOptions, 'autoNext' | 'initialIndex' | 'autoHide'>
+  options: PartialRequired<PlaylistOptions, 'autoNext' | 'autoHide'>
 
   constructor(options?: PlaylistOptions) {
-    this.options = Object.assign({ autoNext: true, initialIndex: 0, autoHide: true }, options)
+    this.options = Object.assign({ autoNext: true, autoHide: true }, options)
   }
 
   apply(player: Player) {
@@ -48,13 +48,17 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.player = player as Player<Ctx>
     this.render()
 
-    if (this.options.autoNext) {
+    const { autoNext, initialIndex } = this.options
+
+    if (autoNext) {
       this.player.on('ended', () => {
         this.next()
       })
     }
 
-    this.changeSource(this.options.initialIndex)
+    if (typeof initialIndex == 'number') {
+      this.changeSource(initialIndex)
+    }
 
     return this
   }
@@ -66,13 +70,14 @@ export default class PlaylistPlugin implements PlayerPlugin {
   async changeSource(idx: number) {
     if (!this.options.sources[idx] || this.isWaiting) return
 
-    this.$root.classList.add('.wait')
+    this.$root.classList.add('wait')
     let source: PlaylistSource = this.options.sources[idx]!
     if (!source.src && this.options.customFetcher) {
       try {
         source = await this.options.customFetcher?.(source, idx)
       } catch (e) {
         // fail
+        this.$root.classList.remove('wait')
         return
       }
     }
@@ -92,7 +97,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     }
 
     this.currentIndex = idx
-    this.$root.classList.remove('.wait')
+    this.$root.classList.remove('wait')
     this.player.emit('playlistsourcechange', { source, id: idx })
     this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
     this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
@@ -102,15 +107,14 @@ export default class PlaylistPlugin implements PlayerPlugin {
   changeSourceList(sources: PlaylistSource[]) {
     this.options.sources = sources
     this.renderList(sources)
-    this.changeSource(this.options.initialIndex)
   }
 
   next() {
-    this.changeSource(this.currentIndex + 1)
+    this.changeSource(this.currentIndex || 0 + 1)
   }
 
   previous() {
-    this.changeSource(this.currentIndex - 1)
+    this.changeSource(this.currentIndex || 0 - 1)
   }
 
   showUI() {

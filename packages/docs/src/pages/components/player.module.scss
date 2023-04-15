@@ -1,0 +1,62 @@
+.container {
+  margin-top: 2em;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+
+  :global {
+    #oplayer {
+      overflow: hidden;
+
+      &[aria-disabled='true'] > div {
+        visibility: hidden;
+      }
+    }
+
+    .form {
+      display: flex;
+
+      button {
+        background: #000;
+        width: 100px;
+        border-radius: 4px;
+        height: 36px;
+        color: #fff;
+        font-weight: bold;
+      }
+    }
+
+    .tips {
+      margin: 0.5em auto 2em;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #b0b3b8;
+    }
+  }
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
