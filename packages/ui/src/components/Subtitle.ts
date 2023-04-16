@@ -4,6 +4,7 @@ import { Icons } from '../functions/icons'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource, UIInterface } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 import { clamp } from '../utils'
+import { controllerHidden } from '../style'
 
 const SETTING_KEY = 'Subtitle'
 
@@ -88,7 +89,7 @@ export class Subtitle {
   createContainer() {
     const {
       el,
-      options: { color, shadow, fontSize, bottom, fontFamily }
+      options: { color, shadow, fontSize, bottom, fontFamily, background }
     } = this
 
     this.$dom = $.create(
@@ -98,7 +99,7 @@ export class Subtitle {
         'text-align': 'center',
         'pointer-events': 'none',
         position: 'absolute',
-        'line-height': '1.2',
+        'line-height': '1.5',
 
         'font-family': fontFamily || 'inherit',
         color: color || '#fff',
@@ -110,7 +111,18 @@ export class Subtitle {
         // fullscreen should be bigger ?
         'font-size': `${(fontSize || (isMobile ? 16 : 20)) / 16}em`,
 
-        '& > p': { margin: 0 }
+        'margin-bottom': '1.25em',
+        transition: 'margin 0.2s',
+        [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 },
+
+        '& > p': {
+          margin: 0,
+          '& > span': {
+            'white-space': 'pre-wrap',
+            background: background ? 'rgba(8, 8, 8, 0.75)' : 'inherit',
+            padding: '0 0.25em'
+          }
+        }
       })}`,
       {
         'aria-label': 'Subtitle'
@@ -155,17 +167,21 @@ export class Subtitle {
     if (!this.$track) this.createTrack()
     this.loadSubtitle()
       .then(() => {
-        this.$track!.addEventListener(`load`, () => {
-          // wait video metadata loaded
-          if (isNaN(this.player.duration)) {
-            this.player.once('loadedmetadata', () => {
+        this.$track!.addEventListener(
+          'load',
+          () => {
+            // wait video metadata loaded
+            if (isNaN(this.player.duration)) {
+              this.player.once('loadedmetadata', () => {
+                this.changeOffset()
+              })
+            } else {
               this.changeOffset()
-            })
-          } else {
-            this.changeOffset()
-          }
-          this.show()
-        })
+            }
+            this.show()
+          },
+          { once: true }
+        )
       })
       .catch((e) => {
         this.player.emit('notice', { text: (<Error>e).message })
@@ -198,7 +214,7 @@ export class Subtitle {
           //@ts-ignore
           html += activeCue.text
             ?.split(/\r?\n/)
-            .map((item: string) => `<p>${item}</p>`)
+            .map((item: string) => `<p><span>${item}</span></p>`)
             .join('')
         }
       }

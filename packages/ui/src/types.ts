@@ -21,6 +21,7 @@ export type Subtitle = {
   color?: string
   shadow?: string
   fontFamily?: string
+  background?: boolean
 }
 
 export type MenuBar<
