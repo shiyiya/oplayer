@@ -8,19 +8,16 @@ import style from './player.module.scss'
 
 export default () => {
   const player = useRef<Player>()
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState(globalThis.location?.search.substring(1))
   const [isFirst, setIsFirst] = useState(true)
 
   useEffect(() => {
-    player.current = Player.make('#oplayer', {
-      source: { src: document.location.search.substring(1) },
-      volume: 0.8
-    })
+    player.current = Player.make('#oplayer', { source: { src: input } })
       .use([ui({ keyboard: { global: true } }), hls({ forceHLS: true }), dash(), mpegts()])
       .create()
       .on(console.log)
 
-    if (document.location.search.substring(1)) {
+    if (input) {
       setIsFirst(false)
     }
 

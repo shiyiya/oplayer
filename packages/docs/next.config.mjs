@@ -26,12 +26,4 @@ export default withNextra({
     }
     return config
   }
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/:path*',
-  //       destination: '/'
-  //     }
-  //   ]
-  // }
 })
