@@ -19,8 +19,12 @@
   transform: translateX(-100%);
 }
 
-.playlist.wait {
+.playlist.wait .playlist-list {
   cursor: wait;
+}
+
+.playlist.wait .playlist-list .playlist-list-item {
+  pointer-events: none;
 }
 
 .playlist.active::before {

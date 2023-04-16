@@ -85,23 +85,31 @@ export default class PlaylistPlugin implements PlayerPlugin {
     const { src, poster, format, title, subtitles, thumbnails, highlights } = source
 
     if (!src) return this.player.context.ui.notice('Empty Source')
-    this.player.changeSource({ src, poster, format, title })
-    if (subtitles) {
-      this.player.context.ui.subtitle.changeSource(subtitles)
-    }
-    if (thumbnails) {
-      this.player.context.ui.changThumbnails(thumbnails)
-    }
-    if (highlights) {
-      this.player.context.ui.changHighlightSource(highlights)
-    }
 
-    this.currentIndex = idx
-    this.$root.classList.remove('wait')
-    this.player.emit('playlistsourcechange', { source, id: idx })
-    this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
-    this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
-    if (this.options.autoHide) this.hideUI()
+    this.player
+      .changeSource({ src, poster, format, title })
+      .then(() => {
+        if (subtitles) {
+          this.player.context.ui.subtitle.changeSource(subtitles)
+        }
+        if (thumbnails) {
+          this.player.context.ui.changThumbnails(thumbnails)
+        }
+        if (highlights) {
+          this.player.context.ui.changHighlightSource(highlights)
+        }
+
+        this.currentIndex = idx
+        this.player.emit('playlistsourcechange', { source, id: idx })
+        this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
+        this.$root
+          .querySelector(`.playlist-list-item[data-index='${idx}']`)
+          ?.classList.add('active')
+        if (this.options.autoHide) this.hideUI()
+      })
+      .finally(() => {
+        this.$root.classList.remove('wait')
+      })
   }
 
   changeSourceList(sources: PlaylistSource[]) {
