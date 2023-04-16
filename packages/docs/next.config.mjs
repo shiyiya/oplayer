@@ -11,7 +11,8 @@ const withNextra = nextra({
 })
 
 export default withNextra({
-  // reactStrictMode: true,
+  output: 'export',
+  reactStrictMode: true,
   images: {
     unoptimized: true
   },
@@ -25,4 +26,12 @@ export default withNextra({
     }
     return config
   }
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       destination: '/'
+  //     }
+  //   ]
+  // }
 })
