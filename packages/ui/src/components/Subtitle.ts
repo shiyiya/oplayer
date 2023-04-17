@@ -73,12 +73,21 @@ export class Subtitle {
     const offset = this.currentSubtitle!.offset
     const cues = this.player.$video.textTracks[0]?.cues
 
-    if (offset && cues) {
+    if (offset) {
       const duration = this.player.duration
-      Array.from(cues).forEach((cue) => {
+
+      Array.from(cues || []).forEach((cue) => {
         cue.startTime = clamp(cue.startTime + offset, 0, duration)
         cue.endTime = clamp(cue.endTime + offset, 0, duration)
       })
+
+      //ios
+      if (this.$iosTrack) {
+        Array.from(this.player.$video.textTracks[1]?.cues || []).forEach((cue) => {
+          cue.startTime = clamp(cue.startTime + offset, 0, duration)
+          cue.endTime = clamp(cue.endTime + offset, 0, duration)
+        })
+      }
     }
   }
 
