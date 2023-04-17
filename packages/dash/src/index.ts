@@ -58,7 +58,7 @@ class DashPlugin implements PlayerPlugin {
 
   static library: typeof import('dashjs')
 
-  player: Player
+  player!: Player
 
   instance?: MediaPlayerClass
 

@@ -41,29 +41,29 @@ const defaultConfig: UiConfig = {
 class UI implements UIInterface {
   key = 'ui'
   version = __VERSION__
-  name: 'oplayer-theme-ui'
+  name = 'oplayer-theme-ui'
 
-  $root: HTMLDivElement
+  player!: Player
+
+  $root!: HTMLDivElement
 
   $coverButton?: HTMLDivElement
 
   $controllerBar?: HTMLDivElement | undefined
 
-  $controllerBottom: HTMLDivElement
+  $controllerBottom!: HTMLDivElement
 
-  $mask: HTMLDivElement
+  $mask!: HTMLDivElement
 
-  $setting: HTMLDivElement
+  $setting!: HTMLDivElement
 
-  $subtitle: HTMLDivElement
+  $subtitle!: HTMLDivElement
 
-  player: Player
+  icons!: typeof ICONS_MAP
 
-  icons: typeof ICONS_MAP
+  subtitle!: Subtitle
 
-  subtitle: Subtitle
-
-  notice: (
+  notice!: (
     text: string,
     position?:
       | 'top'
@@ -95,11 +95,11 @@ class UI implements UIInterface {
     select: (name: string, index: number) => void
   } = {} as any
 
-  toggleController: () => void
+  toggleController!: () => void
 
-  changHighlightSource: (highlights: Highlight[]) => void
+  changHighlightSource!: (highlights: Highlight[]) => void
 
-  changThumbnails: (src: Thumbnails) => void
+  changThumbnails!: (src: Thumbnails) => void
 
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[] = []
 

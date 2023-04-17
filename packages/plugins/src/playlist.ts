@@ -30,11 +30,11 @@ export default class PlaylistPlugin implements PlayerPlugin {
   key = 'playlist'
   name = 'oplayer-plugin-playlist'
 
-  player: Player<Ctx>
+  player!: Player<Ctx>
 
-  currentIndex: number
+  currentIndex?: number
 
-  $root: HTMLDivElement
+  $root!: HTMLDivElement
 
   options: PartialRequired<PlaylistOptions, 'autoNext' | 'autoHide'>
 
@@ -170,7 +170,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.showUI()
         const list = this.$root.querySelector('.playlist-list')!
         const active = this.$root.querySelector<HTMLDivElement>('.playlist-list-item.active')
-        if (active && list.scrollHeight > 0) {
+        if (active && list.scrollHeight > 0 && this.currentIndex) {
           list.scrollTo(0, active.offsetHeight * this.currentIndex)
         }
       }

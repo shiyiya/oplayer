@@ -20,11 +20,11 @@ export default function (it: UIInterface) {
 }
 
 export class Subtitle {
-  options: SubtitleConfig & { source: SubtitleSource[] }
+  options!: SubtitleConfig & { source: SubtitleSource[] }
 
   $track?: HTMLTrackElement
   $iosTrack?: HTMLTrackElement
-  $dom: HTMLDivElement
+  $dom!: HTMLDivElement
 
   isShow = false
   currentSubtitle?: SubtitleSource

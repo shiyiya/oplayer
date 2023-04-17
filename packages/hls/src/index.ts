@@ -77,7 +77,7 @@ class HlsPlugin implements PlayerPlugin {
 
   static library: typeof import('hls.js/dist/hls.min.js')
 
-  player: Player
+  player!: Player
 
   instance?: Hls
 

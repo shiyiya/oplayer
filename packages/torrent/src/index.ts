@@ -14,7 +14,7 @@ class TorrentPlugin implements PlayerPlugin {
   static defaultMatcher: PluginOptions['matcher'] = (source) =>
     /magnet:?[^\"]+/.test(source.src) || /.*\.torrent/.test(source.src)
 
-  player: Player
+  player!: Player
 
   instance: any
 

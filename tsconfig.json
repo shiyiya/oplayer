@@ -24,9 +24,7 @@
     "noImplicitOverride": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": false,
-    "strictPropertyInitialization": false
+    "noUncheckedIndexedAccess": true
   },
   "exclude": ["node_modules", "dist", "packages/*/node_modules", "packages/*/dist"]
 }

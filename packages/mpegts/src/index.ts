@@ -34,7 +34,7 @@ class MpegtsPlugin implements PlayerPlugin {
 
   static library: typeof Mpegts = (globalThis as any).mpegts
 
-  player: Player
+  player!: Player
 
   instance?: Mpegts.Player
 
