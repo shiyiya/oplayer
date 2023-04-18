@@ -30,7 +30,8 @@ async function buildPlugin(name, dev) {
       },
       rollupOptions: { external, output: { dir: 'dist', globals } }
     },
-    plugins: [cssInjectedByJsPlugin()]
+    plugins: [cssInjectedByJsPlugin()],
+    define: { __VERSION__: `'${version}'` }
   })
 
   console.log(`✨ Built ${name}@${version} - ${Date.now() - now}ms!`)

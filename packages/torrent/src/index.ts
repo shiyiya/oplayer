@@ -9,6 +9,7 @@ export type PluginOptions = {
 class TorrentPlugin implements PlayerPlugin {
   key = 'torrent'
   name = 'oplayer-plugin-torrent'
+  //@ts-ignore
   version = __VERSION__
 
   static defaultMatcher: PluginOptions['matcher'] = (source) =>

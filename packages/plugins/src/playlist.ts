@@ -29,6 +29,7 @@ export interface PlaylistSource extends Omit<Source, 'src'> {
 export default class PlaylistPlugin implements PlayerPlugin {
   key = 'playlist'
   name = 'oplayer-plugin-playlist'
+  version = __VERSION__
 
   player!: Player<Ctx>
 
@@ -118,11 +119,11 @@ export default class PlaylistPlugin implements PlayerPlugin {
   }
 
   next() {
-    this.changeSource(this.currentIndex || 0 + 1)
+    this.changeSource((this.currentIndex || 0) + 1)
   }
 
   previous() {
-    this.changeSource(this.currentIndex || 0 - 1)
+    this.changeSource((this.currentIndex || 0) - 1)
   }
 
   showUI() {

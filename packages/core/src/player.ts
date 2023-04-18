@@ -1,5 +1,3 @@
-/// <reference path="../../../types.d.ts" />
-
 import { EVENTS, PLAYER_EVENTS, VIDEO_EVENTS } from './constants'
 import EventEmitter from './event'
 import I18n from './i18n'

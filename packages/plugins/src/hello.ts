@@ -4,6 +4,7 @@ import { PlayerPlugin } from '@oplayer/core'
 export default class HelloPlugin implements PlayerPlugin {
   key = 'hello'
   name = 'oplayer-plugin-hello'
+  version = __VERSION__
 
   apply(player: Player) {
     player.on('play', () => {

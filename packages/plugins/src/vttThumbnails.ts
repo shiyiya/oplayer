@@ -232,5 +232,6 @@ function plugin(player: Player, options: Thumbnails) {
 
 export default (options: Thumbnails): PlayerPlugin => ({
   name: 'oplayer-vtt-thumbnails',
+  version: __VERSION__,
   apply: (player) => plugin(player, options)
 })

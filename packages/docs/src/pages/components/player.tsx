@@ -22,7 +22,7 @@ export default () => {
     }
 
     return () => {
-      player.current.destroy()
+      player.current!.destroy()
     }
   }, [])
 
@@ -42,7 +42,7 @@ export default () => {
           type="button"
           onClick={() => {
             if (input) {
-              player.current.changeSource({ src: input })
+              player.current!.changeSource({ src: input })
               setIsFirst(false)
             }
           }}

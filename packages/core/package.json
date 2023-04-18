@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/core",
-  "version": "1.2.21",
+  "version": "1.2.22",
   "description": "Oh! Another HTML5 video player.",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -11,7 +11,7 @@
   "keywords": [
     "oplayer",
     "video-player",
-    "html5"
+    "html5-player"
   ],
   "license": "MIT",
   "scripts": {

@@ -8,6 +8,7 @@ declare global {
 
 export default <PlayerPlugin>{
   name: 'oplayer-plugin-chromecast',
+  version: __VERSION__,
   apply(player) {
     let cast: any, session: any, currentMedia: any
 

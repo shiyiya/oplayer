@@ -1,5 +1,3 @@
-/// <reference path="../../../../types.d.ts" />
-
 import expandSvg from '../icons/fullscreen-enter.svg?raw'
 import compressSvg from '../icons/fullscreen-exit.svg?raw'
 import loopSvg from '../icons/loop.svg?raw'
@@ -47,6 +45,6 @@ export namespace Icons {
     return ICONS_MAP
   }
 
-  export const get = <K extends keyof typeof ICONS_MAP>(name: K): typeof ICONS_MAP[K] =>
+  export const get = <K extends keyof typeof ICONS_MAP>(name: K): (typeof ICONS_MAP)[K] =>
     ICONS_MAP[name]!
 }
