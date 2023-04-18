@@ -32,6 +32,13 @@
     "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB",
     "newWindow": true
   },
+  "preview": {
+    "title": "Preview",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
   "player": {
     "title": "Player",
     "type": "page",
