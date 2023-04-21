@@ -9,8 +9,9 @@
   "danmaku": "@oplayer/danmaku",
   "react": "@oplayer/react",
   "plugins": "@oplayer/plugins",
+  "vast": "@oplayer/vast",
   "wp_plugin": {
-    "title": "WorldPress",
+    "title": "WorldPress ↗",
     "href": "https://github.com/shiyiya/WordPress-Plugin-OPlayer",
     "newWindow": true
   },
@@ -22,21 +23,21 @@
   "dash": "@oplayer/dash",
   "mpegts": "@oplayer/mpegts",
   "torrent": "@oplayer/torrent",
+  "-- More": {
+    "type": "separator",
+    "title": "More"
+  },
+  "qq": {
+    "title": "QQ ↗",
+    "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB",
+    "newWindow": true
+  },
   "preview": {
     "title": "Preview",
     "type": "page",
     "theme": {
       "layout": "full"
     }
-  },
-  "-- More": {
-    "type": "separator",
-    "title": "More"
-  },
-  "qq": {
-    "title": "QQ",
-    "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB",
-    "newWindow": true
   },
   "player": {
     "title": "Player",

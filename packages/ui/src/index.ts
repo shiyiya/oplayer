@@ -35,7 +35,7 @@ const defaultConfig: UiConfig = {
   keyboard: { focused: true },
   settings: ['loop'],
   theme: { primaryColor: '#6668ab' },
-  speeds: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
+  speeds: ['2.0', '1.5', '1.25', '1.0', '0.75', '0.5']
 }
 
 class UI implements UIInterface {
