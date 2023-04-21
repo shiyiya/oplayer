@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-//https://github.com/shiyiya/OPlayer-thumbnails/blob/master/index.js
-
 var ffmpeg = require('fluent-ffmpeg')
 var nsg = require('node-sprite-generator')
 var Jimp = require('jimp')
@@ -28,6 +26,8 @@ program
   .option('-o, --output <path>', 'thumbnails path, default: ./thumbnails.jpg', './thumbnails.jpg')
   .option('-q, --quality <n>', 'thumbnails quality, default: 60', '60')
   .option('-c, --count <n>', 'thumbnails count, default: 100', '100')
+  // .option('-row, --count <n>', 'thumbnails count, default: 10', '10')
+  // .option('-col, --count <n>', 'thumbnails count, default: 10', '10')
   .description('🎉  Generate video thumbnails')
   .action(function (file, { output, quality, count }) {
     startSpinner('Screenshots generating', 1)
@@ -55,14 +55,13 @@ program
             console.log('[2/3] Sprite generated!')
             startSpinner('Compressing', 3)
 
-            Jimp.read(tmp + '/sprite.png', function (err, lenna) {
+            Jimp.read(tmp + '/sprite.png', function (err, jpeg) {
               if (err) throw err
-              lenna.quality(+quality).write(output)
-              rm(tmp, function () {
-                spinner.stop(true)
-                console.log('[3/3] Compressing complete!')
-                console.log(`✨  Done in ${(+new Date() - startTime) / 1000}s.`)
-              })
+              jpeg.quality(+quality).write(output)
+              rm.sync(tmp)
+              spinner.stop(true)
+              console.log('[3/3] Compressing complete!')
+              console.log(`✨  Done in ${(+new Date() - startTime) / 1000}s.`)
             })
           }
         )

@@ -1,10 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Player from '@oplayer/core'
+import Player, { PlayerPlugin } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import mpegts from '@oplayer/mpegts'
 import style from './player.module.scss'
+
+const userPreferencesPlugin: PlayerPlugin = {
+  name: 'userPreferencesPlugin',
+  apply(player) {
+    const preSpeed = localStorage.getItem('@oplayer/UserPreferences/speed')
+    if (preSpeed) player.setPlaybackRate(+preSpeed)
+
+    const preVolume = localStorage.getItem('@oplayer/UserPreferences/volume')
+    if (preVolume) player.setVolume(+preVolume)
+
+    player.on('ratechange', () => {
+      localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+    })
+
+    player.on('volumechange', () => {
+      localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+    })
+  }
+}
 
 export default () => {
   const player = useRef<Player>()
@@ -13,7 +32,13 @@ export default () => {
 
   useEffect(() => {
     player.current = Player.make('#oplayer', { source: { src: input } })
-      .use([ui({ keyboard: { global: true } }), hls({ forceHLS: true }), dash(), mpegts()])
+      .use([
+        ui({ keyboard: { global: true } }),
+        hls({ forceHLS: true }),
+        dash(),
+        mpegts(),
+        userPreferencesPlugin
+      ])
       .create()
       .on(console.log)
 
@@ -56,7 +81,7 @@ export default () => {
       </p>
       <div
         id="oplayer"
-        className="aspect-video nx-bg-black/[.05] dark:nx-bg-gray-50/10 nx-rounded-md"
+        className="nx-aspect-video nx-bg-black/[.05] dark:nx-bg-gray-50/10 nx-rounded-md"
         aria-disabled={isFirst}
       />
     </div>

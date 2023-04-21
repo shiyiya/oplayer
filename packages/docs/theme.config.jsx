@@ -75,7 +75,7 @@ export default {
           media="(prefers-color-scheme: dark)"
         /> */}
 
-        <script src="https://oplayer.vercel.app/_vercel/insights/script.js" defer={true}></script>
+        <script src="https://oplayer.vercel.app/_vercel/insights/script.js"></script>
       </>
     )
   }
