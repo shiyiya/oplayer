@@ -9,6 +9,7 @@ import { PlaylistPlugin } from '@oplayer/plugins'
 
 <div className="nx-rounded-md nx-overflow-hidden nx-mt-5">
   <Player
+    onEvent={(payload)=>{console.log(payload)}}
     plugins={[
       ui({ pictureInPicture: true }),
       hls({ forceHLS: true }),

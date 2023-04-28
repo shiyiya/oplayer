@@ -27,9 +27,11 @@ export default function registerSpeedSetting(it: UIInterface) {
     player.on('ratechange', () => {
       const rate = player.playbackRate
       const i = speeds.findIndex((it) => +it == rate)
-      setting.select(KEY, i)
+
       if (i == -1) {
         setting.updateLabel(KEY, rate + 'x')
+      } else {
+        setting.select(KEY, i, false)
       }
     })
   }

@@ -1,4 +1,4 @@
-declare module 'webtorrent/webtorrent.min.js' {
+declare module 'webtorrent/dist/webtorrent.min.js' {
   const Any: any
   export = Any
 }

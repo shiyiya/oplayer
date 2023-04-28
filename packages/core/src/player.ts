@@ -413,7 +413,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
     return new Promise<void>((resolve, reject) => {
       const isPreloadNone = this.options.preload == 'none'
-      let canplay = isPreloadNone ? 'loadstart' : isIOS ? 'loadedmetadata' : 'canplay'
+      let canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata'
       const shouldPlay = keepPlaying && isPlaying
       const errorHandler = (e: any) => {
         this.isSourceChanging = false

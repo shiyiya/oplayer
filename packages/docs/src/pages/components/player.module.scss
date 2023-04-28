@@ -7,6 +7,7 @@
   :global {
     #oplayer {
       overflow: hidden;
+      aspect-ratio: 16/9;
 
       &[aria-disabled='true'] > div {
         visibility: hidden;

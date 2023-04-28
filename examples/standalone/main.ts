@@ -10,19 +10,19 @@ import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
 import torrent from '@oplayer/torrent'
 
-import DANMAKU from '../../website/static/danmaku.xml'
-import POSTER from '../../website/static/poster.png'
-import THUMB from '../../website/static/thumbnails.jpg'
-import SRT from '../../website/static/君の名は.srt'
-// import SUPER_DANMAKU from '../../website/static/天气之子.xml'
-import FLV from '../../website/static/op.flv'
-import MP4 from '../../website/static/君の名は.mp4'
+import DANMAKU from '../../packages/docs/public/danmaku.xml'
+import POSTER from '../../packages/docs/public/poster.png'
+import THUMB from '../../packages/docs/public/thumbnails.jpg'
+import SRT from '../../packages/docs/public/君の名は.srt'
+// import SUPER_DANMAKU from '../../packages/docs/public/天气之子.xml'
+import FLV from '../../packages/docs/public/op.flv'
+import MP4 from '../../packages/docs/public/君の名は.mp4'
 
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
 import { Hello, vttThumbnails, ad, PlaylistPlugin } from '@oplayer/plugins'
-import gridThumb1 from '../../website/static/28627454.jpg'
+import gridThumb1 from '../../packages/docs/public/28627454.jpg'
 
 interface Ctx {
   ui: ReturnType<typeof ui>

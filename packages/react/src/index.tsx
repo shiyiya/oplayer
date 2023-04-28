@@ -21,21 +21,29 @@ export interface ReactOPlayerProps extends PlayerOptions {
 const ReactOPlayer = forwardRef(
   (props: ReactOPlayerProps & { source?: Source | Promise<Source> }, ref: Ref<Player | null>) => {
     const { playing, duration, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
+
     const isInitialMount = useRef(true)
+
+    const onEventRef = useRef(onEvent)
+    onEventRef.current = onEvent
 
     const player = useRef<Player | null>(null)
     const preSource = usePrevious(rest.source)
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
-      if (node !== null) {
+      if (node !== null && !player.current) {
         player.current = Player.make(node, rest).use(plugins).create()
         if (typeof duration == 'number') player.current.seek(duration / 1000)
-        if (onEvent) player.current.on(onEvent)
+        if (onEvent) {
+          player.current.on((payload: PlayerEvent) => onEventRef.current?.(payload))
+        }
       }
     }, [])
 
+    const isNotReady = isInitialMount.current || !player.current
+
     useEffect(() => {
-      if (isInitialMount.current) return
+      if (isNotReady) return
       if (playing) {
         if (player.current && !player.current.isPlaying) player.current?.play()
       } else {
@@ -44,7 +52,7 @@ const ReactOPlayer = forwardRef(
     }, [playing])
 
     useEffect(() => {
-      if (isInitialMount.current) return
+      if (isNotReady) return
       if (
         (rest.source instanceof Promise && preSource != rest.source) ||
         (rest.source?.src && preSource?.src !== rest.source.src)
@@ -54,12 +62,12 @@ const ReactOPlayer = forwardRef(
     }, [rest.source])
 
     useEffect(() => {
-      if (isInitialMount.current || typeof duration != 'number') return
+      if (isNotReady || typeof duration != 'number') return
       player.current?.seek(duration / 1000)
     }, [duration])
 
     useEffect(() => {
-      if (isInitialMount.current) return
+      if (isNotReady) return
       if (rest.muted) {
         player.current?.mute()
       } else {
@@ -68,7 +76,7 @@ const ReactOPlayer = forwardRef(
     }, [rest.muted])
 
     useEffect(() => {
-      if (isInitialMount.current) return
+      if (isNotReady) return
       player.current?.setPlaybackRate(rest.playbackRate!)
     }, [rest.playbackRate])
 
@@ -109,7 +117,7 @@ const ReactOPlayer = forwardRef(
   }
 )
 
-function usePrevious<T>(value: T): T | undefined {
+export function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T>()
 
   useEffect(() => {

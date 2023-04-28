@@ -1,5 +1,5 @@
 import { $, isMobile } from '@oplayer/core'
-import { settingShown } from '../style'
+import { DATA_CONTEXTMENU_ATTR_NAME, settingShown } from '../style'
 import { UIInterface } from '../types'
 import { hasClass } from '../utils'
 
@@ -25,7 +25,15 @@ const render = (it: UIInterface) => {
   let timeoutId: number
 
   $dom.addEventListener('click', () => {
-    if (hasClass(player.$root, settingShown)) return
+    if (hasClass(player.$root, settingShown)) {
+      return
+    }
+
+    if (player.$root.getAttribute(DATA_CONTEXTMENU_ATTR_NAME) == 'true') {
+      player.$root.setAttribute(DATA_CONTEXTMENU_ATTR_NAME, 'false')
+      return
+    }
+
     if (isMobile) {
       it.toggleController()
     } else {

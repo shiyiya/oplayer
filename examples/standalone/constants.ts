@@ -1,5 +1,5 @@
-import flv from '../../website/static/op.flv'
-import MP4 from '../../website/static/君の名は.mp4'
+import flv from '../../packages/docs/public/op.flv'
+import MP4 from '../../packages/docs/public/君の名は.mp4'
 
 export const VIDEO_LIST = [
   MP4,
