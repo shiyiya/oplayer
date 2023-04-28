@@ -1,5 +1,5 @@
 import { $, isMobile } from '@oplayer/core'
-import { DATA_CONTEXTMENU_ATTR_NAME, settingShown } from '../style'
+import { settingShown } from '../style'
 import { UIInterface } from '../types'
 import { hasClass } from '../utils'
 
