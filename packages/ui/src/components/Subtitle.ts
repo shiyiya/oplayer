@@ -122,7 +122,7 @@ export class Subtitle {
 
             '& > p': {
               margin: 0,
-              '& > span': {
+              '& span': {
                 'white-space': 'pre-wrap',
                 background: background ? 'rgba(8, 8, 8, 0.75)' : 'inherit',
                 padding: '0 0.25em'
@@ -221,11 +221,15 @@ export class Subtitle {
     if (activeCues?.length) {
       let html = ''
       for (let i = 0; i < activeCues.length; i++) {
-        const activeCue = activeCues[i]
+        const activeCue = activeCues[i] as VTTCue | undefined
         if (activeCue) {
-          //@ts-ignore
+          // TODO: FIX
+          // "<b>Otomi, I don't see this \nfriend you said was here.</b>"
+          // <p><span><b>xxx</b></span></p>
+          // <p><b><span>xxx</span></b></p>
           html += activeCue.text
-            ?.split(/\r?\n/)
+            .replaceAll(`\\h`, '')
+            .split(/\r?\n/)
             .map((item: string) => `<p><span>${item}</span></p>`)
             .join('')
         }
