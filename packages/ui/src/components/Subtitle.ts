@@ -130,7 +130,7 @@ export class Subtitle {
             }
           },
           !isMobile && {
-            'margin-bottom': '1em',
+            'margin-bottom': '1.5em',
             transition: 'margin 0.2s',
             [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 }
           }
