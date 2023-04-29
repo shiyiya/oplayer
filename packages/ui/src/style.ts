@@ -1,24 +1,32 @@
 import { $, isMobile } from '@oplayer/core'
 import type { UiConfig } from './types'
 
+// data-loading="true"
 export const loading = $.cls('loading')
 
+// data-playing="true"
 export const playing = $.cls('playing')
 
+// data-focused="true"
 export const focused = $.cls('focused')
 
+// data-screen="web" "full"
 export const fullscreen = $.cls('fullscreen')
 
+// data-setting-hidden="true"
 export const settingShown = $.cls('settingShown')
 
 export const hidden = $.css('display:none')
 
+// data-ctrl-hidden="true"
 export const controllerHidden = $.css({
   [`.${playing}`]: { cursor: 'none' }
 })
 
+// data-error="true"
 export const error = $.cls('error')
 
+// data-contextmenu="true"
 export const DATA_CONTEXTMENU_ATTR_NAME = 'data-contextmenu'
 
 export const root = (config: UiConfig) => {

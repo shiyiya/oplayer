@@ -29,12 +29,6 @@ const render = (it: UIInterface) => {
       return
     }
 
-    // 只有 windows 需要 ？
-    // if (player.$root.getAttribute(DATA_CONTEXTMENU_ATTR_NAME) == 'true') {
-    //   player.$root.setAttribute(DATA_CONTEXTMENU_ATTR_NAME, 'false')
-    //   return
-    // }
-
     if (isMobile) {
       it.toggleController()
     } else {

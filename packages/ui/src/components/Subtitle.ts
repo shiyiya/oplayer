@@ -102,37 +102,40 @@ export class Subtitle {
     } = this
 
     this.$dom = $.create(
-      `div.${$.css({
-        left: '2%',
-        right: '2%',
-        'text-align': 'center',
-        'pointer-events': 'none',
-        position: 'absolute',
-        'line-height': '1.5',
+      `div.${$.css(
+        Object.assign(
+          {
+            left: '2%',
+            right: '2%',
+            'text-align': 'center',
+            'pointer-events': 'none',
+            position: 'absolute',
+            'line-height': '1.5',
 
-        'font-family': fontFamily || 'inherit',
-        color: color || '#fff',
-        'text-shadow':
-          shadow ||
-          '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
-        bottom: `${bottom || '5%'}`,
-        // 1em = 16px
-        // fullscreen should be bigger ?
-        'font-size': `${(fontSize || (isMobile ? 16 : 20)) / 16}em`,
+            'font-family': fontFamily || 'inherit',
+            color: color || '#fff',
+            'text-shadow':
+              shadow ||
+              '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
+            bottom: `${bottom || '5%'}`,
+            'font-size': `${(fontSize || (isMobile ? 16 : 20)) / 16}em`,
 
-        'margin-bottom': '1.25em',
-        transition: 'margin 0.2s',
-        [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 },
-
-        '& > p': {
-          margin: 0,
-          '& > span': {
-            'white-space': 'pre-wrap',
-            background: background ? 'rgba(8, 8, 8, 0.75)' : 'inherit',
-            padding: '0 0.25em'
+            '& > p': {
+              margin: 0,
+              '& > span': {
+                'white-space': 'pre-wrap',
+                background: background ? 'rgba(8, 8, 8, 0.75)' : 'inherit',
+                padding: '0 0.25em'
+              }
+            }
+          },
+          !isMobile && {
+            'margin-bottom': '1em',
+            transition: 'margin 0.2s',
+            [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 }
           }
-        }
-      })}`,
+        )
+      )}`,
       {
         'aria-label': 'Subtitle'
       }
