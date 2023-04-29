@@ -129,7 +129,7 @@ export const tooltip = isMobile
         'transform-origin': '50% 100%',
         opacity: 0,
         padding: '4px 8px',
-        'border-radius': '4px',
+        'border-radius': '2px',
         transition: 'transform .2s ease .1s,opacity .2s ease .1s',
         'pointer-events': 'none',
         'font-size': '0.75em'

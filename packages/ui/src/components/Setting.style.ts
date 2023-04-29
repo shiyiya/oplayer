@@ -6,7 +6,7 @@ export const setting = (position: 'top' | 'bottom') =>
   $.css({
     'z-index': '98',
     'max-height': '75%',
-    'border-radius': '3px',
+    'border-radius': '2px',
     display: 'block',
     position: 'absolute',
     right: '1em',

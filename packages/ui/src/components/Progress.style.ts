@@ -43,8 +43,8 @@ export const dot = $.css({
 export const hit = $.css({
   position: 'absolute',
   left: '0',
-  'border-radius': '4px',
-  padding: '5px 8px',
+  'border-radius': '2px',
+  padding: '4px 8px',
   'background-color': 'var(--shadow-background-color)',
   color: '#fff',
   'word-wrap': 'nowrap',

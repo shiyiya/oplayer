@@ -5,7 +5,7 @@ import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBar from './ControllerBar'
 import renderControllerBottom from './ControllerBottom'
 
-const CTRL_HIDE_DELAY = 1500
+const CTRL_HIDE_DELAY = 2000
 
 const render = (it: UIInterface) => {
   const { player, config, $root } = it
