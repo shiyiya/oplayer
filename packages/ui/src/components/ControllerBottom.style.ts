@@ -13,17 +13,17 @@ export const live = $.css(
 
 export const expand = $.css(`
     position: absolute;
-    top: 0;
+    top: 10px;
     right: 50%;
     border-radius: 2px;
     box-sizing: border-box;
     transform: translate(50%, -100%);
-    transition: visibility 0s, opacity 0.1s linear;
+    transition: opacity 0.2s ease, top 0.2s ease;
     font-size: 0.875em;
 `)
 
 export const expandBottom = $.css(`
-    top: 100%;
+    top: calc(100% - 10px);
     right: 50%;
     transform: translateX(50%);
 `)
@@ -46,12 +46,17 @@ export const dropdownHoverable = $.css({
 
     [`& .${expand}`]: {
       visibility: 'visible',
-      opacity: 1
+      opacity: 1,
+      top: 0
     }
   },
   ['&[data-dropdown-pos=top]:hover']: {
     'padding-bottom': '0.5em',
-    'margin-bottom': '-0.5em'
+    'margin-bottom': '-0.5em',
+
+    [`& .${expand}`]: {
+      top: '100%'
+    }
   }
 })
 

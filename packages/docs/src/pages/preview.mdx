@@ -9,9 +9,60 @@ import { PlaylistPlugin } from '@oplayer/plugins'
 
 <div className="nx-rounded-md nx-overflow-hidden nx-mt-5">
   <Player
-    onEvent={(payload)=>{console.log(payload)}}
+    onEvent={(payload) => {
+      console.log(payload)
+    }}
     plugins={[
-      ui({ pictureInPicture: true }),
+      ui({
+        pictureInPicture: true,
+        controlBar: true,
+        menu: [
+          {
+            name: 'Custom',
+            position: 'top',
+            children: [
+              {
+                name: 'Custom 1',
+                default: true,
+                value: 1
+              },
+              {
+                name: 'Custom 2',
+                value: 2
+              },
+              {
+                name: 'Custom 3',
+                value: 3
+              }
+            ],
+            onChange({ value, name }, elm) {
+              alert(`${value}`)
+            }
+          },
+          {
+            name: 'Custom',
+            position: 'bootom',
+            children: [
+              {
+                name: 'Custom 1',
+                default: true,
+                value: 1
+              },
+              {
+                name: 'Custom 2',
+                value: 2
+              },
+              {
+                name: 'Custom 3',
+                value: 3
+              }
+            ],
+            onChange({ value, name }, elm) {
+              alert(`${value}`)
+            }
+          }
+        ]
+      }),
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
@@ -30,7 +81,7 @@ import { PlaylistPlugin } from '@oplayer/plugins'
               number: 100
             },
             subtitles: [
-               {
+              {
                 name: 'Japanese',
                 default: true,
                 src: '/君の名は-jp.srt',
@@ -77,8 +128,7 @@ import { PlaylistPlugin } from '@oplayer/plugins'
             duration: '00:17'
           }
         ]
-      }),
+      })
     ]}
   />
-
 </div>

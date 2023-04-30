@@ -32,7 +32,7 @@ export const controlBar = $.css({
   '& > div:nth-child(1)': { cursor: 'pointer', overflow: 'hidden' },
 
   [`& > div:nth-child(2) .${dropdown}:last-child .${expand}`]: {
-    right: '100%'
+    right: 'max(50%,3em)'
   },
 
   [`@global .${controllerHidden} &`]: {
