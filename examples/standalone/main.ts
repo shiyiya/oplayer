@@ -176,25 +176,9 @@ if (false) {
 }
 
 player.context.ui?.menu.register(<MenuBar>{
-  name: 'Custom',
+  name: 'FMT',
   position: 'top',
-  children: [
-    {
-      name: 'Custom 1',
-      default: true,
-      value: 1
-    },
-    {
-      name: 'Custom 2',
-      default: true,
-      value: 3
-    },
-    {
-      name: 'Custom 3',
-      default: true,
-      value: 3
-    }
-  ],
+  children: FORMAT_MENU,
   onChange({ value, name }, elm) {
     src = value
     elm.innerText = name

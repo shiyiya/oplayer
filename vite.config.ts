@@ -13,11 +13,12 @@ export const globals = {
   '@oplayer/torrent': 'OTorrent',
   '@oplayer/danmaku': 'ODanmaku',
   react: 'React',
+  // 'react/jsx-runtime':'',
   dashjs: 'dashjs',
   'hls.js': 'Hls',
   'hls.js/dist/hls.min.js': 'Hls',
   'mpegts.js/dist/mpegts.js': 'mpegts',
-  'webtorrent/webtorrent.min.js': 'WebTorrent'
+  'webtorrent/dist/webtorrent.min.js': 'WebTorrent'
 }
 
 const babelPlugins = [
