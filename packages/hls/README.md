@@ -10,7 +10,7 @@
 ## Install
 
 ```bash
-npm i @oplayer/core @oplayer/hls
+npm i @oplayer/core @oplayer/hls hls.js
 ```
 
 ```html

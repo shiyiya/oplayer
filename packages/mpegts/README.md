@@ -10,7 +10,7 @@
 ## Install
 
 ```bash
-npm i @oplayer/core @oplayer/mpegts
+npm i @oplayer/core @oplayer/mpegts mpegts.js
 ```
 
 ```html

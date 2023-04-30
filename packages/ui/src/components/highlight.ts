@@ -36,7 +36,7 @@ export default function (it: UIInterface, container: HTMLElement) {
   let $highlights: HTMLDivElement[] = []
   let active = true
 
-  player.$root.style.setProperty('--highlight-color', highlightsConfig?.color || '#FFF')
+  container.style.setProperty('--highlight-color', highlightsConfig?.color || '#FFF')
 
   function createDto(options: { left: number; text: string }) {
     const dto = $.create(

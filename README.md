@@ -7,7 +7,7 @@
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![Discord](https://img.shields.io/discord/1017615537234264185.svg?label=&logo=discord&logoColor=fff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/hzjxYyPbKh)
 
-![oplayer](https://github.com/shiyiya/oplayer/raw/main/oplayer.png)
+![oplayer](./oplayer.png)
 
 ## Documentation
 
