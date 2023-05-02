@@ -4,6 +4,7 @@ import { danmakuParseFromUrl, getMode } from './danmaku-parse'
 import type { Comment, Options } from './types'
 
 import danmakuSvg from './danmaku.svg?raw'
+import heatmap from './heatmap'
 
 export * from './types'
 
@@ -21,12 +22,12 @@ export default (options = {} as Options): PlayerPlugin => ({
     if (options.enable == undefined) options.enable = true
 
     let loaded = false
-    const danmaku = new Danmaku({
+    const danmaku: Danmaku & { comments: Comment[] } = new Danmaku({
       container: $danmaku,
       media: player.$video,
       engine: engine || 'dom',
       comments: []
-    })
+    }) as any
     danmaku.speed = isMobile ? speed / 1.5 : speed
 
     player.on('fullscreenchange', () => {
@@ -73,11 +74,13 @@ export default (options = {} as Options): PlayerPlugin => ({
       if (options.enable) {
         fetch(source).then((res) => {
           danmaku.clear()
-          // @ts-ignore
           danmaku.comments = res.sort((a, b) => a.time - b.time)
           if (options.fontSize) setFontSize(options.fontSize)
           loaded = options.enable! // 没加载完又关了
           if (options.enable) danmaku.show()
+          player.once('loadedmetadata', () => {
+            heatmap(player, danmaku.comments)
+          })
         })
       }
     }

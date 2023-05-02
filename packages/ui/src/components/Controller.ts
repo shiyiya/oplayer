@@ -1,5 +1,5 @@
 import { $, isMobile } from '@oplayer/core'
-import { controllerHidden, error, hidden, settingShown } from '../style'
+import { DATA_CONTROLLER_HIDDEN, controllerHidden, error, hidden, settingShown } from '../style'
 import type { UIInterface } from '../types'
 import { addClass, debounce, hasClass, removeClass } from '../utils'
 import renderControllerBar from './ControllerBar'
@@ -34,6 +34,7 @@ const render = (it: UIInterface) => {
       return
     }
     addClass(player.$root, controllerHidden)
+    player.$root.setAttribute(DATA_CONTROLLER_HIDDEN, 'true')
     player.emit('controllervisibilitychange', false)
   }
 
@@ -43,6 +44,7 @@ const render = (it: UIInterface) => {
     cancelHideCtrl()
     if (hasClass(player.$root, controllerHidden)) {
       removeClass(player.$root, controllerHidden)
+      player.$root.setAttribute(DATA_CONTROLLER_HIDDEN, 'false')
       player.emit('controllervisibilitychange', true)
     }
   }

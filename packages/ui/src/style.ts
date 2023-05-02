@@ -18,7 +18,7 @@ export const settingShown = $.cls('settingShown')
 
 export const hidden = $.css('display:none')
 
-// data-ctrl-hidden="true"
+export const DATA_CONTROLLER_HIDDEN = 'data-ctrl-hidden'
 export const controllerHidden = $.css({
   [`.${playing}`]: { cursor: 'none' }
 })
