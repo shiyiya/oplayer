@@ -15,7 +15,14 @@ export default (options = {} as Options): PlayerPlugin => ({
   apply: (player: Player) => {
     if (player.isNativeUI) return
 
-    const { speed = 144, opacity, engine, displaySender, area = 0.8 } = options
+    const {
+      speed = 144,
+      opacity,
+      engine,
+      displaySender,
+      area = 0.8,
+      heatmap: enableHeatmap = true
+    } = options
     const $danmaku = $.render($.create('div'), player.$root)
     $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
     $danmaku.style.height = `${area * 100}%`
@@ -76,13 +83,15 @@ export default (options = {} as Options): PlayerPlugin => ({
       if (options.enable) {
         fetch(source).then((res) => {
           danmaku.clear()
-          danmaku.comments = res.sort((a, b) => a.time - b.time)
+          danmaku.comments = res.sort((a, b) => a.time! - b.time!)
           if (options.fontSize) setFontSize(options.fontSize)
           loaded = options.enable! // 没加载完又关了
           if (options.enable) danmaku.show()
-          player.once('loadedmetadata', () => {
-            heatmap(player, danmaku.comments)
-          })
+          if (enableHeatmap) {
+            player.once('loadedmetadata', () => {
+              heatmap(player, danmaku.comments)
+            })
+          }
         })
       }
     }

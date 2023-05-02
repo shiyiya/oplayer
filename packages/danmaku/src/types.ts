@@ -11,6 +11,10 @@ export type Options = {
    * */
   area?: number
   /**
+   * @default: true
+   * */
+  heatmap?: boolean
+  /**
    * @default 'dom'
    */
   engine?: 'canvas' | 'dom'
