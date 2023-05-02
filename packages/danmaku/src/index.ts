@@ -23,11 +23,12 @@ export default (options = {} as Options): PlayerPlugin => ({
       area = 0.8,
       heatmap: enableHeatmap = true
     } = options
+
     const $danmaku = $.render($.create('div'), player.$root)
     $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
     $danmaku.style.height = `${area * 100}%`
-    if (opacity) $danmaku.style.opacity = `${opacity}`
 
+    if (opacity) $danmaku.style.opacity = `${opacity}`
     if (options.enable == undefined) options.enable = true
 
     let loaded = false
@@ -35,9 +36,9 @@ export default (options = {} as Options): PlayerPlugin => ({
       container: $danmaku,
       media: player.$video,
       engine: engine || 'dom',
-      comments: []
+      comments: [],
+      speed: isMobile ? speed / 1.5 : speed
     }) as any
-    danmaku.speed = isMobile ? speed / 1.5 : speed
 
     player.on('fullscreenchange', () => {
       if (!isIOS) danmaku.resize()
@@ -45,8 +46,9 @@ export default (options = {} as Options): PlayerPlugin => ({
 
     player.on('videosourcechange', () => {
       danmaku.clear()
-      // @ts-ignore
       danmaku.comments = []
+      loaded = false
+      options.source = undefined as any
     })
 
     const resize = danmaku.resize.bind(danmaku)
@@ -79,18 +81,21 @@ export default (options = {} as Options): PlayerPlugin => ({
 
     function bootstrap(source: any) {
       options.source = source
-      loaded = options.enable!
       if (options.enable) {
         fetch(source).then((res) => {
           danmaku.clear()
           danmaku.comments = res.sort((a, b) => a.time! - b.time!)
+          loaded = true
           if (options.fontSize) setFontSize(options.fontSize)
-          loaded = options.enable! // 没加载完又关了
           if (options.enable) danmaku.show()
           if (enableHeatmap) {
-            player.once('loadedmetadata', () => {
+            if (isNaN(player.duration)) {
+              player.once('loadedmetadata', () => {
+                heatmap(player, danmaku.comments)
+              })
+            } else {
               heatmap(player, danmaku.comments)
-            })
+            }
           }
         })
       }

@@ -121,4 +121,8 @@ export default function heatmap(player: Player, danmaku: Comment[]) {
   // </defs>
   // <svg viewBox="0 0 ${w} ${h}" class="${pa}">
   $wrap.innerHTML = `<svg viewBox="0 0 ${w} ${h}" class="${pa}"><path d="${pathD}"></path></svg>`
+
+  player.on('videosourcechange', () => {
+    $wrap.remove()
+  })
 }
