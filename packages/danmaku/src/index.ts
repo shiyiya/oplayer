@@ -15,10 +15,12 @@ export default (options = {} as Options): PlayerPlugin => ({
   apply: (player: Player) => {
     if (player.isNativeUI) return
 
-    const { speed = 144, opacity, engine, displaySender } = options
+    const { speed = 144, opacity, engine, displaySender, area = 0.8 } = options
     const $danmaku = $.render($.create('div'), player.$root)
     $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
+    $danmaku.style.height = `${area * 100}%`
     if (opacity) $danmaku.style.opacity = `${opacity}`
+
     if (options.enable == undefined) options.enable = true
 
     let loaded = false
@@ -86,7 +88,6 @@ export default (options = {} as Options): PlayerPlugin => ({
     }
 
     function setFontSize(value: number) {
-      // @ts-ignore
       danmaku.comments.forEach((comment: any) => {
         if (comment.style?.fontSize) {
           comment.style.fontSize *= value
@@ -155,7 +156,7 @@ export default (options = {} as Options): PlayerPlugin => ({
             children: [25, 50, 80, 100].map((it) => ({
               name: `${it}%`,
               value: it,
-              default: it == 100
+              default: it == area * 100
             })),
             onChange: ({ value }: any) => {
               options.opacity = value
@@ -356,7 +357,7 @@ function registerInputStyle() {
   height: auto;
   padding: 2px 0 0;
   position: absolute;
-  bottom: 1.8em;
+  bottom: 100%;
   left: 50%;
   margin-left: -108px;
   background: rgba(21,21,21,.9);

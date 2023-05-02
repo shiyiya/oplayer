@@ -66,7 +66,7 @@ import { PlaylistPlugin } from '@oplayer/plugins'
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      danmaku({ source: '/danmaku.xml', fontSize: 0.75 }),
+      danmaku({ source: '/danmaku.xml', fontSize: 0.75, displaySender: true }),
       new PlaylistPlugin({
         initialIndex: 0,
         autoNext: true,

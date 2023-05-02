@@ -7,6 +7,10 @@ export type Options = {
   opacity?: number
   fontSize?: number
   /**
+   * @default: 0.8
+   * */
+  area?: number
+  /**
    * @default 'dom'
    */
   engine?: 'canvas' | 'dom'
