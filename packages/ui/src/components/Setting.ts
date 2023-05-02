@@ -330,7 +330,7 @@ export default function (it: UIInterface) {
       {
         class: `${icon} ${tooltip}`,
         'aria-label': player.locales.get('Settings'),
-        'data-tooltip-pos': config.topSetting ? 'bottom-right' : ''
+        'data-tooltip-pos': config.topSetting ? 'down-right' : ''
       },
       `${Icons.get('setting')}`
     )

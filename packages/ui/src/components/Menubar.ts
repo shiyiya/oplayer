@@ -18,7 +18,7 @@ const _select = (elm: HTMLElement) => {
 
 export default (it: UIInterface) => {
   const {
-    config: { menu: initialState }
+    config: { menu: initialState, topSetting }
   } = it
 
   const menus: MenuBar[] = []
@@ -48,14 +48,18 @@ export default (it: UIInterface) => {
     it.addEventListener('click', clickHandler)
   })
 
+  let isNotFirstTop = Boolean(topSetting)
+
   it.menu.register = function register(menu: MenuBar) {
     const isTop = menu.position == 'top' && $targets.length == 2
+    if (isTop && !isNotFirstTop) isNotFirstTop = true
+
     const { name, icon, children } = menu
     let $menu: string = ''
     const $button = `
     <button
       aria-label="${name}"
-      ${isTop ? 'data-tooltip-pos="bottom-right"' : ''}
+      ${isTop ? `data-tooltip-pos="${isNotFirstTop ? 'down' : 'down-right'}"` : ''}
       class="${iconCls} ${!icon ? textIcon : ''} ${!menu.children ? tooltip : ''}"
       type="button"
     >${icon || name}</button>`

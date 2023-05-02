@@ -101,16 +101,18 @@ export const tooltip = isMobile
           opacity: 1,
           transform: 'translateX(-50%) scale(1)'
         },
-        // '&[left]::after': {
-        //   transform: 'translateY(0) scale(1)'
-        // },
+
         '&[data-tooltip-pos=up-right]::after': {
           right: 0,
           left: 'auto',
           transform: 'translateY(0) scale(1)'
         },
 
-        '&[data-tooltip-pos=bottom-right]::after': {
+        '&[data-tooltip-pos=down]::after': {
+          transform: 'translateX(-50%) scale(1)'
+        },
+
+        '&[data-tooltip-pos=down-right]::after': {
           right: 0,
           transform: 'translateY(0) scale(1)'
         }
@@ -135,6 +137,13 @@ export const tooltip = isMobile
         'font-size': '0.75em'
       },
 
+      '&[data-tooltip-pos=down]::after': {
+        top: '100%',
+        bottom: 'auto',
+        'margin-top': '0.5em',
+        transform: 'translate(-50%, -10px) scale(.8)'
+      },
+
       '&[data-tooltip-pos=up-right]::after': {
         right: 0,
         left: 'auto',
@@ -142,7 +151,7 @@ export const tooltip = isMobile
         'transform-origin': '100% 100%'
       },
 
-      '&[data-tooltip-pos=bottom-right]::after': {
+      '&[data-tooltip-pos=down-right]::after': {
         right: 0,
         top: '100%',
         bottom: 'unset',
