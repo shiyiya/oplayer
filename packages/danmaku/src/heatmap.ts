@@ -31,7 +31,7 @@ export default function heatmap(player: Player, danmaku: Comment[]) {
   const $progress = player.context.ui.$progress
 
   const $wrap = document.createElement('div')
-  $wrap.style.cssText = `height: 5em;width:100%;pointer-events:none`
+  $wrap.style.cssText = `height: 8em;width:100%;pointer-events:none`
   $progress.insertBefore($wrap, $progress.firstChild)
   const { offsetWidth: w, offsetHeight: h } = $wrap
 
@@ -40,21 +40,28 @@ export default function heatmap(player: Player, danmaku: Comment[]) {
     xMax: w,
     yMin: 0,
     yMax: 128,
-    scale: 0.2,
-    minHeight: Math.floor(h * 0.1),
+    scale: 0.25,
+    opacity: 0.5,
+    minHeight: Math.floor(h * 0.05),
     sampling: Math.floor(w / 100),
     fill: 'rgba(255, 255, 255, 0.5)',
     smoothing: 0.2,
-    flattening: 0
+    flattening: 0.2
   }
-  const points = []
-  const gap = player.duration / w
 
+  type Point = [number, number]
+  const points: Point[] = []
+  const gap = player.duration / w
   for (let x = 0; x <= w; x += options.sampling) {
     const y = danmaku.filter(
-      ({ time }) => !!time && time > x * gap && time! <= (x + options.sampling) * gap
+      ({ time }) => !!time && time > x * gap && time <= (x + options.sampling) * gap
     ).length
-    points.push([x, y + options.minHeight])
+    points.push([x, y])
+  }
+
+  const [lastX, lastY] = points[points.length - 1]!
+  if (lastX !== w) {
+    points.push([w, lastY])
   }
 
   const yPoints = points.map((point) => point[1]!)
@@ -65,7 +72,7 @@ export default function heatmap(player: Player, danmaku: Comment[]) {
   for (let i = 0; i < points.length; i++) {
     const point = points[i]!
     const y = point[1]!
-    point[1] = y * (y > yMid ? 1 + options.scale : 1 - options.scale)
+    point[1] = y * (y > yMid ? 1 + options.scale : 1 - options.scale) + options.minHeight
   }
 
   const controlPoint = (current: any, previous: any, next: any, reverse?: any) => {
@@ -106,23 +113,41 @@ export default function heatmap(player: Player, danmaku: Comment[]) {
   const pa = $.css({
     position: 'absolute',
     bottom: 0,
-    fill: `var(--heatmap-color, ${options.fill})`,
     [`@global [data-ctrl-hidden=true] &`]: {
       opacity: 0,
       transition: 'opacity .3s'
     }
   })
 
-  //     <defs>
-  //   <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-  //     <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
-  //     <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
-  //   </linearGradient>
-  // </defs>
-  // <svg viewBox="0 0 ${w} ${h}" class="${pa}">
-  $wrap.innerHTML = `<svg viewBox="0 0 ${w} ${h}" class="${pa}"><path d="${pathD}"></path></svg>`
+  $wrap.innerHTML = `
+  <svg viewBox="0 0 ${w} ${h}" class="${pa}">
+      <defs>
+          <linearGradient id="heatmap-solids" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:var(--primary-color); stop-opacity:${options.opacity}" />
+              <stop offset="0%" style="stop-color:var(--primary-color); stop-opacity:${options.opacity}" id="heatmap-start" />
+              <stop offset="0%" style="stop-color:var(--heatmap-color, ${options.fill});" id="heatmap-stop" />
+              <stop offset="100%" style="stop-color:var(--heatmap-color, ${options.fill});" />
+          </linearGradient>
+      </defs>
+      <path fill="url(#heatmap-solids)" d="${pathD}"></path>
+  </svg>
+`
 
-  player.on('videosourcechange', () => {
+  const $start = $wrap.querySelector('#heatmap-start')!
+  const $stop = $wrap.querySelector('#heatmap-stop')!
+
+  const updateProgress = () => {
+    $start.setAttribute('offset', `${(player.currentTime / player.duration) * 100}%`)
+    $stop.setAttribute('offset', `${(player.currentTime / player.duration) * 100}%`)
+  }
+
+  updateProgress()
+
+  player.on(['timeupdate', 'seeked'], updateProgress)
+
+  player.once('videosourcechange', () => {
     $wrap.remove()
+    player.off('timeupdate', updateProgress)
+    player.off('seeked', updateProgress)
   })
 }

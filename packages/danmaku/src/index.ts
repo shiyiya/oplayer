@@ -8,6 +8,9 @@ import heatmap from './heatmap'
 
 export * from './types'
 
+// oic=cid
+// https://cors-flame.vercel.app/api/stream?url=https://api.bilibili.com/x/v1/dm/list.so?oid=144541892
+
 export default (options = {} as Options): PlayerPlugin => ({
   key: 'danmaku',
   name: 'oplayer-plugin-danmaku',
@@ -93,7 +96,7 @@ export default (options = {} as Options): PlayerPlugin => ({
           loaded = true
           if (options.fontSize) setFontSize(options.fontSize)
           if (options.enable) danmaku.show()
-          if (enableHeatmap) {
+          if (enableHeatmap && danmaku.comments.length > 0) {
             if (isNaN(player.duration)) {
               player.once('loadedmetadata', () => {
                 heatmap(player, danmaku.comments)
@@ -401,9 +404,7 @@ function registerInputStyle() {
     cursor: 'pointer',
 
     '&:hover': {
-      fill: 'var(--primary-color)',
-      'padding-top': '0.5em',
-      'margin-top': ' -0.5em'
+      fill: 'var(--primary-color)'
     },
 
     [`&:hover .${modeSelectionWrap}`]: { display: 'block' },
