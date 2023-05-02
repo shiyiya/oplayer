@@ -32,7 +32,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     if (options.enable == undefined) options.enable = true
 
     let loaded = false
-    const danmaku: Danmaku & { comments: Comment[] } = new Danmaku({
+    const danmaku: Danmaku & { comments: Comment[]; defaultFontSize: number } = new Danmaku({
       container: $danmaku,
       media: player.$video,
       engine: engine || 'dom',
@@ -85,6 +85,11 @@ export default (options = {} as Options): PlayerPlugin => ({
         fetch(source).then((res) => {
           danmaku.clear()
           danmaku.comments = res.sort((a, b) => a.time! - b.time!)
+          danmaku.comments.forEach((comment: any) => {
+            if (comment.style?.fontSize) {
+              comment.defaultFontSize = comment.style.fontSize.slice(0, -2)
+            }
+          })
           loaded = true
           if (options.fontSize) setFontSize(options.fontSize)
           if (options.enable) danmaku.show()
@@ -104,7 +109,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     function setFontSize(value: number) {
       danmaku.comments.forEach((comment: any) => {
         if (comment.style?.fontSize) {
-          comment.style.fontSize *= value
+          comment.style.fontSize = `${comment.defaultFontSize * value}px`
         }
       })
     }
