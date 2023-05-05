@@ -1,6 +1,8 @@
 import type { PlayerEvent, PlayerOptions, PlayerPlugin, Source } from '@oplayer/core'
 import Player from '@oplayer/core'
 import {
+  DependencyList,
+  EffectCallback,
   forwardRef,
   Ref,
   useCallback,
@@ -30,8 +32,10 @@ const ReactOPlayer = forwardRef(
     const player = useRef<Player | null>(null)
     const preSource = usePrevious(rest.source)
 
+    const isNotReady = isInitialMount.current || !player.current || /* destroy */ !player.current.$root
+
     const onRefChange = useCallback((node: HTMLDivElement) => {
-      if (node !== null && !player.current) {
+      if (node !== null && (!player.current || !player.current.$root)) {
         player.current = Player.make(node, rest).use(plugins).create()
         if (typeof duration == 'number') player.current.seek(duration / 1000)
         if (onEvent) {
@@ -40,44 +44,39 @@ const ReactOPlayer = forwardRef(
       }
     }, [])
 
-    const isNotReady = isInitialMount.current || !player.current
 
-    useEffect(() => {
-      if (isNotReady) return
+    useEffectWhere(!isNotReady, () => {
       if (playing) {
-        if (player.current && !player.current.isPlaying) player.current?.play()
+        if (!player.current!.isPlaying) player.current!.play()
       } else {
-        if (player.current?.isPlaying) player.current?.pause()
+        if (player.current!.isPlaying) player.current!.pause()
       }
     }, [playing])
 
-    useEffect(() => {
-      if (isNotReady) return
+    useEffectWhere(!isNotReady, () => {
       if (
         (rest.source instanceof Promise && preSource != rest.source) ||
         (rest.source?.src && preSource?.src !== rest.source.src)
       ) {
-        player.current?.changeSource(rest.source)
+        player.current!.changeSource(rest.source)
       }
     }, [rest.source])
 
-    useEffect(() => {
+    useEffectWhere(!isNotReady, () => {
       if (isNotReady || typeof duration != 'number') return
-      player.current?.seek(duration / 1000)
+      player.current!.seek(duration / 1000)
     }, [duration])
 
-    useEffect(() => {
-      if (isNotReady) return
+    useEffectWhere(!isNotReady, () => {
       if (rest.muted) {
-        player.current?.mute()
+        player.current!.mute()
       } else {
-        player.current?.unmute()
+        player.current!.unmute()
       }
     }, [rest.muted])
 
-    useEffect(() => {
-      if (isNotReady) return
-      player.current?.setPlaybackRate(rest.playbackRate!)
+    useEffectWhere(!isNotReady, () => {
+      player.current!.setPlaybackRate(rest.playbackRate!)
     }, [rest.playbackRate])
 
     useEffect(() => {
@@ -116,6 +115,14 @@ const ReactOPlayer = forwardRef(
     }, [])
   }
 )
+
+const useEffectWhere = (where: boolean, cb: EffectCallback, deps?: DependencyList): void => {
+  useEffect(() => {
+    if (where) {
+      return cb()
+    }
+  }, deps)
+}
 
 export function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T>()

@@ -1,4 +1,5 @@
-import { $, isIOS, isMobile, Player, PlayerPlugin } from '@oplayer/core'
+import type { Player, PlayerPlugin } from '@oplayer/core'
+import { $, isIOS, isMobile, } from '@oplayer/core'
 import Danmaku from 'danmaku'
 import { danmakuParseFromUrl, getMode } from './danmaku-parse'
 import type { Comment, Options } from './types'
@@ -21,7 +22,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     const {
       speed = 144,
       opacity,
-      engine,
+      engine = 'dom',
       displaySender,
       area = 0.8,
       heatmap: enableHeatmap = true
@@ -38,7 +39,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     const danmaku: Danmaku & { comments: Comment[]; defaultFontSize: number } = new Danmaku({
       container: $danmaku,
       media: player.$video,
-      engine: engine || 'dom',
+      engine: engine,
       comments: [],
       speed: isMobile ? speed / 1.5 : speed
     }) as any
@@ -65,7 +66,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     if (displaySender && !isMobile) registerInput()
     if (options.enable) bootstrap(options.source)
 
-    async function fetch(source: any) {
+    async function fetchSource(source: Options['source']) {
       try {
         let danmakus: Comment[]
         if (typeof source === 'function') {
@@ -82,10 +83,13 @@ export default (options = {} as Options): PlayerPlugin => ({
       }
     }
 
-    function bootstrap(source: any) {
+    function bootstrap(source: Options['source']) {
       options.source = source
       if (options.enable) {
-        fetch(source).then((res) => {
+        fetchSource(source).then((res) => {
+          //@ts-ignore 已销毁
+          if (!danmaku._) return
+
           danmaku.clear()
           danmaku.comments = res.sort((a, b) => a.time! - b.time!)
           danmaku.comments.forEach((comment: any) => {
