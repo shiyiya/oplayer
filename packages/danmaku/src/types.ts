@@ -1,3 +1,5 @@
+import type Danmaku from "danmaku"
+
 export type Options = {
   source: string | Function | Comment[]
   /**
@@ -13,7 +15,7 @@ export type Options = {
   /**
    * @default: true
    * */
-  heatmap?: boolean
+  heatmap?: boolean | Array<[number, number]>
   /**
    * @default 'dom'
    */
@@ -48,4 +50,10 @@ export interface Comment {
    * When it exist, `text` and `style` will be ignored.
    */
   render?(): HTMLElement | HTMLCanvasElement
+}
+
+export interface DanmakuContext extends Danmaku {
+  comments: Comment[];
+  bootstrap: (source: Options['source']) => Promise<void>
+  setFontSize: (size: number) => void
 }
