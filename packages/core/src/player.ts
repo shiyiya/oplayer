@@ -14,8 +14,6 @@ import type {
   Source
 } from './types'
 
-const players: Player[] = []
-
 const defaultOptions = {
   autoplay: false,
   muted: false,
@@ -33,6 +31,8 @@ const defaultOptions = {
 }
 
 export class Player<Context extends Record<string, any> = Record<string, any>> {
+  static players: Player[] = []
+
   container: HTMLElement
   options: Required<PlayerOptions>
 
@@ -84,7 +84,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     this.initEvent()
     this.plugins.forEach(this.applyPlugin.bind(this))
     if (this.options.source.src) this.load(this.options.source)
-    players.push(this)
+    Player.players.push(this)
     return this
   }
 
@@ -249,8 +249,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   play() {
     if (!this.$video.src || this.isSourceChanging) return
     if (this.options.autopause) {
-      for (let i = 0; i < players.length; i++) {
-        const player = players[i]
+      for (let i = 0; i < Player.players.length; i++) {
+        const player = Player.players[i]
         if (player != this) player!.pause()
       }
     }
@@ -452,7 +452,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   destroy() {
-    players.splice(players.indexOf(this), 1)
+    Player.players.splice(Player.players.indexOf(this), 1)
 
     const {
       eventEmitter,
@@ -479,7 +479,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
     container.removeChild($root)
     // prettier-ignore
-    this.eventEmitter = this.locales = this.options = this.listeners =  this.context = this.plugins = this.container = this.$root = this.$video = this.loader = undefined as any
+    this.eventEmitter = this.locales = this.options = this.listeners = this.context = this.plugins = this.container = this.$root = this.$video = this.loader = undefined as any
   }
 
   get isNativeUI() {
