@@ -26,5 +26,6 @@
     "**/bower_components/**",
     "thumbnails-tool",
     "**/examples/**"
-  ]
+  ],
+  "ignoreDeps": ["node", "pnpm"]
 }
