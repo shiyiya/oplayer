@@ -19,9 +19,9 @@ const loadingListener = (player: Player) => {
   })
 
   player.on(['seeking', 'videoqualitychange', 'videosourcechange'], addClass)
-  player.on([canplay, 'playing', 'pause', 'seeked', 'error'], removeClass)
+  player.on([canplay, 'canplaythrough', 'playing', 'pause', 'seeked', 'error'], removeClass)
 
-  player.on(['stalled', 'waiting'], () => {
+  player.on('waiting', () => {
     addClass()
 
     // Browsers may emit a timeupdate event after a waiting event. In order to prevent
