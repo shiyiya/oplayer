@@ -33,7 +33,18 @@ export default () => {
   useEffect(() => {
     player.current = Player.make('#oplayer', { source: { src: input } })
       .use([
-        ui({ keyboard: { global: true } }),
+        ui({
+          keyboard: { global: true },
+          menu: [
+            {
+              name: 'WEBFULL',
+              icon: `<svg viewBox="0 0 1024 1024" style="transform: scale(0.7)"><path d="M85.333333 768v170.666667h170.666667v85.333333H0v-256h85.333333z m938.666667 0v256h-256v-85.333333h170.666667v-170.666667h85.333333zM640 256a128 128 0 0 1 128 128v256a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V384a128 128 0 0 1 128-128h256zM256 0v85.333333H85.333333v170.666667H0V0h256z m768 0v256h-85.333333V85.333333h-170.666667V0h256z"></path></svg>`,
+              onClick() {
+                player.current?.emit('fullscreenchange', { isWeb: true })
+              }
+            }
+          ]
+        }),
         hls({ forceHLS: true }),
         dash(),
         mpegts(),
