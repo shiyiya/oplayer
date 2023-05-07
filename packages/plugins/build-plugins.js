@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { build } from 'vite'
-import glob from 'glob'
+import { globSync } from 'glob'
 import chokidar from 'chokidar'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
@@ -41,7 +41,7 @@ function runInQueue(ps) {
   return ps.reduce((p, next) => p.then(next), Promise.resolve())
 }
 
-const plugins = glob.sync('src/*').reduce(
+const plugins = globSync('src/*').reduce(
   (result, item) => {
     result[path.basename(item, path.extname(item))] = item
     return result
