@@ -23,7 +23,7 @@
     "cli-spinner": "^0.2.10",
     "commander": "^9.4.1",
     "fluent-ffmpeg": "^2.1.2",
-    "jimp": "^0.16.2",
+    "jimp": "^0.22.0",
     "node-sprite-generator": "^0.10.2",
     "ora": "^6.1.2",
     "rimraf": "^3.0.2"
