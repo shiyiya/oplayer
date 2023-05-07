@@ -213,8 +213,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       webtorrent:
-        specifier: ^2.0.17
-        version: 2.0.17
+        specifier: ^2.0.18
+        version: 2.0.18
 
   packages/ui:
     devDependencies:
@@ -7623,8 +7623,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /webtorrent@2.0.17:
-    resolution: {integrity: sha512-8n5G86LxcrvAdhAYTFwMKD9CgFJXCQL6aYy1ULNff3yqMMf0FWo+SKd5kO93sJ30cGJpOIXuNbAZrdhhBpqDSg==}
+  /webtorrent@2.0.18:
+    resolution: {integrity: sha512-gxQ88qH2VnP9Sc4nOx5cKXrG/iiK3ylpcMyLOqruPbdGb3NkqwCGNDA4wWMrjVBaQKYs7SS4VhaWKpj4euonDg==}
     engines: {node: '>=14'}
     dependencies:
       '@webtorrent/http-node': 1.3.0
