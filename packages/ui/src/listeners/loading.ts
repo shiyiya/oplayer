@@ -1,87 +1,41 @@
 import type Player from '@oplayer/core'
-import { isMobile } from '@oplayer/core'
 import { loading } from '../style'
 import { canplay } from '../utils'
 
-const loadingListener = (player: Player, detect = true) => {
-  const add = () => player.$root.classList.add(loading)
-  const remove = () => {
+const loadingListener = (player: Player) => {
+  const addClass = () => player.$root.classList.add(loading)
+  const removeClass = () => {
     if (!player.isSourceChanging) {
       player.$root.classList.remove(loading)
     }
   }
 
   if (player.$video.preload != 'none') {
-    add()
+    addClass()
   }
 
   player.on('loadstart', () => {
-    if (player.$video.preload == 'none') remove()
+    if (player.$video.preload == 'none') removeClass()
   })
 
-  player.on(['videoqualitychange', 'videosourcechange'], add)
+  player.on(['seeking', 'videoqualitychange', 'videosourcechange'], addClass)
+  player.on([canplay, 'playing', 'pause', 'seeked', 'error'], removeClass)
 
-  if (isMobile && detect) {
-    detectLoading(player, add, remove)
-  } else {
-    player.on(['waiting', 'seeking'], add)
-    player.on([canplay, 'pause', 'seeked', 'error'], remove)
-  }
-}
+  player.on(['stalled', 'waiting'], () => {
+    addClass()
 
-const detectLoading = (player: Player, add: any, remove: any) => {
-  let lastTime = 0
-  let currentTime = 0
-  let bufferingDetected = false
-  let enable = false
-
-  player.on('seeking', () => {
-    if (!player.isPlaying) {
-      add()
-      player.once('seeked', remove)
-    }
-  })
-
-  player.on('play', () => (enable = true))
-  player.on(['pause', 'error'], () => ((enable = false), remove()))
-
-  player.on(canplay, remove)
-
-  player.on(['videosourcechange', 'videoqualitychange'], () => {
-    enable = false
-    lastTime = currentTime = 0
-  })
-
-  const requestAnimationFrame =
-    window.requestAnimationFrame ||
-    (window as any).mozRequestAnimationFrame ||
-    (window as any).webkitRequestAnimationFrame ||
-    function (cb) {
-      return setTimeout(cb, 50 / 3)
-    }
-
-  ;(function raf() {
-    return requestAnimationFrame(() => {
-      if (enable) {
-        currentTime = player.currentTime
-
-        // loading
-        if (!bufferingDetected && currentTime === lastTime && player.isPlaying) {
-          add()
-          bufferingDetected = true
-        }
-
-        if (bufferingDetected && currentTime > lastTime && player.isPlaying) {
-          remove()
-          bufferingDetected = false
-        }
-
-        lastTime = currentTime
+    // Browsers may emit a timeupdate event after a waiting event. In order to prevent
+    // premature removal of the waiting class, wait for the time to change.
+    const timeWhenWaiting = player.currentTime
+    const timeUpdateListener = () => {
+      if (timeWhenWaiting !== player.currentTime) {
+        removeClass()
+        player.off('timeupdate', timeUpdateListener)
       }
+    }
 
-      if (player.$video) raf()
-    })
-  })()
+    player.on('timeupdate', timeUpdateListener)
+  })
 }
 
 const isLoading = (player: Player) => player.$root.classList.contains(loading)

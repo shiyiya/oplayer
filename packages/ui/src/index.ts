@@ -114,7 +114,7 @@ class UI implements UIInterface {
     const $root = (this.$root = $.create(`div.${root(config)}`))
 
     if (player.isNativeUI) {
-      loadingListener(player, false)
+      loadingListener(player)
       renderCoverButton(player, $root)
       renderLoading(player, $root)
       $.render($root, player.$root)

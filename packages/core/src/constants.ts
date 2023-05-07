@@ -33,6 +33,7 @@ export const OH_EVENTS = [
   'loadedplugin',
   'videoqualitychange',
   'videosourcechange',
+  // 'posterchange',
   'destroy'
 ] as const
 
