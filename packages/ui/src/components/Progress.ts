@@ -89,7 +89,7 @@ const render = (it: UIInterface, el: HTMLElement) => {
         $dom.classList.remove(progressDragging)
         isDargMoving = false
         document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
-        player.seek(getSlidingValue(e) * player.duration)
+        if (!isNaN(player.duration)) player.seek(getSlidingValue(e) * player.duration)
       },
       { once: true }
     )
