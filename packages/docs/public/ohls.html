@@ -21,6 +21,10 @@
       })
         .use([OUI(), OHls()])
         .create()
+
+      new Promise(() => {
+        player.emit('fullscreenchange', { isWeb: true })
+      })
     </script>
   </body>
 </html>

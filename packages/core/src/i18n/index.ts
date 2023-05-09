@@ -45,7 +45,7 @@ export default class I18n {
   }
 
   update(languages: Partial<Record<Lang, any>>): void {
-    this.languages = mergeDeep(this.languages, languages) as any
+    mergeDeep(this.languages, languages)
   }
 }
 

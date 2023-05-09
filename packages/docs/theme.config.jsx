@@ -1,7 +1,6 @@
 import React from 'react'
 import { useConfig } from 'nextra-theme-docs'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 
 export default {
   logo: <span>Documentation</span>,
@@ -75,8 +74,6 @@ export default {
           type="image/png"
           media="(prefers-color-scheme: dark)"
         /> */}
-
-        <Script src="https://oplayer.vercel.app/_vercel/insights/script.js" />
       </>
     )
   }
