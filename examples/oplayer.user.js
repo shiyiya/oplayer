@@ -89,7 +89,9 @@
 
   var pushState = history.pushState
   history.pushState = function () {
-    detectVideoTags()
+    setTimeout(() => {
+      detectVideoTags()
+    }, 3000)
     return pushState.apply(history, arguments)
   }
 
@@ -103,12 +105,17 @@
 
   function detectVideoTags() {
     for (let v of Array.from(document.querySelectorAll('video'))) {
-      if (v.src.startsWith('http')) {
-        observer.observe(v, {
-          attributes: true,
-          attributeFilter: ['src']
-        })
-        openPlayerPage(v.src)
+      const sources = v.querySelectorAll('source')
+      if (sources.length) {
+        openPlayerPage(sources.item(0).src)
+      } else {
+        if (v.src.startsWith('http')) {
+          observer.observe(v, {
+            attributes: true,
+            attributeFilter: ['src']
+          })
+          openPlayerPage(v.src)
+        }
       }
     }
   }

@@ -17,10 +17,25 @@
       var player = OPlayer.make('#oplayer', {
         source: {
           src: document.location.search.substring(1)
-        }
+        },
+        playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
+        volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
-        .use([OUI(), OHls()])
+        .use([
+          OUI({
+            keyboard: { global: true }
+          }),
+          OHls()
+        ])
         .create()
+
+      player.on('ratechange', () => {
+        localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+      })
+
+      player.on('volumechange', () => {
+        localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+      })
 
       new Promise(() => {
         player.emit('fullscreenchange', { isWeb: true })
