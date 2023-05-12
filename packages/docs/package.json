@@ -19,9 +19,9 @@
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "mdx-embed": "^1.1.2",
-    "next": "^13.4.1",
-    "nextra": "^2.5.0",
-    "nextra-theme-docs": "^2.5.0",
+    "next": "^13.4.2",
+    "nextra": "^2.5.2",
+    "nextra-theme-docs": "^2.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
