@@ -93,14 +93,12 @@ export const progressInner = $.css({
   height: '4px',
   width: '100%',
   'background-color': 'hsla(0, 0%, 100%, 0.2)',
-  'border-radius': '2px',
 
   [`& .${buffered}, & .${played}`]: {
     position: 'absolute',
     left: '0',
     top: '0',
     bottom: '0',
-    'pointer-events': 'none',
-    'border-radius': '2px'
+    'pointer-events': 'none'
   }
 })
