@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
   </head>
   <body style="margin: 0">
@@ -25,9 +26,10 @@
           OUI({
             keyboard: { global: true }
           }),
-          OHls()
+          OHls({ forceHLS: true })
         ])
         .create()
+        .on('error', console.warn)
 
       player.on('ratechange', () => {
         localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())

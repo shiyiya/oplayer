@@ -8,6 +8,7 @@
 // @homepage     -
 // @match        *://*/*
 // @exclude      https://ohplayer.netlify.app/*
+// @exclude      *://*bilibili.com/*
 // @connect      *
 // @grant        unsafeWindow
 // @grant        GM_openInTab
@@ -69,17 +70,24 @@
 
   const _r_open = unsafeWindow.XMLHttpRequest.prototype.open
   unsafeWindow.XMLHttpRequest.prototype.open = function (...args) {
-    this.addEventListener('load', () => {
-      try {
+    if (checkUrl(args[1])) {
+      openPlayerPage(args[1])
+    } else {
+      this.addEventListener('load', () => {
         if (checkContent(this.responseText)) {
           openPlayerPage(args[1])
         }
-      } catch {
-        // checkUrl(args[1])
-      }
-    })
+      })
+    }
     return _r_open.apply(this, args)
   }
+
+  window.addEventListener('copy', function () {
+    var text = window.getSelection()?.toString()
+    if (checkUrl(text)) {
+      openPlayerPage(text)
+    }
+  })
 
   window.addEventListener('load', () => {
     setTimeout(() => {
@@ -120,12 +128,12 @@
     }
   }
 
-  // function checkUrl(url) {
-  //   url = new URL(url, location.href)
-  //   if (url.pathname.endsWith('.m3u8') || url.pathname.endsWith('.m3u')) {
-  //     openPlayerPage(url)
-  //   }
-  // }
+  function checkUrl(url) {
+    url = new URL(url, location.href)
+    if (['.m3u8', '.m3u', '.m4s', '.mp4'].some((ext) => url.pathname.endsWith(ext))) {
+      return true
+    }
+  }
 
   function checkContent(content) {
     if (content.trim().startsWith('#EXTM3U')) {
@@ -133,8 +141,12 @@
     }
   }
 
+  var latestOpenTS = 0
   function openPlayerPage(url) {
+    if (Date.now() - latestOpenTS < 2000) return
+    latestOpenTS = Date.now()
     if (window.confirm(`detected video: ${url}`)) {
+      latestOpenTS = Date.now()
       mgmapi.openInTab(`https://ohplayer.netlify.app/ohls?${url}`)
     }
   }
