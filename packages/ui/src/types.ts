@@ -22,6 +22,7 @@ export type Subtitle = {
   shadow?: string
   fontFamily?: string
   background?: boolean
+  marginBottom?: string
 }
 
 export type MenuBar<

@@ -98,7 +98,7 @@ export class Subtitle {
   createContainer() {
     const {
       el,
-      options: { color, shadow, fontSize, bottom, fontFamily, background }
+      options: { color, shadow, fontSize, bottom, fontFamily, background, marginBottom }
     } = this
 
     this.$dom = $.create(
@@ -117,7 +117,7 @@ export class Subtitle {
             'text-shadow':
               shadow ||
               '1px 0 1px #000, 0 1px 1px #000, -1px 0 1px #000, 0 -1px 1px #000, 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000',
-            bottom: `${bottom || '5%'}`,
+            bottom: bottom || '2%',
             'font-size': `${(fontSize || (isMobile ? 16 : 20)) / 16}em`,
 
             '& > p': {
@@ -130,7 +130,7 @@ export class Subtitle {
             }
           },
           !isMobile && {
-            'margin-bottom': '1.5em',
+            'margin-bottom': marginBottom || '2.2em',
             transition: 'margin 0.2s',
             [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 }
           }
