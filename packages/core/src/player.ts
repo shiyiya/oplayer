@@ -175,6 +175,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     // not working `setAttribute`
     this.$video.muted = !!this.options.muted
     this.$video.volume = this.options.volume
+    this.$video.playbackRate = this.options.playbackRate
 
     this.$root = $.create(
       `div.${$.css(`
