@@ -14,6 +14,12 @@
 - https://oplayer.vercel.app
 - https://ohplayer.netlify.app
 
+## Who use OPlayer?
+
+- [UPV](https://web.月色真美.life) : free animes no ad
+- [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
+- **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/new?category=show-and-tell)**
+
 ## Feature
 
 - Streaming formats
@@ -31,12 +37,6 @@
   - Highlight Marker
   - [Playlist](./packages/plugins/README.md#playlist)
   - ... and much more!
-
-## Who use OPlayer?
-
-- [UPV](https://web.月色真美.life) : free animes no ad
-- [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
-- **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/issues/new)**
 
 ## Support
 
