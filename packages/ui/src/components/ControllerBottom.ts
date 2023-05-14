@@ -21,7 +21,7 @@ export const controllerBottomWrap = $.css({
   left: 0,
   right: 0,
   bottom: 0,
-  'z-index': 97,
+  'z-index': 7,
   padding: '0 1em',
   transition: 'transform 0.3s ease, padding 0.3s ease',
   '&::before': {

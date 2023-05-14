@@ -9,7 +9,7 @@ const noticeCls = $.css({
   top: '0.625em',
   left: '0.625em',
   right: '0.625em',
-  'z-index': 99,
+  'z-index': 9,
   'margin-top': 'var(--control-bar-height)',
   transition: 'margin 0.2s',
   [`@global .${controllerHidden} &`]: { 'margin-top': 0 }

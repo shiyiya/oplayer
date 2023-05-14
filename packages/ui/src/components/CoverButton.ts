@@ -22,7 +22,7 @@ const styles = $.css(
       fill: '#fff',
       width: '3em',
       height: '3em',
-      'z-index': '97',
+      'z-index': '7',
 
       '& > button': {
         width: '100%',

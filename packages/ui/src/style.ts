@@ -59,7 +59,7 @@ export const root = (config: UiConfig) => {
 }
 
 export const webFullScreen = $.css`
-  z-index: 9999 !important;
+  z-index: 99 !important;
   position: fixed !important;
   left: 0;
   right: 0;

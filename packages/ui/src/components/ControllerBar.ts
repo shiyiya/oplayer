@@ -10,7 +10,7 @@ export const controlBar = $.css({
   top: 0,
   left: 0,
   right: 0,
-  'z-index': 97,
+  'z-index': 7,
   padding: '0.5em 1em 0',
   transition: 'transform 0.3s ease',
   height: 'var(--control-bar-height)',

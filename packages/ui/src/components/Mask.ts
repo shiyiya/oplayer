@@ -13,7 +13,7 @@ export const maskCls = $.css({
   bottom: '0',
 
   [`@global .${settingShown} &`]: {
-    'z-index': '98'
+    'z-index': '8'
   }
 })
 

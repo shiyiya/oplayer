@@ -4,7 +4,7 @@ export const activeCls = $.css('display: block;')
 
 export const setting = (position: 'top' | 'bottom') =>
   $.css({
-    'z-index': '98',
+    'z-index': '8',
     'max-height': '75%',
     'border-radius': '2px',
     display: 'block',

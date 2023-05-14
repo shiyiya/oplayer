@@ -3,7 +3,7 @@
   top: 0;
   left: 100%;
   height: 100%;
-  z-index: 99;
+  z-index: 9;
   width: 18em;
   transition: transform 0.3s;
   background-color: rgba(28, 28, 28, 0.9);
