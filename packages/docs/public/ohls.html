@@ -29,10 +29,11 @@
           OHls({ forceHLS: true })
         ])
         .create()
-        .on('error', console.warn)
+        .on(console.log)
 
       player.on('ratechange', () => {
-        localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+        if (!player.isSourceChanging)
+          localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
       })
 
       player.on('volumechange', () => {

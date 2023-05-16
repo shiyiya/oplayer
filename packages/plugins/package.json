@@ -16,7 +16,7 @@
     "@oplayer/core": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "chokidar": "^3.5.3",
-    "glob": "^10.2.3",
+    "glob": "^10.2.4",
     "vite-plugin-css-injected-by-js": "^3.1.1"
   },
   "keywords": [],

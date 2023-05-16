@@ -37,7 +37,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   options: Required<PlayerOptions>
 
   locales: I18n
-  eventEmitter = new EventEmitter()
+  eventEmitter: EventEmitter
 
   plugins: PlayerPlugin[] = []
   context: Context = {} as Context
@@ -58,11 +58,13 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       throw new Error((typeof el == 'string' ? el : 'Element') + 'does not exist')
 
     this.options = Object.assign(
+      {},
       defaultOptions,
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
     this.locales = new I18n(this.options.lang)
+    this.eventEmitter = new EventEmitter()
   }
 
   static make<Context extends Record<string, any> = Record<string, any>>(
@@ -173,9 +175,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     )
 
     // not working `setAttribute`
-    this.$video.muted = !!this.options.muted
-    this.$video.volume = this.options.volume
-    this.$video.playbackRate = this.options.playbackRate
+    const { muted, volume, playbackRate } = this.options
+    if (!!muted) this.mute()
+    this.$video.volume = volume
+    this.setPlaybackRate(playbackRate)
 
     this.$root = $.create(
       `div.${$.css(`
@@ -423,9 +426,11 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       }
 
       const canplayHandler = () => {
+        this.isSourceChanging = false
         this.off('error', errorHandler)
-        this.setVolume(volume)
-        this.setPlaybackRate(playbackRate)
+        this.emit(options.event, source)
+        if (volume != this.volume) this.setVolume(volume)
+        if (playbackRate != this.playbackRate) this.setPlaybackRate(playbackRate)
         if (isPreloadNone && keepTime) this.$video.load()
         if (keepTime) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
@@ -444,10 +449,6 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
           return source
         })
         .then((source) => this.load(source))
-        .then((source) => {
-          this.isSourceChanging = false
-          this.emit(options.event, source)
-        })
         .catch(errorHandler)
     })
   }

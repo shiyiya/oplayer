@@ -8,7 +8,6 @@
 // @homepage     -
 // @match        *://*/*
 // @exclude      https://ohplayer.netlify.app/*
-// @exclude      *://*bilibili.com/*
 // @connect      *
 // @grant        unsafeWindow
 // @grant        GM_openInTab
@@ -19,7 +18,7 @@
 // @ https://greasyfork.org/zh-CN/scripts/449581-m3u8%E8%A7%86%E9%A2%91%E4%BE%A6%E6%B5%8B%E4%B8%8B%E8%BD%BD%E5%99%A8-%E8%87%AA%E5%8A%A8%E5%97%85%E6%8E%A2
 // ==/UserScript==
 
-;(function (window) {
+; (function (window) {
   const mgmapi = {
     openInTab(url, open_in_background = false) {
       return (typeof GM_openInTab === 'function' ? GM_openInTab : GM.openInTab)(
@@ -78,7 +77,7 @@
           if (checkContent(this.responseText)) {
             openPlayerPage(args[1])
           }
-        } catch (error) {}
+        } catch (error) { }
       })
     }
     return _r_open.apply(this, args)
@@ -133,21 +132,26 @@
 
   function checkUrl(url) {
     url = new URL(url, location.href)
-    // '.m4s'
-    if (['.m3u8', '.m3u', '.mp4'].some((ext) => url.pathname.endsWith(ext))) {
+    if (['.m3u8', '.m3u', '.mp4', '.m4s'].some((ext) => url.pathname.endsWith(ext))) {
       return true
     }
   }
 
+  var blackList = []
   function checkContent(content) {
     if (content.trim().startsWith('#EXTM3U')) {
+      var list = content.match(/(.*\.m3u8)/g)
+      list && blackList.push(list)
       return true
     }
   }
 
   // var latestOpenTS = 0
   function openPlayerPage(url) {
-    pushItem({ href: url })
+    if (!blackList.includes(url) || !blackList.some((b) => url.includes(b))) {
+      blackList.push(url)
+      pushItem({ href: url })
+    }
     // if (Date.now() - latestOpenTS < 2000) return
     // latestOpenTS = Date.now()
     // if (window.confirm(`detected video: ${url}`)) {
@@ -158,17 +162,24 @@
 
   window.addEventListener('DOMContentLoaded', injectUI)
 
-  var list, counter
+  var pin, list, counter
   function injectUI() {
-    const _pin = document.createElement('div')
-    _pin.className = 'media-list'
-    _pin.style.cssText = `position: fixed;top:10vh;right:5vw;z-index: 99;`
-    document.body.appendChild(_pin)
-    var pin = _pin.attachShadow({ mode: 'open' })
+    pin = document.createElement('div')
+    pin.className = 'media-list'
+    pin.style.cssText = `position: fixed;top:10vh;right:5vw;z-index: 99;display:none;`
+    document.body.appendChild(pin)
+    var _pin = pin.attachShadow({ mode: 'open' })
 
-    pin.innerHTML = `
+    _pin.innerHTML = `
     <!-- <style>@import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";</style> -->
      <style>${css}</style>
+     <style>
+     a.dropdown-item, button.dropdown-item{
+      display: flex;
+      justify-content: space-between;
+      padding-right: 1rem;
+     }
+     </style>
       <div class="dropdown is-right is-hoverable">
         <div class="dropdown-trigger">
           <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -186,25 +197,41 @@
         </div>
       </div>`
 
-    list = pin.querySelector('.dropdown-content')
-    counter = pin.querySelector('.media-counter')
+    list = _pin.querySelector('.dropdown-content')
+    counter = _pin.querySelector('.media-counter')
+    pin.ondblclick = function () {
+      detectVideoTags()
+    }
+    queue.forEach((href) => { pushItem({ href }) })
   }
 
   var TS = Date.now()
+  var queue = []
   function pushItem({ href }) {
+    if (!list) {
+      queue.push(href)
+      return
+    }
+
     var pathname = new URL(href).pathname
+    if (pathname.endsWith('/')) {
+      pathname = pathname.substring(0, pathname.length - 2)
+    }
     list.appendChild(
       createElementFromHTML(`
         <a class="dropdown-item" href="https://ohplayer.netlify.app/ohls?${href}" target="_blank">
-          ${pathname.substring(pathname.lastIndexOf('/') + 1)} - ${(Date.now() - TS) / 1000}s
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">${pathname.substring(pathname.lastIndexOf('/') + 1)}</span>
+        <span style="color:hsl(0, 0%, 71%);">${((Date.now() - TS) / 1000).toFixed(1)}s </span>
         </a>`)
     )
     counter.innerText = Number(counter.innerText || 0) + 1
+    pin.style.display = 'block'
   }
 
   function cleanList() {
     list.innerHTML = ''
     counter.innerText = ''
+    pin.style.display = 'none'
   }
 
   function createElementFromHTML(htmlString) {

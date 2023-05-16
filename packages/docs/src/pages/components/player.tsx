@@ -9,14 +9,10 @@ import style from './player.module.scss'
 const userPreferencesPlugin: PlayerPlugin = {
   name: 'userPreferencesPlugin',
   apply(player) {
-    const preSpeed = localStorage.getItem('@oplayer/UserPreferences/speed')
-    if (preSpeed) player.setPlaybackRate(+preSpeed)
-
-    const preVolume = localStorage.getItem('@oplayer/UserPreferences/volume')
-    if (preVolume) player.setVolume(+preVolume)
-
     player.on('ratechange', () => {
-      localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+      // 首次调用changeSource且上一次视频地址为空时会触发 ratechange = 1
+      if (!player.isSourceChanging)
+        localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
     })
 
     player.on('volumechange', () => {
@@ -31,7 +27,11 @@ export default () => {
   const [isFirst, setIsFirst] = useState(true)
 
   useEffect(() => {
-    player.current = Player.make('#oplayer', { source: { src: input } })
+    player.current = Player.make('#oplayer', {
+      source: { src: input },
+      playbackRate: +(localStorage.getItem('@oplayer/UserPreferences/speed') || 1),
+      volume: +(localStorage.getItem('@oplayer/UserPreferences/volume') || 1)
+    })
       .use([
         ui({
           keyboard: { global: true },
