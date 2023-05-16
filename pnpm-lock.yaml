@@ -59,8 +59,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       terser:
-        specifier: ^5.17.3
-        version: 5.17.3
+        specifier: ^5.17.4
+        version: 5.17.4
       tslib:
         specifier: ^2.5.0
         version: 2.5.0
@@ -69,13 +69,13 @@ importers:
         version: 5.0.4
       vite:
         specifier: ^4.3.6
-        version: 4.3.6(@types/node@18.16.10)(terser@5.17.3)
+        version: 4.3.6(@types/node@18.16.10)(terser@5.17.4)
       vite-plugin-banner:
         specifier: ^0.7.0
         version: 0.7.0
       vitest:
         specifier: ^0.31.0
-        version: 0.31.0(jsdom@22.0.0)(terser@5.17.3)
+        version: 0.31.0(jsdom@22.0.0)(terser@5.17.4)
 
   packages/core: {}
 
@@ -422,7 +422,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/helper-plugin-utils': 7.21.5
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.12.9)
       '@babel/plugin-transform-parameters': 7.21.3(@babel/core@7.12.9)
     dev: false
@@ -1623,7 +1623,7 @@ packages:
       '@babel/plugin-transform-react-jsx-self': 7.21.0(@babel/core@7.21.8)
       '@babel/plugin-transform-react-jsx-source': 7.19.6(@babel/core@7.21.8)
       react-refresh: 0.14.0
-      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.3)
+      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6791,8 +6791,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /terser@5.17.3:
-    resolution: {integrity: sha512-AudpAZKmZHkG9jueayypz4duuCFJMMNGRMwaPvQKWfxKedh8Z2x3OCoDqIIi1xx5+iwx1u6Au8XQcc9Lke65Yg==}
+  /terser@5.17.4:
+    resolution: {integrity: sha512-jcEKZw6UPrgugz/0Tuk/PVyLAPfMBJf5clnGueo45wTweoV8yh7Q7PEkhkJ5uuUbC7zAxEcG3tqNr1bstkQ8nw==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -7367,7 +7367,7 @@ packages:
       vfile-message: 3.1.4
     dev: false
 
-  /vite-node@0.31.0(@types/node@18.16.10)(terser@5.17.3):
+  /vite-node@0.31.0(@types/node@18.16.10)(terser@5.17.4):
     resolution: {integrity: sha512-8x1x1LNuPvE2vIvkSB7c1mApX5oqlgsxzHQesYF7l5n1gKrEmrClIiZuOFbFDQcjLsmcWSwwmrWrcGWm9Fxc/g==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -7377,7 +7377,7 @@ packages:
       mlly: 1.2.1
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.3)
+      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.4)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -7397,10 +7397,10 @@ packages:
     peerDependencies:
       vite: '>2.0.0-0'
     dependencies:
-      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.3)
+      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.4)
     dev: true
 
-  /vite@4.3.6(@types/node@18.16.10)(terser@5.17.3):
+  /vite@4.3.6(@types/node@18.16.10)(terser@5.17.4):
     resolution: {integrity: sha512-cqIyLSbA6gornMS659AXTVKF7cvSHMdKmJJwQ9DXq3lwsT1uZSdktuBRlpHQ8VnOWx0QHtjDwxPpGtyo9Fh/Qg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -7429,12 +7429,12 @@ packages:
       esbuild: 0.17.19
       postcss: 8.4.23
       rollup: 3.21.8
-      terser: 5.17.3
+      terser: 5.17.4
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
 
-  /vitest@0.31.0(jsdom@22.0.0)(terser@5.17.3):
+  /vitest@0.31.0(jsdom@22.0.0)(terser@5.17.4):
     resolution: {integrity: sha512-JwWJS9p3GU9GxkG7eBSmr4Q4x4bvVBSswaCFf1PBNHiPx00obfhHRJfgHcnI0ffn+NMlIh9QGvG75FlaIBdKGA==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -7488,8 +7488,8 @@ packages:
       strip-literal: 1.0.1
       tinybench: 2.5.0
       tinypool: 0.5.0
-      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.3)
-      vite-node: 0.31.0(@types/node@18.16.10)(terser@5.17.3)
+      vite: 4.3.6(@types/node@18.16.10)(terser@5.17.4)
+      vite-node: 0.31.0(@types/node@18.16.10)(terser@5.17.4)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
