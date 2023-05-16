@@ -21,10 +21,18 @@ const loadingListener = (player: Player) => {
   player.on(['seeking', 'videoqualitychange', 'videosourcechange'], addClass)
   player.on(['canplaythrough', 'playing', 'pause', 'seeked', 'error'], removeClass)
 
-  // 无视 isSourceChanging
-  // 顺序: loadedmetadata -> ⬇(isSourceChanging: false) -> videosourcechanged(isSourceChanging: true)
-  // safari 当 autoplay = true 才触发 canplay
+  // safari 不预加载, 当 autoplay = true 才触发 canplay(预加载), 改变视频地址后默认预加载(或者是有用户交互?)
+  // TODO: 尝试以下代码
+  // if (isSafari) {
+  //   player.once('loadedmetadata', () => player.$root.classList.remove(loading))
+  // }
+  // player.on('canplay', () =>
+  //   player.$root.classList.remove(loading)
+  // )
+
   player.on(player.$video.autoplay ? 'canplay' : canplay, () =>
+    // 无视 isSourceChanging
+    // 顺序: loadedmetadata -> ⬇(isSourceChanging: false) -> videosourcechanged(isSourceChanging: true)
     player.$root.classList.remove(loading)
   )
 
