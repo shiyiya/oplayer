@@ -70,7 +70,7 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
           }">${arrowSvg('')}</span>`
         : ''
     }
-      <h2 class='${controlBarTitle}'>${player.options?.source?.title}</h2>
+      <h2 class='${controlBarTitle}'>${player.options?.source?.title || ''}</h2>
     </div>
     <div></div>`
   ))

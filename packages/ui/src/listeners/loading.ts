@@ -21,6 +21,10 @@ const loadingListener = (player: Player) => {
   player.on(['seeking', 'videoqualitychange', 'videosourcechange'], addClass)
   player.on([canplay, 'canplaythrough', 'playing', 'pause', 'seeked', 'error'], removeClass)
 
+  // 无视 isSourceChanging
+  // 顺序: loadedmetadata -> ⬇(isSourceChanging: false) -> videosourcechanged(isSourceChanging: true)
+  player.on(canplay, () => player.$root.classList.remove(loading))
+
   player.on('waiting', () => {
     addClass()
 
