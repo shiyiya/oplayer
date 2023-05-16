@@ -1,8 +1,8 @@
 import type Player from '@oplayer/core'
-import { isIOS, isMobile } from '@oplayer/core'
+import { isSafari, isMobile } from '@oplayer/core'
 import { isLoading } from './listeners'
 
-export const canplay = isIOS ? 'loadedmetadata' : 'canplay'
+export const canplay = isSafari ? 'loadedmetadata' : 'canplay'
 
 export function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)

@@ -23,7 +23,10 @@ const loadingListener = (player: Player) => {
 
   // 无视 isSourceChanging
   // 顺序: loadedmetadata -> ⬇(isSourceChanging: false) -> videosourcechanged(isSourceChanging: true)
-  player.on(canplay, () => player.$root.classList.remove(loading))
+  // safari 当 autoplay = true 才触发 canplay
+  player.on(player.$video.autoplay ? 'canplay' : canplay, () =>
+    player.$root.classList.remove(loading)
+  )
 
   player.on('waiting', () => {
     addClass()
