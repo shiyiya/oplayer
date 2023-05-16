@@ -48,7 +48,7 @@
     "terser": "^5.17.4",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
-    "vite": "^4.3.6",
+    "vite": "^4.3.7",
     "vite-plugin-banner": "^0.7.0",
     "vitest": "^0.31.0"
   }
