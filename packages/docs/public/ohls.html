@@ -7,7 +7,7 @@
     <meta name="referrer" content="no-referrer" />
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
   </head>
-  <body style="margin: 0">
+  <body style="margin: 0; background-color: #000">
     <div id="oplayer" style="width: 100vw; height: 100vh"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
@@ -22,12 +22,7 @@
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
-        .use([
-          OUI({
-            keyboard: { global: true }
-          }),
-          OHls({ forceHLS: true })
-        ])
+        .use([OUI({ keyboard: { global: true } }), OHls({ forceHLS: true })])
         .create()
         .on(console.log)
 

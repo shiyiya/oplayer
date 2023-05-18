@@ -1,4 +1,5 @@
 import React from 'react'
+import { isMobile } from '@oplayer/core'
 import Player from '@oplayer/react'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
@@ -7,7 +8,7 @@ import ui from '@oplayer/ui'
 import danmaku from '@oplayer/danmaku'
 import { PlaylistPlugin } from '@oplayer/plugins'
 
-<div className="nx-rounded-md nx-overflow-hidden nx-mt-5">
+<div className="nx-rounded-sm nx-overflow-hidden nx-mt-5">
   <Player
     onEvent={(payload) => {
       console.log(payload)
@@ -39,7 +40,7 @@ import { PlaylistPlugin } from '@oplayer/plugins'
               alert(`${value}`)
             }
           },
-          {
+          !isMobile && {
             name: 'Custom',
             position: 'bootom',
             children: [
@@ -61,12 +62,12 @@ import { PlaylistPlugin } from '@oplayer/plugins'
               alert(`${value}`)
             }
           }
-        ]
+        ].filter(Boolean)
       }),
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      danmaku({ source: '/danmaku.xml', fontSize: 0.75, displaySender: true }),
+      !isMobile && danmaku({ source: '/danmaku.xml', fontSize: 0.75, displaySender: true }),
       new PlaylistPlugin({
         initialIndex: 0,
         autoNext: true,
@@ -129,6 +130,6 @@ import { PlaylistPlugin } from '@oplayer/plugins'
           }
         ]
       })
-    ]}
+    ].filter(Boolean)}
   />
 </div>

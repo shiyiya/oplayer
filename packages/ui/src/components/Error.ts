@@ -13,7 +13,7 @@ const errorCls = $.css(`
   right: 0;
   color: #fff;
   background: #000;
-  z-index: 97;
+  z-index: 7;
   align-items: center;
   padding: 0 10px;
   word-break: break-all;
