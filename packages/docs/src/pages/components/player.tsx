@@ -92,7 +92,7 @@ export default () => {
       </p>
       <div
         id="oplayer"
-        className="nx-bg-black/[.05] dark:nx-bg-gray-50/10 nx-rounded-md"
+        className="nx-bg-black/[.05] dark:nx-bg-gray-50/10 nx-rounded-sm"
         aria-disabled={isFirst}
       />
     </div>

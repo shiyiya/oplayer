@@ -37,8 +37,8 @@ const loadingListener = (player: Player) => {
   )
 
   // why playing:  暂停很久后在播放可能会卡很久
-  player.on(['waiting', 'playing'], () => {
-    addClass()
+  player.on(['waiting', 'playing'], ({ type }) => {
+    if (type == 'wait') addClass()
 
     // Browsers may emit a timeupdate event after a waiting event. In order to prevent
     // premature removal of the waiting class, wait for the time to change.
@@ -47,6 +47,8 @@ const loadingListener = (player: Player) => {
       if (timeWhenWaiting !== player.currentTime) {
         removeClass()
         player.off('timeupdate', timeUpdateListener)
+      } else {
+        addClass()
       }
     }
 
