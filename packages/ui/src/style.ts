@@ -43,16 +43,17 @@ export const root = (config: UiConfig) => {
         width: '100%',
         height: '100%',
 
-        'font-size': '16px',
+        'font-size': isMobile ? '16px' : '18px',
 
         '&, & > *': {
           '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)'
         },
         '& [hidden]': { display: 'none' }
       },
-      !isMobile && {
-        [`&.${fullscreen}`]: { 'font-size': '22px' },
-        [`@global .${webFullScreen} &`]: { 'font-size': '22px' }
+      {
+        [`@global .${webFullScreen} &, &.${fullscreen}`]: {
+          'font-size': isMobile ? '18px' : '22px'
+        }
       }
     )
   )
