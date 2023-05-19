@@ -70,6 +70,15 @@ export type Highlight = {
   time: number
 }
 
+export type Layer = {
+  name: string
+  html: string
+  /** csstext */
+  style: string
+  when: 'always' | 'initial'
+  onClick: (e: MouseEvent) => void
+}
+
 export type UiConfig = {
   theme?: {
     primaryColor: string
@@ -175,7 +184,7 @@ export type UiConfig = {
 
   contextmenu?: []
 
-  layers?: any[]
+  layers?: Layer[]
 }
 
 export type ErrorPayload =

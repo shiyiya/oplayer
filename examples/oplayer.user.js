@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         oplayer
-// @version      0.0.1
+// @version      0.0.2
 // @description  -
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @author       -
@@ -8,6 +8,7 @@
 // @homepage     -
 // @match        *://*/*
 // @exclude      https://ohplayer.netlify.app/*
+// @exclude      https://oplayer.vercel.app/*
 // @connect      *
 // @grant        unsafeWindow
 // @grant        GM_openInTab
@@ -18,7 +19,7 @@
 // @ https://greasyfork.org/zh-CN/scripts/449581-m3u8%E8%A7%86%E9%A2%91%E4%BE%A6%E6%B5%8B%E4%B8%8B%E8%BD%BD%E5%99%A8-%E8%87%AA%E5%8A%A8%E5%97%85%E6%8E%A2
 // ==/UserScript==
 
-; (function (window) {
+;(function (window) {
   const mgmapi = {
     openInTab(url, open_in_background = false) {
       return (typeof GM_openInTab === 'function' ? GM_openInTab : GM.openInTab)(
@@ -69,17 +70,22 @@
 
   const _r_open = unsafeWindow.XMLHttpRequest.prototype.open
   unsafeWindow.XMLHttpRequest.prototype.open = function (...args) {
-    if (checkUrl(args[1])) {
-      openPlayerPage(args[1])
-    } else {
-      this.addEventListener('load', () => {
-        try {
-          if (checkContent(this.responseText)) {
-            openPlayerPage(args[1])
-          }
-        } catch (error) { }
+    if (!isBlackList(args[1])) {
+      this.addEventListener('readystatechange', () => {
+        if (
+          this.readyState == 3 &&
+          this.responseType == 'text' &&
+          checkContent(this.responseText)
+        ) {
+          if (!isBlackList(args[1])) openPlayerPage(args[1])
+        }
       })
+
+      if (checkUrl(args[1])) {
+        openPlayerPage(args[1])
+      }
     }
+
     return _r_open.apply(this, args)
   }
 
@@ -138,26 +144,22 @@
   }
 
   var blackList = []
+  function isBlackList(url) {
+    return blackList.includes(url) || blackList.some((b) => url.includes(b))
+  }
+
   function checkContent(content) {
     if (content.trim().startsWith('#EXTM3U')) {
       var list = content.match(/(.*\.m3u8)/g)
-      list && blackList.push(list)
+      list && blackList.push(...list)
       return true
     }
   }
 
-  // var latestOpenTS = 0
   function openPlayerPage(url) {
-    if (!blackList.includes(url) || !blackList.some((b) => url.includes(b))) {
-      blackList.push(url)
-      pushItem({ href: url })
-    }
-    // if (Date.now() - latestOpenTS < 2000) return
-    // latestOpenTS = Date.now()
-    // if (window.confirm(`detected video: ${url}`)) {
-    //   latestOpenTS = Date.now()
-    //   mgmapi.openInTab(`https://ohplayer.netlify.app/ohls?${url}`)
-    // }
+    if (isBlackList(url)) return
+    blackList.push(url)
+    pushItem({ href: url })
   }
 
   window.addEventListener('DOMContentLoaded', injectUI)
@@ -202,7 +204,7 @@
     pin.ondblclick = function () {
       detectVideoTags()
     }
-    queue.forEach((href) => { pushItem({ href }) })
+    queue.forEach((href) => pushItem({ href }))
   }
 
   var TS = Date.now()
@@ -220,7 +222,9 @@
     list.appendChild(
       createElementFromHTML(`
         <a class="dropdown-item" href="https://ohplayer.netlify.app/ohls?${href}" target="_blank">
-        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">${pathname.substring(pathname.lastIndexOf('/') + 1)}</span>
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">
+            ${pathname.substring(pathname.lastIndexOf('/') + 1)}
+          </span>
         <span style="color:hsl(0, 0%, 71%);">${((Date.now() - TS) / 1000).toFixed(1)}s </span>
         </a>`)
     )
