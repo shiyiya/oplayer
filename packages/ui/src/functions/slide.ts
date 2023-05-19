@@ -1,6 +1,6 @@
 import { UIInterface } from '../types'
 import { isMobile } from '@oplayer/core'
-import { canplay, clamp, formatTime, hasClass } from '../utils'
+import { clamp, formatTime, hasClass } from '../utils'
 import { settingShown } from '../style'
 
 const FULL_SLIDE_DURATION = 60
@@ -9,7 +9,7 @@ export default function (it: UIInterface) {
   const { player, config, $mask: $dom } = it
 
   if (isMobile && !player.options.isLive && config.slideToSeek && config.slideToSeek != 'none') {
-    player.once(canplay, () => {
+    player.once('loadedmetadata', () => {
       let startX = 0
       let startY = 0
       let touchedTime = 0
