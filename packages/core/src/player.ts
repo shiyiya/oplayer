@@ -381,7 +381,6 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     this.hasError = false
     if (this.isPlaying) {
       this.$video.pause() // Possible failure
-      this.emit('pause')
     }
   }
 
@@ -408,17 +407,18 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   //TODO: cancel previous promise
   _loader(
-    source: Source | Promise<Source>,
+    sourceLike: Source | Promise<Source>,
     options: { keepPlaying: boolean; event: string; keepTime?: boolean }
   ) {
     const { isPlaying, currentTime, volume, playbackRate } = this
     const { keepPlaying, keepTime } = options
+    const isPreloadNone = this.options.preload == 'none'
+    const canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata' // TODO: changesource 的话似乎无视 preload
+    const shouldPlay = keepPlaying && isPlaying
+    let finalSource: Source
     this._resetStatus()
 
     return new Promise<void>((resolve, reject) => {
-      const isPreloadNone = this.options.preload == 'none'
-      let canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata'
-      const shouldPlay = keepPlaying && isPlaying
       const errorHandler = (e: any) => {
         this.isSourceChanging = false
         this.off(canplay, canplayHandler)
@@ -428,7 +428,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       const canplayHandler = () => {
         this.isSourceChanging = false
         this.off('error', errorHandler)
-        this.emit(options.event, source)
+        this.emit(options.event, finalSource)
         if (volume != this.volume) this.setVolume(volume)
         if (playbackRate != this.playbackRate) this.setPlaybackRate(playbackRate)
         if (isPreloadNone && keepTime) this.$video.load()
@@ -437,10 +437,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         resolve()
       }
 
-      return (source instanceof Promise ? source : Promise.resolve(source))
+      return (sourceLike instanceof Promise ? sourceLike : Promise.resolve(sourceLike))
         .then((source) => {
           if (!source.src) throw new Error('Empty Source')
-
+          finalSource = source
           this.$video.poster = source.poster || ''
           Object.assign(this.options.source, source)
           this.once('error', errorHandler)
