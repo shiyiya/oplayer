@@ -15,9 +15,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
 
     <script>
+      const query = document.location.search.substring(1)
       var player = OPlayer.make('#oplayer', {
         source: {
-          src: document.location.search.substring(1)
+          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : query
         },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1

@@ -164,7 +164,7 @@
 
   window.addEventListener('DOMContentLoaded', injectUI)
 
-  var pin, list, counter
+  var pin, list, counter, copy, clear
   function injectUI() {
     pin = document.createElement('div')
     pin.className = 'media-list'
@@ -190,19 +190,40 @@
             </span>
           </button>
         </div>
-        <div
-            class="dropdown-menu"
-            id="dropdown-menu" role="menu"
-          >
-          <div class="dropdown-content" style="max-height: 60vh;max-width: 30vw;overflow:auto;box-sizing: border-box;"></div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div style="text-align: right;background-color: #fff;border-radius: 4px;box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);margin-bottom: 0.5em;">
+            <button class="copy button is-primary is-light is-small">Copy</button>
+            <button class="clear button is-danger is-light is-small">Clear</button>
+          </div>
+          <div class="dropdown-content" style="max-height: 60vh;max-width: 30vw;overflow:auto;box-sizing: border-box;">
+          </div>
           </div>
         </div>
       </div>`
 
+    copy = _pin.querySelector('.copy')
+    clear = _pin.querySelector('.clear')
     list = _pin.querySelector('.dropdown-content')
     counter = _pin.querySelector('.media-counter')
-    pin.ondblclick = function () {
-      detectVideoTags()
+
+    pin.ondblclick = detectVideoTags
+    copy.onclick = function () {
+      const text = [...list.querySelectorAll('.dropdown-item')].reduce((p, c) => {
+        const [a, ...b] = c.href.split('?')
+        return p + '\n' + a + '?' + btoa(b.join('')) + '=='
+      }, '')
+      mgmapi.copyText(text)
+    }
+    copy.ondblclick = function () {
+      const text = [...list.querySelectorAll('.dropdown-item')].reduce((p, c) => {
+        const [a, ...b] = c.href.split('?')
+        return p + '\n' + c.href
+      }, '')
+      mgmapi.copyText(text)
+    }
+    clear.onclick = () => {
+      list.innerHTML = ''
+      counter.innerText = ''
     }
     queue.forEach((href) => pushItem({ href }))
   }
@@ -221,12 +242,13 @@
     }
     list.appendChild(
       createElementFromHTML(`
-        <a class="dropdown-item" href="https://ohplayer.netlify.app/ohls?${href}" target="_blank">
-          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">
-            ${pathname.substring(pathname.lastIndexOf('/') + 1)}
-          </span>
+      <a class="dropdown-item" href="https://ohplayer.netlify.app/ohls?${href}" target="_blank">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">
+          ${pathname.substring(pathname.lastIndexOf('/') + 1)}
+        </span>
         <span style="color:hsl(0, 0%, 71%);">${((Date.now() - TS) / 1000).toFixed(1)}s </span>
-        </a>`)
+      </a>
+        `)
     )
     counter.innerText = Number(counter.innerText || 0) + 1
     pin.style.display = 'block'
