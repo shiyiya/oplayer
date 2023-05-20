@@ -311,11 +311,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   async enterFullscreen() {
     if (this.isInPip) await this.exitPip()
-    if (isIOS) {
-      ;(this.$video as any).webkitEnterFullscreen()
-    } else {
-      this._requestFullscreen.call(this.$root, { navigationUI: 'hide' })
-    }
+    this._requestFullscreen.call(this.$root, { navigationUI: 'hide' })
   }
 
   exitFullscreen() {
@@ -324,21 +320,21 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   get isFullscreenEnabled() {
     return (
-      Boolean(isIOS && (this.$video as any).webkitEnterFullscreen) ||
       document.fullscreenEnabled ||
       (document as any).webkitFullscreenEnabled ||
       (document as any).mozFullScreenEnabled ||
-      (document as any).msFullscreenEnabled
+      (document as any).msFullscreenEnabled ||
+      Boolean(isIOS && (this.$video as any).webkitEnterFullscreen)
     )
   }
 
   get isFullScreen() {
     return Boolean(
-      (isIOS && (this.$video as any).webkitDisplayingFullscreen) ||
-        (document.fullscreenElement ||
-          (document as any).webkitFullscreenElement ||
-          (document as any).mozFullScreenElement ||
-          (document as any).msFullscreenElement) === this.$root
+      (document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement) === this.$root ||
+        Boolean(isIOS && (this.$video as any).webkitDisplayingFullscreen)
     )
   }
 
@@ -537,7 +533,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       HTMLElement.prototype.requestFullscreen ||
       (HTMLElement.prototype as any).webkitRequestFullscreen ||
       (HTMLElement.prototype as any).mozRequestFullScreen ||
-      (HTMLElement.prototype as any).msRequestFullscreen
+      (HTMLElement.prototype as any).msRequestFullscreen ||
+      (this.$video as any).webkitEnterFullscreen()
     )
   }
 

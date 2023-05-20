@@ -138,7 +138,10 @@
 
   function checkUrl(url) {
     url = new URL(url, location.href)
-    if (['.m3u8', '.m3u', '.mp4', '.m4s'].some((ext) => url.pathname.endsWith(ext))) {
+    if (url.host == 'video.twimg.com' && url.pathname.endsWith('.mp4')) {
+      return false
+    }
+    if (['.m3u8', '.m3u', '.mp4'].some((ext) => url.pathname.endsWith(ext))) {
       return true
     }
   }
