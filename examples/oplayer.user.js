@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         oplayer
-// @version      0.0.2
+// @version      0.0.3
 // @description  -
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @author       -
@@ -213,14 +213,13 @@
     pin.ondblclick = detectVideoTags
     copy.onclick = function () {
       const text = [...list.querySelectorAll('.dropdown-item')].reduce((p, c) => {
-        const [a, ...b] = c.href.split('?')
-        return p + '\n' + a + '?' + btoa(b.join('')) + '=='
+        const expo = c.href.indexOf('?')
+        return p + '\n' + c.href.substring(0, expo + 1) + btoa(c.href.substring(expo + 1)) + '=='
       }, '')
       mgmapi.copyText(text)
     }
     copy.ondblclick = function () {
       const text = [...list.querySelectorAll('.dropdown-item')].reduce((p, c) => {
-        const [a, ...b] = c.href.split('?')
         return p + '\n' + c.href
       }, '')
       mgmapi.copyText(text)
