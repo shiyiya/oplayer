@@ -1,9 +1,10 @@
 import { $, isIOS, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
-import { controllerHidden, icon, off, on, tooltip, webFullScreen } from '../style'
-import { formatTime, screenShot, toggleClass } from '../utils'
+import { controllerHidden, icon, off, on, tooltip } from '../style'
+import { formatTime, screenShot } from '../utils'
 import renderVolumeBar from './VolumeBar'
 import renderProgress from './Progress'
+import { isFullscreen, isWebFullscreen } from '../listeners/fullscreen'
 
 import type { UIInterface } from '../types'
 
@@ -145,13 +146,9 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
   }
 
   if (config.fullscreen) {
-    player.on('fullscreenchange', ({ payload }) =>
+    player.on('fullscreenchange', () =>
       setTimeout(() => {
-        if (payload.isWeb) {
-          switcher($fullscreen, toggleClass(player.$root, webFullScreen))
-        } else {
-          switcher($fullscreen, player.isFullScreen)
-        }
+        switcher($fullscreen, isFullscreen(player))
       })
     )
   }
@@ -198,10 +195,10 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
       case pipLabel:
         return player.togglePip()
       case fullscreenLabel:
-        if (player.isFullscreenEnabled) {
-          player.toggleFullScreen()
-        } else {
+        if (isWebFullscreen(player) || !player.isFullscreenEnabled) {
           player.emit('fullscreenchange', { isWeb: true })
+        } else {
+          player.toggleFullScreen()
         }
         return
       case screenshotLabel:

@@ -22,7 +22,6 @@ import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
 import { Hello, vttThumbnails, ad, PlaylistPlugin } from '@oplayer/plugins'
-import gridThumb1 from '../../packages/docs/public/28627454.jpg'
 
 interface Ctx {
   ui: ReturnType<typeof ui>
@@ -114,25 +113,7 @@ const player = Player.make<Ctx>('#player', {
         {
           title: 'Big Buck Bunny - HLS',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-          duration: '10:34',
-          thumbnails: {
-            src: [
-              gridThumb1,
-              // 'https://i0.hdslb.com/bfs/videoshot/28627454.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-1.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-2.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-3.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-4.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-5.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-6.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-7.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-8.jpg',
-              'https://i0.hdslb.com/bfs/videoshot/28627454-9.jpg'
-            ],
-            x: 10,
-            y: 10,
-            number: 972
-          }
+          duration: '10:34'
         },
         {
           title: 'DASH',

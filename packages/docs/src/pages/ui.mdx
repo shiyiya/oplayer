@@ -55,13 +55,14 @@ OUI({
   slideToSeek: 'none', // 'always' | 'long-touch'
   controlBar: false, // | { back:  'always' | 'fullscreen' } // appbar
   topSetting: false, //show setting icon on appbar
- /* Default value, Optional */
+  /* Default value, Optional */
 
   /* Custom options */
   subtitle: {
     color: 'hotpink',
     fontSize: 20,
     fontFamily: '',
+    background: true,
     source: [
       {
         name: 'Japanese',
@@ -87,10 +88,10 @@ thumbnails = {
 }
 // multipe & grid
 thumbnails = {
-  src: ['https://oplayer.vercel.app/thumbnails-grid.jpg'],
+  src: ['1.jpg', '2,jpg'],
   x: 10,
-  y: 6,
-  number: 60
+  y: 10,
+  number: 192
 }
 ```
 
@@ -144,6 +145,36 @@ thumbnails = {
     }
   ]
 }
+
+//or
+player.context.menu.register([])
+```
+
+## Add custom setting
+
+```js
+{
+  settings: [
+    'loop', // Build-in
+    'speed', // Build-in
+    {
+      // Custom
+      key: 'KEY',
+      type: 'selector', // or 'switcher'
+      name: 'name',
+      icon: 'icon',
+      children: [
+        { name: 'a', value: 'a', default: true },
+        { name: 'b', value: 'b', default: false }
+      ],
+      onChange: ({ value }) => {
+        // do something
+      }
+    }
+  ]
+}
+//or
+player.context.menu.register([])
 ```
 
 ## Highlight
@@ -168,22 +199,28 @@ All methods on `player.context.ui`
 
 ```js
 // - Update subtitle
-player.context.ui.subtitle.updateSource([])
+player.context.ui.subtitle.changeSource([])
 
 // - Update highlight
-player.context.ui.highlight([])
+player.context.ui.changHighlightSource([])
 
 // - Update thumbnails
-player.context.ui.thumbnails('src')
+player.context.ui.changThumbnails('src')
 
 // - Register menu
 player.context.ui.menu.register({})
 player.context.ui.menu.unregister('key')
 player.context.ui.menu.select('key', 'index')
 
-// - Display error
-player.context.ui.menu.error({ message: 'msg', code: 'number' })
-player.context.ui.menu.notice('hello')
+// - Register setting
+player.context.ui.setting.register({})
+player.context.ui.setting.unregister('key')
+player.context.ui.setting.updateLabel('key', 'text')
+player.context.ui.setting.select('key', 'index')
+
+// - Display error,notice
+player.emit('error', { message: 'msg', code: 'number' })
+player.context.ui.notice('hello')
 ```
 
 ## keyboard

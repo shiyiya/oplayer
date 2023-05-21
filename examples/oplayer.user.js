@@ -184,6 +184,7 @@
       justify-content: space-between;
       padding-right: 1rem;
      }
+     a:visited {color: hsl(0, 0%, 71%);}
      </style>
       <div class="dropdown is-right is-hoverable">
         <div class="dropdown-trigger">

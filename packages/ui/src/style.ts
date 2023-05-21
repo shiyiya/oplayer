@@ -51,7 +51,10 @@ export const root = (config: UiConfig) => {
         '& [hidden]': { display: 'none' }
       },
       {
-        [`@global .${webFullScreen} &, &.${fullscreen}`]: {
+        [`@global .${webFullScreen} &`]: {
+          'font-size': isMobile ? '18px' : '22px'
+        },
+        [`@global .${fullscreen} &`]: {
           'font-size': isMobile ? '18px' : '22px'
         }
       }

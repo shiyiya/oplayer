@@ -122,7 +122,7 @@ class UI implements UIInterface {
     }
 
     this.icons = Icons.setupIcons(config.icons)
-    startListening(player, config, $root)
+    startListening(player, config)
 
     renderError(player, $root, config)
     renderNotice(this)

@@ -15,10 +15,10 @@ export {
   fullscreenListener
 }
 
-export default (player: Player, config: UiConfig, $root: HTMLDivElement) => {
+export default (player: Player, config: UiConfig) => {
   playingListener(player)
   loadingListener(player)
-  fullscreenListener(player, $root)
+  fullscreenListener(player)
 
   if (!isMobile) {
     focusListener(player, config.autoFocus!)
