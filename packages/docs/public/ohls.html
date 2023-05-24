@@ -44,7 +44,12 @@
       })
         .use([
           OUI({ keyboard: { global: true } }),
-          OHls({ forceHLS: true }),
+          OHls({
+            forceHLS: true,
+            active(e) {
+              console.log(e)
+            }
+          }),
           {
             apply(player) {
               player.on('ratechange', () => {
@@ -56,6 +61,7 @@
                 localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
               })
 
+              console.log(player.options.source.src)
               if (player.options.source.src) {
                 mp4box()
               }
@@ -77,6 +83,10 @@
         .create()
         .on(console.log))
 
+      new Promise(() => {
+        player.emit('fullscreenchange', { isWeb: true })
+      })
+
       function renderVideoInfo(info) {
         console.log(info)
         const videoTrack = info.tracks[0]
@@ -91,7 +101,7 @@
                   <h4>Audio Metadata</h4>
                   <p>${'Audio Codec: "' + audioTrack.codec + '"; nb_samples: ' + audioTrack.nb_samples}</p>
                   <p>${audioTrack.name + ': size: ' + audioTrack.size + '; bitrate: ' + audioTrack.bitrate}</p>
-                  <!-- <div class="close">[x]</div> -->
+                  <div class="close" onclick="closeVideoInfo()">[x]</div>
                   `
 
         box.style.cssText = `
@@ -104,11 +114,13 @@
                   color: var(--primary-color);
                   font-size: 0.875em;
                   border-radius: 4px;`
+        window.closeVideoInfo = function () {
+          console.log(1)
+          box.classList.toggle('hidden')
+        }
         player.context.ui.$root.appendChild(box)
         player.context.ui.keyboard.register({
-          v: () => {
-            box.classList.toggle('.hidden')
-          }
+          v: window.closeVideoInfo
         })
       }
     </script>
