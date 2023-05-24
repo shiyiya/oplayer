@@ -3,7 +3,7 @@
 ⚡ Oh! Another HTML5 video player.
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
-[![npm dt](https://img.shields.io/npm/dt/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
+[![npm dt](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/core/badge)](https://www.jsdelivr.com/package/npm/@oplayer/core)
 [![Discord](https://img.shields.io/discord/1017615537234264185.svg?label=&logo=discord&logoColor=fff&color=7389D8&labelColor=6A7EC2&style=flat-square)](https://discord.gg/hzjxYyPbKh)
 
@@ -44,6 +44,8 @@ If you think this is super cool, or useful, and want to donate a little, then yo
 
 - [Paypal](https://www.paypal.com/paypalme/ShiYiYa)
 - [WeChat Pay](https://www.oaii.me/wechat_donate.png)
+
+- ![Star](https://img.shields.io/github/stars/shiyiya/oplayer?style=social)
 
 ## Jetbrains <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="35" height="35">
 
