@@ -6,24 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="no-referrer" />
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
-    <style>
-      p {
-        margin: 0;
-      }
-      h4 {
-        margin: 10px 0 4px;
-      }
-      .close {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        cursor: pointer;
-        font-size: 1em;
-      }
-      .hidden {
-        display: none;
-      }
-    </style>
   </head>
   <body style="margin: 0; background-color: #000">
     <div id="oplayer" style="width: 100vw; height: 100vh"></div>
@@ -31,55 +13,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mp4box@0.5.2/dist/mp4box.all.min.js"></script>
 
     <script>
       const query = document.location.search.substring(1)
       const player = (window.player = OPlayer.make('#oplayer', {
         source: {
-          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : query
+          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : query,
+          poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
         },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
-        .use([
-          OUI({ keyboard: { global: true } }),
-          OHls({
-            forceHLS: true,
-            active(e) {
-              console.log(e)
-            }
-          }),
-          {
-            apply(player) {
-              player.on('ratechange', () => {
-                if (!player.isSourceChanging)
-                  localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
-              })
-
-              player.on('volumechange', () => {
-                localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
-              })
-
-              console.log(player.options.source.src)
-              if (player.options.source.src) {
-                mp4box()
-              }
-
-              function mp4box() {
-                const mp4box = MP4Box.createFile()
-                mp4box.onReady = renderVideoInfo
-
-                fetch(player.options.source.src, { headers: { range: 'bytes=0-50000' } })
-                  .then((it) => it.arrayBuffer())
-                  .then((arrayBuffer) => {
-                    arrayBuffer.fileStart = 0
-                    mp4box.appendBuffer(arrayBuffer)
-                  })
-              }
-            }
-          }
-        ])
+        .use([OUI({ keyboard: { global: true }, slideToSeek: 'always' }), OHls({ forceHLS: true })])
         .create()
         .on(console.log))
 
@@ -87,42 +32,14 @@
         player.emit('fullscreenchange', { isWeb: true })
       })
 
-      function renderVideoInfo(info) {
-        console.log(info)
-        const videoTrack = info.tracks[0]
-        const audioTrack = info.tracks[1]
-        const box = document.createElement('div')
-        box.innerHTML = `
-                  <p>${'Duration: ' + parseInt(info.duration / 1000) + 's'}</p>
-                  <p>${'Brands: ' + info.brands.join(',')}</p>
-                  <h4>Video Metadata</h4>
-                  <p>${'Video Codec: "' + videoTrack.codec + '"; nb_samples: ' + videoTrack.nb_samples}</p>
-                  <p>${videoTrack.name + ': size: ' + videoTrack.size + '; bitrate: ' + videoTrack.bitrate}</p>
-                  <h4>Audio Metadata</h4>
-                  <p>${'Audio Codec: "' + audioTrack.codec + '"; nb_samples: ' + audioTrack.nb_samples}</p>
-                  <p>${audioTrack.name + ': size: ' + audioTrack.size + '; bitrate: ' + audioTrack.bitrate}</p>
-                  <div class="close" onclick="closeVideoInfo()">[x]</div>
-                  `
+      player.on('ratechange', () => {
+        if (!player.isSourceChanging)
+          localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+      })
 
-        box.style.cssText = `
-                  position: absolute;
-                  left: 0;
-                  top: 0;
-                  padding: 20px;
-                  background-color: rgba(0,0,0, .5);
-                  color: #54ab3d;
-                  color: var(--primary-color);
-                  font-size: 0.875em;
-                  border-radius: 4px;`
-        window.closeVideoInfo = function () {
-          console.log(1)
-          box.classList.toggle('hidden')
-        }
-        player.context.ui.$root.appendChild(box)
-        player.context.ui.keyboard.register({
-          v: window.closeVideoInfo
-        })
-      }
+      player.on('volumechange', () => {
+        localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+      })
     </script>
   </body>
 </html>

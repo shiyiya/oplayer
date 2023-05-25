@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
   </head>
   <body style="margin: 0">
@@ -21,27 +22,32 @@
 
       const src = decodeURI(search.get('src'))
       const subtitle = search.get('subtitle')
-        ? {
-            subtitle: {
-              source: [
-                {
-                  name: 'Default',
-                  default: true,
-                  src: decodeURI(search.get('subtitle'))
-                }
-              ]
-            }
-          }
+        ? { source: [{ name: 'Default', default: true, src: decodeURI(search.get('subtitle')) }] }
         : undefined
 
       var player = OPlayer.make('#oplayer', {
         source: {
           src,
-          format: src.includes('bilibili') ? 'dash' : 'auto'
+          format: src.includes('bilibili') ? 'dash' : 'auto',
+          poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
         }
       })
-        .use([OUI({ subtitle }), OHls(), ODash()])
+        .use([OUI({ subtitle, keyboard: { global: true }, slideToSeek: 'always' }), OHls({ forceHLS: true }), ODash()])
         .create()
+        .on(console.log)
+
+      new Promise(() => {
+        player.emit('fullscreenchange', { isWeb: true })
+      })
+
+      player.on('ratechange', () => {
+        if (!player.isSourceChanging)
+          localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+      })
+
+      player.on('volumechange', () => {
+        localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+      })
     </script>
   </body>
 </html>

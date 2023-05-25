@@ -134,11 +134,11 @@ importers:
         specifier: ^13.4.3
         version: 13.4.3(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
       nextra:
-        specifier: ^2.6.0
-        version: 2.6.0(next@13.4.3)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^2.6.1
+        version: 2.6.1(next@13.4.3)(react-dom@18.2.0)(react@18.2.0)
       nextra-theme-docs:
-        specifier: ^2.6.0
-        version: 2.6.0(next@13.4.3)(nextra@2.6.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^2.6.1
+        version: 2.6.1(next@13.4.3)(nextra@2.6.1)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -147,8 +147,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@types/react':
-        specifier: ^18.2.6
-        version: 18.2.6
+        specifier: ^18.2.7
+        version: 18.2.7
       '@types/react-dom':
         specifier: ^18.2.4
         version: 18.2.4
@@ -198,8 +198,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@types/react':
-        specifier: ^18.2.6
-        version: 18.2.6
+        specifier: ^18.2.7
+        version: 18.2.7
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1112,7 +1112,7 @@ packages:
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.5
-      '@types/react': 18.2.6
+      '@types/react': 18.2.7
       react: 18.2.0
     dev: false
 
@@ -1592,11 +1592,11 @@ packages:
   /@types/react-dom@18.2.4:
     resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
     dependencies:
-      '@types/react': 18.2.6
+      '@types/react': 18.2.7
     dev: true
 
-  /@types/react@18.2.6:
-    resolution: {integrity: sha512-wRZClXn//zxCFW+ye/D2qY65UsYP1Fpex2YXorHc8awoNamkMZSvBxwxdYVInsHOZZd2Ppq8isnSzJL5Mpf8OA==}
+  /@types/react@18.2.7:
+    resolution: {integrity: sha512-ojrXpSH2XFCmHm7Jy3q44nXDyN54+EYKP2lBhJ2bqfyPj6cIUW/FZW/Csdia34NQgq7KYcAlHi5184m4X88+yw==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -2105,7 +2105,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001489
-      electron-to-chromium: 1.4.405
+      electron-to-chromium: 1.4.407
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.5)
     dev: true
@@ -2761,8 +2761,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.405:
-    resolution: {integrity: sha512-JdDgnwU69FMZURoesf9gNOej2Cms1XJFfLk24y1IBtnAdhTcJY/mXnokmpmxHN59PcykBP4bgUU98vLY44Lhuw==}
+  /electron-to-chromium@1.4.407:
+    resolution: {integrity: sha512-5smEvFSFYMv90tICOzRVP7Opp98DAC4KW7RRipg3BuNpGbbV3N+x24Zh3sbLb1T5haGtOSy/hrBfXsWnIM9aCg==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -5162,8 +5162,8 @@ packages:
     engines: {node: '>= 8.0.0'}
     dev: true
 
-  /mlly@1.2.1:
-    resolution: {integrity: sha512-1aMEByaWgBPEbWV2BOPEMySRrzl7rIHXmQxam4DM8jVjalTQDjpN2ZKOLUrwyhfZQO7IXHml2StcHMhooDeEEQ==}
+  /mlly@1.3.0:
+    resolution: {integrity: sha512-HT5mcgIQKkOrZecOjOX3DJorTikWXwsBfpcr/MGBkhfWcjiqvnaL/9ppxvIUXfjT6xt4DVIAsN9fMUz1ev4bIw==}
     dependencies:
       acorn: 8.8.2
       pathe: 1.1.0
@@ -5288,11 +5288,11 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /nextra-theme-docs@2.6.0(next@13.4.3)(nextra@2.6.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-/baIEzrBDjWD60/6l+mxUND0ZAjF27uRIUWP5QRWb01TQDA8Nqy8a/ANYM0a3bx4RgL/YBt47D0aWu/beWL1Fg==}
+  /nextra-theme-docs@2.6.1(next@13.4.3)(nextra@2.6.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-25Va2D5bzFRIE7uIZ75QfmvsdurXI+xzoWBNMQTnG+ONv9yiQSWRYjfw/Yep1OXF6ahDaaNqbCb8HmRoX7sqRg==}
     peerDependencies:
       next: '>=9.5.3'
-      nextra: 2.6.0
+      nextra: 2.6.1
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
@@ -5307,15 +5307,15 @@ packages:
       next: 13.4.3(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
       next-seo: 6.0.0(next@13.4.3)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.4.3)(react-dom@18.2.0)(react@18.2.0)
-      nextra: 2.6.0(next@13.4.3)(react-dom@18.2.0)(react@18.2.0)
+      nextra: 2.6.1(next@13.4.3)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.0.10
       zod: 3.21.4
     dev: false
 
-  /nextra@2.6.0(next@13.4.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-yLYcjQWBfzlUUuf7q8M5DXIpNId19RB5SyrpjcNB/KvZ1S2CQpf5cXmpRzKGl015NI3MRAX+z7pMR2qiU3HtwA==}
+  /nextra@2.6.1(next@13.4.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-5NN+aTFzW17/42AWp3qAvBTlgZvSQVpHOUb2MdHI6gnslpjik6z7DS1gZJ9zJ/I8veVxdLhdE70TfksAZ9tgxQ==}
     engines: {node: '>=16'}
     peerDependencies:
       next: '>=9.5.3'
@@ -5763,7 +5763,7 @@ packages:
     resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==}
     dependencies:
       jsonc-parser: 3.2.0
-      mlly: 1.2.1
+      mlly: 1.3.0
       pathe: 1.1.0
     dev: true
 
@@ -7375,7 +7375,7 @@ packages:
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
-      mlly: 1.2.1
+      mlly: 1.3.0
       pathe: 1.1.0
       picocolors: 1.0.0
       vite: 4.3.8(@types/node@18.16.14)(terser@5.17.6)
