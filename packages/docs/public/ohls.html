@@ -18,8 +18,8 @@
       const query = document.location.search.substring(1)
       const player = (window.player = OPlayer.make('#oplayer', {
         source: {
-          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : query,
-          poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
+          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : query
+          // poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
         },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
