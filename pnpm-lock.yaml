@@ -131,7 +131,7 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@mdx-js/mdx@1.6.22)(@mdx-js/react@1.6.22)(react-dom@18.2.0)(react@18.2.0)
       next:
-        specifier: ^13.4.4
+        specifier: ^13.4.3
         version: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
       nextra:
         specifier: ^2.6.1
@@ -162,7 +162,7 @@ importers:
         specifier: workspace:*
         version: link:../core
       hls.js:
-        specifier: ^1.4.4
+        specifier: ^1.4.3
         version: 1.4.4
 
   packages/mpegts:
@@ -422,7 +422,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/helper-plugin-utils': 7.21.5
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.12.9)
       '@babel/plugin-transform-parameters': 7.22.0(@babel/core@7.12.9)
     dev: false
