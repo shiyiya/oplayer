@@ -1,6 +1,10 @@
 # Changelog
 
-## [1.2.26-beta.1](https://github.com/shiyiya/oplayer/tree/1.2.26-beta.3) (2023-05-12)
+## [1.2.27](https://github.com/shiyiya/oplayer/tree/1.2.27) (2023-05-31)
 
-- IOS 设备全屏（video->$root）
-- `videosourcechanged` 事件错误的 `payload` (Promise<source>->source)
+- fix IOS fullscreen behavior
+
+## [1.2.26](https://github.com/shiyiya/oplayer/tree/1.2.26) (2023-05-27)
+
+- fix broken changevideosource playload
+- update IOS fullscreen behavior
