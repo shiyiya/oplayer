@@ -8,14 +8,7 @@ import { isFullscreen, isWebFullscreen } from '../listeners/fullscreen'
 
 import type { UIInterface } from '../types'
 
-import {
-  controllerBottom,
-  dropdown,
-  dropdownHoverable,
-  expand,
-  time,
-  live
-} from './ControllerBottom.style'
+import { controllerBottom, dropdown, dropdownHoverable, expand, time, live } from './ControllerBottom.style'
 
 export const controllerBottomWrap = $.css({
   position: 'absolute',
@@ -38,6 +31,11 @@ export const controllerBottomWrap = $.css({
     'pointer-events': 'none',
     'background-image': 'linear-gradient(transparent, rgba(0, 0, 0, .3))'
   },
+
+  //TODO: support display-mode
+  // '@media (display-mode: fullscreen)': {
+  //   'padding-bottom': 'env(safe-area-inset-bottom)'
+  // },
 
   [`@global .${controllerHidden} &`]: {
     padding: 0,
@@ -135,9 +133,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   const $play = $dom.querySelector<HTMLButtonElement>(`button[aria-label=${playLabel}]`)!
   const $time = $dom.querySelector<HTMLSpanElement>('.' + time)!
-  const $fullscreen = $dom.querySelector<HTMLButtonElement>(
-    `button[aria-label="${fullscreenLabel}"]`
-  )!
+  const $fullscreen = $dom.querySelector<HTMLButtonElement>(`button[aria-label="${fullscreenLabel}"]`)!
   const $pip = $dom.querySelector<HTMLButtonElement>(`button[aria-label="${pipLabel}"]`)!
 
   const switcher = (el: HTMLElement, display: boolean) => {
@@ -154,9 +150,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
   }
 
   if (config.pictureInPicture) {
-    player.on(['enterpictureinpicture', 'leavepictureinpicture'], () =>
-      switcher($pip, player.isInPip)
-    )
+    player.on(['enterpictureinpicture', 'leavepictureinpicture'], () => switcher($pip, player.isInPip))
   }
 
   player.on(['play', 'pause', 'videosourcechange'], () => {
@@ -172,8 +166,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
   })
 
   player.on('videosourcechange', () => {
-    $time.innerText =
-      player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
+    $time.innerText = player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
   })
 
   $dom.addEventListener('click', (e: Event) => {

@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "webtorrent": "^2.0.18"
+    "webtorrent": "^2.0.26"
   }
 }

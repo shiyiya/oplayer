@@ -15,6 +15,12 @@ export const controlBar = $.css({
   transition: 'transform 0.3s ease',
   height: 'var(--control-bar-height)',
 
+  // https://developer.mozilla.org/zh-CN/docs/Web/CSS/env
+  //TODO: support display-mode
+  // '@media (display-mode: fullscreen)': {
+  //   'padding-top': 'constant(safe-area-inset-top)',
+  // },
+
   '&::before': {
     position: 'absolute',
     content: "''",
@@ -41,9 +47,7 @@ export const controlBar = $.css({
   }
 })
 
-const controlBarBackIcon = $.css(
-  'width: 2.5em;height: 2.5em;margin:0 -10px;transform: rotate(180deg);'
-)
+const controlBarBackIcon = $.css('width: 2.5em;height: 2.5em;margin:0 -10px;transform: rotate(180deg);')
 
 const controlBarTitle = $.css(
   'flex:1;font-size:1em;margin: 0 0.25em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'
@@ -65,9 +69,9 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
     `<div>
     ${
       backEnabled
-        ? `<span role='button' class="${controlBarBackIcon} ${
-            back == 'fullscreen' ? hidden : ''
-          }">${arrowSvg('')}</span>`
+        ? `<span role='button' class="${controlBarBackIcon} ${back == 'fullscreen' ? hidden : ''}">${arrowSvg(
+            ''
+          )}</span>`
         : ''
     }
       <h2 class='${controlBarTitle}'>${player.options?.source?.title || ''}</h2>

@@ -31,7 +31,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-destructuring": "^7.21.3",
-    "@babel/plugin-transform-parameters": "^7.22.0",
+    "@babel/plugin-transform-parameters": "^7.22.3",
     "@babel/plugin-transform-spread": "^7.20.7",
     "@babel/plugin-transform-template-literals": "^7.18.9",
     "@changesets/cli": "^2.26.1",
@@ -41,7 +41,7 @@
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
     "concurrently": "^8.0.1",
     "cross-env": "^7.0.3",
-    "jsdom": "^22.0.0",
+    "jsdom": "^22.1.0",
     "lint-staged": "^13.2.2",
     "nx": "^16.2.2",
     "rimraf": "^5.0.1",
@@ -50,6 +50,6 @@
     "typescript": "^5.0.4",
     "vite": "^4.3.9",
     "vite-plugin-banner": "^0.7.0",
-    "vitest": "^0.31.1"
+    "vitest": "^0.31.2"
   }
 }
