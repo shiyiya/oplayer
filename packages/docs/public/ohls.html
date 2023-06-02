@@ -18,7 +18,7 @@
       const query = document.location.search.substring(1)
       const player = (window.player = OPlayer.make('#oplayer', {
         source: {
-          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : query
+          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : decodeURIComponent(query)
           // poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
         },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
@@ -28,10 +28,6 @@
         .create()
         .on(console.log))
 
-      new Promise(() => {
-        player.emit('fullscreenchange', { isWeb: true })
-      })
-
       player.on('ratechange', () => {
         if (!player.isSourceChanging)
           localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
@@ -39,6 +35,14 @@
 
       player.on('volumechange', () => {
         localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+      })
+
+      new Promise(() => {
+        // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
+        const $op = document.querySelector('#oplayer')
+        if ($op.clientWidth > 960) {
+          $op.firstElementChild.children[1].style.fontSize = '22px'
+        }
       })
     </script>
   </body>

@@ -19,10 +19,9 @@
 
     <script>
       const search = new URLSearchParams(document.location.search)
-
-      const src = decodeURI(search.get('src'))
+      const src = decodeURIComponent(search.get('src'))
       const subtitle = search.get('subtitle')
-        ? { source: [{ name: 'Default', default: true, src: decodeURI(search.get('subtitle')) }] }
+        ? { source: [{ name: 'Default', default: true, src: decodeURIComponent(search.get('subtitle')) }] }
         : undefined
 
       var player = OPlayer.make('#oplayer', {
@@ -36,10 +35,6 @@
         .create()
         .on(console.log)
 
-      new Promise(() => {
-        player.emit('fullscreenchange', { isWeb: true })
-      })
-
       player.on('ratechange', () => {
         if (!player.isSourceChanging)
           localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
@@ -47,6 +42,14 @@
 
       player.on('volumechange', () => {
         localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+      })
+
+      new Promise(() => {
+        // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
+        const $op = document.querySelector('#oplayer')
+        if ($op.clientWidth > 960) {
+          $op.firstElementChild.children[1].style.fontSize = '22px'
+        }
       })
     </script>
   </body>
