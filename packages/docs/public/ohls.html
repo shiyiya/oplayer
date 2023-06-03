@@ -6,9 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="no-referrer" />
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
+    <meta name="keywords" content="hls player,online hls player" />
+    <style>
+      .placeholder {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: #fff;
+        transform: translate(-50%, -50%);
+        font-size: large;
+        animation: jello-horizontal 0.9s both infinite;
+        letter-spacing: 4px;
+      }
+
+      @keyframes jello-horizontal {
+        0% {
+          -webkit-transform: scale3d(1, 1, 1);
+          transform: scale3d(1, 1, 1);
+        }
+        30% {
+          -webkit-transform: scale3d(1.25, 0.75, 1);
+          transform: scale3d(1.25, 0.75, 1);
+        }
+        40% {
+          -webkit-transform: scale3d(0.75, 1.25, 1);
+          transform: scale3d(0.75, 1.25, 1);
+        }
+        50% {
+          -webkit-transform: scale3d(1.15, 0.85, 1);
+          transform: scale3d(1.15, 0.85, 1);
+        }
+        65% {
+          -webkit-transform: scale3d(0.95, 1.05, 1);
+          transform: scale3d(0.95, 1.05, 1);
+        }
+        75% {
+          -webkit-transform: scale3d(1.05, 0.95, 1);
+          transform: scale3d(1.05, 0.95, 1);
+        }
+        100% {
+          -webkit-transform: scale3d(1, 1, 1);
+          transform: scale3d(1, 1, 1);
+        }
+      }
+    </style>
   </head>
   <body style="margin: 0; background-color: #000">
-    <div id="oplayer" style="width: 100vw; height: 100vh"></div>
+    <div id="oplayer" style="width: 100vw; height: 100vh">
+      <div class="placeholder">WAIT ···</div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
@@ -21,8 +67,8 @@
           src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : decodeURIComponent(query)
           // poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
         },
-        playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
-        volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
+        playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
+        volume: localStorage.getItem('@oplayer/UserPreferences/volume')
       })
         .use([OUI({ keyboard: { global: true }, slideToSeek: 'always' }), OHls({ forceHLS: true })])
         .create()
@@ -43,6 +89,7 @@
         if ($op.clientWidth > 960) {
           $op.firstElementChild.children[1].style.fontSize = '22px'
         }
+        document.querySelector('.placeholder').remove()
       })
     </script>
   </body>
