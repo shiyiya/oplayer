@@ -8,7 +8,16 @@
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
     <meta name="keywords" content="hls player,online hls player" />
     <style>
+      html {
+        /* https://dev.to/rachelg/a-javascript-fix-for-the-100vh-problem-on-mobile-screens-9im */
+        height: fill-available;
+        height: -webkit-fill-available;
+      }
       #oplayer {
+        min-width: 100vw;
+        min-height: 100vh;
+        min-height: fill-available;
+        min-height: -webkit-fill-available;
         line-height: 100vh;
         text-align: center;
       }
@@ -46,7 +55,7 @@
     </style>
   </head>
   <body style="margin: 0; background-color: #000">
-    <div id="oplayer" style="width: 100vw; height: 100vh">
+    <div id="oplayer">
       <div class="placeholder">WAIT ···</div>
     </div>
 
