@@ -1,5 +1,5 @@
 import type { Player, PlayerPlugin } from '@oplayer/core'
-import { $, isIOS, isMobile } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import Danmaku from 'danmaku'
 import { danmakuParseFromUrl } from './danmaku-parse'
 import type { Comment, DanmakuContext, Options } from './types'
@@ -71,10 +71,7 @@ export default (options = {} as Options): PlayerPlugin => ({
           loaded = true
           if (options.fontSize) danmaku.setFontSize(options.fontSize)
           if (options.enable) danmaku.show()
-          if (
-            (enableHeatmap == true || Array.isArray(enableHeatmap)) &&
-            danmaku.comments.length > 0
-          ) {
+          if ((enableHeatmap == true || Array.isArray(enableHeatmap)) && danmaku.comments.length > 0) {
             if (isNaN(player.duration)) {
               player.once('loadedmetadata', () => {
                 heatmap(player, danmaku.comments, enableHeatmap)
@@ -90,7 +87,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     }
 
     player.on('fullscreenchange', () => {
-      if (!isIOS) danmaku.resize()
+      danmaku.resize()
     })
 
     player.on('videosourcechange', () => {
@@ -130,7 +127,7 @@ export default (options = {} as Options): PlayerPlugin => ({
         type: 'selector',
         default: true,
         key: 'danmaku',
-        icon: danmakuSvg,
+        icon: player.context.ui?.icons.danmalu ?? danmakuSvg,
         children: [
           {
             name: player.locales.get('Display'),

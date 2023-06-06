@@ -9,10 +9,7 @@ interface Ctx {
 
 export interface PlaylistOptions {
   sources: PlaylistSource[]
-  customFetcher?: (
-    source: PlaylistSource,
-    index: number
-  ) => Promise<PlaylistSource> | PlaylistSource
+  customFetcher?: (source: PlaylistSource, index: number) => Promise<PlaylistSource> | PlaylistSource
   autoNext?: boolean
   autoHide?: boolean
   initialIndex?: number
@@ -103,9 +100,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.currentIndex = idx
         this.player.emit('playlistsourcechange', { source, id: idx })
         this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
-        this.$root
-          .querySelector(`.playlist-list-item[data-index='${idx}']`)
-          ?.classList.add('active')
+        this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
         if (this.options.autoHide) this.hideUI()
       })
       .finally(() => {
@@ -138,7 +133,10 @@ export default class PlaylistPlugin implements PlayerPlugin {
     const $playlist = `
     <div class="playlist-head">
       <span class="playlist-head-title">${this.player.locales.get('PLAYLIST')}</span>
-      <div class="playlist-back"><svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg></div>
+      <div class="playlist-back">${
+        this.player.context.ui.icons.playlist ||
+        `<svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg>`
+      }</div>
     </div>
     <div class="playlist-list">
     </div>`

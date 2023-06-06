@@ -8,44 +8,38 @@
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
     <meta name="keywords" content="hls player,online hls player" />
     <style>
+      #oplayer {
+        line-height: 100vh;
+        text-align: center;
+      }
+
       .placeholder {
-        position: absolute;
-        top: 50%;
-        left: 50%;
         color: #fff;
-        transform: translate(-50%, -50%);
-        font-size: large;
-        animation: jello-horizontal 0.9s both infinite;
+        font-size: 24px;
+        animation: jello-horizontal 1.2s both infinite;
         letter-spacing: 4px;
       }
 
       @keyframes jello-horizontal {
         0% {
-          -webkit-transform: scale3d(1, 1, 1);
           transform: scale3d(1, 1, 1);
         }
         30% {
-          -webkit-transform: scale3d(1.25, 0.75, 1);
           transform: scale3d(1.25, 0.75, 1);
         }
         40% {
-          -webkit-transform: scale3d(0.75, 1.25, 1);
           transform: scale3d(0.75, 1.25, 1);
         }
         50% {
-          -webkit-transform: scale3d(1.15, 0.85, 1);
           transform: scale3d(1.15, 0.85, 1);
         }
         65% {
-          -webkit-transform: scale3d(0.95, 1.05, 1);
           transform: scale3d(0.95, 1.05, 1);
         }
         75% {
-          -webkit-transform: scale3d(1.05, 0.95, 1);
           transform: scale3d(1.05, 0.95, 1);
         }
         100% {
-          -webkit-transform: scale3d(1, 1, 1);
           transform: scale3d(1, 1, 1);
         }
       }
@@ -59,18 +53,46 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js"></script>
 
     <script>
-      const query = document.location.search.substring(1)
+      var query = document.location.search.substring(1)
+      var src, poster, subtitle, danmaku
+
+      if (query.startsWith('http')) {
+        src = query.endsWith('==')
+          ? atob(query.substring(0, query.length - 2))
+          : safeDecodeURIComponent(query)
+      } else {
+        const search = new URLSearchParams(document.location.search)
+        src = safeDecodeURIComponent(search.get('src'))
+        poster = safeDecodeURIComponent(search.get('poster'))
+        danmaku = safeDecodeURIComponent(search.get('danmaku'))
+        subtitle = search.get('subtitle')
+          ? {
+              source: [
+                {
+                  name: 'Default',
+                  default: true,
+                  src: decodeURIComponent(search.get('subtitle'))
+                }
+              ]
+            }
+          : undefined
+      }
+
       const player = (window.player = OPlayer.make('#oplayer', {
-        source: {
-          src: query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : decodeURIComponent(query)
-          // poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
-        },
+        source: { src, poster },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
         volume: localStorage.getItem('@oplayer/UserPreferences/volume')
       })
-        .use([OUI({ keyboard: { global: true }, slideToSeek: 'always' }), OHls({ forceHLS: true })])
+        .use(
+          [
+            OUI({ keyboard: { global: true }, slideToSeek: 'always' }),
+            OHls({ forceHLS: true }),
+            danmaku && ODanmaku({ enable: true, source: danmaku })
+          ].filter(Boolean)
+        )
         .create()
         .on(console.log))
 
@@ -91,6 +113,10 @@
         }
         document.querySelector('.placeholder').remove()
       })
+
+      function safeDecodeURIComponent(uri) {
+        return uri ? decodeURIComponent(uri) : undefined
+      }
     </script>
   </body>
 </html>
