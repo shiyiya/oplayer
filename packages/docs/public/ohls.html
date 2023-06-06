@@ -8,18 +8,23 @@
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
     <meta name="keywords" content="hls player,online hls player" />
     <style>
-      #oplayer {
+      #oplayer,
+      .placeholder {
         width: 100vw;
         height: 100vh;
-        line-height: 100vh;
-        text-align: center;
       }
 
       .placeholder {
-        color: #fff;
-        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .placeholder span {
         animation: jello-horizontal 1.2s both infinite;
         letter-spacing: 4px;
+        color: #fff;
+        font-size: 24px;
       }
 
       @keyframes jello-horizontal {
@@ -49,7 +54,9 @@
   </head>
   <body style="margin: 0; background-color: #000">
     <div id="oplayer">
-      <div class="placeholder">WAIT ···</div>
+      <div class="placeholder">
+        <span>WAIT ···</span>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
