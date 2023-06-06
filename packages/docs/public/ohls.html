@@ -8,16 +8,9 @@
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
     <meta name="keywords" content="hls player,online hls player" />
     <style>
-      html {
-        /* https://dev.to/rachelg/a-javascript-fix-for-the-100vh-problem-on-mobile-screens-9im */
-        height: fill-available;
-        height: -webkit-fill-available;
-      }
       #oplayer {
-        min-width: 100vw;
-        min-height: 100vh;
-        min-height: fill-available;
-        min-height: -webkit-fill-available;
+        width: 100vw;
+        height: 100vh;
         line-height: 100vh;
         text-align: center;
       }
@@ -76,7 +69,7 @@
         const search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
         poster = safeDecodeURIComponent(search.get('poster'))
-        title = safeDecodeURIComponent(search.get('title')) || 'Back'
+        title = safeDecodeURIComponent(search.get('title'))
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
 
         subtitle = search.get('subtitle')
@@ -92,6 +85,7 @@
           : undefined
       }
 
+      document.querySelector('.placeholder').remove()
       const player = (window.player = OPlayer.make('#oplayer', {
         source: { src, poster, title },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
@@ -123,10 +117,9 @@
       new Promise(() => {
         // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
         const $op = document.querySelector('#oplayer')
-        if ($op.clientWidth > 960) {
+        if ($op.clientWidth > 768) {
           $op.firstElementChild.children[1].style.fontSize = '22px'
         }
-        document.querySelector('.placeholder').remove()
       })
 
       function safeDecodeURIComponent(uri) {
