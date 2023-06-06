@@ -42,6 +42,7 @@ export const root = (config: UiConfig) => {
         left: '0',
         width: '100%',
         height: '100%',
+        'line-height': 1,
 
         'font-size': isMobile ? '16px' : '18px',
 
