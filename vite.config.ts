@@ -23,6 +23,10 @@ export const globals = {
 
 const babelPlugins = [
   'syntax-trailing-function-commas',
+  // x ??= 1
+  '@babel/plugin-proposal-logical-assignment-operators',
+  // x ?? 1
+  '@babel/plugin-proposal-nullish-coalescing-operator',
   // These use loose mode which avoids embedding a runtime.
   // TODO: Remove object spread from the source. Prefer Object.assign instead.
   ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
