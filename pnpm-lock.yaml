@@ -142,7 +142,7 @@ importers:
         version: 1.1.2(@mdx-js/mdx@1.6.22)(@mdx-js/react@1.6.22)(react-dom@18.2.0)(react@18.2.0)
       next:
         specifier: ^13.4.4
-        version: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
+        version: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.63.2)
       nextra:
         specifier: ^2.7.1
         version: 2.7.1(next@13.4.4)(react-dom@18.2.0)(react@18.2.0)
@@ -157,14 +157,14 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@types/react':
-        specifier: ^18.2.8
-        version: 18.2.8
+        specifier: ^18.2.9
+        version: 18.2.9
       '@types/react-dom':
         specifier: ^18.2.4
         version: 18.2.4
       sass:
-        specifier: ^1.62.1
-        version: 1.62.1
+        specifier: ^1.63.2
+        version: 1.63.2
 
   packages/hls:
     devDependencies:
@@ -208,8 +208,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@types/react':
-        specifier: ^18.2.8
-        version: 18.2.8
+        specifier: ^18.2.9
+        version: 18.2.9
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -223,8 +223,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       webtorrent:
-        specifier: ^2.0.34
-        version: 2.0.34
+        specifier: ^2.0.36
+        version: 2.0.36
 
   packages/ui:
     devDependencies:
@@ -1166,7 +1166,7 @@ packages:
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.5
-      '@types/react': 18.2.8
+      '@types/react': 18.2.9
       react: 18.2.0
     dev: false
 
@@ -1701,11 +1701,11 @@ packages:
   /@types/react-dom@18.2.4:
     resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
     dependencies:
-      '@types/react': 18.2.8
+      '@types/react': 18.2.9
     dev: true
 
-  /@types/react@18.2.8:
-    resolution: {integrity: sha512-lTyWUNrd8ntVkqycEEplasWy2OxNlShj3zqS0LuB1ENUGis5HodmhM7DtCoUGbxj3VW/WsGA0DUhpG6XrM7gPA==}
+  /@types/react@18.2.9:
+    resolution: {integrity: sha512-pL3JAesUkF7PEQGxh5XOwdXGV907te6m1/Qe1ERJLgomojS6Ne790QiA7GUl434JEkFA2aAaB6qJ5z4e1zJn/w==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -2127,8 +2127,8 @@ packages:
       - supports-color
     dev: true
 
-  /bittorrent-tracker@10.0.7:
-    resolution: {integrity: sha512-i8UW1xpEGxRi0Y1nLNQD/HavEXeGvTe6lU7dH9bRTA55ynn2/mP73iXYvdkvMPgp5T2lqEi0ltHksdjbEykicg==}
+  /bittorrent-tracker@10.0.8:
+    resolution: {integrity: sha512-xU7v426SXEUl908dLuIQTkjluXMMPq6zbjgwk9kvF+NqwfpCjlpGgmhXn2VuLtaiiBX36HNQ5151GY8yiULb4g==}
     engines: {node: '>=12.20.0'}
     hasBin: true
     dependencies:
@@ -2208,7 +2208,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001495
-      electron-to-chromium: 1.4.423
+      electron-to-chromium: 1.4.425
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.7)
     dev: true
@@ -3169,8 +3169,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
 
-  /electron-to-chromium@1.4.423:
-    resolution: {integrity: sha512-y4A7YfQcDGPAeSWM1IuoWzXpg9RY1nwHzHSwRtCSQFp9FgAVDgdWlFf0RbdWfLWQ2WUI+bddUgk5RgTjqRE6FQ==}
+  /electron-to-chromium@1.4.425:
+    resolution: {integrity: sha512-wv1NufHxu11zfDbY4fglYQApMswleE9FL/DSeyOyauVXDZ+Kco96JK/tPfBUaDqfRarYp2WH2hJ/5UnVywp9Jg==}
     dev: true
 
   /elkjs@0.8.2:
@@ -5688,7 +5688,7 @@ packages:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
     dependencies:
-      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
+      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.63.2)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -5700,12 +5700,12 @@ packages:
       react: '*'
       react-dom: '*'
     dependencies:
-      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
+      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.63.2)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /next@13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1):
+  /next@13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.63.2):
     resolution: {integrity: sha512-C5S0ysM0Ily9McL4Jb48nOQHT1BukOWI59uC3X/xCMlYIh9rJZCv7nzG92J6e1cOBqQbKovlpgvHWFmz4eKKEA==}
     engines: {node: '>=16.8.0'}
     hasBin: true
@@ -5730,7 +5730,7 @@ packages:
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      sass: 1.62.1
+      sass: 1.63.2
       styled-jsx: 5.1.1(@babel/core@7.12.9)(react@18.2.0)
       zod: 3.21.4
     optionalDependencies:
@@ -5764,7 +5764,7 @@ packages:
       git-url-parse: 13.1.0
       intersection-observer: 0.12.2
       match-sorter: 6.3.1
-      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
+      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.63.2)
       next-seo: 6.0.0(next@13.4.4)(react-dom@18.2.0)(react@18.2.0)
       next-themes: 0.2.1(next@13.4.4)(react-dom@18.2.0)(react@18.2.0)
       nextra: 2.7.1(next@13.4.4)(react-dom@18.2.0)(react@18.2.0)
@@ -5792,7 +5792,7 @@ packages:
       gray-matter: 4.0.3
       katex: 0.16.7
       lodash.get: 4.4.2
-      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.62.1)
+      next: 13.4.4(@babel/core@7.12.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.63.2)
       next-mdx-remote: 4.4.1(react-dom@18.2.0)(react@18.2.0)
       p-limit: 3.1.0
       react: 18.2.0
@@ -6712,8 +6712,8 @@ packages:
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /sass@1.62.1:
-    resolution: {integrity: sha512-NHpxIzN29MXvWiuswfc1W3I0N8SXBd8UR26WntmDlRYf0bSADnwnOjsyMZ3lMezSlArD33Vs3YFhp7dWvL770A==}
+  /sass@1.63.2:
+    resolution: {integrity: sha512-u56TU0AIFqMtauKl/OJ1AeFsXqRHkgO7nCWmHaDwfxDo9GUMSqBA4NEh6GMuh1CYVM7zuROYtZrHzPc2ixK+ww==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
@@ -7320,13 +7320,13 @@ packages:
     dependencies:
       is-number: 7.0.0
 
-  /torrent-discovery@10.0.10:
-    resolution: {integrity: sha512-cJ2goeCMbXgG09X0uGkaIBOzZROJN5iEfwVR+GUilaiyDUGgLawGzZFxsi1cCPipQztAaTdDq2w/ui0RjUObug==}
+  /torrent-discovery@10.0.11:
+    resolution: {integrity: sha512-iEjQT6ohouYSWumYqz3ov1ngtxo+DPaeK1j3cRWZcWmMgwzn0C55TMcihnui08DDGkKwTGFd+7uthg0EMO4KcA==}
     engines: {node: '>=12.20.0'}
     dependencies:
       bittorrent-dht: 11.0.4
       bittorrent-lsd: 2.0.0
-      bittorrent-tracker: 10.0.7
+      bittorrent-tracker: 10.0.8
       debug: 4.3.4
       run-parallel: 1.2.0
     transitivePeerDependencies:
@@ -7991,8 +7991,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /webtorrent@2.0.34:
-    resolution: {integrity: sha512-2rONbvMcgDssvOhcJqoRYycn1rzx99SFzIi9gHCk6XxapdJ1zm3ZhZot2Dcfq7f01jqUDU1cII+pgJPmcgZBhg==}
+  /webtorrent@2.0.36:
+    resolution: {integrity: sha512-lhZZfTP3YoTlUn7omW5fXJGlk6pyCQEzanBReepIvnTEWZoxo/StmaipoYDxRM1V4eKdCTc0wQYYDrCE/14Qcw==}
     engines: {node: '>=14'}
     dependencies:
       '@thaunknown/simple-peer': 9.12.0
@@ -8026,7 +8026,7 @@ packages:
       speed-limiter: 1.0.2
       streamx: 2.14.0
       throughput: 1.0.1
-      torrent-discovery: 10.0.10
+      torrent-discovery: 10.0.11
       torrent-piece: 2.0.1
       uint8-util: 2.1.9
       unordered-array-remove: 1.0.2

@@ -48,7 +48,6 @@ export default function (it: UIInterface) {
 
       function moving(e: TouchEvent) {
         if (startX == 0 && startY == 0) return
-        e.preventDefault()
         const { clientX, clientY } = e.changedTouches[0]!
         const [dx, dy] = [clientX - startX, startY - clientY]
         if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return
@@ -59,6 +58,7 @@ export default function (it: UIInterface) {
           (angle >= 135 && angle <= 180) ||
           (angle >= -180 && angle < -135)
         ) {
+          e.preventDefault()
           shouldSeekSec = (FULL_SLIDE_DURATION * dx) / rect.width
 
           player.emit('notice', {
