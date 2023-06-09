@@ -154,6 +154,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   render() {
+    // prettier-ignore
+    const { source: { poster } , autoplay, loop, playsinline, preload, muted, volume, playbackRate, videoAttr } = this.options
     this.$video = $.create(
       `video.${$.css(`
         width: 100%;
@@ -162,22 +164,21 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         position: relative;
       `)}`,
       {
-        autoplay: this.options.autoplay,
-        loop: this.options.loop,
-        playsinline: this.options.playsinline,
-        'webkit-playsinline': this.options.playsinline,
-        'x5-playsinline': this.options.playsinline,
-        preload: this.options.preload,
-        poster: this.options.source.poster,
-        ...this.options.videoAttr
+        autoplay: autoplay,
+        loop: loop,
+        playsinline: playsinline,
+        'webkit-playsinline': playsinline,
+        'x5-playsinline': playsinline,
+        preload: preload,
+        ...videoAttr
       }
     )
 
     // not working `setAttribute`
-    const { muted, volume, playbackRate } = this.options
-    if (!!muted) this.mute()
-    this.$video.volume = volume
-    this.setPlaybackRate(playbackRate)
+    if (poster) this.$video.poster = poster
+    if (!!muted) this.$video.muted = true
+    if (volume != 1) this.$video.volume = volume
+    if (playbackRate != 1) this.$video.playbackRate = playbackRate
 
     this.$root = $.create(
       `div.${$.css(`
