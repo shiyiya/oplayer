@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/ui",
-  "version": "1.2.27",
+  "version": "1.2.28",
   "description": "ui plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",

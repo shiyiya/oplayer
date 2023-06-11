@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.28]
+
+- fix initial playback rate not working
+
 ## [1.2.27](https://github.com/shiyiya/oplayer/tree/1.2.27) (2023-05-31)
 
 - fix IOS fullscreen behavior
