@@ -45,12 +45,12 @@ export default function (it: UIInterface, container: HTMLElement) {
 
       if (Array.isArray(thumbnails.src)) {
         // n*x * n*y
-        const index = Math.ceil(thumbnails.number * rate)
-        const srcIdx = Math.ceil(thumbnails.src.length * rate) - 1
+        const index = thumbnails.number * rate
+        const srcIdx = Math.ceil(index / (thumbnails.x! * thumbnails.y!)) - 1
 
-        const gridIdx = Math.ceil(index % (thumbnails.x! * thumbnails.y!))
-        const gridX = Math.ceil(gridIdx % thumbnails.x!) - 1
-        const gridY = Math.ceil(gridIdx / thumbnails.x!) - 1
+        const gridIdx = index % thumbnails.number
+        const gridY = Math.floor(gridIdx / thumbnails.x!)
+        const gridX = Math.ceil(gridIdx % thumbnails.x!)
 
         $dom.style.backgroundImage = `url(${thumbnails.src[srcIdx]})`
         $dom.style.backgroundPosition = `${-gridX}00% ${-gridY}00%`
