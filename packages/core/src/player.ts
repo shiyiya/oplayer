@@ -177,7 +177,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     const { muted, volume, playbackRate } = this.options
     if (!!muted) this.mute()
     this.$video.volume = volume
-    this.setPlaybackRate(playbackRate)
+    // 设置 src 后执行
+    setTimeout(() => {
+      this.setPlaybackRate(playbackRate)
+    })
 
     this.$root = $.create(
       `div.${$.css(`
