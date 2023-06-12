@@ -178,6 +178,8 @@ export type UiConfig = {
     loop?: string
     progressIndicator?: string
     loadingIndicator?: string
+    next?: string
+    previous?: string
   }
 
   /*  --- WIP ---  */

@@ -60,18 +60,24 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   renderProgress(it, el)
 
-  const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel] = [
+  const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel, previousLabel, nextLabel] = [
     player.locales.get('Play'),
     player.locales.get('Pause'),
     player.locales.get('Screenshot'),
     player.locales.get('Picture in Picture'),
-    player.locales.get(player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen')
+    player.locales.get(player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen'),
+    player.locales.get('Previous'),
+    player.locales.get('Next'),
   ]
 
+  const [previousSvg, nextSvg] = [Icons.get('previous') || '', Icons.get('next') || '']
   const $dom = (it.$controllerBottom = $.create(
     `div.${controllerBottom}`,
     {},
     `<div>
+
+    ${previousSvg && `<button class="${icon} ${tooltip}" aria-label="${previousLabel}" >${previousSvg}</button>`}
+
       <button
         class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
         aria-label="${playLabel}"
@@ -80,10 +86,11 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
         ${Icons.get('pause')}
       </button>
 
+      ${nextSvg && `<button class="${icon} ${tooltip}" aria-label="${nextLabel}">${nextSvg}</button>`}
+
       ${player.options.isLive ? `<span class="${live}"></span>` : ''}
 
-      <span class=${time}>${
-      player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
+      <span class=${time}>${player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
     }</span>
     </div>
 

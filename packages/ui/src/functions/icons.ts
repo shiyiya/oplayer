@@ -34,7 +34,9 @@ export const ICONS_MAP = {
   // plugins
   chromecast: null,
   danmaku: null,
-  playlist: null
+  playlist: null,
+  previous: null,
+  next: null
 }
 
 export namespace Icons {
