@@ -1,5 +1,5 @@
 import { $, Player } from '@oplayer/core'
-import type { Comment, Options } from './types'
+import type { DanmakuContext, Options } from './types'
 
 const lib = {
   map(value: number, inMin: number, inMax: number, outMin: number, outMax: number) {
@@ -27,9 +27,7 @@ const line = (pointA: number[], pointB: number[]) => {
   }
 }
 
-export default function heatmap(player: Player, danmaku: Comment[], customPoints: Options['heatmap']) {
-  if (Array.isArray(customPoints) && !customPoints.length) return
-
+export default function heatmap(player: Player, danmaku: DanmakuContext, customPoints: Options['heatmap']) {
   const $progress = player.context.ui.$progress
   const $wrap = document.createElement('div')
   $wrap.style.cssText = `height: 8em;width:100%;pointer-events:none`
@@ -56,7 +54,7 @@ export default function heatmap(player: Player, danmaku: Comment[], customPoints
   if (!points.length) {
     const gap = player.duration / w
     for (let x = 0; x <= w; x += options.sampling) {
-      const y = danmaku.filter(
+      const y = danmaku.comments.filter(
         ({ time }) => !!time && time > x * gap && time <= (x + options.sampling) * gap
       ).length
       points.push([x, y])
@@ -147,11 +145,22 @@ export default function heatmap(player: Player, danmaku: Comment[], customPoints
 
   updateProgress()
 
-  player.on(['timeupdate', 'seeked'], updateProgress)
-
   player.once('videosourcechange', () => {
     $wrap.remove()
+    danmaku.heatmap = undefined
     player.off('timeupdate', updateProgress)
     player.off('seeked', updateProgress)
   })
+
+  danmaku.heatmap = {
+    enable() {
+      $wrap.style.display = 'block'
+      player.on(['timeupdate', 'seeked'], updateProgress)
+    },
+    disable() {
+      $wrap.style.display = 'none'
+      player.off('timeupdate', updateProgress)
+      player.off('seeked', updateProgress)
+    }
+  }
 }

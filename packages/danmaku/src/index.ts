@@ -21,14 +21,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     //@ts-ignore
     if (player.isNativeUI) return
 
-    const {
-      speed = 144,
-      opacity,
-      engine = 'dom',
-      displaySender,
-      area = 0.8,
-      heatmap: enableHeatmap = true
-    } = options
+    const { speed = 144, opacity, engine = 'dom', displaySender, area = 0.8, fontSize } = options
 
     const $danmaku = $.render($.create('div'), player.$root)
     $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
@@ -36,6 +29,7 @@ export default (options = {} as Options): PlayerPlugin => ({
 
     if (opacity) $danmaku.style.opacity = `${opacity}`
     if (options.enable == undefined) options.enable = true
+    let heatmapEnable = options.heatmap == undefined || options.heatmap || heatmap.length
 
     let loaded = false
     const danmaku: DanmakuContext = new Danmaku({
@@ -69,15 +63,15 @@ export default (options = {} as Options): PlayerPlugin => ({
             }
           })
           loaded = true
-          if (options.fontSize) danmaku.setFontSize(options.fontSize)
+          if (fontSize) danmaku.setFontSize(fontSize)
           if (options.enable) danmaku.show()
-          if ((enableHeatmap == true || Array.isArray(enableHeatmap)) && danmaku.comments.length > 0) {
+          if (heatmapEnable && danmaku.comments.length > 0) {
             if (isNaN(player.duration)) {
               player.once('loadedmetadata', () => {
-                heatmap(player, danmaku.comments, enableHeatmap)
+                heatmap(player, danmaku, options.heatmap)
               })
             } else {
-              heatmap(player, danmaku.comments, enableHeatmap)
+              heatmap(player, danmaku, options.heatmap)
             }
           }
         })
@@ -148,6 +142,16 @@ export default (options = {} as Options): PlayerPlugin => ({
             }
           },
           {
+            name: player.locales.get('Heatmap'),
+            type: 'switcher',
+            default: heatmapEnable,
+            key: 'heatmap',
+            onChange: (value: Boolean) => {
+              if (value) danmaku.heatmap?.enable()
+              else danmaku.heatmap?.disable()
+            }
+          },
+          {
             type: 'selector',
             key: 'danmaku-font',
             name: player.locales.get('FontSize'),
@@ -161,7 +165,6 @@ export default (options = {} as Options): PlayerPlugin => ({
               danmaku.setFontSize(value)
             }
           },
-
           {
             type: 'selector',
             key: 'danmaku-opacity',

@@ -40,7 +40,7 @@
     "@babel/plugin-transform-template-literals": "^7.22.5",
     "@changesets/cli": "^2.26.1",
     "@rollup/plugin-babel": "^6.0.3",
-    "@types/node": "^18.16.17",
+    "@types/node": "^18.16.18",
     "@vitejs/plugin-react": "^4.0.0",
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
     "concurrently": "^8.2.0",
@@ -48,13 +48,13 @@
     "jsdom": "^22.1.0",
     "lint-staged": "^13.2.2",
     "nx": "^16.3.2",
+    "prettier": "^2.8.8",
     "rimraf": "^5.0.1",
-    "terser": "^5.17.7",
+    "terser": "^5.18.0",
     "tslib": "^2.5.3",
     "typescript": "^5.1.3",
     "vite": "^4.3.9",
     "vite-plugin-banner": "^0.7.0",
-    "vitest": "^0.31.4",
-    "prettier": "^2.8.8"
+    "vitest": "^0.31.4"
   }
 }

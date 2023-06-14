@@ -90,6 +90,8 @@
               ]
             }
           : undefined
+
+        if (title) document.title = title
       }
 
       document.querySelector('.placeholder').remove()
@@ -102,11 +104,11 @@
           [
             OUI({
               keyboard: { global: true },
-              // slideToSeek: 'long-touch',
+              slideToSeek: 'always',
               controlBar: { back: 'fullscreen' }
             }),
             OHls({ forceHLS: true }),
-            danmaku && ODanmaku({ enable: true, source: danmaku })
+            danmaku && ODanmaku({ source: danmaku })
           ].filter(Boolean)
         )
         .create()
@@ -124,8 +126,9 @@
       new Promise(() => {
         // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
         const $op = document.querySelector('#oplayer')
-        if ($op.clientWidth > 768) {
-          $op.firstElementChild.children[1].style.fontSize = '22px'
+        // not in iframe
+        if (window.self == window.top && $op.clientWidth > 960) {
+          $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '22px' : '20px'
         }
       })
 

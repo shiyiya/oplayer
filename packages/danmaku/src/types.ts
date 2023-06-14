@@ -1,4 +1,4 @@
-import type Danmaku from "danmaku"
+import type Danmaku from 'danmaku'
 
 export type Options = {
   source: string | Function | Comment[]
@@ -53,7 +53,11 @@ export interface Comment {
 }
 
 export interface DanmakuContext extends Danmaku {
-  comments: Comment[];
+  comments: Comment[]
+  heatmap?: {
+    enable: () => void
+    disable: () => void
+  }
   bootstrap: (source: Options['source']) => Promise<void>
   setFontSize: (size: number) => void
 }
