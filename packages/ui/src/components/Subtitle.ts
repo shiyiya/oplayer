@@ -293,6 +293,7 @@ export class Subtitle {
   loadSetting() {
     const source = this.options.source
     if (source.length) {
+      this.setting.unregister(SETTING_KEY)
       this.setting.register(<Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
