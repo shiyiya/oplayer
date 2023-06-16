@@ -8,6 +8,10 @@
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
     <meta name="keywords" content="hls player,online hls player" />
     <style>
+      body {
+        margin: 0;
+        background-color: #000;
+      }
       #oplayer,
       .placeholder {
         width: 100vw;
@@ -52,7 +56,7 @@
       }
     </style>
   </head>
-  <body style="margin: 0; background-color: #000">
+  <body>
     <div id="oplayer">
       <div class="placeholder">
         <span>WAIT ···</span>
@@ -61,19 +65,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js"></script>
 
     <script>
       var query = document.location.search.substring(1)
       var src, poster, subtitle, danmaku, title
+      var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
+      var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
+      var plugins = [
+        OUI({
+          keyboard: { global: true },
+          slideToSeek: 'always',
+          controlBar: { back: 'fullscreen' }
+        })
+      ]
 
       if (query.startsWith('http')) {
         src = query.endsWith('==')
           ? atob(query.substring(0, query.length - 2))
           : safeDecodeURIComponent(query)
       } else {
-        const search = new URLSearchParams(document.location.search)
+        var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
         poster = safeDecodeURIComponent(search.get('poster'))
         title = safeDecodeURIComponent(search.get('title'))
@@ -94,46 +105,78 @@
         if (title) document.title = title
       }
 
-      document.querySelector('.placeholder').remove()
-      const player = (window.player = OPlayer.make('#oplayer', {
-        source: { src, poster, title },
-        playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
-        volume: localStorage.getItem('@oplayer/UserPreferences/volume')
-      })
-        .use(
-          [
-            OUI({
-              keyboard: { global: true },
-              slideToSeek: 'always',
-              controlBar: { back: 'fullscreen' }
-            }),
-            OHls({ forceHLS: true }),
-            danmaku && ODanmaku({ source: danmaku })
-          ].filter(Boolean)
-        )
-        .create()
-        .on(console.log))
+      if (/m3u8(#|\?|$)/.test(src)) {
+        loadScripts([hlsScriptCdn]).then(() => {
+          plugins.push(OHls({ forceHLS: true }))
+          bootstrap()
+        })
+      } else {
+        bootstrap()
+      }
 
-      player.on('ratechange', () => {
-        if (!player.isSourceChanging)
-          localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
-      })
-
-      player.on('volumechange', () => {
-        localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
-      })
-
-      new Promise(() => {
-        // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
-        const $op = document.querySelector('#oplayer')
-        // not in iframe
-        if (window.self == window.top && $op.clientWidth > 960) {
-          $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '22px' : '20px'
+      function bootstrap() {
+        if (danmaku) {
+          loadScripts([danmakuScriptCdn]).then((p) => {
+            player.applyPlugin(ODanmaku({ source: danmaku }))
+          })
         }
-      })
+
+        document.querySelector('.placeholder').remove()
+        var player = (window.player = OPlayer.make('#oplayer', {
+          source: { src, poster, title },
+          playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
+          volume: localStorage.getItem('@oplayer/UserPreferences/volume')
+        })
+          .use(plugins)
+          .create()
+          .on(console.log))
+
+        player.on('ratechange', () => {
+          if (!player.isSourceChanging)
+            localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+        })
+
+        player.on('volumechange', () => {
+          localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+        })
+
+        player.on('timeupdate', () => {
+          localStorage.setItem(src, player.currentTime.toString())
+        })
+
+        if (src) {
+          var prevTime = localStorage.getItem(src)
+          if (prevTime) {
+            player.on('loadedmetadata', () => {
+              player.seek(prevTime)
+            })
+          }
+        }
+
+        new Promise(() => {
+          // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
+          var $op = document.querySelector('#oplayer')
+          // not in iframe
+          if (window.self == window.top && $op.clientWidth > 960) {
+            $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '22px' : '20px'
+          }
+        })
+      }
 
       function safeDecodeURIComponent(uri) {
         return uri ? decodeURIComponent(uri) : undefined
+      }
+
+      function loadScripts(scripts) {
+        return Promise.all(
+          scripts.map((s) => {
+            return new Promise((r) => {
+              var t = document.body.appendChild(document.createElement('script'))
+              t.src = s
+              t.onload = r
+            })
+          })
+        )
       }
     </script>
   </body>
