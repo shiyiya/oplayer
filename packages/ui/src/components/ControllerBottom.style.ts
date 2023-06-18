@@ -89,7 +89,7 @@ export const dropItem = $.css({
 
 export const textIcon = $.cls('textIcon')
 
-export const controllerBottom = $.css({
+export const controllers = $.css({
   color: '#fff',
   fill: '#fff',
   height: '2.5em',
@@ -98,20 +98,37 @@ export const controllerBottom = $.css({
   'justify-content': 'space-between',
   'align-items': 'center',
   'padding-bottom': isMobile ? 0 : '4px',
-  margin: '0 -6px',
+
+  // left & right
+  '> div': {
+    display: 'flex',
+    'align-items': 'center',
+    margin: '0 -.5em',
+
+    [`& .${icon}:last-child `]: {
+      'margin-right': 0
+    }
+  },
 
   [`& .${icon}.${textIcon}`]: {
     width: 'auto',
     'min-width': '2em',
-    'font-size': '0.875em'
+    'font-size': '0.875em',
+    padding: '0 4px'
   },
 
   [`& .${icon}`]: {
-    padding: '0 0.5em',
-    width: '1.25em',
-    height: '1.5em',
-    'line-height': '1.5em',
-    'box-sizing': 'content-box',
+    width: '2em',
+    height: '2em',
+    'margin-right': '6px',
+    'justify-content': 'center',
+    'align-items': 'center',
+    display: 'inline-flex',
+    'border-radius': '2px',
+
+    [`${isMobile ? '&:active' : '&:hover'}`]: {
+      'background-color': 'rgb(255 255 255 / .2)'
+    },
 
     '& > *': {
       height: '1.5em',
@@ -121,14 +138,5 @@ export const controllerBottom = $.css({
     },
 
     '&:active > *': { transform: 'scale(.85)' }
-  },
-
-  // left & right
-  '> div': {
-    display: 'flex',
-    'align-items': 'center',
-    [`&:nth-child(1) .${icon} `]: {
-      'padding-left': 0
-    }
   }
 })
