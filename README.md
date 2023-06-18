@@ -18,6 +18,7 @@
 
 - [UPV](https://web.月色真美.life) : free animes no ad
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
+- [mirutv](https://mirutv.vercel.app) : Let's watch anime... Just Mi and Ru...
 - **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/new?category=show-and-tell)**
 
 ## Feature

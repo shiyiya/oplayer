@@ -1,5 +1,5 @@
 import type { Player } from '@oplayer/core'
-import { $, isIOS, isMobile } from '@oplayer/core'
+import { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource, UIInterface } from '../types'
 import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
@@ -153,7 +153,8 @@ export class Subtitle {
       this.player.$video
     )
 
-    if (isIOS) {
+    // video fullscreen
+    if (!this.player._requestFullscreen) {
       this.$iosTrack = <HTMLTrackElement>$.render(
         $.create('track', {
           default: false,

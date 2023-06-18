@@ -37,3 +37,8 @@ export default Object.assign(
     ui: ui
   }
 )
+
+if (globalThis.window) {
+  // @ts-ignore
+  globalThis.window.OUI = ui
+}
