@@ -114,7 +114,8 @@ export const controllers = $.css({
     width: 'auto',
     'min-width': '2em',
     'font-size': '0.875em',
-    padding: '0 4px'
+    padding: '0 4px',
+    'border-radius': '2px'
   },
 
   [`& .${icon}`]: {

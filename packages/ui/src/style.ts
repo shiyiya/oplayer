@@ -81,7 +81,9 @@ export const icon = $.css({
   color: 'inherit',
   'line-height': 'inherit',
   'text-align': 'inherit',
-  width: '100%'
+  width: '100%',
+  '-webkit-tap-highlight-color': 'transparent',
+  'user-select': 'none'
 })
 
 export const on = $.css({
