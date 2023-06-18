@@ -105,7 +105,7 @@ export const controllers = $.css({
     'align-items': 'center',
     margin: '0 -.5em',
 
-    [`& .${icon}:last-child `]: {
+    [`& > .${icon}:last-child `]: {
       'margin-right': 0
     }
   },
@@ -124,7 +124,7 @@ export const controllers = $.css({
     'justify-content': 'center',
     'align-items': 'center',
     display: 'inline-flex',
-    'border-radius': '2px',
+    'border-radius': isMobile ? '50%' : '2px',
 
     [`${isMobile ? '&:active' : '&:hover'}`]: {
       'background-color': 'rgb(255 255 255 / .2)'
@@ -135,8 +135,6 @@ export const controllers = $.css({
       width: '1.5em',
       'pointer-events': 'none',
       transition: 'transform .2s ease-in-out'
-    },
-
-    '&:active > *': { transform: 'scale(.85)' }
+    }
   }
 })
