@@ -44,16 +44,13 @@ export const hit = $.css({
   position: 'absolute',
   left: '0',
   'border-radius': '2px',
-  padding: '4px 8px',
+  padding: '6px 8px',
   'background-color': 'var(--shadow-background-color)',
   color: '#fff',
-  'word-wrap': 'nowrap',
-  'word-break': 'nowrap',
   'z-index': '2',
   'pointer-events': 'none',
   transform: 'translateX(-50%)',
   display: 'none',
-  'white-space': 'pre',
   bottom: '15px'
 })
 

@@ -118,24 +118,26 @@ export const controllers = $.css({
     'border-radius': '2px'
   },
 
-  [`& .${icon}`]: {
-    width: '2em',
-    height: '2em',
-    'margin-right': '6px',
-    'justify-content': 'center',
-    'align-items': 'center',
-    display: 'inline-flex',
-    'border-radius': isMobile ? '50%' : '2px',
+  [`& .${icon}`]: Object.assign(
+    {
+      width: '2em',
+      height: '2em',
+      'margin-right': '6px',
+      'justify-content': 'center',
+      'align-items': 'center',
+      display: 'inline-flex',
+      'border-radius': isMobile ? '50%' : '2px',
 
-    [`${isMobile ? '&:active' : '&:hover'}`]: {
-      'background-color': 'rgb(255 255 255 / .2)'
+      '& > *': {
+        height: '1.5em',
+        width: '1.5em',
+        'pointer-events': 'none',
+        transition: 'transform .2s ease-in-out'
+      }
     },
 
-    '& > *': {
-      height: '1.5em',
-      width: '1.5em',
-      'pointer-events': 'none',
-      transition: 'transform .2s ease-in-out'
-    }
-  }
+    isMobile
+      ? { '&:active > *': { transform: 'scale(.9)' } }
+      : { '&:hover': { 'background-color': 'rgb(255 255 255 / .2)' } }
+  )
 })
