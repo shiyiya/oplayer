@@ -6,7 +6,7 @@ export const highlightTextCls = $.css(`
   bottom: 15px;
   position: absolute;
   left: 50%;
-  padding: 4px 8px;
+  padding: 6px 8px;
   background-color: var(--shadow-background-color);
   color: #fff;
   border-radius: 2px;
@@ -39,11 +39,7 @@ export default function (it: UIInterface, container: HTMLElement) {
   container.style.setProperty('--highlight-color', highlightsConfig?.color || '#FFF')
 
   function createDto(options: { left: number; text: string }) {
-    const dto = $.create(
-      `div.${highlightCls}`,
-      {},
-      `<span class="${highlightTextCls}">${options.text}</san>`
-    )
+    const dto = $.create(`div.${highlightCls}`, {}, `<span class="${highlightTextCls}">${options.text}</san>`)
     dto.style.left = `${options.left}%`
     return dto
   }

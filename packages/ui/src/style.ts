@@ -126,7 +126,6 @@ export const tooltip = isMobile
       },
 
       '&::after': {
-        'line-height': '1.25em',
         position: 'absolute',
         content: 'attr(aria-label)',
         bottom: '100%',
@@ -137,7 +136,7 @@ export const tooltip = isMobile
         transform: 'translate(-50%, 10px) scale(.8)',
         'transform-origin': '50% 100%',
         opacity: 0,
-        padding: '4px 8px',
+        padding: '6px 8px',
         'border-radius': '2px',
         transition: 'transform .2s ease .1s,opacity .2s ease .1s',
         'pointer-events': 'none',

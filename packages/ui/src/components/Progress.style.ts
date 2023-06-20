@@ -14,7 +14,6 @@ export const dot = $.css({
   width: '100%',
   'pointer-events': 'none',
   position: 'relative',
-  'z-index': 1,
 
   '& > *': {
     content: "''",

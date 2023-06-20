@@ -8,7 +8,10 @@ import ui from '@oplayer/ui'
 import danmaku from '@oplayer/danmaku'
 import { PlaylistPlugin } from '@oplayer/plugins'
 
-<div className="nx-rounded-sm nx-overflow-hidden nx-mt-5" style={{ width: '80%', margin: '1.25rem auto' }}>
+<div
+  className="nx-rounded-sm nx-overflow-hidden nx-mt-5"
+  style={{ maxWidth: '1024px', width:'100%' margin: '1.25rem auto' }}
+>
   <Player
     onEvent={(payload) => {
       console.log(payload)
