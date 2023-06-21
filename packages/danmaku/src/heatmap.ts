@@ -163,4 +163,6 @@ export default function heatmap(player: Player, danmaku: DanmakuContext, customP
       player.off('seeked', updateProgress)
     }
   }
+
+  danmaku.heatmap.enable()
 }

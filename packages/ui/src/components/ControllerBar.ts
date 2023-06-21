@@ -2,7 +2,7 @@ import { $, isMobile } from '@oplayer/core'
 
 import type { UIInterface } from '../types'
 import { controllerHidden, hidden } from '../style'
-import { controllerBottom, dropdown, expand } from './ControllerBottom.style'
+import { controllers, dropdown, expand } from './ControllerBottom.style'
 import { arrowSvg } from './Setting'
 
 export const controlBar = $.css({
@@ -64,7 +64,7 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
   const $dom = (it.$controllerBar = $.create(
     'div',
     {
-      class: `${controlBar} ${controllerBottom}`
+      class: `${controlBar} ${controllers}`
     },
     `<div>
     ${
@@ -105,8 +105,6 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
   })
 
   $.render($dom, el)
-
-  return { cls: { controlBar } }
 }
 
 export default render

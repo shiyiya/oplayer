@@ -8,7 +8,7 @@ import { isFullscreen, isWebFullscreen } from '../listeners/fullscreen'
 
 import type { UIInterface } from '../types'
 
-import { controllerBottom, dropdown, dropdownHoverable, expand, time, live } from './ControllerBottom.style'
+import { controllers, dropdown, dropdownHoverable, expand, time, live } from './ControllerBottom.style'
 
 export const controllerBottomWrap = $.css({
   position: 'absolute',
@@ -67,16 +67,19 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
     player.locales.get('Picture in Picture'),
     player.locales.get(player.isFullscreenEnabled ? 'Fullscreen' : 'WebFullscreen'),
     player.locales.get('Previous'),
-    player.locales.get('Next'),
+    player.locales.get('Next')
   ]
 
   const [previousSvg, nextSvg] = [Icons.get('previous') || '', Icons.get('next') || '']
   const $dom = (it.$controllerBottom = $.create(
-    `div.${controllerBottom}`,
+    `div.${controllers}`,
     {},
     `<div>
 
-    ${previousSvg && `<button class="${icon} ${tooltip}" aria-label="${previousLabel}" >${previousSvg}</button>`}
+    ${
+      previousSvg &&
+      `<button class="${icon} ${tooltip}" aria-label="${previousLabel}" >${previousSvg}</button>`
+    }
 
       <button
         class="${icon} ${player.isPlaying ? on : off} ${tooltip}"
@@ -90,11 +93,11 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
       ${player.options.isLive ? `<span class="${live}"></span>` : ''}
 
-      <span class=${time}>${player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
+      <span class=${time}>${
+      player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
     }</span>
     </div>
 
-    <!-- right -->
     <div>
       <div class="${dropdown} ${dropdownHoverable}">
         <button class="${icon} ${player.isMuted ? on : off}" aria-label="Volume">
