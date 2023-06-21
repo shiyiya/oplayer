@@ -105,7 +105,9 @@ export const controllers = $.css({
     'align-items': 'center',
     margin: '0 -.5em',
 
-    [`& > .${icon}:last-child${isMobile ? `, & >  .${icon}[aria-label="Play"]` : ''}`]: {
+    [`& > .${icon}:last-child${
+      isMobile ? `, & >  .${icon}[aria-label="Play"], & >  .${icon}[aria-label="Pause"]` : ''
+    }`]: {
       'margin-right': 0
     }
   },
