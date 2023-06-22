@@ -436,7 +436,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         if (volume != this.volume) this.setVolume(volume)
         if (playbackRate != this.playbackRate) this.setPlaybackRate(playbackRate)
         if (isPreloadNone && keepTime) this.$video.load()
-        if (keepTime) this.seek(currentTime)
+        if (keepTime && !this.options.isLive) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
         resolve()
       }
