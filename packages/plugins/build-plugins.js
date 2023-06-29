@@ -41,7 +41,7 @@ function runInQueue(ps) {
   return ps.reduce((p, next) => p.then(next), Promise.resolve())
 }
 
-const plugins = globSync('src/*').reduce(
+const plugins = globSync('src/*.ts').reduce(
   (result, item) => {
     result[path.basename(item, path.extname(item))] = item
     return result

@@ -67,18 +67,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
 
     <script>
-      var query = document.location.search.substring(1)
-      var src, poster, subtitle, danmaku, title
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
-      var plugins = [
-        OUI({
-          keyboard: { global: true },
-          slideToSeek: 'always',
-          controlBar: { back: 'fullscreen' }
-        })
-      ]
+      var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
 
+      var query = document.location.search.substring(1)
+      var src, playlist, poster, subtitle, danmaku, title, watermark
       if (query.startsWith('http')) {
         src = query.endsWith('==')
           ? atob(query.substring(0, query.length - 2))
@@ -86,7 +80,8 @@
       } else {
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
-        poster = safeDecodeURIComponent(search.get('poster'))
+        playlist = JSON.parse(safeDecodeURIComponent(search.get('playlist')) || [])
+        poster = safeDecodeURIComponent(search.get('poster') || 0)
         title = safeDecodeURIComponent(search.get('title'))
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
 
@@ -103,16 +98,59 @@
           : undefined
 
         if (title) document.title = title
+
+        watermark = search.get('watermark')
+          ? {
+              src: decodeURIComponent(search.get('watermark')),
+              style: {
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                maxWidth: '200px',
+                height: 'auto'
+              }
+            }
+          : undefined
       }
 
-      if (/m3u8(#|\?|$)/.test(src)) {
-        loadScripts([hlsScriptCdn]).then(() => {
-          plugins.push(OHls({ forceHLS: true }))
-          bootstrap()
+      var deps = []
+      var plugins = [
+        OUI({
+          keyboard: { global: true },
+          slideToSeek: 'always',
+          controlBar: { back: 'fullscreen' },
+          theme: { watermark },
+          subtitle
         })
-      } else {
-        bootstrap()
+      ]
+
+      if (/m3u8(#|\?|$)/.test(src) || playlist.some((it) => /m3u8(#|\?|$)/.test(it))) {
+        deps.push([
+          hlsScriptCdn,
+          () => {
+            plugins.push(OHls({ forceHLS: true }))
+          }
+        ])
       }
+
+      if (playlist.length) {
+        deps.push([
+          playlistScriptCdn,
+          () => {
+            plugins.push(
+              new OPlaylist({
+                initialIndex: 0,
+                sources: playlist
+              })
+            )
+          }
+        ])
+      }
+
+      loadScripts(deps.map(([s]) => s)).then(() => {
+        deps.map(([_, fn]) => fn())
+        bootstrap()
+      })
 
       function bootstrap() {
         if (danmaku) {
@@ -123,7 +161,7 @@
 
         document.querySelector('.placeholder').remove()
         var player = (window.player = OPlayer.make('#oplayer', {
-          source: { src, poster, title },
+          source: { src: !playlist.length ? src : undefined, poster, title },
           playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
           volume: localStorage.getItem('@oplayer/UserPreferences/volume')
         })
