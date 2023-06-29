@@ -82,6 +82,12 @@ export type Layer = {
 export type UiConfig = {
   theme?: {
     primaryColor: string
+    watermark?: {
+      /** img or svg */
+      src: string
+      style?: Record<string, string>
+      className?: string
+    }
   }
   /**
    * default: false
@@ -204,6 +210,8 @@ export interface UIInterface extends PlayerPlugin {
   icons: typeof ICONS_MAP
 
   subtitle: SubtitleInstance
+
+  $watermark?: HTMLImageElement
 
   notice: (
     text: string,

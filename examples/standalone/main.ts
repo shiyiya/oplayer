@@ -17,6 +17,7 @@ import SRT from '../../packages/docs/public/君の名は.srt'
 // import SUPER_DANMAKU from '../../packages/docs/public/天气之子.xml'
 import FLV from '../../packages/docs/public/op.flv'
 import MP4 from '../../packages/docs/public/君の名は.mp4'
+import vercel from '../../packages/docs/public/vercel.svg'
 
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
@@ -53,6 +54,19 @@ const player = Player.make<Ctx>('#player', {
 })
   .use([
     ui({
+      theme: {
+        watermark: {
+          src: vercel,
+          style: {
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '200px',
+            height: 'auto'
+          },
+          className: 'watermark'
+        }
+      },
       controlBar: { back: 'always' },
       topSetting: isMobile,
       slideToSeek: 'always',
@@ -145,8 +159,7 @@ if (false) {
   player.applyPlugin(
     ad({
       autoplay: false,
-      image:
-        'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
+      image: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
       // video: VIDEO_LIST[1],
       duration: 10,
       skipDuration: 5,
@@ -201,12 +214,7 @@ const meta = () => html`
 let logs: HTMLTextAreaElement
 
 const actions = () => html`<p style="display:flex;">
-    <input
-      type="text"
-      @input=${(e: any) => (src = e.target.value)}
-      style="width:100%;"
-      .value=${live(src)}
-    />
+    <input type="text" @input=${(e: any) => (src = e.target.value)} style="width:100%;" .value=${live(src)} />
 
     <button @click=${() => player.changeSource({ src })}>Load</button>
 
@@ -214,9 +222,7 @@ const actions = () => html`<p style="display:flex;">
       @click=${() => {
         src =
           VIDEO_LIST[
-            currentDataSrcId + 1 >= VIDEO_LIST.length
-              ? (currentDataSrcId = 0)
-              : (currentDataSrcId += 1)
+            currentDataSrcId + 1 >= VIDEO_LIST.length ? (currentDataSrcId = 0) : (currentDataSrcId += 1)
           ]!
 
         player.changeSource(
@@ -256,8 +262,7 @@ player.on((e: PlayerEvent) => {
 
   if (logs.value.split('==>').length >= 66) {
     logs.value =
-      '==> ------------clear logs------------- \r\n' +
-      logs.value.split('==>').slice(0, 20).join('==>')
+      '==> ------------clear logs------------- \r\n' + logs.value.split('==>').slice(0, 20).join('==>')
   }
 
   // if (e.type != 'progress') console.info(e)

@@ -44,7 +44,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   // hls|dash|etc. instance
   loader?: Destroyable
 
-  $root!: HTMLElement
+  $root!: HTMLDivElement
   $video!: HTMLVideoElement
   listeners: Record<(typeof EVENTS)[number] | 'fullscreenchange' | 'fullscreenerror', Function> =
     Object.create(null)

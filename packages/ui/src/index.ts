@@ -1,4 +1,4 @@
-import { $, isMobile } from '@oplayer/core'
+import { $, isMobile, mergeDeep } from '@oplayer/core'
 import { root } from './style'
 
 import {
@@ -19,6 +19,7 @@ import renderMenubar from './components/Menubar'
 import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle, { Subtitle } from './components/Subtitle'
+import { render as renderLayer } from './components/layer'
 
 import type { Player } from '@oplayer/core'
 import type { Highlight, MenuBar, Setting, Thumbnails, UiConfig, UIInterface } from './types'
@@ -104,7 +105,7 @@ class UI implements UIInterface {
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[] = []
 
   constructor(public config: UiConfig) {
-    this.config = Object.assign({}, defaultConfig, config)
+    this.config = mergeDeep({}, defaultConfig, config)
   }
 
   apply(player: Player) {
@@ -112,6 +113,8 @@ class UI implements UIInterface {
     this.player = player
 
     const $root = (this.$root = $.create(`div.${root(config)}`))
+
+    renderLayer(this, config)
 
     if (player.isNativeUI) {
       loadingListener(player)

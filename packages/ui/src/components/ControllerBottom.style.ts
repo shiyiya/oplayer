@@ -123,7 +123,7 @@ export const controllers = $.css({
   [`& .${icon}`]: Object.assign(
     {
       width: '2em',
-      height: '2em',
+      height: isMobile ? 'auto' : '2em',
       'margin-right': '6px',
       'justify-content': 'center',
       'align-items': 'center',

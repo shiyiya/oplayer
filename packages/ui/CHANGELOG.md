@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.29-beta.0]
+
+- add watermark (img or svg)
+- screenshot with watermark
+
 ## [1.2.29]
 
 - hover background for icon
@@ -13,8 +18,6 @@
   })
   ```
 
-```
-
 ## [1.2.28]
 
 - fix grid thumbnails
@@ -24,4 +27,7 @@
 
 - fix IOS loading state
 - update desktop default size and mobile size on fullscreen
+
+```
+
 ```

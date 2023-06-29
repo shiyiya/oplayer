@@ -1,6 +1,7 @@
 import type Player from '@oplayer/core'
 import { isMobile } from '@oplayer/core'
 import { isLoading } from './listeners'
+import type { UIInterface } from './types'
 
 export function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
@@ -25,13 +26,26 @@ export function download(url: string, name: string) {
   $a.click()
 }
 
-export const resolveVideoDataURL = ($video: HTMLVideoElement): string | Error => {
+export const resolveVideoAndWatermarkDataURL = (player: Player): string | Error => {
   try {
+    const { $video, $root } = player
+    const ui = player.context.ui as UIInterface
     const $canvas = document.createElement('canvas')
     const { videoWidth, videoHeight } = $video
     $canvas.width = videoWidth
     $canvas.height = videoHeight
-    $canvas.getContext('2d')?.drawImage($video, 0, 0, videoWidth, videoHeight)
+    $canvas.getContext('2d')!.drawImage($video, 0, 0, videoWidth, videoHeight)
+
+    if (ui.$watermark) {
+      const { offsetLeft, offsetTop, offsetWidth } = ui.$watermark
+      const offsetRight = $root.clientWidth - offsetLeft - offsetWidth
+      const { width, height } = ui.$watermark.getBoundingClientRect()
+
+      $canvas
+        .getContext('2d')!
+        .drawImage(ui.$watermark, videoWidth - offsetRight - offsetWidth, offsetTop, width, height)
+    }
+
     return $canvas.toDataURL('image/png')
   } catch (error) {
     return error as Error
@@ -43,7 +57,7 @@ export const screenShot = (player: Player) => {
     player.emit('notice', { text: player.locales.get('Please wait for loading to complete') })
     return
   }
-  const resp = resolveVideoDataURL(player.$video)
+  const resp = resolveVideoAndWatermarkDataURL(player)
   if (resp instanceof Error) {
     player.emit('notice', { text: resp.message })
   } else {
