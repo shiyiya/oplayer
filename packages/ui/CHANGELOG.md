@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.29-beta.1]
+
+- fix previous,next event
+
 ## [1.2.29-beta.0]
 
 - add watermark (img or svg)

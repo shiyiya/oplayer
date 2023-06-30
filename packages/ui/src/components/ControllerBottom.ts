@@ -207,6 +207,12 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
       case screenshotLabel:
         screenShot(player)
         break
+      case nextLabel:
+        player.emit('next')
+        break
+      case previousLabel:
+        player.emit('previous')
+        break
       default:
         break
     }
