@@ -72,7 +72,8 @@
       var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
 
       var query = document.location.search.substring(1)
-      var src, playlist, poster, subtitle, danmaku, title, watermark
+      var src, poster, subtitle, danmaku, title, watermark
+      var playlist = []
       if (query.startsWith('http')) {
         src = query.endsWith('==')
           ? atob(query.substring(0, query.length - 2))
@@ -81,7 +82,7 @@
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
         playlist = JSON.parse(safeDecodeURIComponent(search.get('playlist')) || [])
-        poster = safeDecodeURIComponent(search.get('poster') || 0)
+        poster = safeDecodeURIComponent(search.get('poster'))
         title = safeDecodeURIComponent(search.get('title'))
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
 
