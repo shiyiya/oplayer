@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.29-beta.2]
+
+- update screenshot with watermark
+
 ## [1.2.29-beta.1]
 
 - fix previous,next event

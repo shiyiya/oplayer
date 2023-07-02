@@ -70,21 +70,14 @@ export type Highlight = {
   time: number
 }
 
-export type Layer = {
-  name: string
-  html: string
-  /** csstext */
-  style: string
-  when: 'always' | 'initial'
-  onClick: (e: MouseEvent) => void
-}
-
 export type UiConfig = {
   theme?: {
     primaryColor: string
     watermark?: {
       /** img or svg */
       src: string
+      // make screenshot include watermark?
+      // set positioning here [top, left, right, bottom]
       style?: Record<string, string>
       className?: string
     }
@@ -191,8 +184,6 @@ export type UiConfig = {
   /*  --- WIP ---  */
 
   contextmenu?: []
-
-  layers?: Layer[]
 }
 
 export type ErrorPayload =

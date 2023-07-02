@@ -35,15 +35,29 @@ export const resolveVideoAndWatermarkDataURL = (player: Player): string | Error 
     $canvas.width = videoWidth
     $canvas.height = videoHeight
     $canvas.getContext('2d')!.drawImage($video, 0, 0, videoWidth, videoHeight)
+    const { top, left, right, bottom } = ui.$watermark?.style || {}
 
-    if (ui.$watermark) {
-      const { offsetLeft, offsetTop, offsetWidth } = ui.$watermark
-      const offsetRight = $root.clientWidth - offsetLeft - offsetWidth
+    if (ui.$watermark && [top, left, right, bottom].filter((it) => it != undefined).length > 1) {
+      const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = ui.$watermark
       const { width, height } = ui.$watermark.getBoundingClientRect()
+      let dx = 0,
+        dy = 0
 
-      $canvas
-        .getContext('2d')!
-        .drawImage(ui.$watermark, videoWidth - offsetRight - offsetWidth, offsetTop, width, height)
+      if (left) {
+        dx = offsetLeft
+      } else if (right) {
+        const offsetRight = $root.clientWidth - offsetLeft - offsetWidth
+        dx = videoWidth - offsetRight - offsetWidth
+      }
+
+      if (top) {
+        dy = offsetTop
+      } else if (bottom) {
+        const offsetBottom = $root.clientHeight - offsetTop - offsetHeight
+        dy = videoWidth - offsetBottom - offsetHeight
+      }
+
+      $canvas.getContext('2d')!.drawImage(ui.$watermark, dx, dy, width, height)
     }
 
     return $canvas.toDataURL('image/png')
