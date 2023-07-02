@@ -64,7 +64,10 @@ const player = Player.make<Ctx>('#player', {
             width: '200px',
             height: 'auto'
           },
-          className: 'watermark'
+          attrs: {
+            class: 'watermark',
+            crossOrigin: 'anonymous'
+          }
         }
       },
       controlBar: { back: 'always' },

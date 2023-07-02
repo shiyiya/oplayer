@@ -7,12 +7,13 @@ export const render = (it: UIInterface, config: UiConfig) => {
   const wm = (it.$watermark = document.createElement('img'))
 
   for (const key in watermark.style) {
-    if (Object.prototype.hasOwnProperty.call(watermark.style, key)) {
-      wm.style[key as any] = watermark.style[key]!
-    }
+    wm.style[key as any] = watermark.style[key]!
   }
 
-  if (watermark.className) wm.className = watermark.className
+  for (const key in watermark.attrs) {
+    wm.setAttribute(key, watermark.attrs[key]!)
+  }
+
   wm.src = watermark.src
   it.$root.appendChild(wm)
 }

@@ -79,7 +79,7 @@ export type UiConfig = {
       // make screenshot include watermark?
       // set positioning here [top, left, right, bottom]
       style?: Record<string, string>
-      className?: string
+      attrs?: Record<string, string>
     }
   }
   /**
