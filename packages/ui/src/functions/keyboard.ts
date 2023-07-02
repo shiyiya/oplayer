@@ -53,6 +53,8 @@ const KEY_FN: Record<string, (player: Player) => void> = {
 
   f: (player: Player) => player.toggleFullScreen(),
 
+  w: (player: Player) => player.emit('fullscreenchange', { isWeb: true }),
+
   s: screenShot
 }
 
