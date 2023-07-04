@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@oplayer/ui?style=flat-square&label=@oplayer/ui)](https://www.npmjs.com/package/@oplayer/ui)
 
-![oplayer-mobile](https://github.com/shiyiya/oplayer/raw/main/packages/ui/oplayer-ui-mobile.png)
+![oplayer-mobile](https://github.com/shiyiya/oplayer/raw/main/packages/ui/oplayer-ui-mobile.jpg)
 
 ## Install
 
@@ -231,9 +231,40 @@ player.context.ui.notice('hello')
 - `space` play or pause
 - `s` catch a screenshot
 - `f` toggle full-screen
+- `w` toggle full-screen web
+
+## watermark
+
+```js
+const ui = OUI({
+  theme: {
+    watermark: {
+      src: '/your/path/logo.jpg',
+      style: {
+        position: 'absolute',
+        // want make screenshot include watermark?
+        // set positioning here, not css. [top, left, right, bottom]
+        top: '10px',
+        right: '10px',
+        width: '200px',
+        height: 'auto'
+      },
+      attrs: {
+        class: 'watermark'
+        // crossOrigin: 'anonymous'
+        // etc.
+      }
+    }
+  }
+})
+```
+
+## Add next,previous button
+
+- https://github.com/shiyiya/oplayer/discussions/88
 
 ## Events
 
 ```ts
-type UIEventName = 'controllervisibilitychange' | 'backward'
+type UIEventName = 'controllervisibilitychange' | 'backward' | 'previous' | 'next'
 ```

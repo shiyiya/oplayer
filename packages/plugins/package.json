@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/plugins",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "oplayer's plugin",
   "type": "module",
   "main": "dist/index.es.js",

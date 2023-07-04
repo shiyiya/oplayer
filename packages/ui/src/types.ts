@@ -72,7 +72,7 @@ export type Highlight = {
 
 export type UiConfig = {
   theme?: {
-    primaryColor: string
+    primaryColor?: string
     watermark?: {
       /** img or svg */
       src: string

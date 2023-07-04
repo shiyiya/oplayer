@@ -27,3 +27,8 @@ declare module '*.mp4' {
   const json: string
   export default json
 }
+
+declare module '*.svg' {
+  const json: string
+  export default json
+}
