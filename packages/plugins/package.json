@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/plugins",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "oplayer's plugin",
   "type": "module",
   "main": "dist/index.es.js",
@@ -17,7 +17,7 @@
     "@oplayer/ui": "workspace:*",
     "chokidar": "^3.5.3",
     "glob": "^10.3.1",
-    "vite-plugin-css-injected-by-js": "^3.1.2"
+    "vite-plugin-css-injected-by-js": "^3.2.0"
   },
   "keywords": [],
   "author": "",
