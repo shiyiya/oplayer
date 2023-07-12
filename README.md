@@ -19,6 +19,7 @@
 - [UPV](https://onime.netlify.app) : free animes no ad
 - [enime.moe](https://enime.moe) : An anime streaming site. Just hop in and watch with speed without VPN or ads
 - [mirutv](https://mirutv.vercel.app) : Let's watch anime... Just Mi and Ru...
+- [NGEWIBU.TV](https://ngewibu.tv/) : Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
 - **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/new?category=show-and-tell)**
 
 ## Feature
