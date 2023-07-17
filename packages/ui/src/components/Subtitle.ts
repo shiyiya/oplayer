@@ -303,6 +303,7 @@ export class Subtitle {
         onChange: ({ value }) => {
           if (value) {
             this.currentSubtitle = value
+            this.$dom.innerHTML = ''
             this.load()
           } else {
             this.hide()

@@ -204,6 +204,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         const returned = await plugin.load(this, source)
         if (returned != false && !this.loader) {
           this.loader = returned
+          this.emit('loaderchange', returned)
           break
         }
       }

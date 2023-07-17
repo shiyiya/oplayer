@@ -1,5 +1,6 @@
 import { $ } from '@oplayer/core'
 import type { Highlight, UIInterface } from '../types'
+import { dot } from './Progress.style'
 
 export const highlightTextCls = $.css(`
   display: none;
@@ -34,7 +35,6 @@ export default function (it: UIInterface, container: HTMLElement) {
   } = it
 
   let $highlights: HTMLDivElement[] = []
-  let active = true
 
   container.style.setProperty('--highlight-color', highlightsConfig?.color || '#FFF')
 
@@ -46,16 +46,16 @@ export default function (it: UIInterface, container: HTMLElement) {
 
   function createHighlights(highlights: Highlight[], duration: number) {
     $highlights.forEach((it) => it.remove())
+    const $dot = container.querySelector(`.${dot}`)
     for (let i = 0; i < highlights.length; i++) {
       const h = highlights[i]!
       const $highlight = createDto({ left: (h.time / duration) * 100, text: h.text })
       $highlights.push($highlight)
-      $.render($highlight, container)
+      container.insertBefore($highlight, $dot)
     }
   }
 
   function change(highlights: Highlight[]) {
-    active = true
     bootstrap(highlights)
   }
 
@@ -64,7 +64,7 @@ export default function (it: UIInterface, container: HTMLElement) {
       createHighlights(highlights, player.duration)
     } else {
       player.once('loadedmetadata', function durationchange() {
-        if (active) createHighlights(highlights, player.duration)
+        createHighlights(highlights, player.duration)
       })
     }
   }
@@ -72,8 +72,8 @@ export default function (it: UIInterface, container: HTMLElement) {
   if (highlightsConfig?.source) bootstrap(highlightsConfig.source)
 
   player.on('videosourcechange', () => {
-    active = false
     $highlights.forEach((it) => it.remove())
+    $highlights = []
   })
 
   it.changHighlightSource = change

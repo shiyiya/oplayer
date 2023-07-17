@@ -5,6 +5,7 @@ export const render = (it: UIInterface, config: UiConfig) => {
   if (!watermark) return
 
   const wm = (it.$watermark = document.createElement('img'))
+  wm.setAttribute('alt', 'watermark')
 
   for (const key in watermark.style) {
     wm.style[key as any] = watermark.style[key]!
