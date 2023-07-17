@@ -1,6 +1,5 @@
 import { $ } from '@oplayer/core'
 import type { Highlight, UIInterface } from '../types'
-import { dot } from './Progress.style'
 
 export const highlightTextCls = $.css(`
   display: none;
@@ -46,12 +45,11 @@ export default function (it: UIInterface, container: HTMLElement) {
 
   function createHighlights(highlights: Highlight[], duration: number) {
     $highlights.forEach((it) => it.remove())
-    const $dot = container.querySelector(`.${dot}`)
     for (let i = 0; i < highlights.length; i++) {
       const h = highlights[i]!
       const $highlight = createDto({ left: (h.time / duration) * 100, text: h.text })
       $highlights.push($highlight)
-      container.insertBefore($highlight, $dot)
+      $.render($highlight, container)
     }
   }
 
