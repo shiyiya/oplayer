@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/plugins",
-  "version": "1.0.5",
+  "version": "1.0.6-beta.1",
   "description": "oplayer's plugin",
   "type": "module",
   "main": "dist/index.es.js",
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@oplayer/core": "workspace:*",
     "@oplayer/ui": "workspace:*",
+    "@types/chromecast-caf-sender": "^1.0.5",
     "chokidar": "^3.5.3",
     "glob": "^10.3.3",
     "vite-plugin-css-injected-by-js": "^3.2.0"

@@ -1,19 +1,28 @@
 import { PlayerPlugin, $ } from '@oplayer/core'
 
-declare global {
-  interface Window {
-    chrome: any
-  }
-}
+let castReceiver: typeof chrome.cast
+
+function noop() {}
+
+//TODO: sync event
 
 export default <PlayerPlugin>{
   name: 'oplayer-plugin-chromecast',
   version: __VERSION__,
   apply(player) {
-    let cast: any, session: any, currentMedia: any
+    let currentSession: chrome.cast.Session | undefined, currentMedia: chrome.cast.media.Media | undefined
+
+    function onError(e: chrome.cast.Error | Error) {
+      player.context.ui?.notice('Chromecast: ' + (<chrome.cast.Error>e).description || (<Error>e).message)
+    }
 
     function loadChromecast() {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
+        if (castReceiver) {
+          resolve()
+          return
+        }
+
         $.render(
           $.create('script', {
             type: 'text/javascript',
@@ -22,87 +31,62 @@ export default <PlayerPlugin>{
           document.body
         )
 
-        //@ts-ignore
-        window.__onGCastApiAvailable = (isAvailable: boolean) => {
+        window.__onGCastApiAvailable = (isAvailable) => {
           if (isAvailable) {
-            cast = window.chrome.cast
-            const sessionRequest = new cast.SessionRequest(cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID)
-            const apiConfig = new cast.ApiConfig(
-              sessionRequest,
-              () => {},
-              (status: any) => {
-                if (status === cast.ReceiverAvailability.AVAILABLE) {
-                } else {
-                }
-              }
+            castReceiver = window.chrome.cast
+            const sessionRequest = new castReceiver.SessionRequest(
+              castReceiver.media.DEFAULT_MEDIA_RECEIVER_APP_ID
             )
-            cast.initialize(apiConfig, resolve, reject)
+            const apiConfig = new castReceiver.ApiConfig(sessionRequest, noop, noop)
+            castReceiver.initialize(apiConfig, resolve, reject)
           } else {
-            player.context.ui?.notice('Chromecast not available')
-            player.context.ui?.menu.unregister('chromecast')
-            reject()
+            reject(new Error('Chromecast not available'))
           }
         }
       })
     }
 
     const discoverDevices = () => {
-      cast.requestSession(
-        (session: {
-          loadMedia: (
-            arg0: any,
-            arg1: (media: any) => void,
-            arg2: (err: any) => void
-          ) => { (): any; new (): any; play: { (): void; new (): any } }
-        }) => {
-          session = session
-          const mediaInfo = new cast.media.MediaInfo(player.options.source.src)
-          const request = new cast.media.LoadRequest(mediaInfo)
-
-          if (!session) window.open(player.options.source.src)
-
-          session
-            .loadMedia(
-              request,
-              (media: any) => {
-                currentMedia = media
-              },
-              (err: { message: string }) => {
-                player.context.ui?.notice('Chromecast: ' + err.message)
-              }
-            )
-            .play()
-        },
-        (err: { code: string; description: any }) => {
-          if (err.code === 'cancel') {
-            session = undefined
-          } else {
-            player.context.ui?.notice('Chromecast: ' + err.code + (err.description || ''))
-          }
+      castReceiver.requestSession((session) => {
+        currentSession = session
+        const { source, isLive } = player.options
+        const mediaInfo = new castReceiver.media.MediaInfo(source.src, (<any>source).type || 'video/mp4')
+        mediaInfo.metadata.title = source.title
+        // mediaInfo.metadata.subtitle
+        mediaInfo.streamType = isLive
+          ? chrome.cast.media.StreamType.LIVE
+          : chrome.cast.media.StreamType.BUFFERED
+        if (source.poster) {
+          mediaInfo.metadata.images = [{ url: source.poster }]
         }
-      )
+        const request = new castReceiver.media.LoadRequest(mediaInfo)
+        request.currentTime = player.currentTime
+        request.autoplay = true
+
+        session.loadMedia(
+          request,
+          (media) => {
+            currentMedia = media
+          },
+          onError
+        )
+      }, onError)
     }
 
     player.context.ui?.menu.register({
       name: 'Chromecast',
       position: 'top',
-      icon:
-        player.context.ui?.icons.chromecast ||
-        `<svg viewBox="0 0 1024 1024" style="scale: 0.9;" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M895.66 128H128a85.44 85.44 0 0 0-85.44 85.44v127.84H128v-127.84h767.66v597.12H597.28V896H896a85.44 85.44 0 0 0 85.44-85.44V213.44A85.44 85.44 0 0 0 896 128zM42.56 767.16v127.84h127.82a127.82 127.82 0 0 0-127.82-127.84z m0-170.56V682a213.26 213.26 0 0 1 213.28 213.32v0.68h85.44a298.38 298.38 0 0 0-298-298.72h-0.66z m0-170.54v85.44c212-0.2 384 171.5 384.16 383.5v1h85.44c-0.92-258.92-210.68-468.54-469.6-469.28z"></path></svg>`,
+      icon: player.context.ui?.icons.chromecast,
       onClick() {
-        let promis: Promise<any> = Promise.resolve()
-        if (!cast) {
-          promis = loadChromecast()
-        }
-
-        promis.then((_) => {
-          if (session) {
-            currentMedia?.stop()
-            session?.stop()
-          } else {
-            discoverDevices()
-          }
-        })
+        loadChromecast()
+          .then((_) => {
+            if (currentSession || currentMedia) {
+              currentMedia?.stop(new chrome.cast.media.StopRequest(), noop, noop)
+              currentSession?.stop(noop, noop)
+            }
+            setTimeout(discoverDevices)
+          })
+          .catch(onError)
       }
     })
   }

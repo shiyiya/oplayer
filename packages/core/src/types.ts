@@ -1,6 +1,7 @@
 import { EVENTS } from './constants'
 import type { Player } from './player'
 
+// TODO: multiple source
 export type Source = {
   src: string
   poster?: string
@@ -19,6 +20,7 @@ export type Source = {
     | 'mpegts'
     /** other */
     | string
+  type?: 'string' // video/mp4 video/webm
 }
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
