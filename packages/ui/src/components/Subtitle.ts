@@ -31,7 +31,7 @@ export class Subtitle {
 
   constructor(
     public player: Player,
-    public setting: any,
+    public setting: UIInterface['setting'],
     public el: HTMLElement,
     options?: SubtitleConfig
   ) {
@@ -131,7 +131,7 @@ export class Subtitle {
           },
           !isMobile && {
             'margin-bottom': marginBottom || '2.2em',
-            transition: 'margin 0.2s',
+            transition: 'margin 0.3s',
             [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 }
           }
         )
@@ -256,7 +256,7 @@ export class Subtitle {
 
   loadSubtitle() {
     const { currentSubtitle, player, $track, $iosTrack } = this
-    const { src, encoding, type } = currentSubtitle!
+    const { src, encoding, type = 'auto' } = currentSubtitle!
 
     return fetch(src)
       .then((response) => response.arrayBuffer())
@@ -264,9 +264,7 @@ export class Subtitle {
         const decoder = new TextDecoder(encoding)
         const text = decoder.decode(buffer)
 
-        switch (
-          type == undefined || type == 'auto' ? /srt|ass|vtt(#|\?|$)/i.exec(src)?.[0] : type
-        ) {
+        switch (type == 'auto' ? /srt|ass|vtt(#|\?|$)/i.exec(src)?.[0] : type) {
           case 'srt':
             return vttToBlob(srtToVtt(text))
           case 'ass':

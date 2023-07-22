@@ -109,7 +109,7 @@ export const tooltip = isMobile
           transform: 'translateX(-50%) scale(1)'
         },
 
-        '&[data-tooltip-pos=up-right]::after': {
+        '&:not([data-tooltip-pos]):last-child::after': {
           right: 0,
           left: 'auto',
           transform: 'translateY(0) scale(1)'
@@ -119,7 +119,7 @@ export const tooltip = isMobile
           transform: 'translateX(-50%) scale(1)'
         },
 
-        '&[data-tooltip-pos=down-right]::after': {
+        '&[data-tooltip-pos=down]:last-child::after': {
           right: 0,
           transform: 'translateY(0) scale(1)'
         }
@@ -150,14 +150,7 @@ export const tooltip = isMobile
         transform: 'translate(-50%, -10px) scale(.8)'
       },
 
-      '&[data-tooltip-pos=up-right]::after': {
-        right: 0,
-        left: 'auto',
-        transform: 'translateY(10px) scale(.8)',
-        'transform-origin': '100% 100%'
-      },
-
-      '&[data-tooltip-pos=down-right]::after': {
+      '&[data-tooltip-pos=down]:last-child::after': {
         right: 0,
         top: '100%',
         bottom: 'unset',
@@ -165,5 +158,12 @@ export const tooltip = isMobile
         'margin-top': '0.5em',
         transform: 'translateY(-10px) scale(.8)',
         'transform-origin': '100% 0'
+      },
+
+      '&:not([data-tooltip-pos]):last-child::after': {
+        right: 0,
+        left: 'auto',
+        transform: 'translateY(10px) scale(.8)',
+        'transform-origin': '100% 100%'
       }
     })

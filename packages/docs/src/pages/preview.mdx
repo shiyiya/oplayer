@@ -6,7 +6,7 @@ import dash from '@oplayer/dash'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
 import danmaku from '@oplayer/danmaku'
-import { PlaylistPlugin } from '@oplayer/plugins'
+import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
 
 <div className="nx-rounded-sm nx-overflow-hidden" style={{ maxWidth: '1024px', margin: '1.25rem auto' }}>
   <Player
@@ -18,6 +18,13 @@ import { PlaylistPlugin } from '@oplayer/plugins'
         pictureInPicture: true,
         controlBar: { back: 'fullscreen' },
         menu: [
+          {
+            name: '❤❤❤❤❤',
+            position: 'top',
+            onClick() {
+              alert('❤❤❤❤❤')
+            }
+          },
           {
             name: 'Custom',
             position: 'top',
@@ -129,7 +136,8 @@ import { PlaylistPlugin } from '@oplayer/plugins'
             duration: '00:17'
           }
         ]
-      })
+      }),
+      chromecast
     ].filter(Boolean)}
   />
 </div>

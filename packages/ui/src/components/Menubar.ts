@@ -17,10 +17,7 @@ const _select = (elm: HTMLElement) => {
 }
 
 export default (it: UIInterface) => {
-  const {
-    config: { menu: initialState, topSetting }
-  } = it
-
+  const initialState = it.config.menu
   const menus: MenuBar[] = []
   const $top = it.$controllerBar?.children[1]
   const $end = it.$controllerBottom.children[1]!
@@ -48,27 +45,21 @@ export default (it: UIInterface) => {
     it.addEventListener('click', clickHandler)
   })
 
-  let isNotFirstTop = Boolean(topSetting)
-
   it.menu.register = function register(menu: MenuBar) {
-    const isTop = menu.position == 'top' && $targets.length == 2
-    if (isTop && !isNotFirstTop) isNotFirstTop = true
-
-    const { name, icon, children } = menu
+    const { name, icon, children, position } = menu
+    const isTop = position == 'top' && $targets.length == 2
     let $menu: string = ''
     const $button = `
     <button
       aria-label="${name}"
-      ${isTop ? `data-tooltip-pos="${isNotFirstTop ? 'down' : 'down-right'}"` : ''}
+      ${isTop ? 'data-tooltip-pos="down"' : ''}
       class="${iconCls} ${!icon ? textIcon : ''} ${!menu.children ? tooltip : ''}"
       type="button"
     >${icon || name}</button>`
 
     if (menu.children) {
       $menu = `
-      <div class="${dropdown} ${dropdownHoverable}" data-dropdown-pos="${
-        menu.position
-      }" aria-label="${name}">
+      <div class="${dropdown} ${dropdownHoverable}" data-dropdown-pos="${menu.position}" aria-label="${name}">
         ${$button}
         <div class='${expand} ${isTop ? expandBottom : ''}' role='menu'>
           ${children!
@@ -90,12 +81,13 @@ export default (it: UIInterface) => {
       $menu = $button
     }
 
-    menus.push(menu)
     if (isTop) {
-      $top?.insertAdjacentHTML('afterbegin', $menu)
+      $top!.insertAdjacentHTML('afterbegin', $menu)
     } else {
       $end.insertAdjacentHTML('afterbegin', $menu)
     }
+
+    menus.push(menu)
   }
 
   it.menu.unregister = function unregister(name: string) {

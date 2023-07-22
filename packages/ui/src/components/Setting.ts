@@ -184,8 +184,7 @@ function createPanel(
 
     //处理 selector，因为依赖label，所以需先创建子 panel
     if (children) {
-      const nextIsSelectorOptionsPanel =
-        type == 'selector' && children.every((it) => !Boolean(it.type))
+      const nextIsSelectorOptionsPanel = type == 'selector' && children.every((it) => !Boolean(it.type))
 
       const optionPanel = createPanel(player, panels, children, {
         key,
@@ -280,9 +279,7 @@ export default function (it: UIInterface) {
   it.setting.unregister = function unregister(key: string) {
     if (!hasRendered) return
     panels[0]?.$ref.querySelector(`[data-key=${key}]`)?.remove()
-    panels = panels.filter((p) =>
-      p.key === key ? (p.$ref.remove(), (p = null as any), false) : true
-    )
+    panels = panels.filter((p) => (p.key === key ? (p.$ref.remove(), (p = null as any), false) : true))
   }
 
   it.setting.updateLabel = function updateLabel(key: string, text: string) {
@@ -291,11 +288,7 @@ export default function (it: UIInterface) {
     if ($item) $item.innerText = text
   }
 
-  it.setting.select = function select(
-    key: string,
-    value: boolean | number,
-    shouldBeCallFn: Boolean = true
-  ) {
+  it.setting.select = function select(key: string, value: boolean | number, shouldBeCallFn: Boolean = true) {
     if (!hasRendered) return
     if (typeof value == 'number') {
       for (let i = 0; i < panels.length; i++) {
@@ -330,7 +323,7 @@ export default function (it: UIInterface) {
       {
         class: `${icon} ${tooltip}`,
         'aria-label': player.locales.get('Settings'),
-        'data-tooltip-pos': config.topSetting ? 'down-right' : ''
+        'data-tooltip-pos': config.topSetting ? 'down' : undefined
       },
       `${Icons.get('setting')}`
     )
@@ -353,9 +346,7 @@ export default function (it: UIInterface) {
       })
     })
 
-    const index = [config.pictureInPicture && player.isPipEnabled, config.fullscreen].filter(
-      Boolean
-    ).length
+    const index = [config.pictureInPicture && player.isPipEnabled, config.fullscreen].filter(Boolean).length
 
     if (topEnabled) {
       const parent = it.$controllerBar!.children[1]!

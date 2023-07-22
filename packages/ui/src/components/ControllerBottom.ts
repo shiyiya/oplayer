@@ -128,7 +128,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
       ${
         config.fullscreen
-          ? `<button class="${icon} ${off} ${tooltip}" data-tooltip-pos="up-right" aria-label="${fullscreenLabel}">
+          ? `<button class="${icon} ${off} ${tooltip}" aria-label="${fullscreenLabel}">
                 ${Icons.get('fullscreen')[0]}
                 ${Icons.get('fullscreen')[1]}
               </button>`
