@@ -7,10 +7,7 @@ const PLUGIN_NAME = 'oplayer-plugin-hls'
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
 // active inactive
-export type Active = (
-  instance: Hls,
-  library: typeof import('hls.js/dist/hls.min.js')
-) => void | ((instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void)
+export type Active = (instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void
 
 export interface HlsPluginOptions {
   matcher?: Matcher
@@ -20,6 +17,8 @@ export interface HlsPluginOptions {
    * @type {Active}
    */
   active?: Active
+
+  inactive?: Active
   /**
    * config for hls.js
    *
@@ -81,7 +80,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: RequiredPartial<HlsPluginOptions, 'active'> = {
+  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -89,8 +88,7 @@ class HlsPlugin implements PlayerPlugin {
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher,
-    active: undefined
+    matcher: defaultMatcher
   }
 
   constructor(options?: HlsPluginOptions) {
@@ -110,19 +108,15 @@ class HlsPlugin implements PlayerPlugin {
 
     if (!HlsPlugin.library.isSupported()) return false
 
-    const {
-      config,
-      active,
-      withBitrate,
-      qualityControl,
-      qualitySwitch,
-      audioControl,
-      textControl
-    } = this.options
+    const { config, active } = this.options
 
     this.instance = new HlsPlugin.library(config)
 
     const { instance, player } = this
+
+    if (active) {
+      active(instance, HlsPlugin.library)
+    }
 
     instance.loadSource(source.src)
     instance.attachMedia($video)
@@ -135,19 +129,8 @@ class HlsPlugin implements PlayerPlugin {
       }
     })
 
-    if (active) {
-      const returned = active(instance, HlsPlugin.library)
-      if (returned) this.options.active = returned
-    }
-
     if (player.context.ui?.setting) {
-      generateSetting(player, instance, {
-        qualityControl,
-        qualitySwitch,
-        withBitrate,
-        audioControl,
-        textControl
-      })
+      generateSetting(player, instance, this.options)
     }
 
     return this
@@ -160,7 +143,7 @@ class HlsPlugin implements PlayerPlugin {
   destroy() {
     if (this.instance) {
       // prettier-ignore
-      const { player, instance, options: { active: inactive } } = this
+      const { player, instance, options: { inactive } } = this
       if (inactive) inactive(instance!, HlsPlugin.library)
       if (player.context.ui?.setting) removeSetting(player)
       instance.destroy()
@@ -190,7 +173,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
                 if (options.withBitrate) {
                   const kb = level.bitrate / 1000
                   const useMb = kb > 1000
-                  const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+                  const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
                   name += ` (${number}${useMb ? 'm' : 'k'}bps)`
                 }
                 pre.push({ name, default: instance.currentLevel == i, value: i })

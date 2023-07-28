@@ -14,7 +14,6 @@ export type Active = (
 export type MpegtsPluginOptions = {
   config?: Partial<Mpegts.Config>
   matcher?: Matcher
-  active?: Active
 }
 
 const REG = /flv|ts|m2ts(#|\?|$)/i
@@ -40,8 +39,7 @@ class MpegtsPlugin implements PlayerPlugin {
 
   options: PartialRequired<MpegtsPluginOptions, 'matcher'> = {
     matcher: defaultMatcher,
-    config: undefined,
-    active: undefined
+    config: undefined
   }
 
   constructor(options?: MpegtsPluginOptions) {
@@ -71,11 +69,7 @@ class MpegtsPlugin implements PlayerPlugin {
       this.options.config
     )
 
-    const {
-      player,
-      instance,
-      options: { active }
-    } = this
+    const { player, instance } = this
 
     instance.on(MpegtsPlugin.library.Events.ERROR, function (_, data) {
       const { type, details, fatal } = data
@@ -89,19 +83,11 @@ class MpegtsPlugin implements PlayerPlugin {
     instance.attachMediaElement($video)
     instance.load()
 
-    if (active) {
-      const returned = active(instance, MpegtsPlugin.library)
-      if (returned) this.options.active = returned
-    }
-
     return this
   }
 
   destroy() {
-    // prettier-ignore
-    const { instance, options: { active: inactive } } = this
-    if (inactive) inactive(instance!, MpegtsPlugin.library)
-    instance?.destroy()
+    this.instance?.destroy()
   }
 }
 

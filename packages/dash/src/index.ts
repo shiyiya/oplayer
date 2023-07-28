@@ -6,20 +6,25 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
 // active inactive
-export type Active = (
-  instance: MediaPlayerClass,
-  library: typeof import('dashjs')
-) => void | ((instance: MediaPlayerClass, library: typeof import('dashjs')) => void)
+export type Active = (instance: MediaPlayerClass, library: typeof import('dashjs')) => void
 
 export interface DashPluginOptions {
   matcher?: Matcher
   active?: Active
+  inactive?: Active
   /**
    * config for dashjs
    *
    * @type {MediaPlayerSettingClass}
    */
   config?: MediaPlayerSettingClass
+
+  // qualityLabelBuilder?: (instance: MediaPlayerClass) => {
+  //   name: string
+  //   default: boolean
+  //   value: any
+  // }[]
+
   /**
    * enable quality control for the stream, does not apply to the native (iPhone) clients.
    * @default: true
@@ -48,8 +53,7 @@ export interface DashPluginOptions {
 const defaultMatcher: Matcher = (_, source) =>
   source.format === 'dash' ||
   source.format === 'mpd' ||
-  ((source.format === 'auto' || typeof source.format === 'undefined') &&
-    /.mpd(#|\?|$)/i.test(source.src))
+  ((source.format === 'auto' || typeof source.format === 'undefined') && /.mpd(#|\?|$)/i.test(source.src))
 
 class DashPlugin implements PlayerPlugin {
   key = 'dash'
@@ -62,15 +66,13 @@ class DashPlugin implements PlayerPlugin {
 
   instance?: MediaPlayerClass
 
-  options: RequiredPartial<DashPluginOptions, 'active' | 'config'> = {
+  options: RequiredPartial<DashPluginOptions, 'active' | 'inactive' | 'config'> = {
     textControl: true,
     audioControl: true,
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher,
-    active: undefined,
-    config: undefined
+    matcher: defaultMatcher
   }
 
   constructor(options?: DashPluginOptions) {
@@ -92,17 +94,12 @@ class DashPlugin implements PlayerPlugin {
 
     this.instance = DashPlugin.library.MediaPlayer().create()
 
-    const {
-      config,
-      active,
-      withBitrate,
-      qualityControl,
-      qualitySwitch,
-      audioControl,
-      textControl
-    } = this.options
+    const { player, instance } = this
+    const { config, active } = this.options
 
-    const { instance, player } = this
+    if (active) {
+      active(instance, DashPlugin.library)
+    }
 
     if (config) instance.updateSettings(config)
     instance.initialize($video, source.src, $video.autoplay)
@@ -113,19 +110,8 @@ class DashPlugin implements PlayerPlugin {
       player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
     })
 
-    if (active) {
-      const returned = active(instance, DashPlugin.library)
-      if (returned) this.options.active = returned
-    }
-
     if (player.context.ui?.setting) {
-      generateSetting(player, instance, {
-        qualityControl,
-        qualitySwitch,
-        withBitrate,
-        audioControl,
-        textControl
-      })
+      generateSetting(player, instance, this.options)
     }
 
     return this
@@ -134,8 +120,8 @@ class DashPlugin implements PlayerPlugin {
   destroy() {
     if (this.instance) {
       // prettier-ignore
-      const { player, instance, options: { active: inactive } } = this
-      if (inactive) inactive(instance!, DashPlugin.library)
+      const { player, instance, options: { inactive } } = this
+      if (inactive) inactive(instance, DashPlugin.library)
       if (player.context.ui?.setting) removeSetting(player)
       instance.destroy()
     }
@@ -155,7 +141,7 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
       if (withBitrate) {
         const kb = it.bitrate / 1000
         const useMb = kb > 1000
-        const number = useMb ? ~~(kb / 1000) : Math.floor(kb)
+        const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
         name += ` (${number}${useMb ? 'm' : 'k'}bps)`
       }
 
@@ -170,11 +156,7 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
   return []
 }
 
-const generateSetting = (
-  player: Player,
-  instance: MediaPlayerClass,
-  options: DashPluginOptions
-) => {
+const generateSetting = (player: Player, instance: MediaPlayerClass, options: DashPluginOptions) => {
   instance.on(DashPlugin.library.MediaPlayer.events.STREAM_INITIALIZED, function () {
     if (options.qualityControl) {
       settingUpdater({
@@ -206,10 +188,7 @@ const generateSetting = (
       instance.on(
         DashPlugin.library.MediaPlayer.events.QUALITY_CHANGE_RENDERED,
         function qualityMenuUpdater(data: QualityChangeRenderedEvent) {
-          if (
-            data.mediaType !== 'video' ||
-            !instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video
-          )
+          if (data.mediaType !== 'video' || !instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
             return
 
           const height = instance.getBitrateInfoListFor('video')[data.newQuality]?.height
