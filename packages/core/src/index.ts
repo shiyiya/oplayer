@@ -1,7 +1,7 @@
 export { $ } from './utils/dom'
 export * from './utils/platform'
 export * from './utils/index'
-// export * from './utils/script'
+export * from './utils/script'
 
 export { EVENTS, VIDEO_EVENTS, PLAYER_EVENTS, OH_EVENTS } from './constants'
 

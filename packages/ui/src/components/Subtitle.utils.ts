@@ -32,65 +32,42 @@ export function vttToBlob(vttText: string) {
   )
 }
 
-function fixTime(time = '') {
-  return time
-    .split(/[:.]/)
-    .map((item, index, arr) => {
-      if (index === arr.length - 1) {
-        if (item.length === 1) {
-          return `.${item}00`
-        }
-
-        if (item.length === 2) {
-          return `.${item}0`
-        }
-      } else if (item.length === 1) {
-        return (index === 0 ? '0' : ':0') + item
-      }
-
-      return index === 0 ? item : index === arr.length - 1 ? `.${item}` : `:${item}`
-    })
-    .join('')
-}
-
+// https://github.com/jamiees2/ass-to-vtt/blob/master/index.js
 export function assToVtt(ass: string) {
   const reAss = new RegExp(
-    'Dialogue:\\s\\d,' +
+    'Dialogue:\\s\\d+,' +
       '(\\d+:\\d\\d:\\d\\d.\\d\\d),' +
       '(\\d+:\\d\\d:\\d\\d.\\d\\d),' +
       '([^,]*),' +
       '([^,]*),' +
       '(?:[^,]*,){4}' +
-      '([\\s\\S]*)$',
+      '(.*)$',
     'i'
   )
 
-  return `WEBVTT\n\n${ass
+  return `WEBVTT\r\n\r\n${ass
     .split(/\r?\n/)
     .map((line) => {
       const m = line.match(reAss)
-      if (!m) return null
+      if (!m || !m[1] || !m[2] || !m[5]) return null
+
+      // TODO: support style & tag -> m[3] m[4]
+
       return {
-        start: fixTime(m[1]!.trim()),
-        end: fixTime(m[2]!.trim()),
-        text: m[5]!
-          .replace(/{[\s\S]*?}/g, '')
-          .replace(/(\\N)/g, '\n')
-          .trim()
-          .split(/\r?\n/)
-          .map((item) => item.trim())
-          .join('\n')
+        start: m[1],
+        end: m[2],
+        text: escape(
+          m[5]
+            .replace(/{[\s\S]*?}/g, '')
+            .replace(/\\N/g, '\r\n')
+            .replace(/\\n/g, ' ')
+            .replace(/\\h/g, '&nbsp;')
+        )
       }
     })
-    .filter((line) => line)
-    .map((line, index) => {
-      if (line) {
-        return `${index + 1}\n${line.start} --> ${line.end}\n${line.text}`
-      }
-      return ''
-    })
-    .filter((line) => line.trim())
-    .join('\n\n')}`
+    .filter((line) => line != null)
+    .map((line, i) => `${i + 1}\r\n0${line!.start}0 --> 0${line!.end}0\r\n${line!.text}`)
+    .join('\r\n\r\n')}`
 }
 
 export function escape(str: string) {

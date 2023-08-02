@@ -6,6 +6,10 @@ import { assToVtt, srtToVtt, vttToBlob } from './Subtitle.utils'
 import { clamp } from '../utils'
 import { controllerHidden } from '../style'
 
+// TODO: support style & tag
+// 00:03:31.485 --> 00:03:31.719 align:start position:0% line:0%
+// <c.color96D2D3>Hey! nanika ga okoru spe cial </c><c.colorFEFEFE>night</c>
+
 const SETTING_KEY = 'Subtitle'
 
 export default function (it: UIInterface) {
@@ -229,7 +233,7 @@ export class Subtitle {
           // <p><span><b>xxx</b></span></p>
           // <p><b><span>xxx</span></b></p>
           html += activeCue.text
-            .replaceAll(`\\h`, '')
+            .replace(/\\h/g, '&nbsp;')
             .split(/\r?\n/)
             .map((item: string) => `<p><span>${item}</span></p>`)
             .join('')
