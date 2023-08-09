@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "hls.js": "^1.4.9"
+    "hls.js": "^1.4.10"
   }
 }

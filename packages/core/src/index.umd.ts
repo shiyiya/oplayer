@@ -3,6 +3,7 @@ import { Player } from './player'
 import { $ } from './utils/dom'
 import * as platform from './utils/platform'
 import * as utils from './utils/index'
+import * as script from './utils/script'
 
 export default Object.assign(
   Player,
@@ -16,5 +17,6 @@ export default Object.assign(
   },
 
   utils,
-  platform
+  platform,
+  script
 )
