@@ -50,9 +50,9 @@ export const loadSDK = <SDKType = unknown>(
     }
 
     if (!isUndefined(sdkReadyVar)) {
-      const previousOnReady: () => void = window[sdkReadyVar as any] as any
-      ;(window as any)[sdkReadyVar as any] = function () {
-        if (!isUndefined(previousOnReady)) previousOnReady()
+      const previousOnReady: (...arg: any) => void = window[sdkReadyVar as keyof Window]
+      ;(window as any)[sdkReadyVar as any] = function (...args: any) {
+        if (!isUndefined(previousOnReady)) previousOnReady(...args)
         onLoaded(getGlobal(sdkGlobalVar as keyof Window))
       }
     }
