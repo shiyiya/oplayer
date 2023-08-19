@@ -24,18 +24,16 @@ const ReactOPlayer = forwardRef(
   (props: ReactOPlayerProps & { source?: Source | Promise<Source> }, ref: Ref<Player | null>) => {
     const { playing, duration, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
 
-    const isInitialMount = useRef(true)
+    const player = useRef<Player | null>(null)
+
+    const preSource = usePrevious(rest.source)
+    const isReady = Boolean(player.current)
 
     const onEventRef = useRef(onEvent)
     onEventRef.current = onEvent
 
-    const player = useRef<Player | null>(null)
-    const preSource = usePrevious(rest.source)
-
-    const isNotReady = isInitialMount.current || !player.current || /* destroy */ !player.current.$root
-
     const onRefChange = useCallback((node: HTMLDivElement) => {
-      if (node !== null && (!player.current || !player.current.$root)) {
+      if (node !== null && !isReady) {
         player.current = Player.make(node, rest).use(plugins).create()
         if (typeof duration == 'number') player.current.seek(duration / 1000)
         if (onEvent) {
@@ -44,51 +42,77 @@ const ReactOPlayer = forwardRef(
       }
     }, [])
 
+    const { playbackRate, source, muted } = rest
+    const safePlayer = player.current! // can only use on isReady
 
-    useEffectWhere(!isNotReady, () => {
-      if (playing) {
-        if (!player.current!.isPlaying) player.current!.play()
-      } else {
-        if (player.current!.isPlaying) player.current!.pause()
-      }
-    }, [playing])
+    useEffectWhere(
+      isReady,
+      () => {
+        if (playing != safePlayer.isPlaying) {
+          if (playing) {
+            safePlayer.play()
+          } else {
+            safePlayer.pause()
+          }
+        }
+      },
+      [playing]
+    )
 
-    useEffectWhere(!isNotReady, () => {
-      if (
-        (rest.source instanceof Promise && preSource != rest.source) ||
-        (rest.source?.src && preSource?.src !== rest.source.src)
-      ) {
-        player.current!.changeSource(rest.source)
-      }
-    }, [rest.source])
+    useEffectWhere(
+      isReady,
+      () => {
+        if (
+          (source instanceof Promise && preSource != source) ||
+          (source?.src && preSource?.src !== source.src)
+        ) {
+          safePlayer.changeSource(source)
+        }
+      },
+      [source]
+    )
 
-    useEffectWhere(!isNotReady, () => {
-      if (isNotReady || typeof duration != 'number') return
-      player.current!.seek(duration / 1000)
-    }, [duration])
+    useEffectWhere(
+      isReady,
+      () => {
+        if (duration) safePlayer.seek(duration / 1000)
+      },
+      [duration]
+    )
 
-    useEffectWhere(!isNotReady, () => {
-      if (rest.muted) {
-        player.current!.mute()
-      } else {
-        player.current!.unmute()
-      }
-    }, [rest.muted])
+    useEffectWhere(
+      isReady,
+      () => {
+        if (muted) {
+          safePlayer.mute()
+        } else {
+          safePlayer.unmute()
+        }
+      },
+      [muted]
+    )
 
-    useEffectWhere(!isNotReady, () => {
-      player.current!.setPlaybackRate(rest.playbackRate!)
-    }, [rest.playbackRate])
-
-    useEffect(() => {
-      isInitialMount.current = false
-      return () => player.current?.destroy()
-    }, [])
+    useEffectWhere(
+      isReady,
+      () => {
+        safePlayer.setPlaybackRate(playbackRate!)
+      },
+      [playbackRate]
+    )
 
     useImperativeHandle(ref, () => player.current, [])
 
+    useEffect(() => {
+      return () => {
+        // strict mode: destory, but ref cb call once
+        player.current?.destroy()
+        player.current = null
+      }
+    }, [])
+
     return useMemo(() => {
       if (aspectRatio == 0) {
-        return <div style={{ height: '100%', width: '100%' }} ref={onRefChange}></div>
+        return <div ref={onRefChange}></div>
       }
 
       return (

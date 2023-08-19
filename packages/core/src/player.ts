@@ -179,7 +179,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     this.$video.volume = volume
     // 设置 src 后执行
     setTimeout(() => {
-      this.setPlaybackRate(playbackRate)
+      // maybe destroyed
+      if (this.$root) this.setPlaybackRate(playbackRate)
     })
 
     this.$root = $.create(
