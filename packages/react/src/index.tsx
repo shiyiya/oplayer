@@ -5,7 +5,6 @@ import {
   EffectCallback,
   forwardRef,
   Ref,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -24,6 +23,7 @@ const ReactOPlayer = forwardRef(
   (props: ReactOPlayerProps & { source?: Source | Promise<Source> }, ref: Ref<Player | null>) => {
     const { playing, duration, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
 
+    const $player = useRef<HTMLDivElement>(null)
     const player = useRef<Player | null>(null)
 
     const preSource = usePrevious(rest.source)
@@ -31,16 +31,6 @@ const ReactOPlayer = forwardRef(
 
     const onEventRef = useRef(onEvent)
     onEventRef.current = onEvent
-
-    const onRefChange = useCallback((node: HTMLDivElement) => {
-      if (node !== null && !isReady) {
-        player.current = Player.make(node, rest).use(plugins).create()
-        if (typeof duration == 'number') player.current.seek(duration / 1000)
-        if (onEvent) {
-          player.current.on((payload: PlayerEvent) => onEventRef.current?.(payload))
-        }
-      }
-    }, [])
 
     const { playbackRate, source, muted } = rest
     const safePlayer = player.current! // can only use on isReady
@@ -103,8 +93,13 @@ const ReactOPlayer = forwardRef(
     useImperativeHandle(ref, () => player.current, [])
 
     useEffect(() => {
+      if (!$player.current) return
+      player.current = Player.make($player.current, rest).use(plugins).create()
+      if (typeof duration == 'number') player.current.seek(duration / 1000)
+      if (onEvent) {
+        player.current.on((payload: PlayerEvent) => onEventRef.current?.(payload))
+      }
       return () => {
-        // strict mode: destory, but ref cb call once
         player.current?.destroy()
         player.current = null
       }
@@ -112,7 +107,7 @@ const ReactOPlayer = forwardRef(
 
     return useMemo(() => {
       if (aspectRatio == 0) {
-        return <div ref={onRefChange}></div>
+        return <div ref={$player}></div>
       }
 
       return (
@@ -132,7 +127,7 @@ const ReactOPlayer = forwardRef(
               width: '100%',
               height: '100%'
             }}
-            ref={onRefChange}
+            ref={$player}
           ></div>
         </div>
       )
