@@ -426,12 +426,14 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
     return new Promise<void>((resolve, reject) => {
       const errorHandler = (e: any) => {
+        if (!this.$root) return
         this.isSourceChanging = false
         this.off(canplay, canplayHandler)
         reject(e)
       }
 
       const canplayHandler = () => {
+        if (!this.$root) return
         this.isSourceChanging = false
         this.off('error', errorHandler)
         this.emit(options.event, finalSource)
