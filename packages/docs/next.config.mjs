@@ -12,7 +12,7 @@ const withNextra = nextra({
 
 export default withNextra({
   output: 'export',
-  // reactStrictMode: true,
+  reactStrictMode: true,
   trailingSlash: true,
   images: {
     unoptimized: true

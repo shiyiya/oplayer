@@ -19,15 +19,15 @@
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "mdx-embed": "^1.1.2",
-    "next": "^13.4.13",
-    "nextra": "^2.10.0",
-    "nextra-theme-docs": "^2.10.0",
+    "next": "^13.4.19",
+    "nextra": "^2.11.0",
+    "nextra-theme-docs": "^2.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.19",
+    "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
-    "sass": "^1.64.2"
+    "sass": "^1.66.1"
   }
 }
