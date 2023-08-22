@@ -54,6 +54,10 @@ export class Subtitle {
     this.loadSetting()
 
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
+    this.player.on('videoqualitychang', () => {
+      if (this.isShow) this.hide()
+    })
+    this.player.on('videoqualitychanged', this.load.bind(this))
   }
 
   /**

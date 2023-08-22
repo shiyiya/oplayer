@@ -74,7 +74,7 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      !isMobile && danmaku({ source: '/danmaku.xml', fontSize: 0.75, displaySender: false }),
+      !isMobile && danmaku({ enable: false, source: '/danmaku.xml', fontSize: 0.75, displaySender: false }),
       new PlaylistPlugin({
         initialIndex: 0,
         autoNext: true,
