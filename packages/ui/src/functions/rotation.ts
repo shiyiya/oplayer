@@ -6,8 +6,11 @@ export default function registerFullScreenRotation(player: Player, config: UiCon
     player.on('fullscreenchange', ({ payload }) => {
       if (payload.isWeb) return
       if (player.isFullScreen) {
+        // https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1615
+        //@ts-expect-error
         screen.orientation?.lock('landscape')
       } else {
+
         screen.orientation?.unlock()
       }
     })
