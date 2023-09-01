@@ -17,7 +17,7 @@
     "@oplayer/ui": "workspace:*",
     "@types/chromecast-caf-sender": "^1.0.5",
     "chokidar": "^3.5.3",
-    "glob": "^10.3.3",
+    "glob": "^10.3.4",
     "vite-plugin-css-injected-by-js": "^3.3.0"
   },
   "keywords": [],
