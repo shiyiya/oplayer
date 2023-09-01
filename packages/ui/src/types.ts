@@ -148,6 +148,8 @@ export type UiConfig = {
    */
   controlBar?: { back?: 'always' | 'fullscreen' } // | boolean
 
+  ctrlHideBehavior?: 'hover' | 'delay' | 'none'
+
   /**
    * default: false
    * required -> controlBar: true
@@ -189,9 +191,9 @@ export type UiConfig = {
 export type ErrorPayload =
   | Event
   | {
-      message: string
-      code?: number
-    }
+    message: string
+    code?: number
+  }
 
 export interface UIInterface extends PlayerPlugin {
   config: UiConfig

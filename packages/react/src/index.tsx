@@ -22,27 +22,26 @@ export interface ReactOPlayerProps extends PlayerOptions {
 const ReactOPlayer = forwardRef(
   (props: ReactOPlayerProps & { source?: Source | Promise<Source> }, ref: Ref<Player | null>) => {
     const { playing, duration, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
+    const { playbackRate, source, muted } = rest
 
     const $player = useRef<HTMLDivElement>(null)
     const player = useRef<Player | null>(null)
 
     const preSource = usePrevious(rest.source)
-    const isReady = Boolean(player.current)
 
     const onEventRef = useRef(onEvent)
     onEventRef.current = onEvent
 
-    const { playbackRate, source, muted } = rest
-    const safePlayer = player.current! // can only use on isReady
+    const instance = player.current!
 
     useEffectWhere(
-      isReady,
+      instance,
       () => {
-        if (playing != safePlayer.isPlaying) {
+        if (playing != instance.isPlaying) {
           if (playing) {
-            safePlayer.play()
+            instance.play()
           } else {
-            safePlayer.pause()
+            instance.pause()
           }
         }
       },
@@ -50,42 +49,42 @@ const ReactOPlayer = forwardRef(
     )
 
     useEffectWhere(
-      isReady,
+      instance,
       () => {
         if (
           (source instanceof Promise && preSource != source) ||
           (source?.src && preSource?.src !== source.src)
         ) {
-          safePlayer.changeSource(source)
+          instance.changeSource(source)
         }
       },
       [source]
     )
 
     useEffectWhere(
-      isReady,
+      instance,
       () => {
-        if (duration) safePlayer.seek(duration / 1000)
+        if (duration) instance.seek(duration / 1000)
       },
       [duration]
     )
 
     useEffectWhere(
-      isReady,
+      instance,
       () => {
         if (muted) {
-          safePlayer.mute()
+          instance.mute()
         } else {
-          safePlayer.unmute()
+          instance.unmute()
         }
       },
       [muted]
     )
 
     useEffectWhere(
-      isReady,
+      instance,
       () => {
-        safePlayer.setPlaybackRate(playbackRate!)
+        instance.setPlaybackRate(playbackRate!)
       },
       [playbackRate]
     )
@@ -135,9 +134,9 @@ const ReactOPlayer = forwardRef(
   }
 )
 
-const useEffectWhere = (where: boolean, cb: EffectCallback, deps?: DependencyList): void => {
+const useEffectWhere = (where: any, cb: EffectCallback, deps?: DependencyList): void => {
   useEffect(() => {
-    if (where) {
+    if (Boolean(where)) {
       return cb()
     }
   }, deps)

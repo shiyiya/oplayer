@@ -49,11 +49,13 @@ const render = (it: UIInterface) => {
     }
   }
 
-  player.on('play', debounceHideCtrl)
-  player.on(['pause', 'videosourcechange'], showCtrl)
-  player.on('destroy', cancelHideCtrl)
+  if (config.ctrlHideBehavior != 'none') {
+    player.on('play', debounceHideCtrl)
+    player.on(['pause', 'videosourcechange'], showCtrl)
+    player.on('destroy', cancelHideCtrl)
+  }
 
-  if (!isMobile) {
+  if (!isMobile && config.ctrlHideBehavior == 'hover') {
     player.$root.addEventListener('mousemove', () => {
       showCtrl()
       debounceHideCtrl()
