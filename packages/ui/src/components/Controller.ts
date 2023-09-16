@@ -55,12 +55,12 @@ const render = (it: UIInterface) => {
     player.on('destroy', cancelHideCtrl)
   }
 
-  if (!isMobile && config.ctrlHideBehavior == 'hover') {
+  if (!isMobile) {
     player.$root.addEventListener('mousemove', () => {
       showCtrl()
       debounceHideCtrl()
     })
-    player.$root.addEventListener('mouseleave', hideCtrl)
+    if (config.ctrlHideBehavior == 'hover') player.$root.addEventListener('mouseleave', hideCtrl)
   }
 
   it.toggleController = function toggle() {
