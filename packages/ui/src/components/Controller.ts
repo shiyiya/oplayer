@@ -56,9 +56,11 @@ const render = (it: UIInterface) => {
   }
 
   if (!isMobile) {
-    player.$root.addEventListener('mousemove', () => {
+    player.$root.addEventListener('mousemove', (e) => {
       showCtrl()
-      debounceHideCtrl()
+      if (!$controller.contains(<HTMLDivElement>e.target)) {
+        debounceHideCtrl()
+      }
     })
     if (config.ctrlHideBehavior == 'hover') player.$root.addEventListener('mouseleave', hideCtrl)
   }
