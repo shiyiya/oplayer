@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.33]
+
+- update controller hide behavior.
+- fix subtitle not work on custom `videosourcechange`
+
 ## [1.2.29-beta.2]
 
 - update screenshot with watermark
