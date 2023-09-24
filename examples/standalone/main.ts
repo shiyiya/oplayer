@@ -223,18 +223,18 @@ const actions = () => html`<p style="display:flex;">
 
     <button
       @click=${() => {
-        src =
-          VIDEO_LIST[
-            currentDataSrcId + 1 >= VIDEO_LIST.length ? (currentDataSrcId = 0) : (currentDataSrcId += 1)
-          ]!
+    src =
+      VIDEO_LIST[
+      currentDataSrcId + 1 >= VIDEO_LIST.length ? (currentDataSrcId = 0) : (currentDataSrcId += 1)
+      ]!
 
-        player.changeSource(
-          new Promise((r) => {
-            stopLoad()
-            r({ src })
-          })
-        )
-      }}
+    player.changeSource(
+      new Promise((r) => {
+        stopLoad()
+        r({ src })
+      })
+    )
+  }}
     >
       Queue
     </button>

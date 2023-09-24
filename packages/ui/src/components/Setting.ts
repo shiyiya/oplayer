@@ -20,8 +20,7 @@ import {
 } from './Setting.style'
 
 export const arrowSvg = (className = nextIcon) =>
-  `<svg ${
-    className ? `class="${className}"` : ''
+  `<svg ${className ? `class="${className}"` : ''
   } viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
 
 // Selector Options
@@ -219,7 +218,7 @@ function createPanel(
             $targets.item(i).setAttribute('aria-checked', 'true')
             const value = children[i]
             $label.innerText = value!.name
-            if (shouldBeCallFn) onChange?.(value, { index: i })
+            if (shouldBeCallFn) onChange?.(value, { index: i, player })
           }
         }
 
@@ -252,6 +251,8 @@ function createPanel(
 export default function (it: UIInterface) {
   const { player, $root: $el, config } = it
 
+  if (config.settings === false) return
+
   const topEnabled = config.controlBar && config.topSetting
   const options = config.settings || []
   const $dom = $.create(`div.${setting(topEnabled ? 'top' : 'bottom')}`, {
@@ -272,23 +273,23 @@ export default function (it: UIInterface) {
 
   bootstrap(options.map((it) => (typeof it == 'string' ? defaultSettingMap[it] : it)) as Setting[])
 
-  it.setting.register = function register(payload: Setting | Setting[]) {
+  it.setting!.register = function register(payload: Setting | Setting[]) {
     bootstrap(Array.isArray(payload) ? payload : [payload])
   }
 
-  it.setting.unregister = function unregister(key: string) {
+  it.setting!.unregister = function unregister(key: string) {
     if (!hasRendered) return
     panels[0]?.$ref.querySelector(`[data-key=${key}]`)?.remove()
     panels = panels.filter((p) => (p.key === key ? (p.$ref.remove(), (p = null as any), false) : true))
   }
 
-  it.setting.updateLabel = function updateLabel(key: string, text: string) {
+  it.setting!.updateLabel = function updateLabel(key: string, text: string) {
     if (!hasRendered) return
     const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
     if ($item) $item.innerText = text
   }
 
-  it.setting.select = function select(key: string, value: boolean | number, shouldBeCallFn: Boolean = true) {
+  it.setting!.select = function select(key: string, value: boolean | number, shouldBeCallFn: Boolean = true) {
     if (!hasRendered) return
     if (typeof value == 'number') {
       for (let i = 0; i < panels.length; i++) {

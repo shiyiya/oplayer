@@ -213,7 +213,7 @@ export class Subtitle {
     const { $dom, $track, $iosTrack } = this
     $track?.removeEventListener('cuechange', this.update)
     $dom.innerHTML = ''
-    this.setting.unregister(SETTING_KEY)
+    this.setting?.unregister(SETTING_KEY)
     if ($track?.src) URL.revokeObjectURL($track.src)
     if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
     $track?.remove()
@@ -298,6 +298,7 @@ export class Subtitle {
   }
 
   loadSetting() {
+    if (!this.setting) return
     const source = this.options.source
     if (source.length) {
       this.setting.unregister(SETTING_KEY)

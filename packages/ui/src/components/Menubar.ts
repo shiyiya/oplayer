@@ -34,10 +34,11 @@ export default (it: UIInterface) => {
       _select(elm)
       target.onChange?.(
         target.children![+elm.getAttribute('data-index')!]!,
-        elm.parentElement!.previousElementSibling as HTMLButtonElement
+        elm.parentElement!.previousElementSibling as HTMLButtonElement,
+        it.player
       )
     } else if (elm.tagName.toUpperCase() == 'BUTTON') {
-      target.onClick?.(elm as any)
+      target.onClick?.(elm as any, it.player)
     }
   }
 
@@ -63,9 +64,9 @@ export default (it: UIInterface) => {
         ${$button}
         <div class='${expand} ${isTop ? expandBottom : ''}' role='menu'>
           ${children!
-            .map(
-              (it, i) =>
-                `<span
+          .map(
+            (it, i) =>
+              `<span
                   role="menuitemradio"
                   aria-haspopup="false"
                   aria-label="${name}"
@@ -73,8 +74,8 @@ export default (it: UIInterface) => {
                   aria-checked="${Boolean(it.default)}"
                   data-index="${i}"
                 >${it.name}</span>`
-            )
-            .join('')}
+          )
+          .join('')}
           </div>
       </div>`
     } else {

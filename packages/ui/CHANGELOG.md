@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.34-beta.0]
+
+- add params to menu & setting cb.
+
 ## [1.2.33]
 
 - update controller hide behavior.

@@ -36,8 +36,8 @@ export type MenuBar<
   name: string
   icon?: string
   children?: T[]
-  onChange?: (arg: T, elm: HTMLButtonElement) => void
-  onClick?: (elm: HTMLButtonElement) => void
+  onChange?: (arg: T, elm: HTMLButtonElement, player: Player) => void
+  onClick?: (elm: HTMLButtonElement, player: Player) => void
 }
 
 export type Setting<T = any> = {
@@ -50,7 +50,7 @@ export type Setting<T = any> = {
   type: 'selector' | 'switcher'
   icon?: string
   children?: Setting[]
-  onChange?: (a: T /* Setting | boolean */, b?: { index: number }) => void | Promise<void>
+  onChange?: (a: T /* Setting | boolean */, b?: { index: number, player: Player }) => void | Promise<void>
   default?: any
   value?: T
 }
@@ -140,7 +140,7 @@ export type UiConfig = {
   /**
    * default: ['loop', 'speed']
    */
-  settings?: (Setting | 'loop')[]
+  settings?: (Setting | 'loop')[] | false
 
   /**
    * default: false
@@ -225,7 +225,7 @@ export interface UIInterface extends PlayerPlugin {
     unregister: (keys: string[]) => void
   }
 
-  setting: {
+  setting?: {
     register: (payload: Setting | Setting[]) => void
     unregister: (key: string) => void
     updateLabel: (key: string, text: string) => void

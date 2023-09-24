@@ -10,7 +10,7 @@ export default function registerSpeedSetting(it: UIInterface) {
     setting
   } = it
 
-  if (speeds?.length) {
+  if (speeds?.length && setting) {
     setting.register(<Setting>{
       key: KEY,
       type: 'selector',
