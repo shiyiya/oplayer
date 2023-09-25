@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.34-beta.1]
+
+- try fix subtitle not working.
+
 ## [1.2.34-beta.0]
 
 - add params to menu & setting cb.

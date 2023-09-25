@@ -1,4 +1,4 @@
-import type { Player } from '@oplayer/core'
+import type { PartialRequired, Player } from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import type { Setting, Subtitle as SubtitleConfig, SubtitleSource, UIInterface } from '../types'
@@ -24,11 +24,11 @@ export default function (it: UIInterface) {
 }
 
 export class Subtitle {
-  options!: SubtitleConfig & { source: SubtitleSource[] }
+  options: PartialRequired<SubtitleConfig, 'source'>
 
-  $track?: HTMLTrackElement
+  $dom: HTMLDivElement
+  $track: HTMLTrackElement
   $iosTrack?: HTMLTrackElement
-  $dom!: HTMLDivElement
 
   isShow = false
   currentSubtitle?: SubtitleSource
@@ -44,63 +44,24 @@ export class Subtitle {
       return
     }
 
-    this.setting = setting
     this.options = { source: [], ...options }
+    this.processDefault(this.options.source)
 
-    this.processDefault()
     this.createContainer()
-
-    this.load()
+    this.fetchSubtitle()
     this.loadSetting()
 
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
     this.player.on('videoqualitychang', () => {
       if (this.isShow) this.hide()
     })
-    this.player.on('videoqualitychanged', this.load.bind(this))
-  }
-
-  /**
-   * change subtitle source
-   * @deprecated use `changeSource`
-   */
-  updateSource(payload: SubtitleSource[]) {
-    this.changeSource(payload)
+    this.player.on('videoqualitychanged', this.fetchSubtitle.bind(this))
   }
 
   changeSource(payload: SubtitleSource[]) {
-    this.options.source = payload
-    this.processDefault()
-
-    this.load()
+    this.processDefault(payload)
+    this.fetchSubtitle()?.then(() => this.player.emit('subtitlesourcechange', payload))
     this.loadSetting()
-    this.player.emit('subtitlesourcechange', payload)
-  }
-
-  changeOffset() {
-    const offset = this.currentSubtitle!.offset
-    const cues = this.player.$video.textTracks[0]?.cues
-
-    if (offset) {
-      const duration = this.player.duration
-
-      Array.from(cues || []).forEach((cue) => {
-        cue.startTime = clamp(cue.startTime + offset, 0, duration)
-        cue.endTime = clamp(cue.endTime + offset, 0, duration)
-      })
-
-      //ios
-      if (this.$iosTrack) {
-        Array.from(this.player.$video.textTracks[1]?.cues || []).forEach((cue) => {
-          cue.startTime = clamp(cue.startTime + offset, 0, duration)
-          cue.endTime = clamp(cue.endTime + offset, 0, duration)
-        })
-      }
-    }
-  }
-
-  processDefault() {
-    this.currentSubtitle = findDefault(this.options.source)
   }
 
   createContainer() {
@@ -183,44 +144,31 @@ export class Subtitle {
     }
   }
 
-  load() {
-    if (!this.currentSubtitle) return
-    if (!this.$track) this.createTrack()
-    this.loadSubtitle()
-      .then(() => {
-        this.$track!.addEventListener(
-          'load',
-          () => {
-            // wait video metadata loaded
-            if (isNaN(this.player.duration)) {
-              this.player.once('loadedmetadata', () => {
-                this.changeOffset()
-              })
-            } else {
-              this.changeOffset()
-            }
-            this.show()
-          },
-          { once: true }
-        )
+  changeOffset() {
+    const offset = this.currentSubtitle!.offset
+
+    if (offset) {
+      const cues = this.player.$video.textTracks[0]?.cues
+      const duration = this.player.duration
+
+      Array.from(cues || []).forEach((cue) => {
+        cue.startTime = clamp(cue.startTime + offset, 0, duration)
+        cue.endTime = clamp(cue.endTime + offset, 0, duration)
       })
-      .catch((e) => {
-        this.player.emit('notice', { text: (<Error>e).message })
-      })
+
+      //ios
+      if (this.$iosTrack) {
+        Array.from(this.player.$video.textTracks[1]?.cues || []).forEach((cue) => {
+          cue.startTime = clamp(cue.startTime + offset, 0, duration)
+          cue.endTime = clamp(cue.endTime + offset, 0, duration)
+        })
+      }
+    }
   }
 
-  destroy() {
-    const { $dom, $track, $iosTrack } = this
-    $track?.removeEventListener('cuechange', this.update)
-    $dom.innerHTML = ''
-    this.setting?.unregister(SETTING_KEY)
-    if ($track?.src) URL.revokeObjectURL($track.src)
-    if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
-    $track?.remove()
-    $iosTrack?.remove()
-    this.$track = undefined
-    this.$iosTrack = undefined
-    this.isShow = false
+  processDefault(payload: SubtitleSource[]) {
+    this.options.source = payload
+    this.currentSubtitle = findDefault(payload)
   }
 
   update = () => {
@@ -251,7 +199,7 @@ export class Subtitle {
 
   show() {
     this.isShow = true
-    this.$track!.addEventListener('cuechange', this.update)
+    this.$track.addEventListener('cuechange', this.update)
   }
 
   hide() {
@@ -259,12 +207,14 @@ export class Subtitle {
 
     this.isShow = false
     $dom.innerHTML = ''
-    $track!.removeEventListener('cuechange', this.update)
+    $track.removeEventListener('cuechange', this.update)
   }
 
-  loadSubtitle() {
+  fetchSubtitle() {
+    if (!this.currentSubtitle) return
+    if (!this.$track) this.createTrack()
     const { currentSubtitle, player, $track, $iosTrack } = this
-    const { src, encoding, type = 'auto' } = currentSubtitle!
+    const { src, encoding, type = 'auto' } = currentSubtitle
 
     return fetch(src)
       .then((response) => response.arrayBuffer())
@@ -284,13 +234,28 @@ export class Subtitle {
         }
       })
       .then((url) => {
-        if ($track?.src) URL.revokeObjectURL($track!.src)
-        $track!.src = url
+        if ($track.src) URL.revokeObjectURL($track.src)
+        if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
 
-        if ($iosTrack) {
-          if ($iosTrack.src) URL.revokeObjectURL($iosTrack.src)
-          $iosTrack.src = url
-        }
+        this.$track.addEventListener(
+          'load',
+          () => {
+            // wait video metadata loaded
+            if (isNaN(this.player.duration) || this.player.duration < 1) {
+              this.player.once('loadedmetadata', () => {
+                this.changeOffset()
+                this.show()
+              })
+            } else {
+              this.changeOffset()
+              this.show()
+            }
+          },
+          { once: true }
+        )
+
+        $track.src = url
+        $iosTrack && ($iosTrack.src = url)
       })
       .catch((err) => {
         player.emit('notice', { text: 'Subtitle' + (<Error>err).message })
@@ -309,9 +274,13 @@ export class Subtitle {
         key: SETTING_KEY,
         onChange: ({ value }) => {
           if (value) {
-            this.currentSubtitle = value
-            this.$dom.innerHTML = ''
-            this.load()
+            if (value.src == this.currentSubtitle?.src) {
+              this.show()
+            } else {
+              this.currentSubtitle = value
+              this.$dom.innerHTML = ''
+              this.fetchSubtitle()
+            }
           } else {
             this.hide()
           }
@@ -329,6 +298,19 @@ export class Subtitle {
         ]
       })
     }
+  }
+
+  destroy() {
+    const { $dom, $track, $iosTrack } = this
+    $track?.removeEventListener('cuechange', this.update)
+    this.setting?.unregister(SETTING_KEY)
+    if ($track?.src) URL.revokeObjectURL($track.src)
+    if ($iosTrack?.src) URL.revokeObjectURL($iosTrack.src)
+    $track?.remove()
+    $iosTrack?.remove()
+    $dom.innerHTML = ''
+    this.isShow = false
+    this.$track = this.$iosTrack = undefined as any
   }
 }
 

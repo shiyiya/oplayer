@@ -18,6 +18,7 @@
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
     // "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
 
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,

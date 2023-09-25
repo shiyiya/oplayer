@@ -14,6 +14,7 @@ import DANMAKU from '../../packages/docs/public/danmaku.xml'
 import POSTER from '../../packages/docs/public/poster.png'
 import THUMB from '../../packages/docs/public/thumbnails.jpg'
 import SRT from '../../packages/docs/public/君の名は.srt'
+import JPSRT from '../../packages/docs/public/君の名は-jp.srt'
 // import SUPER_DANMAKU from '../../packages/docs/public/天气之子.xml'
 import FLV from '../../packages/docs/public/op.flv'
 import MP4 from '../../packages/docs/public/君の名は.mp4'
@@ -106,7 +107,7 @@ const player = Player.make<Ctx>('#player', {
     }),
     new Hello(),
     new PlaylistPlugin({
-      initialIndex: 1,
+      initialIndex: 0,
       sources: [
         {
           title: '君の名は - MP4',
@@ -122,6 +123,11 @@ const player = Player.make<Ctx>('#player', {
               name: 'Default',
               default: true,
               src: SRT,
+              offset: 2
+            },
+            {
+              name: 'Japan',
+              src: JPSRT,
               offset: 2
             }
           ],
