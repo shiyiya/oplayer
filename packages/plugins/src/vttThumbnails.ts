@@ -231,7 +231,7 @@ function plugin(player: Player, options?: Thumbnails) {
   player.context.ui.changThumbnails = ({ src }: any) => bootstrap(src)
 }
 
-export default (options: Thumbnails): PlayerPlugin => ({
+export default (options?: Thumbnails): PlayerPlugin => ({
   name: 'oplayer-vtt-thumbnails',
   version: __VERSION__,
   apply: (player) => plugin(player, options)
