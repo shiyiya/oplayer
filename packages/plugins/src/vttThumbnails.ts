@@ -9,7 +9,7 @@ type Thumbnails = {
 
 type Def = { start: number; end: number; css: any }
 
-function plugin(player: Player, options: Thumbnails) {
+function plugin(player: Player, options?: Thumbnails) {
   const { $progress } = player.context.ui
   const container = $progress.firstElementChild
 
@@ -17,7 +17,7 @@ function plugin(player: Player, options: Thumbnails) {
   let cache = {} as any
   let lastStyle: Def
   let isActive = false
-  let src = options.src
+  let src = options?.src
   const $dom = $.render($.create(`div.${player.context.ui.vttThumbnailsCls}`), container)
 
   $dom.style.width = (options?.width || 160) + 'px'
@@ -36,7 +36,7 @@ function plugin(player: Player, options: Thumbnails) {
       })
   }
 
-  if (options.src) bootstrap(options.src)
+  if (options?.src) bootstrap(options.src)
 
   player.on('videosourcechange', () => {
     player.context.ui.progressHoverCallback.splice(
@@ -133,6 +133,7 @@ function plugin(player: Player, options: Thumbnails) {
   const mergeSrc = (() => {
     const cache = {} as Record<string, string>
     return (path: string) => {
+      if (!src) return path
       if (cache[path]) return cache[path]
       if (/(https?:)?\/\//.test(path)) return path
 

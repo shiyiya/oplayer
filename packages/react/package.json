@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/react",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "React wrapper for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -16,11 +16,6 @@
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
     "build": "vite build && tsc --emitDeclarationOnly"
-  },
-  "exports": {
-    ".": {
-      "default": "./dist/index.es.js"
-    }
   },
   "files": [
     "dist",
