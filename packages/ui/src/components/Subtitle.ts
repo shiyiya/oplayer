@@ -59,9 +59,19 @@ export class Subtitle {
   }
 
   changeSource(payload: SubtitleSource[]) {
+    this.setting?.unregister(SETTING_KEY)
     this.processDefault(payload)
-    this.fetchSubtitle()?.then(() => this.player.emit('subtitlesourcechange', payload))
-    this.loadSetting()
+    const next = () => {
+      this.fetchSubtitle()?.then(() => {
+        this.player.emit('subtitlesourcechange', payload)
+        this.loadSetting()
+      })
+    }
+    if (this.player.isSourceChanging || isNaN(this.player.duration) || this.player.duration < 1) {
+      this.player.once('loadedmetadata', next)
+    } else {
+      next()
+    }
   }
 
   createContainer() {
@@ -240,16 +250,9 @@ export class Subtitle {
         this.$track.addEventListener(
           'load',
           () => {
-            // wait video metadata loaded
-            if (isNaN(this.player.duration) || this.player.duration < 1) {
-              this.player.once('loadedmetadata', () => {
-                this.changeOffset()
-                this.show()
-              })
-            } else {
-              this.changeOffset()
-              this.show()
-            }
+
+            this.changeOffset()
+            this.show()
           },
           { once: true }
         )
@@ -266,7 +269,6 @@ export class Subtitle {
     if (!this.setting) return
     const source = this.options.source
     if (source.length) {
-      this.setting.unregister(SETTING_KEY)
       this.setting.register(<Setting>{
         name: this.player.locales.get('Subtitle'),
         type: 'selector',
