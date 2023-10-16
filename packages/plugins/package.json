@@ -15,9 +15,9 @@
   "devDependencies": {
     "@oplayer/core": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "@types/chromecast-caf-sender": "^1.0.5",
+    "@types/chromecast-caf-sender": "^1.0.6",
     "chokidar": "^3.5.3",
-    "glob": "^10.3.4",
+    "glob": "^10.3.10",
     "vite-plugin-css-injected-by-js": "^3.3.0"
   },
   "keywords": [],
