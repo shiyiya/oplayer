@@ -35,7 +35,7 @@ export const controlBar = $.css({
     'background-image': 'linear-gradient(rgba(0, 0, 0, .3), transparent)'
   },
 
-  '& > div:nth-child(1)': { cursor: 'pointer', overflow: 'hidden' },
+  '& > div:nth-child(1)': { overflow: 'hidden', flex: '1 1 0', 'margin-right': '1em' },
 
   [`& > div:nth-child(2) .${dropdown}:last-child .${expand}`]: {
     right: 'max(50%,3em)'
