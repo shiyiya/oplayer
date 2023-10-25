@@ -196,8 +196,8 @@ importers:
         specifier: workspace:*
         version: link:../ui
       '@types/chromecast-caf-sender':
-        specifier: ^1.0.6
-        version: 1.0.6
+        specifier: ^1.0.7
+        version: 1.0.7
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
@@ -214,8 +214,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@types/react':
-        specifier: ^18.2.28
-        version: 18.2.28
+        specifier: ^18.2.31
+        version: 18.2.31
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -450,7 +450,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.12.9)
       '@babel/plugin-transform-parameters': 7.22.15(@babel/core@7.12.9)
     dev: false
@@ -1188,7 +1188,7 @@ packages:
       react: '>=16'
     dependencies:
       '@types/mdx': 2.0.6
-      '@types/react': 18.2.28
+      '@types/react': 18.2.31
       react: 18.2.0
     dev: false
 
@@ -1713,8 +1713,8 @@ packages:
       '@types/har-format': 1.2.12
     dev: true
 
-  /@types/chromecast-caf-sender@1.0.6:
-    resolution: {integrity: sha512-0D5uA7Ijlr8OCcMM565ArAC+y86u09Q51FBxqa46ucuheeBW56Q2oqV28Q1goxm7eD4/eCRTOQlHZU+IP+1T7Q==}
+  /@types/chromecast-caf-sender@1.0.7:
+    resolution: {integrity: sha512-LejZfjk1ANkmz8BFPTwnXKQXFZN9NOZjc2nLHlkuZwle8MTXger5q1nc9B7aIix8DACBMKIWj6s19oua0m/SEQ==}
     dependencies:
       '@types/chrome': 0.0.243
     dev: true
@@ -1843,6 +1843,14 @@ packages:
 
   /@types/react@18.2.28:
     resolution: {integrity: sha512-ad4aa/RaaJS3hyGz0BGegdnSRXQBkd1CCYDCdNjBPg90UUpLgo+WlJqb9fMYUxtehmzF3PJaTWqRZjko6BRzBg==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.3
+      csstype: 3.1.2
+    dev: true
+
+  /@types/react@18.2.31:
+    resolution: {integrity: sha512-c2UnPv548q+5DFh03y8lEDeMfDwBn9G3dRwfkrxQMo/dOtRHUUO57k6pHvBIfH/VF4Nh+98mZ5aaSe+2echD5g==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
