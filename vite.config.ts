@@ -24,12 +24,15 @@ export const globals = {
 const babelPlugins = [
   'syntax-trailing-function-commas',
   // x ??= 1
-  '@babel/plugin-proposal-logical-assignment-operators',
+  // '@babel/plugin-proposal-logical-assignment-operators',
+  '@babel/plugin-transform-logical-assignment-operators',
   // x ?? 1
-  '@babel/plugin-proposal-nullish-coalescing-operator',
+  // '@babel/plugin-proposal-nullish-coalescing-operator',
+  '@babel/plugin-transform-nullish-coalescing-operator',
   // These use loose mode which avoids embedding a runtime.
   // TODO: Remove object spread from the source. Prefer Object.assign instead.
-  ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
+  // ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
+  ['@babel/plugin-transform-object-rest-spread', { loose: true, useBuiltIns: true }],
   ['@babel/plugin-transform-template-literals', { loose: true }],
   // TODO: Remove array spread from the source. Prefer .apply instead.
   ['@babel/plugin-transform-spread', { loose: true, useBuiltIns: true }],
