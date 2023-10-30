@@ -5,10 +5,11 @@ import { globSync } from 'glob'
 import chokidar from 'chokidar'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
-const external = ['@oplayer/core']
+const external = ['@oplayer/core', 'm3u8-parser']
 
 const globals = {
-  '@oplayer/core': 'OPlayer'
+  '@oplayer/core': 'OPlayer',
+  'm3u8-parser': 'm3u8Parser'
 }
 
 async function buildPlugin(name, dev) {
