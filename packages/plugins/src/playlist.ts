@@ -19,9 +19,11 @@ export interface PlaylistOptions {
   autoNext?: boolean
   autoHide?: boolean
   initialIndex?: number
-  m3uList?: {
-    sourceFormat?: (info: Segment) => Source
-  } | true
+  m3uList?:
+    | {
+        sourceFormat?: (info: Segment) => Source
+      }
+    | true
 }
 
 export interface PlaylistSource extends Omit<Source, 'src'> {
@@ -52,7 +54,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.options = Object.assign({ autoNext: true, autoHide: true }, options)
   }
 
-  async apply(player: Player) {
+  apply(player: Player) {
     if (player.isNativeUI) return
 
     this.player = player as Player<Ctx>
@@ -68,7 +70,6 @@ export default class PlaylistPlugin implements PlayerPlugin {
         })
       }
     }
-
 
     const { initialIndex, m3uList, sources } = this.options
 
@@ -92,7 +93,6 @@ export default class PlaylistPlugin implements PlayerPlugin {
     } else {
       start()
     }
-
 
     return this
   }
@@ -169,8 +169,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
     const $playlist = `
     <div class="playlist-head">
       <span class="playlist-head-title">${this.player.locales.get('PLAYLIST')}</span>
-      <div class="playlist-back">${this.player.context.ui.icons.playlist ||
-      `<svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg>`
+      <div class="playlist-back">${
+        this.player.context.ui.icons.playlist ||
+        `<svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg>`
       }</div>
     </div>
     <div class="playlist-list">
@@ -231,5 +232,5 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.$root.querySelector('.playlist-list')!.innerHTML = child
   }
 
-  destroy() { }
+  destroy() {}
 }
