@@ -114,7 +114,8 @@ const player = Player.make<Ctx>('#player', {
           const titleWith = chunk.find(it => it.includes('title')).split('=')[1]
           const posterWith = chunk.find(it => it.includes('logo'))?.split('=')[1]
           return {
-            src: info.uri.endsWith('m3u8') ? info.uri : info.uri + '&m3u8',
+            src: info.uri,
+            format: 'm3u8',
             title: titleWith.substring(1, titleWith.length),
             poster: posterWith?.substring(1, posterWith.length),
           }
