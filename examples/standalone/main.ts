@@ -2,7 +2,7 @@ import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 import { ref } from 'lit/directives/ref.js'
 
-import { Player, isMobile, PlayerEvent } from '@oplayer/core'
+import { Player, isMobile, PlayerEvent, Source } from '@oplayer/core'
 import danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
@@ -108,7 +108,22 @@ const player = Player.make<Ctx>('#player', {
     new Hello(),
     new PlaylistPlugin({
       initialIndex: 0,
+      m3uList: {
+        sourceFormat(info) {
+          const chunk = info.title.substring(3).split(' ')
+          const titleWith = chunk.find(it => it.includes('title')).split('=')[1]
+          const posterWith = chunk.find(it => it.includes('logo'))?.split('=')[1]
+          return {
+            src: info.uri.endsWith('m3u8') ? info.uri : info.uri + '&m3u8',
+            title: titleWith.substring(1, titleWith.length),
+            poster: posterWith?.substring(1, posterWith.length),
+          }
+        },
+      },
       sources: [
+        {
+          src: 'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/global.m3u'
+        },
         {
           title: '君の名は - MP4',
           poster: POSTER,
@@ -235,7 +250,7 @@ const actions = () => html`<p style="display:flex;">
       ]!
 
     player.changeSource(
-      new Promise((r) => {
+      new Promise<Source>((r) => {
         stopLoad()
         r({ src })
       })

@@ -21,7 +21,7 @@ export interface PlaylistOptions {
   initialIndex?: number
   m3uList?: {
     sourceFormat?: (info: Segment) => Source
-  }
+  } | true
 }
 
 export interface PlaylistSource extends Omit<Source, 'src'> {
@@ -56,15 +56,21 @@ export default class PlaylistPlugin implements PlayerPlugin {
     if (player.isNativeUI) return
 
     this.player = player as Player<Ctx>
-    this.render()
 
-    const { autoNext, initialIndex, m3uList, sources } = this.options
-
-    if (autoNext) {
-      this.player.on('ended', () => {
-        this.next()
-      })
+    const start = () => {
+      this.render()
+      if (typeof initialIndex == 'number') {
+        this.changeSource(initialIndex)
+      }
+      if (this.options.autoNext) {
+        this.player.on('ended', () => {
+          this.next()
+        })
+      }
     }
+
+
+    const { initialIndex, m3uList, sources } = this.options
 
     if (m3uList && sources[0]?.src) {
       //@ts-ignore
@@ -76,17 +82,17 @@ export default class PlaylistPlugin implements PlayerPlugin {
           parser.push(manifest)
           parser.end()
           this.options.sources = parser.manifest.segments.map((seg: Segment) => {
-            if (m3uList.sourceFormat) {
-              return m3uList.sourceFormat(seg)
+            if ((<any>m3uList)?.sourceFormat) {
+              return (<any>m3uList).sourceFormat(seg)
             }
             return { src: seg.uri, title: seg.title }
           })
+          start()
         })
+    } else {
+      start()
     }
 
-    if (typeof initialIndex == 'number') {
-      this.changeSource(initialIndex)
-    }
 
     return this
   }
@@ -163,9 +169,8 @@ export default class PlaylistPlugin implements PlayerPlugin {
     const $playlist = `
     <div class="playlist-head">
       <span class="playlist-head-title">${this.player.locales.get('PLAYLIST')}</span>
-      <div class="playlist-back">${
-        this.player.context.ui.icons.playlist ||
-        `<svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg>`
+      <div class="playlist-back">${this.player.context.ui.icons.playlist ||
+      `<svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg>`
       }</div>
     </div>
     <div class="playlist-list">
@@ -226,5 +231,5 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.$root.querySelector('.playlist-list')!.innerHTML = child
   }
 
-  destroy() {}
+  destroy() { }
 }
