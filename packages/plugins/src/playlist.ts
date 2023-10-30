@@ -59,6 +59,12 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
     this.player = player as Player<Ctx>
 
+    this._init()
+
+    return this
+  }
+
+  async _init() {
     const start = () => {
       this.render()
       if (typeof initialIndex == 'number') {
@@ -76,7 +82,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     if (m3uList && sources[0]?.src) {
       //@ts-ignore
       if (!PlaylistPlugin.m3u8Parser) PlaylistPlugin.m3u8Parser = await import('m3u8-parser')
-      fetch(sources[0]!.src!)
+      fetch(sources[0].src)
         .then((resp) => resp.text())
         .then((manifest) => {
           const parser = new PlaylistPlugin.m3u8Parser.Parser()
@@ -90,11 +96,12 @@ export default class PlaylistPlugin implements PlayerPlugin {
           })
           start()
         })
+        .catch((err) => {
+          this.player.emit('notice', { pluginName: this.name, text: 'Playlist' + (<Error>err).message })
+        })
     } else {
       start()
     }
-
-    return this
   }
 
   get isWaiting() {
