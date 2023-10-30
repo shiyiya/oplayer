@@ -7,12 +7,21 @@ interface Ctx {
   ui: UIInterface
 }
 
+interface Segment {
+  uri: string
+  timeline: number
+  title: string
+}
+
 export interface PlaylistOptions {
   sources: PlaylistSource[]
   customFetcher?: (source: PlaylistSource, index: number) => Promise<PlaylistSource> | PlaylistSource
   autoNext?: boolean
   autoHide?: boolean
   initialIndex?: number
+  m3uList?: {
+    sourceFormat?: (info: Segment) => Source
+  }
 }
 
 export interface PlaylistSource extends Omit<Source, 'src'> {
@@ -28,6 +37,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
   name = 'oplayer-plugin-playlist'
   version = __VERSION__
 
+  //@ts-expect-error
+  static m3u8Parser = globalThis.m3u8Parser
+
   player!: Player<Ctx>
 
   currentIndex?: number
@@ -40,18 +52,36 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.options = Object.assign({ autoNext: true, autoHide: true }, options)
   }
 
-  apply(player: Player) {
+  async apply(player: Player) {
     if (player.isNativeUI) return
 
     this.player = player as Player<Ctx>
     this.render()
 
-    const { autoNext, initialIndex } = this.options
+    const { autoNext, initialIndex, m3uList, sources } = this.options
 
     if (autoNext) {
       this.player.on('ended', () => {
         this.next()
       })
+    }
+
+    if (m3uList && sources[0]?.src) {
+      //@ts-ignore
+      if (!PlaylistPlugin.m3u8Parser) PlaylistPlugin.m3u8Parser = await import('m3u8-parser')
+      fetch(sources[0]!.src!)
+        .then((resp) => resp.text())
+        .then((manifest) => {
+          const parser = new PlaylistPlugin.m3u8Parser.Parser()
+          parser.push(manifest)
+          parser.end()
+          this.options.sources = parser.manifest.segments.map((seg: Segment) => {
+            if (m3uList.sourceFormat) {
+              return m3uList.sourceFormat(seg)
+            }
+            return { src: seg.uri, title: seg.title }
+          })
+        })
     }
 
     if (typeof initialIndex == 'number') {
