@@ -5,7 +5,7 @@
 [![npm dm](https://img.shields.io/npm/dm/@oplayer/react?style=flat-square)](https://www.npmjs.com/package/@oplayer/react)
 [![jsdelivr](https://data.jsdelivr.com/v1/package/npm/@oplayer/react/badge)](https://www.jsdelivr.com/package/npm/@oplayer/react)
 
-React wrapper for oplayer
+React wrapper for oplayer. (NOT WORKING ON REACT STRICT MODE)
 
 ## Install
 

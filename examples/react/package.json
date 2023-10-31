@@ -12,6 +12,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@oplayer/core": "file:../../packages/core",
     "@oplayer/danmaku": "file:../../packages/danmaku",
     "@oplayer/dash": "file:../../packages/dash",
     "@oplayer/hls": "file:../../packages/hls",
@@ -19,8 +20,8 @@
     "@oplayer/plugins": "file:../../packages/plugins",
     "@oplayer/react": "file:../../packages/react",
     "@oplayer/ui": "file:../../packages/ui",
-    "@types/react": "^18.0.35",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

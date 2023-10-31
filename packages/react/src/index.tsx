@@ -5,6 +5,7 @@ import {
   EffectCallback,
   forwardRef,
   Ref,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -22,91 +23,87 @@ export interface ReactOPlayerProps extends PlayerOptions {
 const ReactOPlayer = forwardRef(
   (props: ReactOPlayerProps & { source?: Source | Promise<Source> }, ref: Ref<Player | null>) => {
     const { playing, duration, aspectRatio = 9 / 16, plugins = [], onEvent, ...rest } = props
-    const { playbackRate, source, muted } = rest
-
-    const $player = useRef<HTMLDivElement>(null)
-    const player = useRef<Player | null>(null)
-
-    const preSource = usePrevious(rest.source)
 
     const onEventRef = useRef(onEvent)
     onEventRef.current = onEvent
 
-    const instance = player.current!
+    const player = useRef<Player | null>(null)
+    const preSource = usePrevious(rest.source)
 
-    useEffectWhere(
-      instance,
+    const isReady = player.current && player.current.$root
+
+    const onRefChange = useCallback((node: HTMLDivElement) => {
+      if (node !== null && !isReady) {
+        player.current = Player.make(node, rest).use(plugins).create()
+        if (typeof duration == 'number') player.current.seek(duration / 1000)
+        if (onEvent) {
+          player.current.on((payload: PlayerEvent) => onEventRef.current?.(payload))
+        }
+      }
+    }, [])
+
+    useEffectIf(
+      isReady,
       () => {
-        if (playing != instance.isPlaying) {
-          if (playing) {
-            instance.play()
-          } else {
-            instance.pause()
-          }
+        if (playing) {
+          if (!player.current!.isPlaying) player.current!.play()
+        } else {
+          if (player.current!.isPlaying) player.current!.pause()
         }
       },
       [playing]
     )
 
-    useEffectWhere(
-      instance,
+    useEffectIf(
+      isReady,
       () => {
         if (
-          (source instanceof Promise && preSource != source) ||
-          (source?.src && preSource?.src !== source.src)
+          (rest.source instanceof Promise && preSource != rest.source) ||
+          (rest.source?.src && preSource?.src !== rest.source.src)
         ) {
-          instance.changeSource(source)
+          player.current!.changeSource(rest.source)
         }
       },
-      [source]
+      [rest.source]
     )
 
-    useEffectWhere(
-      instance,
+    useEffectIf(
+      isReady && typeof duration === 'number',
       () => {
-        if (duration) instance.seek(duration / 1000)
+        player.current!.seek(duration! / 1000)
       },
       [duration]
     )
 
-    useEffectWhere(
-      instance,
+    useEffectIf(
+      isReady,
       () => {
-        if (muted) {
-          instance.mute()
+        if (rest.muted) {
+          player.current!.mute()
         } else {
-          instance.unmute()
+          player.current!.unmute()
         }
       },
-      [muted]
+      [rest.muted]
     )
 
-    useEffectWhere(
-      instance,
+    useEffectIf(
+      isReady,
       () => {
-        instance.setPlaybackRate(playbackRate!)
+        player.current!.setPlaybackRate(rest.playbackRate!)
       },
-      [playbackRate]
+      [rest.playbackRate]
     )
+
+    useEffect(() => {
+      return () => player.current?.destroy()
+    }, [])
 
     useImperativeHandle(ref, () => player.current, [])
 
-    useEffect(() => {
-      if (!$player.current) return
-      player.current = Player.make($player.current, rest).use(plugins).create()
-      if (typeof duration == 'number') player.current.seek(duration / 1000)
-      if (onEvent) {
-        player.current.on((payload: PlayerEvent) => onEventRef.current?.(payload))
-      }
-      return () => {
-        player.current?.destroy()
-        player.current = null
-      }
-    }, [])
-
     return useMemo(() => {
       if (aspectRatio == 0) {
-        return <div ref={$player}></div>
+        return <div ref={onRefChange}></div>
       }
 
       return (
@@ -126,7 +123,7 @@ const ReactOPlayer = forwardRef(
               width: '100%',
               height: '100%'
             }}
-            ref={$player}
+            ref={onRefChange}
           ></div>
         </div>
       )
@@ -134,7 +131,7 @@ const ReactOPlayer = forwardRef(
   }
 )
 
-const useEffectWhere = (where: any, cb: EffectCallback, deps?: DependencyList): void => {
+const useEffectIf = (where: any, cb: EffectCallback, deps?: DependencyList): void => {
   useEffect(() => {
     if (Boolean(where)) {
       return cb()
