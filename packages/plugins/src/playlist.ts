@@ -71,7 +71,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.changeSource(initialIndex)
       }
       if (this.options.autoNext) {
-        this.player.on('ended', () => {
+        this.player.on(['ended', 'error'], () => {
           this.next()
         })
       }
