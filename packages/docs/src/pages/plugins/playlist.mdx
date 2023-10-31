@@ -74,3 +74,56 @@ Player.make('#player')
   ])
   .create()
 ```
+##  methods
+
+```ts
+export default class PlaylistPlugin implements PlayerPlugin {
+    key: string;
+    name: string;
+    version: string;
+    static m3u8Parser: any;
+    player: Player<Ctx>;
+    currentIndex?: number;
+    $root: HTMLDivElement;
+    options: PartialRequired<PlaylistOptions, 'autoNext' | 'autoHide'>;
+    constructor(options?: PlaylistOptions);
+    apply(player: Player): this | undefined;
+    _init(): Promise<void>;
+    get isWaiting(): boolean;
+    changeSource(idx: number): Promise<void>;
+    changeSourceList(sources: PlaylistSource[]): void;
+    next(): void;
+    previous(): void;
+    showUI(): void;
+    hideUI(): void;
+    render(): void;
+    renderList(sources: PlaylistSource[]): void;
+    destroy(): void;
+}
+
+interface Segment {
+    uri: string;
+    timeline: number;
+    title: string;
+}
+
+export interface PlaylistOptions {
+    sources: PlaylistSource[];
+    customFetcher?: (source: PlaylistSource, index: number) => Promise<PlaylistSource> | PlaylistSource;
+    autoNext?: boolean;
+    autoHide?: boolean;
+    initialIndex?: number;
+    m3uList?: {
+        sourceFormat?: (info: Segment) => Source;
+    } | true;
+}
+
+export interface PlaylistSource extends Omit<Source, 'src'> {
+    src?: string;
+    duration?: string;
+    subtitles?: SubtitleSource[];
+    thumbnails?: Thumbnails;
+    highlights?: Highlight[];
+}
+
+```

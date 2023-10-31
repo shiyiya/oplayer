@@ -126,6 +126,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     const { src, poster, format, title, subtitles, thumbnails, highlights } = source
 
     if (!src) return this.player.context.ui.notice('Empty Source')
+    this.currentIndex = idx
 
     this.player
       .changeSource({ src, poster, format, title })
@@ -140,7 +141,6 @@ export default class PlaylistPlugin implements PlayerPlugin {
           this.player.context.ui.changHighlightSource(highlights)
         }
 
-        this.currentIndex = idx
         this.player.emit('playlistsourcechange', { source, id: idx })
         this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
         this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')

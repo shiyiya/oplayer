@@ -11,5 +11,5 @@ import Player from '@oplayer/react'
 import ui from '@oplayer/ui'
 import { vttThumbnails } from '@oplayer/plugins'
 
-Player.make('#player').use([ui(), vttThumbnails]).create()
+Player.make('#player').use([ui(), vttThumbnails({ src:'your-path' })]).create()
 ```
