@@ -7,12 +7,23 @@ interface Ctx {
   ui: UIInterface
 }
 
+interface Segment {
+  uri: string
+  timeline: number
+  title: string
+}
+
 export interface PlaylistOptions {
   sources: PlaylistSource[]
   customFetcher?: (source: PlaylistSource, index: number) => Promise<PlaylistSource> | PlaylistSource
   autoNext?: boolean
   autoHide?: boolean
   initialIndex?: number
+  m3uList?:
+    | {
+        sourceFormat?: (info: Segment) => Source
+      }
+    | true
 }
 
 export interface PlaylistSource extends Omit<Source, 'src'> {
@@ -27,6 +38,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
   key = 'playlist'
   name = 'oplayer-plugin-playlist'
   version = __VERSION__
+
+  //@ts-expect-error
+  static m3u8Parser = globalThis.m3u8Parser
 
   player!: Player<Ctx>
 
@@ -44,21 +58,50 @@ export default class PlaylistPlugin implements PlayerPlugin {
     if (player.isNativeUI) return
 
     this.player = player as Player<Ctx>
-    this.render()
 
-    const { autoNext, initialIndex } = this.options
-
-    if (autoNext) {
-      this.player.on('ended', () => {
-        this.next()
-      })
-    }
-
-    if (typeof initialIndex == 'number') {
-      this.changeSource(initialIndex)
-    }
+    this._init()
 
     return this
+  }
+
+  async _init() {
+    const start = () => {
+      this.render()
+      if (typeof initialIndex == 'number') {
+        this.changeSource(initialIndex)
+      }
+      if (this.options.autoNext) {
+        this.player.on('ended', () => {
+          this.next()
+        })
+      }
+    }
+
+    const { initialIndex, m3uList, sources } = this.options
+
+    if (m3uList && sources[0]?.src) {
+      //@ts-ignore
+      if (!PlaylistPlugin.m3u8Parser) PlaylistPlugin.m3u8Parser = await import('m3u8-parser')
+      fetch(sources[0].src)
+        .then((resp) => resp.text())
+        .then((manifest) => {
+          const parser = new PlaylistPlugin.m3u8Parser.Parser()
+          parser.push(manifest)
+          parser.end()
+          this.options.sources = parser.manifest.segments.map((seg: Segment) => {
+            if ((<any>m3uList)?.sourceFormat) {
+              return (<any>m3uList).sourceFormat(seg)
+            }
+            return { src: seg.uri, title: seg.title }
+          })
+          start()
+        })
+        .catch((err) => {
+          this.player.emit('notice', { pluginName: this.name, text: 'Playlist' + (<Error>err).message })
+        })
+    } else {
+      start()
+    }
   }
 
   get isWaiting() {
