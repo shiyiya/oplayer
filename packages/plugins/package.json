@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/plugins",
-  "version": "1.0.9-playlist.1",
+  "version": "1.0.9-playlist.2",
   "description": "oplayer's plugin",
   "type": "module",
   "main": "dist/index.es.js",
@@ -10,7 +10,9 @@
     "build": "node build-plugins.js && tsc --emitDeclarationOnly"
   },
   "peerDependencies": {
-    "@oplayer/core": ">=1.0.0"
+    "@oplayer/core": ">=1.0.0",
+    "@oplayer/ui": "workspace:*",
+    "m3u8-parser": "^7.1.0"
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
