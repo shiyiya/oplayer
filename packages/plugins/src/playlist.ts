@@ -14,7 +14,7 @@ interface Segment {
 }
 
 export interface PlaylistOptions {
-  sources: PlaylistSource[]
+  sources?: PlaylistSource[]
   customFetcher?: (source: PlaylistSource, index: number) => Promise<PlaylistSource> | PlaylistSource
   autoNext?: boolean
   autoHide?: boolean
@@ -48,10 +48,10 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   $root!: HTMLDivElement
 
-  options: PartialRequired<PlaylistOptions, 'autoNext' | 'autoHide'>
+  options: PartialRequired<PlaylistOptions, 'autoNext' | 'autoHide' | 'sources'>
 
   constructor(options?: PlaylistOptions) {
-    this.options = Object.assign({ autoNext: true, autoHide: true }, options)
+    this.options = Object.assign({ autoNext: true, autoHide: true, sources: [] }, options)
   }
 
   apply(player: Player) {
