@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/plugins",
-  "version": "1.0.9-playlist.0",
+  "version": "1.0.9-playlist.1",
   "description": "oplayer's plugin",
   "type": "module",
   "main": "dist/index.es.js",

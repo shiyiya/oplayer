@@ -4,5 +4,9 @@
     "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["src", "../../global.d.ts"]
+  "include": [
+    "src",
+    "index.ts",
+    "../../global.d.ts"
+  ]
 }
