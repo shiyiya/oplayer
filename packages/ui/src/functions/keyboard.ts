@@ -64,9 +64,14 @@ export default function (it: UIInterface) {
   function keydown(e: KeyboardEvent) {
     if (
       document.activeElement?.tagName == 'INPUT' ||
+      document.activeElement?.tagName == 'TEXTAREA' ||
       document.activeElement?.getAttribute('contenteditable') ||
       (!config.keyboard?.global && !config.keyboard?.focused) ||
-      (config.keyboard.focused && !isFocused(player))
+      (config.keyboard.focused && !isFocused(player)) ||
+      !e.altKey ||
+      !e.ctrlKey ||
+      !e.metaKey ||
+      !e.shiftKey
     ) {
       return
     }
