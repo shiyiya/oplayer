@@ -5,7 +5,7 @@ npm i @oplayer/plugins
 ```
 
 ```js
-import { PlaylistPlugin, vttThumbnails, chormecast, ad } from '@oplayer/plugins'
+import { PlaylistPlugin, vttThumbnails, chromecast, ad } from '@oplayer/plugins'
 ```
 
 ```html
@@ -18,8 +18,8 @@ import { PlaylistPlugin, vttThumbnails, chormecast, ad } from '@oplayer/plugins'
 <!-- VTT Thumbnails -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/vttThumbnails.min.js"></script>
 
-<!-- Chormecast -->
-<script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chormecast.min.js"></script>
+<!-- Chromecast -->
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js"></script>
 
 <!-- AD -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/ad.min.js"></script>
@@ -86,6 +86,14 @@ player.context.playlist.changeSourceList([]) //change playlist sources
 
 ![](./vtt.png)
 
-### Chormecast
+```js
+Player.make('#oplayer')
+  .use([vttThumbnails({ src: 'your-file-path' })])
+  .create()
+```
+
+### Chromecast
+
+Player.make('#oplayer').use([chromecast]).create()
 
 ### AD

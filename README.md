@@ -16,9 +16,9 @@
 
 ## Who use OPlayer?
 
+- [UPV](https://onime.netlify.app) : free anime no ad
 - [NGEWIBU.TV](https://ngewibu.tv/) : Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
 - [Animex](https://www.animex.live/) : Watch Anime for free in HD quality with English subbed or dubbed.
-- [UPV](https://onime.netlify.app) : free animes no ad
 - **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/new?category=show-and-tell)**
 
 ## Feature
@@ -33,10 +33,10 @@
   - Danmaku
   - Screenshot
   - Hotkeys
-  - Thumbnails (spirit or vtt)
+  - Thumbnails (spirit or [vtt](https://oplayer.vercel.app/plugins/vtt-thumbnails))
   - Subtitles (formats: SRT, WEBVTT with HTML tags support; subtitles from HLS; multiple subtitles for video)
-  - Highlight Marker
-  - [Playlist](./packages/plugins/README.md#playlist)
+  - [Chromecast](https://oplayer.vercel.app/plugins/chromecast)
+  - [Playlist](https://oplayer.vercel.app/plugins/playlist)
   - ... and much more!
 
 ## Support
