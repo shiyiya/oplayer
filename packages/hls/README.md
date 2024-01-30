@@ -93,3 +93,25 @@ export interface HlsPluginOptions {
   textControl?: boolean
 }
 ```
+
+## Handle Hls.js Error **v1.2.24.beta.0+**
+
+```ts
+OPlayer.make('#oplayer', {
+  source: {
+    src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+    poster: 'https://oplayer.vercel.app/poster.png'
+  }
+})
+  .use([
+    OHls({
+      errorHandler(player, data, cb) {
+        // skip bufferAppendError
+        if (data.details == 'bufferAppendError') return
+
+        cb(player, data)
+      }
+    })
+  ])
+  .create()
+```

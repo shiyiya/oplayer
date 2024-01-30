@@ -1,18 +1,25 @@
 import type { Player, PlayerPlugin, RequiredPartial, Source } from '@oplayer/core'
-import Hls from 'hls.js'
-import type { HlsConfig, LevelSwitchedData } from 'hls.js'
+import type Hls from 'hls.js'
+import type { ErrorData, HlsConfig, LevelSwitchedData } from 'hls.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
-// active inactive
 export type Active = (instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void
 
 export interface HlsPluginOptions {
   matcher?: Matcher
+
   /**
-   * active or inactive(returned fn)
+   * custom handle hls fatal error
+   * @param {Events}
+   * @param {ErrorData}
+   * @returns {boolean}
+   */
+  errorHandler?: (player: Player, data: ErrorData, cb: typeof defaultErrorHandler) => void
+  /**
+   * active
    *
    * @type {Active}
    */
@@ -69,6 +76,14 @@ const defaultMatcher: Matcher = (video, source, forceHLS) => {
   )
 }
 
+const defaultErrorHandler = (player: Player, data: ErrorData) => {
+  if (data.fatal) {
+    const { type, details } = data
+    player.hasError = true
+    player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
+  }
+}
+
 class HlsPlugin implements PlayerPlugin {
   key = 'hls'
   name = PLUGIN_NAME
@@ -80,7 +95,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive'> = {
+  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive' | 'errorHandler'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -108,7 +123,7 @@ class HlsPlugin implements PlayerPlugin {
 
     if (!HlsPlugin.library.isSupported()) return false
 
-    const { config, active } = this.options
+    const { config, active, errorHandler } = this.options
 
     this.instance = new HlsPlugin.library(config)
 
@@ -121,11 +136,10 @@ class HlsPlugin implements PlayerPlugin {
     instance.loadSource(source.src)
     instance.attachMedia($video)
     instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
-      const { type, details, fatal } = data
-
-      if (fatal) {
-        player.hasError = true
-        player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
+      if (errorHandler) {
+        errorHandler(player, data, defaultErrorHandler)
+      } else {
+        defaultErrorHandler(player, data)
       }
     })
 
