@@ -62,6 +62,7 @@ const render = (it: UIInterface) => {
         debounceHideCtrl()
       }
     })
+    if (config.ctrlHideBehavior == 'delay') player.$root.addEventListener('mouseleave', debounceHideCtrl)
     if (config.ctrlHideBehavior == 'hover') player.$root.addEventListener('mouseleave', hideCtrl)
   }
 
