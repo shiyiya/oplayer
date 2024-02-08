@@ -111,20 +111,17 @@ const player = Player.make<Ctx>('#player', {
       m3uList: {
         sourceFormat(info) {
           const chunk = info.title.substring(3).split(' ')
-          const titleWith = chunk.find(it => it.includes('title')).split('=')[1]
-          const posterWith = chunk.find(it => it.includes('logo'))?.split('=')[1]
+          const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
+          const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
           return {
             src: info.uri,
             format: 'm3u8',
             title: titleWith.substring(1, titleWith.length),
-            poster: posterWith?.substring(1, posterWith.length),
+            poster: posterWith?.substring(1, posterWith.length)
           }
-        },
+        }
       },
       sources: [
-        {
-          src: 'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/global.m3u'
-        },
         {
           title: '君の名は - MP4',
           poster: POSTER,
@@ -245,18 +242,18 @@ const actions = () => html`<p style="display:flex;">
 
     <button
       @click=${() => {
-    src =
-      VIDEO_LIST[
-      currentDataSrcId + 1 >= VIDEO_LIST.length ? (currentDataSrcId = 0) : (currentDataSrcId += 1)
-      ]!
+        src =
+          VIDEO_LIST[
+            currentDataSrcId + 1 >= VIDEO_LIST.length ? (currentDataSrcId = 0) : (currentDataSrcId += 1)
+          ]!
 
-    player.changeSource(
-      new Promise<Source>((r) => {
-        stopLoad()
-        r({ src })
-      })
-    )
-  }}
+        player.changeSource(
+          new Promise<Source>((r) => {
+            stopLoad()
+            r({ src })
+          })
+        )
+      }}
     >
       Queue
     </button>

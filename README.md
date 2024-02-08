@@ -13,6 +13,9 @@
 
 - https://oplayer.vercel.app
 - https://ohplayer.netlify.app
+- Quick Start
+  - https://ohplayer.netlify.app/ohls.html?src=https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+  - https://oplayer.vercel.app/ohls.html?src=https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
 
 ## Who use OPlayer?
 

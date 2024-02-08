@@ -81,7 +81,7 @@
       } else {
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
-        playlist = JSON.parse(safeDecodeURIComponent(search.get('playlist')) || [])
+        playlist = JSON.parse(safeDecodeURIComponent(search.get('playlist')) || '[]')
         poster = safeDecodeURIComponent(search.get('poster'))
         title = safeDecodeURIComponent(search.get('title'))
         danmaku = safeDecodeURIComponent(search.get('danmaku'))

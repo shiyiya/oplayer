@@ -95,7 +95,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive' | 'errorHandler'> = {
+  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -103,7 +103,8 @@ class HlsPlugin implements PlayerPlugin {
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher
+    matcher: defaultMatcher,
+    errorHandler: defaultErrorHandler
   }
 
   constructor(options?: HlsPluginOptions) {
@@ -136,11 +137,7 @@ class HlsPlugin implements PlayerPlugin {
     instance.loadSource(source.src)
     instance.attachMedia($video)
     instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
-      if (errorHandler) {
-        errorHandler(player, data, defaultErrorHandler)
-      } else {
-        defaultErrorHandler(player, data)
-      }
+      errorHandler(player, data, defaultErrorHandler)
     })
 
     if (player.context.ui?.setting) {
@@ -158,7 +155,7 @@ class HlsPlugin implements PlayerPlugin {
     if (this.instance) {
       // prettier-ignore
       const { player, instance, options: { inactive } } = this
-      if (inactive) inactive(instance!, HlsPlugin.library)
+      if (inactive) inactive(instance, HlsPlugin.library)
       if (player.context.ui?.setting) removeSetting(player)
       instance.destroy()
     }
