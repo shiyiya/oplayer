@@ -58,5 +58,10 @@
     "vite": "^4.5.2",
     "vite-plugin-banner": "^0.7.1",
     "vitest": "^0.31.4"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "nextra@2.13.3": "patches/nextra@2.13.3.patch"
+    }
   }
 }
