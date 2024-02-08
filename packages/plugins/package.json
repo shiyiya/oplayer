@@ -17,11 +17,11 @@
   "devDependencies": {
     "@oplayer/core": "workspace:*",
     "@oplayer/ui": "workspace:*",
-    "@types/chromecast-caf-sender": "^1.0.7",
-    "chokidar": "^3.5.3",
+    "@types/chromecast-caf-sender": "^1.0.8",
+    "chokidar": "^3.6.0",
     "glob": "^10.3.10",
-    "vite-plugin-css-injected-by-js": "^3.3.0",
-    "m3u8-parser": "^7.1.0"
+    "m3u8-parser": "^7.1.0",
+    "vite-plugin-css-injected-by-js": "^3.4.0"
   },
   "keywords": [],
   "author": "",
