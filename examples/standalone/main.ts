@@ -23,11 +23,10 @@ import vercel from '../../packages/docs/public/vercel.svg'
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU, highlight, VIDEO_LIST } from './constants'
 import emptyBuffer from './emptyBuffer'
-import { Hello, vttThumbnails, ad, PlaylistPlugin } from '@oplayer/plugins'
+import { vttThumbnails, ad, PlaylistPlugin } from '@oplayer/plugins'
 
 interface Ctx {
   ui: ReturnType<typeof ui>
-  hello: Hello
   hls: ReturnType<typeof hls>
   dash: ReturnType<typeof dash>
   mpegts: ReturnType<typeof mpegts>
@@ -105,22 +104,21 @@ const player = Player.make<Ctx>('#player', {
       // displaySender: true,
       source: DANMAKU //SUPER_DANMAKU
     }),
-    new Hello(),
     new PlaylistPlugin({
       initialIndex: 0,
-      m3uList: {
-        sourceFormat(info) {
-          const chunk = info.title.substring(3).split(' ')
-          const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
-          const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
-          return {
-            src: info.uri,
-            format: 'm3u8',
-            title: titleWith.substring(1, titleWith.length),
-            poster: posterWith?.substring(1, posterWith.length)
-          }
-        }
-      },
+      // m3uList: {
+      //   sourceFormat(info) {
+      //     const chunk = info.title.substring(3).split(' ')
+      //     const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
+      //     const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
+      //     return {
+      //       src: info.uri,
+      //       format: 'm3u8',
+      //       title: titleWith.substring(1, titleWith.length),
+      //       poster: posterWith?.substring(1, posterWith.length)
+      //     }
+      //   }
+      // },
       sources: [
         {
           title: '君の名は - MP4',
@@ -135,7 +133,7 @@ const player = Player.make<Ctx>('#player', {
             {
               name: 'Default',
               default: true,
-              src: SRT,
+              src: SRT, //'https://mentoor-st.s3.ir-thr-at1.arvanstorage.ir/media/courses/videos/a220374676eb40e4/001f4770a44497047661e446/subtitle/001f4770a44497047661e446_subtitle.srt', //SRT,
               offset: 2
             },
             {
@@ -165,10 +163,6 @@ const player = Player.make<Ctx>('#player', {
     })
   ])
   .create()
-
-// setTimeout(() => {
-//   player.changeQuality(Promise.resolve({ src, title: '君の名は' }))
-// }, 1000)
 
 //@ts-ignore
 if (false) {
@@ -213,10 +207,6 @@ player.context.ui?.menu.register(<MenuBar>{
       })
   }
 })
-
-console.log(player.context)
-
-player.context.hello.say()
 
 function stopLoad() {
   player.loader?.destroy()

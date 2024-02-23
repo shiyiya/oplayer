@@ -1,4 +1,4 @@
-import type { Player, PlayerEvent } from '@oplayer/core'
+import type { Player } from '@oplayer/core'
 import { $ } from '@oplayer/core'
 import { error } from '../style'
 import { ErrorPayload, UiConfig } from '../types'
@@ -30,13 +30,6 @@ const VIDEO_ERROR_MAP = {
 }
 
 const render = (player: Player, el: HTMLElement, config: UiConfig) => {
-  if (config.errorBuilder) {
-    player.on('error', ({ payload }: PlayerEvent) => {
-      config.errorBuilder!(payload)
-    })
-    return
-  }
-
   const $dom = $.render($.create(`div.${errorCls}`, { 'aria-label': 'Error Overlay' }), el)
 
   function show(payload: ErrorPayload) {
@@ -70,8 +63,16 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     $dom.innerText = ''
   }
 
+  const cx = (payload: ErrorPayload) => {
+    if (config.errorBuilder) {
+      config.errorBuilder!(payload, $dom, () => show(payload))
+    } else {
+      show(payload)
+    }
+  }
+
   player.on(['videosourcechange', 'videoqualitychange'], clear)
-  player.on('error', ({ payload }) => show(payload))
+  player.on('error', ({ payload }) => cx(payload))
 
   return show
 }

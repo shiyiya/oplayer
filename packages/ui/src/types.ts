@@ -50,7 +50,7 @@ export type Setting<T = any> = {
   type: 'selector' | 'switcher'
   icon?: string
   children?: Setting[]
-  onChange?: (a: T /* Setting | boolean */, b?: { index: number, player: Player }) => void | Promise<void>
+  onChange?: (a: T /* Setting | boolean */, b?: { index: number; player: Player }) => void | Promise<void>
   default?: any
   value?: T
 }
@@ -165,7 +165,7 @@ export type UiConfig = {
 
   menu?: MenuBar[]
 
-  errorBuilder?: (error: Error | Event | { code: number; message: string }) => void
+  errorBuilder?: (error: ErrorPayload, target: HTMLDivElement, cb: () => void) => void
 
   icons?: {
     play?: string
@@ -191,9 +191,9 @@ export type UiConfig = {
 export type ErrorPayload =
   | Event
   | {
-    message: string
-    code?: number
-  }
+      message: string
+      code?: number
+    }
 
 export interface UIInterface extends PlayerPlugin {
   config: UiConfig

@@ -68,10 +68,10 @@ export default function (it: UIInterface) {
       document.activeElement?.getAttribute('contenteditable') ||
       (!config.keyboard?.global && !config.keyboard?.focused) ||
       (config.keyboard.focused && !isFocused(player)) ||
-      !e.altKey ||
-      !e.ctrlKey ||
-      !e.metaKey ||
-      !e.shiftKey
+      e.altKey ||
+      e.ctrlKey ||
+      e.metaKey ||
+      e.shiftKey
     ) {
       return
     }

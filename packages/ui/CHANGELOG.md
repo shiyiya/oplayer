@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.35.beta-2]
+
+- fix keyboard (fn).
+- improve custom errorBuilder.
+
 ## [1.2.34-beta.1]
 
 - try fix subtitle not working.
