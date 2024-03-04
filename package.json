@@ -31,18 +31,18 @@
     "lint": "prettier -w ./packages/*/**/*.ts"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
+    "@babel/core": "^7.24.0",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-destructuring": "^7.23.3",
     "@babel/plugin-transform-logical-assignment-operators": "^7.23.4",
     "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
-    "@babel/plugin-transform-object-rest-spread": "^7.23.4",
+    "@babel/plugin-transform-object-rest-spread": "^7.24.0",
     "@babel/plugin-transform-parameters": "^7.23.3",
     "@babel/plugin-transform-spread": "^7.23.3",
     "@babel/plugin-transform-template-literals": "^7.23.3",
     "@changesets/cli": "^2.27.1",
     "@rollup/plugin-babel": "^6.0.4",
-    "@types/node": "^18.19.14",
+    "@types/node": "^18.19.21",
     "@vitejs/plugin-react": "^4.2.1",
     "babel-plugin-syntax-trailing-function-commas": "^6.22.0",
     "concurrently": "^8.2.2",
@@ -52,7 +52,7 @@
     "nx": "^16.10.0",
     "prettier": "^2.8.8",
     "rimraf": "^5.0.5",
-    "terser": "^5.27.0",
+    "terser": "^5.28.1",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3",
     "vite": "^4.5.2",
@@ -61,7 +61,7 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "nextra@2.13.3": "patches/nextra@2.13.3.patch"
+      "nextra@2.13.4": "patches/nextra@2.13.4.patch"
     }
   }
 }

@@ -20,14 +20,14 @@
     "@oplayer/ui": "workspace:*",
     "mdx-embed": "^1.1.2",
     "next": "^13.5.6",
-    "nextra": "^2.13.3",
-    "nextra-theme-docs": "^2.13.3",
+    "nextra": "^2.13.4",
+    "nextra-theme-docs": "^2.13.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
+    "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
-    "sass": "^1.70.0"
+    "sass": "^1.71.1"
   }
 }

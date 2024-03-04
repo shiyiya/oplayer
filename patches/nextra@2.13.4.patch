@@ -1,0 +1,12 @@
+diff --git a/dist/mdx-plugins/remark-replace-imports.mjs b/dist/mdx-plugins/remark-replace-imports.mjs
+index 2d1bd6cf632116dd71c2f38d627b5d5248e3f4be..5244bad5770a40cb0eded70088ac20a5117d4104 100644
+--- a/dist/mdx-plugins/remark-replace-imports.mjs
++++ b/dist/mdx-plugins/remark-replace-imports.mjs
+@@ -6,6 +6,7 @@ var remarkReplaceImports = () => {
+   return (tree, _file, done) => {
+     visit(tree, "mdxjsEsm", (node) => {
+       const { source } = node.data.estree.body[0];
++      if (!source) return;
+       const absolutePath = require2.resolve(source.value);
+       source.value = absolutePath;
+       source.raw = `"${absolutePath}"`;
