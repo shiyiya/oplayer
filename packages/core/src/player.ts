@@ -255,7 +255,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   play() {
-    if (!this.$video.src || this.isSourceChanging) return
+    if ((!this.$video.src && !this.$video.currentSrc) || this.isSourceChanging) return
     if (this.options.autopause) {
       for (let i = 0; i < Player.players.length; i++) {
         const player = Player.players[i]

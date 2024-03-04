@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.35]
+
+- release.
+
 ## [1.2.35.beta-2]
 
 - fix keyboard (fn).

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.32]
+
+- Fix the video src is empty when hls video with external subtitle and can't be played. Close #114.
+
 ## [1.2.28]
 
 - fix initial playback rate not working
