@@ -81,6 +81,7 @@ class DashPlugin implements PlayerPlugin {
 
   apply(player: Player) {
     this.player = player
+    return this
   }
 
   async load({ $video }: Player, source: Source) {

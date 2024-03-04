@@ -48,6 +48,7 @@ class MpegtsPlugin implements PlayerPlugin {
 
   apply(player: Player) {
     this.player = player
+    return this
   }
 
   async load({ $video, options }: Player, source: Source) {
