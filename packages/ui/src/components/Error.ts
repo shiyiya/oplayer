@@ -65,7 +65,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
 
   const cx = (payload: ErrorPayload) => {
     if (config.errorBuilder) {
-      config.errorBuilder!(payload, $dom, () => show(payload))
+      config.errorBuilder!(payload, $dom, (customPayload: ErrorPayload) => show(customPayload))
     } else {
       show(payload)
     }

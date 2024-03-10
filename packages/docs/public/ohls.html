@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="no-referrer" />
     <title>Start streaming now using OPlayer - Free HTML5 Player</title>
-    <meta name="keywords" content="hls player,online hls player" />
+    <meta name="keywords" content="oplayer,hls player,online hls player" />
     <style>
       body {
         margin: 0;
@@ -70,6 +70,7 @@
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
       var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
+      var chromecastScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js'
 
       var query = document.location.search.substring(1)
       var src, poster, subtitle, danmaku, title, watermark
@@ -114,15 +115,30 @@
           : undefined
       }
 
-      var deps = []
       var plugins = [
         OUI({
           keyboard: { global: true },
           slideToSeek: 'always',
           controlBar: { back: 'fullscreen' },
           theme: { watermark },
-          subtitle
+          subtitle,
+          errorBuilder(e, t, builder) {
+            builder({
+              ...e,
+              message:
+                e.message + '\n' + 'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
+            })
+          }
         })
+      ]
+
+      var deps = [
+        [
+          chromecastScriptCdn,
+          () => {
+            plugins.push(OChromecast)
+          }
+        ]
       ]
 
       if (/m3u8(#|\?|$)/.test(src) || playlist.some((it) => /m3u8(#|\?|$)/.test(it))) {
@@ -179,11 +195,11 @@
           localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
         })
 
-        player.on('timeupdate', () => {
-          localStorage.setItem(src, player.currentTime.toString())
-        })
-
         if (src) {
+          player.on('timeupdate', () => {
+            localStorage.setItem(src, player.currentTime.toString())
+          })
+
           var prevTime = localStorage.getItem(src)
           if (prevTime) {
             player.on('loadedmetadata', () => {
@@ -197,7 +213,7 @@
           var $op = document.querySelector('#oplayer')
           // not in iframe
           if (window.self == window.top && $op.clientWidth > 960) {
-            $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '22px' : '20px'
+            $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '24px' : '20px'
           }
         })
       }

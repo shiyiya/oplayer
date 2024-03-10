@@ -68,10 +68,10 @@ export const switcherCls = $.css({
   '&:before': {
     position: 'absolute',
     content: '""',
-    height: '16px',
-    width: '16px',
-    left: '4px',
-    bottom: '3px',
+    height: '1em',
+    width: '1em',
+    left: '0.25em',
+    bottom: '0.1875em',
     'background-color': 'white',
     transition: '.3s',
     'border-radius': '50%'
@@ -80,8 +80,8 @@ export const switcherCls = $.css({
 
 export const switcherContainer = $.css(`
   position: relative;
-  width: 40px;
-  height: 22px;
+  width: 2.5em;
+  height: 1.375em;
 `)
 
 // `selectedText` >
@@ -117,7 +117,7 @@ export const settingItemCls = $.css({
     [`& .${switcherCls}`]: {
       'background-color': 'var(--primary-color)',
 
-      '&:before': { transform: 'translateX(16px)' }
+      '&:before': { transform: 'translateX(1em)' }
     }
   }
 })

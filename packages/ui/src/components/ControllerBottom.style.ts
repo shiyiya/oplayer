@@ -124,7 +124,7 @@ export const controllers = $.css({
     {
       width: '2em',
       height: isMobile ? 'auto' : '2em',
-      'margin-right': '6px',
+      'margin-right': '0.5em',
       'justify-content': 'center',
       'align-items': 'center',
       display: 'inline-flex',

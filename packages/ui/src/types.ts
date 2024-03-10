@@ -165,7 +165,7 @@ export type UiConfig = {
 
   menu?: MenuBar[]
 
-  errorBuilder?: (error: ErrorPayload, target: HTMLDivElement, cb: () => void) => void
+  errorBuilder?: (error: ErrorPayload, target: HTMLDivElement, cb: (error: ErrorPayload) => void) => void
 
   icons?: {
     play?: string
