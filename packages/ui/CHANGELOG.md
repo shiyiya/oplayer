@@ -2,8 +2,11 @@
 
 ## UnRelease
 
-- any px -> rem
-- ErrorBuilder custom params
+- any px -> rem.
+- ErrorBuilder custom params.
+- add keyboard.
+  - k: play | pause
+  - m: mute | unmute
 
 ## [1.2.35]
 

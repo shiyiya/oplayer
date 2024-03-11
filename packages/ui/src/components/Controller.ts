@@ -35,7 +35,7 @@ const render = (it: UIInterface) => {
     }
     addClass(player.$root, controllerHidden)
     player.$root.setAttribute(DATA_CONTROLLER_HIDDEN, 'true')
-    player.emit('controllervisibilitychange', false)
+    player.emit('controlshidden', false)
   }
 
   const { callee: debounceHideCtrl, clear: cancelHideCtrl } = debounce(hideCtrl, CTRL_HIDE_DELAY)
@@ -45,7 +45,7 @@ const render = (it: UIInterface) => {
     if (hasClass(player.$root, controllerHidden)) {
       removeClass(player.$root, controllerHidden)
       player.$root.setAttribute(DATA_CONTROLLER_HIDDEN, 'false')
-      player.emit('controllervisibilitychange', true)
+      player.emit('controlsshown', true)
     }
   }
 

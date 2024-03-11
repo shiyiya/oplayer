@@ -42,6 +42,7 @@ const KEY_FN: Record<string, (player: Player) => void> = {
   },
 
   ' ': (player: Player) => player.togglePlay(),
+  k: (player: Player) => player.togglePlay(),
 
   Escape: (player: Player) => {
     if (player.isFullScreen) {
@@ -55,7 +56,9 @@ const KEY_FN: Record<string, (player: Player) => void> = {
 
   w: (player: Player) => player.emit('fullscreenchange', { isWeb: true }),
 
-  s: screenShot
+  s: screenShot,
+
+  m: (player: Player) => (player.isMuted ? player.unmute() : player.mute())
 }
 
 export default function (it: UIInterface) {
