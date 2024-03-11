@@ -21,15 +21,14 @@
 
       var vConsole = new window.VConsole()
 
-      var player = OPlayer.make('#oplayer', {
-        source: {
-          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
-          // poster: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif'
-        }
-      })
-        .use([OUI(), OHls({ forceHLS: search.get('fh') })])
+      var player = OPlayer.make('#oplayer', { source: { src } })
+        .use([OUI(), OHls({ forceHLS: true })])
         .create()
-        .on(console.log)
+        .on(({ type }) => {
+          if (['timeupdate', 'controllervisibilitychange'].includes(type)) {
+            console.log(type)
+          }
+        })
     </script>
   </body>
 </html>
