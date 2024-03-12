@@ -1,5 +1,6 @@
-import webtorrent from 'webtorrent/dist/webtorrent.min.js'
+import webtorrent from 'webtorrent/webtorrent.min.js'
 import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import type Webtorrent from 'webtorrent'
 
 export type PluginOptions = {
   config?: Record<string, any>
@@ -17,7 +18,7 @@ class TorrentPlugin implements PlayerPlugin {
 
   player!: Player
 
-  instance: any
+  instance: Webtorrent.Instance
 
   prePreload?: HTMLMediaElement['preload']
 
@@ -36,13 +37,66 @@ class TorrentPlugin implements PlayerPlugin {
     if (!webtorrent.WEBRTC_SUPPORT) return false
 
     this.prePreload ??= $video.preload
-    this.instance = new webtorrent(config)
+    const instance: Webtorrent.Instance = (this.instance = new webtorrent(config))
     $video.preload = 'metadata'
 
+    instance.on('error', (err) => {
+      this.player.emit('error', {
+        message: (<Error>err)?.message || err,
+        pluginName: 'oplayer-plugin-torrent'
+      })
+    })
+
     //TODO: source list
-    this.instance.add(source.src, (torrent: any) => {
-      const file = torrent.files.find((file: any) => file.name.endsWith('.mp4'))
-      file.renderTo($video, { autoplay: $video.autoplay, controls: false })
+    instance.add(source.src, (torrent) => {
+      const emit = () => {
+        this.player.emit('notice', {
+          pos: 'right',
+          text: `Size:${(torrent.length / 1000000).toFixed(1)}MB Peers:${torrent.numPeers} Progress:${(
+            100 * torrent.progress
+          ).toFixed(1)}% D:${(instance.downloadSpeed / 1000).toFixed(2)}Kb/s U:${(
+            instance.uploadSpeed / 1000
+          ).toFixed(2)}Kb/s`
+        })
+      }
+
+      torrent.on('download', emit)
+      torrent.on('upload', emit)
+
+      let foundMp4 = false
+      let subtitlePromise: Promise<any>[] = []
+
+      torrent.files.forEach((file) => {
+        if (!foundMp4 && file.name.endsWith('.mp4') && file.renderTo) {
+          foundMp4 = true
+          file.renderTo($video, {
+            autoplay: $video.autoplay,
+            controls: false,
+            maxBlobLength: 2 * 1024 * 1000 * 1000 // 2 GB
+          })
+        } else if (file.name.endsWith('.srt')) {
+          subtitlePromise.push(
+            new Promise((resolve) => {
+              file.getBlobURL((err, url) => {
+                if (err) return
+                resolve({
+                  name: file.name,
+                  src: url
+                })
+              })
+            })
+          )
+        } else if (file.name.startsWith('poster')) {
+          file.getBlobURL((err, url) => {
+            if (err || !url) return
+            $video.poster = url
+          })
+        }
+      })
+
+      Promise.all(subtitlePromise).then((subtitles) => {
+        this.player.context.ui?.subtitle.changeSource(subtitles)
+      })
     })
 
     return this

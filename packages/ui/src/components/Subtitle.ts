@@ -62,10 +62,9 @@ export class Subtitle {
     this.setting?.unregister(SETTING_KEY)
     this.processDefault(payload)
     const next = () => {
-      this.fetchSubtitle()?.then(() => {
-        this.player.emit('subtitlesourcechange', payload)
-        this.loadSetting()
-      })
+      this.loadSetting()
+      this.player.emit('subtitlesourcechange', payload)
+      this.fetchSubtitle()
     }
     if (this.player.isSourceChanging || isNaN(this.player.duration) || this.player.duration < 1) {
       this.player.once('loadedmetadata', next)
@@ -250,7 +249,6 @@ export class Subtitle {
         this.$track.addEventListener(
           'load',
           () => {
-
             this.changeOffset()
             this.show()
           },

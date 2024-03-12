@@ -64,7 +64,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     return this
   }
 
-  _init() {
+  async _init() {
     const start = () => {
       this.render()
       if (typeof initialIndex == 'number') {

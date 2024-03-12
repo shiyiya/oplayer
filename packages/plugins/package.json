@@ -11,7 +11,7 @@
   },
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0",
-    "@oplayer/ui": "workspace:*",
+    "@oplayer/ui": ">=1.0.0",
     "m3u8-parser": "^7.1.0"
   },
   "devDependencies": {

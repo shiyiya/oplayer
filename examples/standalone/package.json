@@ -23,6 +23,6 @@
     "dashjs": "^4.6.0",
     "hls.js": "^1.4.0",
     "lit": "^2.7.2",
-    "webtorrent": "^2.0.16"
+    "webtorrent": "1.9.7"
   }
 }

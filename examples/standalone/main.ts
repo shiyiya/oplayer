@@ -100,20 +100,13 @@ const player = Player.make<Ctx>('#player', {
     }),
     new PlaylistPlugin({
       initialIndex,
-      // m3uList: {
-      //   sourceFormat(info) {
-      //     const chunk = info.title.substring(3).split(' ')
-      //     const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
-      //     const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
-      //     return {
-      //       src: info.uri,
-      //       format: 'm3u8',
-      //       title: titleWith.substring(1, titleWith.length),
-      //       poster: posterWith?.substring(1, posterWith.length)
-      //     }
-      //   }
-      // },
       sources: [
+        {
+          title: 'webtorrent - MP4 + subtitle + poster',
+          src: 'https://webtorrent.io/torrents/sintel.torrent',
+          // 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent',
+          poster: 'https://api.imlazy.ink/img?webtorrent'
+        },
         {
           title: 'HLS with default SRT subtitle',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
@@ -168,6 +161,19 @@ const player = Player.make<Ctx>('#player', {
           duration: '00:17'
         }
       ]
+      // m3uList: {
+      //   sourceFormat(info) {
+      //     const chunk = info.title.substring(3).split(' ')
+      //     const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
+      //     const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
+      //     return {
+      //       src: info.uri,
+      //       format: 'm3u8',
+      //       title: titleWith.substring(1, titleWith.length),
+      //       poster: posterWith?.substring(1, posterWith.length)
+      //     }
+      //   }
+      // },
     })
   ])
   .create()
@@ -193,7 +199,7 @@ render(actions(), document.getElementById('actions')!)
 player.on((e: PlayerEvent) => {
   render(actions(), document.getElementById('actions')!)
 
-  if ('timeupdate' == e.type) {
+  if ('timeupdate' == e.type || 'notice' === e.type) {
     return
   }
 
