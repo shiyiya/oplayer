@@ -64,7 +64,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     return this
   }
 
-  async _init() {
+  _init() {
     const start = () => {
       this.render()
       if (typeof initialIndex == 'number') {
@@ -108,46 +108,62 @@ export default class PlaylistPlugin implements PlayerPlugin {
     return this.$root.classList.contains('wait')
   }
 
-  async changeSource(idx: number) {
+  changeSource(idx: number) {
     if (!this.options.sources[idx] || this.isWaiting) return
 
+    const $target = this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)
+
     this.$root.classList.add('wait')
-    let source: PlaylistSource = this.options.sources[idx]!
-    if (!source.src && this.options.customFetcher) {
-      try {
-        source = await this.options.customFetcher?.(source, idx)
-      } catch (e) {
-        // fail
-        this.$root.classList.remove('wait')
+    $target?.classList.add('progress')
+
+    const source: PlaylistSource = this.options.sources[idx]!
+
+    return new Promise<PlaylistSource>((resolve) => {
+      if (!source.src && this.options.customFetcher) {
+        resolve(this.options.customFetcher?.(source, idx))
         return
       }
-    }
+      resolve(source)
+    })
+      .then((source) => {
+        if (!source.src) {
+          this.player.context.ui.notice('Empty Source')
+          throw new Error('Empty Source')
+        }
 
-    const { src, poster, format, title, subtitles, thumbnails, highlights } = source
+        const { src, poster, format, title, subtitles, thumbnails, highlights } = source
 
-    if (!src) return this.player.context.ui.notice('Empty Source')
-    this.currentIndex = idx
-
-    this.player
-      .changeSource({ src, poster, format, title })
+        return this.player.changeSource({ src, poster, format, title }).then(() => {
+          if (subtitles) {
+            this.player.context.ui.subtitle.changeSource(subtitles)
+          }
+          if (thumbnails) {
+            this.player.context.ui.changThumbnails(thumbnails)
+          }
+          if (highlights) {
+            this.player.context.ui.changHighlightSource(highlights)
+          }
+        })
+      })
       .then(() => {
-        if (subtitles) {
-          this.player.context.ui.subtitle.changeSource(subtitles)
-        }
-        if (thumbnails) {
-          this.player.context.ui.changThumbnails(thumbnails)
-        }
-        if (highlights) {
-          this.player.context.ui.changHighlightSource(highlights)
-        }
-
+        this.currentIndex = idx
         this.player.emit('playlistsourcechange', { source, id: idx })
         this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
-        this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)?.classList.add('active')
-        if (this.options.autoHide) this.hideUI()
+        $target?.classList.add('active')
+        if (this.options.autoHide) {
+          setTimeout(() => {
+            this.hideUI()
+          }, 500)
+        }
+      })
+      .catch((err) => {
+        this.player.emit('playlistsourceerror', err)
       })
       .finally(() => {
-        this.$root.classList.remove('wait')
+        setTimeout(() => {
+          this.$root.classList.remove('wait')
+          $target?.classList.remove('progress')
+        }, 500)
       })
   }
 
@@ -224,7 +240,16 @@ export default class PlaylistPlugin implements PlayerPlugin {
       .map(
         (source, idx) => `
   <div class="playlist-list-item" data-index="${idx}">
-    <div class="playlist-list-item-thumb" style="background-image: url('${source.poster}');"></div>
+  <div class="playlist-list-item-thumb">
+    ${
+      source.poster
+        ? `<img class="playlist-list-item-img" src="${source.poster}" alt="${
+            source.title || ''
+          }" loading="lazy" />`
+        : '<span>EMPTY</span>'
+    }
+    </div>
+
     <div class="playlist-list-item-desc">
       <p>${source.title}</p>
       ${source.duration ? `<span>${source.duration}</span>` : ''}

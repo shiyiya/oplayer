@@ -117,6 +117,7 @@ const player = Player.make<Ctx>('#player', {
         {
           title: 'HLS with default SRT subtitle',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+          poster: 'https://api.imlazy.ink/img?id19',
           subtitles: [
             {
               name: 'Default',

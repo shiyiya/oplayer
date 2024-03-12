@@ -25,7 +25,7 @@
         .use([OUI(), OHls({ forceHLS: true })])
         .create()
         .on(({ type }) => {
-          if (['timeupdate', 'controllervisibilitychange'].includes(type)) {
+          if (!['timeupdate', 'controllervisibilitychange'].includes(type)) {
             console.log(type)
           }
         })
