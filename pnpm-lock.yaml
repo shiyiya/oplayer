@@ -240,7 +240,7 @@ importers:
         specifier: ^0.109.8
         version: 0.109.8
       webtorrent:
-        specifier: ^1.0.0
+        specifier: 1.9.7
         version: 1.9.7
 
   packages/ui:
