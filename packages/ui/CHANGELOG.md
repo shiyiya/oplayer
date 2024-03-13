@@ -2,11 +2,14 @@
 
 ## UnRelease
 
+## [1.2.36-beta.0]
+
 - any px -> rem.
 - ErrorBuilder custom params.
 - add keyboard.
   - k: play | pause
   - m: mute | unmute
+- fix global keyboard not working.
 
 ## [1.2.35]
 

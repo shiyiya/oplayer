@@ -90,6 +90,7 @@
   height: 5em;
   cursor: pointer;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .playlist-list-item > * {

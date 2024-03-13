@@ -2,6 +2,11 @@
 
 ## UnRelease
 
+## 1.0.10-beta.1
+
+- playlist
+  - add keyboard `l`.
+
 ## 1.0.10-beta.0
 
 - playlist
