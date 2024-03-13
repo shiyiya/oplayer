@@ -71,7 +71,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     }
   }
 
-  player.on(['videosourcechange', 'videoqualitychange'], clear)
+  player.on(['videosourcechange', 'videoqualitychange', 'loadedmetadata'], clear)
   player.on('error', ({ payload }) => cx(payload))
 
   return show

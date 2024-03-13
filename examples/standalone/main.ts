@@ -102,26 +102,6 @@ const player = Player.make<Ctx>('#player', {
       initialIndex,
       sources: [
         {
-          title: 'webtorrent - MP4 + subtitle + poster',
-          src: 'https://webtorrent.io/torrents/sintel.torrent',
-          // 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent',
-          poster: 'https://api.imlazy.ink/img?webtorrent'
-        },
-        {
-          title: 'HLS with default SRT subtitle',
-          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-          poster: 'https://api.imlazy.ink/img?id19',
-          subtitles: [
-            {
-              name: 'Default',
-              default: true,
-              src: SRT,
-              offset: 2
-            }
-          ],
-          duration: '10:34'
-        },
-        {
           title: '君の名は - MP4',
           poster: POSTER,
           src: MP4,
@@ -146,6 +126,25 @@ const player = Player.make<Ctx>('#player', {
           highlights: highlight
         },
         {
+          title: 'HLS with default SRT subtitle',
+          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+          poster: 'https://api.imlazy.ink/img?id19',
+          subtitles: [
+            {
+              name: 'Default',
+              default: true,
+              src: SRT,
+              offset: 2
+            }
+          ],
+          duration: '10:34'
+        },
+        {
+          title: 'BROKEN SOURCE',
+          src: '//',
+          duration: '00:00'
+        },
+        {
           title: 'Big Buck Bunny - HLS',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
           duration: '10:34'
@@ -159,6 +158,12 @@ const player = Player.make<Ctx>('#player', {
           title: 'FLV',
           src: FLV,
           duration: '00:17'
+        },
+        {
+          title: 'webtorrent - MP4 + subtitle + poster',
+          src: 'https://webtorrent.io/torrents/sintel.torrent',
+          // 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent',
+          poster: 'https://api.imlazy.ink/img?webtorrent'
         }
       ]
       // m3uList: {

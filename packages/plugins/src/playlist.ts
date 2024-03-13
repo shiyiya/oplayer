@@ -151,20 +151,20 @@ export default class PlaylistPlugin implements PlayerPlugin {
         })
       })
       .then(() => {
-        this.currentIndex = idx
         this.player.emit('playlistsourcechange', { source, id: idx })
-        this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
-        $target?.classList.add('active')
         if (this.options.autoHide) {
           setTimeout(() => {
             this.hideUI()
           }, 500)
         }
       })
-      .catch((err) => {
-        this.player.emit('playlistsourceerror', err)
+      .catch((error) => {
+        this.player.emit('playlistsourceerror', { error, idx })
       })
       .finally(() => {
+        this.currentIndex = idx
+        this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
+        $target?.classList.add('active')
         setTimeout(() => {
           this.$root.classList.remove('wait')
           $target?.classList.remove('progress')

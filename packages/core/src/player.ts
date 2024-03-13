@@ -431,11 +431,14 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         if (!this.$root) return
         this.off(canplay, canplayHandler)
         this.emit(options.brokenEvent, finalSource || sourceLike)
-        if (options.event == 'videoqualitychanged') {
-          this.load(this.options.source).then(() => {
-            rollback()
-            this.isSourceChanging = false
-          })
+        if (options.event == 'videosourcechanged') {
+          this.isSourceChanging = false
+        } else {
+          this.load(this.options.source)
+            .then(rollback)
+            .finally(() => {
+              this.isSourceChanging = false
+            })
         }
         reject(e)
       }
