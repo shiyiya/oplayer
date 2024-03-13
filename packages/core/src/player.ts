@@ -384,23 +384,19 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {
-    this.isSourceChanging = true
-    this.emit('videoqualitychange', source)
-
     return this._loader(source, {
       keepPlaying: true,
       keepTime: true,
+      preEvent: 'videoqualitychange',
       event: 'videoqualitychanged',
       brokenEvent: 'qualitychangeerror'
     })
   }
 
   changeSource(source: Source | Promise<Source>, keepPlaying: boolean = true) {
-    this.isSourceChanging = true
-    this.emit('videosourcechange', source)
-
     return this._loader(source, {
       keepPlaying,
+      preEvent: 'videosourcechange',
       event: 'videosourcechanged',
       brokenEvent: 'sourcechangeerror'
     })
@@ -408,17 +404,26 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   _loader(
     sourceLike: Source | Promise<Source>,
-    options: { keepPlaying: boolean; event: string; keepTime?: boolean; brokenEvent: string }
+    options: {
+      event: string
+      preEvent: string
+      brokenEvent: string
+      keepPlaying: boolean
+      keepTime?: boolean
+    }
   ) {
     return new Promise<void>((resolve, reject) => {
-      if (this.isSourceChanging) return reject()
+      if (this.isSourceChanging) return reject(Error('Previous Source is Changing.'))
+
+      this.hasError = false
+      this.isSourceChanging = true
+      this.emit(options.preEvent, sourceLike)
 
       const { isPlaying, currentTime, volume, playbackRate } = this
       const { keepPlaying, keepTime } = options
       const isPreloadNone = this.options.preload == 'none'
       const canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata'
       const shouldPlay = keepPlaying && isPlaying
-      this.hasError = false
 
       let finalSource: Source
 

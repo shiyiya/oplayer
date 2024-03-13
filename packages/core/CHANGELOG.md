@@ -2,7 +2,7 @@
 
 ## UnRelease
 
-## [1.2.33-beta.0]
+## [1.2.33-beta.1]
 
 - add events `sourcechangeerror`, `qualitychangeerror`.
 - qualitychange fallback.
