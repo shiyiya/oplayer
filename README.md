@@ -13,16 +13,14 @@
 
 - https://oplayer.vercel.app
 - https://ohplayer.netlify.app
-- Quick Start
-  - https://ohplayer.netlify.app/ohls.html?src=https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-  - https://oplayer.vercel.app/ohls.html?src=https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+- [Standalone Demo](https://oplayer.vercel.app/ohls.html?src=https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8)
 
 ## Who use OPlayer?
 
-- [UPV](https://onime.netlify.app) : free anime no ad
-- [NGEWIBU.TV](https://ngewibu.tv/) : Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
+- **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/116)**
+- [UPV](https://onime.netlify.app) : free anime no ad.
 - [Animex](https://www.animex.live/) : Watch Anime for free in HD quality with English subbed or dubbed.
-- **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/new?category=show-and-tell)**
+- ~~[NGEWIBU.TV](https://ngewibu.tv/) : Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis~~
 
 ## Feature
 
@@ -46,6 +44,7 @@
 
 If you think this is super cool, or useful, and want to donate a little, then you are also super cool!
 
+- PR WELCOME ！
 - [Paypal](https://www.paypal.com/paypalme/ShiYiYa)
 - [WeChat Pay](https://www.oaii.me/wechat_donate.png)
 

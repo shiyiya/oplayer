@@ -383,13 +383,6 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     }
   }
 
-  _resetStatus() {
-    this.hasError = false
-    if (this.isPlaying) {
-      this.$video.pause() // Possible failure
-    }
-  }
-
   changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {
     this.isSourceChanging = true
     this.emit('videoqualitychange', source)
@@ -397,7 +390,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     return this._loader(source, {
       keepPlaying: true,
       keepTime: true,
-      event: 'videoqualitychanged'
+      event: 'videoqualitychanged',
+      brokenEvent: 'qualitychangeerror'
     })
   }
 
@@ -407,41 +401,55 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
     return this._loader(source, {
       keepPlaying,
-      event: 'videosourcechanged'
+      event: 'videosourcechanged',
+      brokenEvent: 'sourcechangeerror'
     })
   }
 
-  //TODO: cancel previous promise
   _loader(
     sourceLike: Source | Promise<Source>,
-    options: { keepPlaying: boolean; event: string; keepTime?: boolean }
+    options: { keepPlaying: boolean; event: string; keepTime?: boolean; brokenEvent: string }
   ) {
-    const { isPlaying, currentTime, volume, playbackRate } = this
-    const { keepPlaying, keepTime } = options
-    const isPreloadNone = this.options.preload == 'none'
-    const canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata' // TODO: changesource 的话似乎无视 preload
-    const shouldPlay = keepPlaying && isPlaying
-    let finalSource: Source
-    this._resetStatus()
-
     return new Promise<void>((resolve, reject) => {
+      if (this.isSourceChanging) return reject()
+
+      const { isPlaying, currentTime, volume, playbackRate } = this
+      const { keepPlaying, keepTime } = options
+      const isPreloadNone = this.options.preload == 'none'
+      const canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata'
+      const shouldPlay = keepPlaying && isPlaying
+      this.hasError = false
+
+      let finalSource: Source
+
       const errorHandler = (e: any) => {
         if (!this.$root) return
-        this.isSourceChanging = false
         this.off(canplay, canplayHandler)
+        this.emit(options.brokenEvent, finalSource || sourceLike)
+        if (options.event == 'videoqualitychanged') {
+          this.load(this.options.source).then(() => {
+            rollback()
+            this.isSourceChanging = false
+          })
+        }
         reject(e)
       }
 
-      const canplayHandler = () => {
-        if (!this.$root) return
-        this.isSourceChanging = false
-        this.off('error', errorHandler)
-        this.emit(options.event, finalSource)
+      const rollback = () => {
         if (volume != this.volume) this.setVolume(volume)
         if (playbackRate != this.playbackRate) this.setPlaybackRate(playbackRate)
         if (isPreloadNone && keepTime) this.$video.load()
         if (keepTime && !this.options.isLive) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
+        Object.assign(this.options.source, finalSource)
+      }
+
+      const canplayHandler = () => {
+        if (!this.$root) return
+        this.off('error', errorHandler)
+        rollback()
+        this.isSourceChanging = false
+        this.emit(options.event, finalSource)
         resolve()
       }
 
@@ -450,7 +458,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
           if (!source.src) throw new Error('Empty Source')
           finalSource = source
           this.$video.poster = source.poster || ''
-          Object.assign(this.options.source, source)
+
           this.once('error', errorHandler)
           this.once(canplay, canplayHandler)
 
