@@ -145,13 +145,21 @@ const player = Player.make<Ctx>('#player', {
           duration: '00:00'
         },
         {
+          title: "Disney's Oceans - MP4",
+          src: '//vjs.zencdn.net/v/oceans.mp4',
+          poster: '//vjs.zencdn.net/v/oceans.png',
+          duration: '00:46'
+        },
+        {
           title: 'Big Buck Bunny - HLS',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+          poster: 'https://d2zihajmogu5jn.cloudfront.net/big-buck-bunny/bbb.png',
           duration: '10:34'
         },
         {
-          title: 'DASH',
+          title: 'Big Buck Bunny - DASH',
           src: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd',
+          poster: 'https://d2zihajmogu5jn.cloudfront.net/big-buck-bunny/bbb.png',
           duration: '10:34'
         },
         {
@@ -191,13 +199,14 @@ function stopLoad() {
 
 let src: string = player.context.playlist.options.sources[initialIndex].src
 
-const actions = () => html`<p style="display:flex;">
-  <input type="text" @input=${(e: any) => (src = e.target.value)} style="width:100%;" .value=${live(src)} />
+const actions = () =>
+  html`<p style="display:flex;">
+    <input type="text" @input=${(e: any) => (src = e.target.value)} style="width:100%;" .value=${live(src)} />
 
-  <button @click=${() => player.changeSource({ src })}>Load</button>
+    <button @click=${() => player.changeSource({ src })}>Load</button>
 
-  <button @click=${stopLoad}>StopLoad</button>
-</p> `
+    <button @click=${stopLoad}>StopLoad</button>
+  </p> `
 
 render(actions(), document.getElementById('actions')!)
 
