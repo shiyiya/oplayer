@@ -32,8 +32,9 @@ const defaultConfig: UiConfig = {
   autoFocus: true,
   forceLandscapeOnFullscreen: true,
 
-  showControls: 'always',
   settings: ['loop'],
+  showControls: 'always',
+  keyboard: { focused: true },
   theme: { primaryColor: '#6668ab' },
   speeds: ['2.0', '1.5', '1.25', '1.0', '0.75', '0.5'],
   ctrlHideBehavior: 'hover'
@@ -106,6 +107,9 @@ class UI implements UIInterface {
 
   constructor(public config: UiConfig) {
     this.config = mergeDeep({}, defaultConfig, config)
+    if (this.config.keyboard?.global) {
+      this.config.keyboard!.focused = false
+    }
   }
 
   apply(player: Player) {

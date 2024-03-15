@@ -64,16 +64,11 @@ const KEY_FN: Record<string, (player: Player) => void> = {
 export default function (it: UIInterface) {
   const { player, config } = it
 
-  if (typeof config.keyboard == 'undefined') {
-    config.keyboard = { focused: true }
-  }
-
   function keydown(e: KeyboardEvent) {
     if (
       document.activeElement?.tagName == 'INPUT' ||
       document.activeElement?.tagName == 'TEXTAREA' ||
       document.activeElement?.getAttribute('contenteditable') ||
-      (!config.keyboard!.global && !config.keyboard!.focused) ||
       (config.keyboard!.focused && !isFocused(player)) ||
       e.altKey ||
       e.ctrlKey ||
@@ -91,18 +86,19 @@ export default function (it: UIInterface) {
     }
   }
 
-  it.keyboard.register = function register(payload: any) {
-    for (const key in payload) {
-      if (Object.prototype.hasOwnProperty.call(payload, key)) {
-        KEY_FN[key] = payload[key]
+  it.keyboard = {
+    register: function register(payload: any) {
+      for (const key in payload) {
+        if (Object.prototype.hasOwnProperty.call(payload, key)) {
+          KEY_FN[key] = payload[key]
+        }
       }
+    },
+    unregister: function unregister(payload: string[]) {
+      payload.forEach((k) => {
+        delete KEY_FN[k]
+      })
     }
-  }
-
-  it.keyboard.unregister = function unregister(payload: string[]) {
-    payload.forEach((k) => {
-      delete KEY_FN[k]
-    })
   }
 
   document.addEventListener('keydown', keydown)

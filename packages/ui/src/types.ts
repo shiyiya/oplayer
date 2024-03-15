@@ -220,7 +220,7 @@ export interface UIInterface extends PlayerPlugin {
       | 'left-bottom'
   ) => void
 
-  keyboard: {
+  keyboard?: {
     register: (payload: Record<string, (e: any) => void>) => void
     unregister: (keys: string[]) => void
   }
