@@ -163,6 +163,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
       })
       .finally(() => {
         this.currentIndex = idx
+        this._updateHeader()
         this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
         $target?.classList.add('active')
         setTimeout(() => {
@@ -263,10 +264,14 @@ export default class PlaylistPlugin implements PlayerPlugin {
       )
       .join('')
 
+    this._updateHeader()
+    this.$root.querySelector('.playlist-list')!.innerHTML = child
+  }
+
+  _updateHeader() {
     this.$root.querySelector('.playlist-head-title')!.textContent = `${this.player.locales.get(
       'PLAYLIST'
-    )} (${sources.length})`
-    this.$root.querySelector('.playlist-list')!.innerHTML = child
+    )} (${this.currentIndex}/${this.options.sources.length})`
   }
 
   destroy() {}
