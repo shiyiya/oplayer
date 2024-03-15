@@ -2,7 +2,12 @@
 
 ## UnRelease
 
-## 1.0.10-beta.1
+## 1.0.10-beta.3
+
+- playlist
+  - style fixed.
+
+## 1.0.10-beta.2
 
 - playlist
   - style fixed.

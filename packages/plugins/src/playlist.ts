@@ -77,7 +77,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
       }
       this.player.context.ui.keyboard?.register({
         l: () => {
-          this.$root.classList.toggle('active')
+          this.$root.classList.toggle('playlist__active')
         }
       })
     }
@@ -110,7 +110,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   }
 
   get isWaiting() {
-    return this.$root.classList.contains('wait')
+    return this.$root.classList.contains('playlist__wait')
   }
 
   changeSource(idx: number) {
@@ -118,8 +118,8 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
     const $target = this.$root.querySelector(`.playlist-list-item[data-index='${idx}']`)
 
-    this.$root.classList.add('wait')
-    $target?.classList.add('progress')
+    this.$root.classList.add('playlist__wait')
+    $target?.classList.add('playlist-source__progress')
 
     const source: PlaylistSource = this.options.sources[idx]!
 
@@ -164,11 +164,13 @@ export default class PlaylistPlugin implements PlayerPlugin {
       .finally(() => {
         this.currentIndex = idx
         this._updateHeader()
-        this.$root.querySelector('.playlist-list-item.active')?.classList.remove('active')
-        $target?.classList.add('active')
+        console.log(this.$root.querySelector('.playlist-source__active'))
+
+        this.$root.querySelector('.playlist-source__active')?.classList.remove('playlist-source__active')
+        $target?.classList.add('playlist-source__active')
         setTimeout(() => {
-          this.$root.classList.remove('wait')
-          $target?.classList.remove('progress')
+          this.$root.classList.remove('playlist__wait')
+          $target?.classList.remove('playlist-source__progress')
         }, 500)
       })
   }
@@ -187,11 +189,11 @@ export default class PlaylistPlugin implements PlayerPlugin {
   }
 
   showUI() {
-    this.$root.classList.add('active')
+    this.$root.classList.add('playlist__active')
   }
 
   hideUI() {
-    this.$root.classList.remove('active')
+    this.$root.classList.remove('playlist__active')
   }
 
   render() {
@@ -217,7 +219,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         this.changeSource(+target.getAttribute('data-index')!)
       } else if (
         target.classList.contains('playlist-back') ||
-        (target == this.$root && target.classList.contains('active'))
+        (target == this.$root && target.classList.contains('playlist__active'))
       ) {
         this.hideUI()
       }
@@ -233,7 +235,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
       onClick: () => {
         this.showUI()
         const list = this.$root.querySelector('.playlist-list')!
-        const active = this.$root.querySelector<HTMLDivElement>('.playlist-list-item.active')
+        const active = this.$root.querySelector<HTMLDivElement>('.playlist-source__active')
         if (active && list.scrollHeight > 0 && this.currentIndex) {
           list.scrollTo(0, active.offsetHeight * this.currentIndex)
         }
@@ -271,7 +273,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   _updateHeader() {
     this.$root.querySelector('.playlist-head-title')!.textContent = `${this.player.locales.get(
       'PLAYLIST'
-    )} (${this.currentIndex}/${this.options.sources.length})`
+    )} (${this.currentIndex !== undefined ? `${this.currentIndex + 1}/` : ''}${this.options.sources.length})`
   }
 
   destroy() {}

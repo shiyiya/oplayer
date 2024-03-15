@@ -30,14 +30,17 @@
     <script>
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
-      var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.10-beta.2/dist/playlist.min.js'
+      var playlistScriptCdn =
+        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.10-beta.3/dist/playlist.min.js'
       var chromecastScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js'
 
       var query = document.location.search.substring(1)
       var src, poster, subtitle, danmaku, title, watermark
       var playlist = []
       if (query.startsWith('http')) {
-        src = query.endsWith('==') ? atob(query.substring(0, query.length - 2)) : safeDecodeURIComponent(query)
+        src = query.endsWith('==')
+          ? atob(query.substring(0, query.length - 2))
+          : safeDecodeURIComponent(query)
       } else {
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
@@ -52,9 +55,9 @@
                 {
                   name: 'Default',
                   default: true,
-                  src: decodeURIComponent(search.get('subtitle')),
-                },
-              ],
+                  src: decodeURIComponent(search.get('subtitle'))
+                }
+              ]
             }
           : undefined
 
@@ -68,16 +71,16 @@
                 top: '10px',
                 right: '10px',
                 maxWidth: '200px',
-                height: 'auto',
-              },
+                height: 'auto'
+              }
             }
           : undefined
       }
 
       var player = OPlayer.make('#oplayer', {
         source: { src: !playlist.length ? src : undefined, poster, title: title || 'Free HTML5 Player' },
-        playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed'),
-        volume: localStorage.getItem('@oplayer/UserPreferences/volume'),
+        playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
+        volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
         .use([
           OUI({
@@ -89,10 +92,12 @@
             errorBuilder(e, t, builder) {
               builder({
                 ...e,
-                message: e.message || '' + '\n' + 'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose',
+                message:
+                  e.message ||
+                  '' + '\n' + 'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
               })
-            },
-          }),
+            }
+          })
         ])
         .create()
         .on(console.log)
@@ -102,8 +107,8 @@
           chromecastScriptCdn,
           () => {
             player.applyPlugin(OChromecast)
-          },
-        ],
+          }
+        ]
       ]
 
       if (/m3u8(#|\?|$)/.test(src) || playlist.some((it) => /m3u8(#|\?|$)/.test(it.src))) {
@@ -111,7 +116,7 @@
           hlsScriptCdn,
           () => {
             player.applyPlugin(OHls({ forceHLS: true }))
-          },
+          }
         ])
       }
 
@@ -123,7 +128,7 @@
             const dash = ODash()
             dash.constructor.library = dashjs
             player.applyPlugin(dash)
-          },
+          }
         ])
       }
 
@@ -134,10 +139,10 @@
             player.applyPlugin(
               new OPlaylist({
                 initialIndex: 0,
-                sources: playlist,
+                sources: playlist
               })
             )
-          },
+          }
         ])
       }
 
