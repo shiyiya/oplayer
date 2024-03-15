@@ -415,6 +415,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     return new Promise<void>((resolve, reject) => {
       if (this.isSourceChanging) return reject(Error('Previous Source is Changing.'))
 
+      this.pause()
       this.hasError = false
       this.isSourceChanging = true
       this.emit(options.preEvent, sourceLike)

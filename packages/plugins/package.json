@@ -1,7 +1,14 @@
 {
   "name": "@oplayer/plugins",
   "version": "1.0.10-beta.2",
+  "author": "shiyiya",
   "description": "oplayer's plugin",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer",
+    "oplayer-plugins"
+  ],
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.es.js",
   "types": "dist/index.d.ts",
@@ -22,8 +29,5 @@
     "glob": "^10.3.10",
     "m3u8-parser": "^7.1.0",
     "vite-plugin-css-injected-by-js": "^3.4.0"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }

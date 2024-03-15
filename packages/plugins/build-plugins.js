@@ -15,7 +15,8 @@ const globals = {
 
 async function buildPlugin(name, dev) {
   const { version, description, author, homepage } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
-  const pluginName = name.split('.').shift()
+  const outfileName = name
+  const pluginName = name=='index'?'@oplayer/plugins':`@oplayer/${outfileName}`
   const now = Date.now()
   console.log(`👾 Start built ${pluginName} ··· `)
 
@@ -27,15 +28,15 @@ async function buildPlugin(name, dev) {
       lib: {
         entry: plugins[name],
         formats: dev ? ['es'] : ['es', 'umd'],
-        name: dev ? undefined : 'O' + pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
-        fileName: (format) => `${pluginName}.${{ es: 'es', umd: 'min' }[format]}.js`
+        name: dev ? undefined : 'O' + outfileName.charAt(0).toUpperCase() + outfileName.slice(1),
+        fileName: (format) => `${outfileName}.${{ es: 'es', umd: 'min' }[format]}.js`
       },
       rollupOptions: { external, output: { dir: 'dist', globals } }
     },
     plugins: [
       cssInjectedByJsPlugin(),
       banner(
-        `/**\n * name: ${name}\n * version: v${version}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
+        `/**\n * name: ${pluginName}\n * version: v${version}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
       )
     ],
     define: { __VERSION__: `'${version}'` }
@@ -85,5 +86,5 @@ if (process.argv.pop() == '--watch') {
     console.log(`✨ Finished building all plugins!`)
   })
 
-  buildPlugin('index', true)
+  // buildPlugin('index', true)
 }
