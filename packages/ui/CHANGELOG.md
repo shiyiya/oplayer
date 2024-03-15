@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## [1.2.36-beta.2]
+
+- fix keyboard config conflicts.
+
 ## [1.2.36-beta.0]
 
 - any px -> rem.

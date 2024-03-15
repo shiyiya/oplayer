@@ -4,6 +4,7 @@ import { build } from 'vite'
 import { globSync } from 'glob'
 import chokidar from 'chokidar'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+import banner from 'vite-plugin-banner'
 
 const external = ['@oplayer/core', 'm3u8-parser']
 
@@ -13,7 +14,7 @@ const globals = {
 }
 
 async function buildPlugin(name, dev) {
-  const { version } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
+  const { version, description, author, homepage } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
   const pluginName = name.split('.').shift()
   const now = Date.now()
   console.log(`👾 Start built ${pluginName} ··· `)
@@ -31,7 +32,12 @@ async function buildPlugin(name, dev) {
       },
       rollupOptions: { external, output: { dir: 'dist', globals } }
     },
-    plugins: [cssInjectedByJsPlugin()],
+    plugins: [
+      cssInjectedByJsPlugin(),
+      banner(
+        `/**\n * name: ${name}\n * version: v${version}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
+      )
+    ],
     define: { __VERSION__: `'${version}'` }
   })
 
