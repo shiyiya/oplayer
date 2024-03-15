@@ -146,8 +146,8 @@ const player = Player.make<Ctx>('#player', {
         },
         {
           title: "Disney's Oceans - MP4",
-          src: '//vjs.zencdn.net/v/oceans.mp4',
-          poster: '//vjs.zencdn.net/v/oceans.png',
+          src: 'https://vjs.zencdn.net/v/oceans.mp4',
+          poster: 'https://vjs.zencdn.net/v/oceans.png',
           duration: '00:46'
         },
         {

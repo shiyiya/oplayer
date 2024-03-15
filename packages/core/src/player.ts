@@ -218,8 +218,8 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   applyPlugin(plugin: PlayerPlugin) {
+    this.plugins.push(plugin)
     const returned = plugin.apply(this)
-
     const { name, key } = plugin
     if (returned) {
       //@ts-ignore
