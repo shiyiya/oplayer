@@ -92,7 +92,7 @@ export const textIcon = $.cls('textIcon')
 export const controllers = $.css({
   color: '#fff',
   fill: '#fff',
-  height: '2.5em',
+  height: '2.375em',
   display: 'flex',
   'box-sizing': 'border-box',
   'justify-content': 'space-between',
@@ -128,7 +128,6 @@ export const controllers = $.css({
       'justify-content': 'center',
       'align-items': 'center',
       display: 'inline-flex',
-      'border-radius': isMobile ? '50%' : '2px',
 
       '& > *': {
         height: '1.5em',
