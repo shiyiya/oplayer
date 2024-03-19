@@ -10,7 +10,7 @@ import { icon as iconCls, tooltip } from '../style'
 import type { MenuBar, UIInterface } from '../types'
 import { siblings } from '../utils'
 
-const _select = (elm: HTMLElement) => {
+const setChecked = (elm: HTMLElement) => {
   const selected = elm.getAttribute('aria-checked') == 'true'
   elm.setAttribute('aria-checked', `${!selected}`)
   siblings(elm, (it) => it.setAttribute('aria-checked', `${selected}`))
@@ -31,7 +31,7 @@ export default (it: UIInterface) => {
     if (!target || elm.getAttribute('aria-checked') == 'true') return
 
     if (elm.tagName.toUpperCase() == 'SPAN') {
-      _select(elm)
+      setChecked(elm)
       target.onChange?.(
         target.children![+elm.getAttribute('data-index')!]!,
         elm.parentElement!.previousElementSibling as HTMLButtonElement,
@@ -46,10 +46,14 @@ export default (it: UIInterface) => {
     it.addEventListener('click', clickHandler)
   })
 
-  it.menu.register = function register(menu: MenuBar) {
+  function _register(menu: MenuBar) {
+    const repeated = menus.find((m) => m.name == menu.name)
+    if (repeated) unregister(repeated.name)
+
     const { name, icon, children, position } = menu
     const isTop = position == 'top' && $targets.length == 2
     let $menu: string = ''
+
     const $button = `
     <button
       aria-label="${name}"
@@ -64,9 +68,9 @@ export default (it: UIInterface) => {
         ${$button}
         <div class='${expand} ${isTop ? expandBottom : ''}' role='menu'>
           ${children!
-          .map(
-            (it, i) =>
-              `<span
+            .map(
+              (it, i) =>
+                `<span
                   role="menuitemradio"
                   aria-haspopup="false"
                   aria-label="${name}"
@@ -74,8 +78,8 @@ export default (it: UIInterface) => {
                   aria-checked="${Boolean(it.default)}"
                   data-index="${i}"
                 >${it.name}</span>`
-          )
-          .join('')}
+            )
+            .join('')}
           </div>
       </div>`
     } else {
@@ -91,18 +95,32 @@ export default (it: UIInterface) => {
     menus.push(menu)
   }
 
-  it.menu.unregister = function unregister(name: string) {
+  function unregister(name: string) {
     $targets.forEach((it) => {
       it.querySelector(`button[aria-label=${name}]`)?.remove()
       it.querySelector(`div[aria-label=${name}]`)?.remove()
     })
   }
 
-  it.menu.select = function select(name: string, index: number) {
+  function select(name: string, index: number, shouldBeCallFn: Boolean = true) {
     $targets.forEach((it) => {
-      _select(it.querySelector(`.${expand} > span[aria-label=${name}]:nth-child(${index + 1})`)!)
+      const $target = it.querySelector<HTMLElement>(
+        `.${expand} > span[aria-label=${name}]:nth-child(${index + 1})`
+      )
+      if ($target) {
+        setChecked($target)
+        if (shouldBeCallFn) $target.click()
+      }
     })
   }
 
-  if (initialState) initialState.forEach((menu) => it.menu.register(menu))
+  if (initialState) initialState.forEach(_register)
+
+  it.menu = {
+    register: function (menu: MenuBar | MenuBar[]) {
+      ;(Array.isArray(menu) ? menu : [menu]).forEach(_register)
+    },
+    unregister,
+    select
+  }
 }
