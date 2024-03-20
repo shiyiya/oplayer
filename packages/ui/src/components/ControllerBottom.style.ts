@@ -4,7 +4,6 @@ import { icon } from '../style'
 export const time = $.css`
   font-variant-numeric: tabular-nums;
   font-size: 0.875em;
-  margin-top: 2px;
 `
 
 export const live = $.css(
@@ -92,7 +91,6 @@ export const textIcon = $.cls('textIcon')
 export const withIcon = $.css({
   display: 'flex',
   'align-items': 'center',
-  margin: '0 -.5em',
 
   [`& > .${icon}:last-child${
     isMobile ? `, & >  .${icon}[aria-label="Play"], & >  .${icon}[aria-label="Pause"]` : ''
