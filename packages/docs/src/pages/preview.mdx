@@ -15,8 +15,10 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
     }}
     plugins={[
       ui({
+        theme: {
+          controller: { display: 'always' }
+        },
         pictureInPicture: true,
-        controlBar: { back: 'fullscreen' },
         menu: [
           {
             name: '❤❤',
@@ -139,5 +141,7 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
       }),
       chromecast
     ].filter((it) => it?.apply)}
-  />
+
+/>
+
 </div>

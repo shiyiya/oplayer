@@ -155,7 +155,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         if (this.options.autoHide) {
           setTimeout(() => {
             this.hideUI()
-          }, 500)
+          }, 300)
         }
       })
       .catch((error) => {
@@ -171,7 +171,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         setTimeout(() => {
           this.$root.classList.remove('playlist__wait')
           $target?.classList.remove('playlist-source__progress')
-        }, 500)
+        }, 300)
       })
   }
 
