@@ -11,19 +11,17 @@ export const played = $.css({
 })
 
 export const dot = $.css({
-  width: '100%',
   'pointer-events': 'none',
   position: 'relative',
 
   '& > *': {
-    content: "''",
     display: 'block',
     position: 'absolute',
     width: '1.4em',
     height: '1.4em',
-    top: 'calc(-0.7em + 2px)',
-    left: '-0.7em',
-    bottom: '0',
+    top: '0',
+    left: '0',
+    margin: '-0.5em 0 0 -0.5em',
     transform: isMobile ? 'none' : 'scale(0)',
     transition: 'transform 0.3s ease',
     'z-index': '1'
@@ -32,8 +30,7 @@ export const dot = $.css({
   '& > *:not(svg)': {
     width: '1em',
     height: '1em',
-    top: 'calc(-0.5em + 2px)',
-    left: '-0.5em',
+    margin: '-0.4em 0 0 -0.4em',
     'border-radius': '50%',
     'background-color': '#fff'
   }
@@ -60,7 +57,7 @@ export const progress = $.css(
     {
       position: 'relative',
       'box-sizing': 'border-box',
-      padding: '0.5em 0px',
+      padding: '0.5em',
       cursor: 'pointer',
       width: '100%',
       'font-size': '0.75em',

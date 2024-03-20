@@ -142,7 +142,7 @@ export const controllers = $.css({
 export const centerProgressWrap = $.css({
   flex: 1,
   height: '100%',
-  padding: '0 0.8em 0 1.2em',
+  'padding-left': '0.5em',
   '> div': {
     height: '100%',
     display: 'flex',
