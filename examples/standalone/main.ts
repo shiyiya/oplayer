@@ -66,15 +66,20 @@ const player = Player.make<Ctx>('#player', {
             class: 'watermark',
             crossOrigin: 'anonymous'
           }
+        },
+        primaryColor: '#6668ab',
+        progress: {},
+        setting: { postion: 'auto' },
+        controller: {
+          display: 'always',
+          coverButton: true,
+          displayBehavior: 'hover',
+          header: { back: 'always' },
+          slideToSeek: 'always'
         }
       },
-      controlBar: { back: 'always' },
-      topSetting: isMobile,
-      slideToSeek: 'always',
-      // miniProgressBar: false,
       // autoFocus: true,
       keyboard: { global: true },
-      // speed: [],
       screenshot: true,
       settings: ['loop'],
       pictureInPicture: true,

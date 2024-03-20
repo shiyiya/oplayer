@@ -15,7 +15,9 @@ const render = (it: UIInterface) => {
   renderControllerBar(it, $controller)
   renderControllerBottom(it, $controller)
 
-  if (config.showControls == 'played') {
+  const { display: showControls, displayBehavior: ctrlHideBehavior } = config.theme.controller || {}
+
+  if (showControls == 'played') {
     addClass($controller, hidden)
 
     player.once('play', () => {
@@ -49,7 +51,7 @@ const render = (it: UIInterface) => {
     }
   }
 
-  if (config.ctrlHideBehavior != 'none') {
+  if (ctrlHideBehavior != 'none') {
     player.on('play', debounceHideCtrl)
     player.on(['pause', 'videosourcechange'], showCtrl)
     player.on('destroy', cancelHideCtrl)
@@ -62,8 +64,8 @@ const render = (it: UIInterface) => {
         debounceHideCtrl()
       }
     })
-    if (config.ctrlHideBehavior == 'delay') player.$root.addEventListener('mouseleave', debounceHideCtrl)
-    if (config.ctrlHideBehavior == 'hover') player.$root.addEventListener('mouseleave', hideCtrl)
+    if (ctrlHideBehavior == 'delay') player.$root.addEventListener('mouseleave', debounceHideCtrl)
+    if (ctrlHideBehavior == 'hover') player.$root.addEventListener('mouseleave', hideCtrl)
   }
 
   it.toggleController = function toggle() {

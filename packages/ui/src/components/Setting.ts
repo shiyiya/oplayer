@@ -1,4 +1,4 @@
-import Player, { $ } from '@oplayer/core'
+import Player, { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
 import type { Setting, UIInterface } from '../types'
@@ -7,7 +7,7 @@ import {
   nextIcon,
   nextLabelText,
   panelCls,
-  setting,
+  settingCls,
   settingItemCls,
   settingItemLeft,
   settingItemRight,
@@ -254,13 +254,19 @@ export default function (it: UIInterface) {
 
   if (config.settings === false) return
 
-  const topEnabled = config.controlBar && config.topSetting
+  const setting = config.theme.setting
   const options = config.settings || []
-  const $dom = $.create(`div.${setting(topEnabled ? 'top' : 'bottom')}`, {
+
+  const isTop =
+    config.theme.controller?.header && (setting?.postion == 'top' || (isMobile && setting?.postion == 'auto'))
+
+  const $dom = $.create(`div.${settingCls(isTop ? 'top' : 'bottom')}`, {
     'aria-label': 'Setting'
   })
+
   let panels: Panel[] = []
   let hasRendered = false
+
   const defaultSettingMap = {
     loop: {
       name: player.locales.get('Loop'),
@@ -328,9 +334,27 @@ export default function (it: UIInterface) {
       hasRendered = true
       $.render($dom, $el)
       renderSettingMenu()
+      it.keyboard?.register({ c: showSetting })
     }
 
     createPanel(player, panels, settings, { target: $dom })
+  }
+
+  function showSetting() {
+    player.$root.classList.add(settingShown)
+    panels[0]!.$ref.classList.add(activeCls)
+
+    function outClickListener(e: Event) {
+      if (!$dom.contains(<HTMLElement>e.target)) {
+        player.$root.classList.remove(settingShown)
+        panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+        document.removeEventListener('click', outClickListener)
+      }
+    }
+
+    setTimeout(() => {
+      document.addEventListener('click', outClickListener)
+    })
   }
 
   function renderSettingMenu() {
@@ -339,36 +363,23 @@ export default function (it: UIInterface) {
       {
         class: `${icon} ${tooltip}`,
         'aria-label': player.locales.get('Settings'),
-        'data-tooltip-pos': config.topSetting ? 'down' : undefined
+        'data-tooltip-pos': config?.theme.setting?.postion == 'top' ? 'down' : undefined
       },
       `${Icons.get('setting')}`
     )
 
     settingButton.addEventListener('click', (e) => {
       e.stopPropagation()
-      player.$root.classList.add(settingShown)
-      panels[0]!.$ref.classList.add(activeCls)
-
-      function outClickListener(e: Event) {
-        if (!$dom.contains(<HTMLElement>e.target)) {
-          player.$root.classList.remove(settingShown)
-          panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
-          document.removeEventListener('click', outClickListener)
-        }
-      }
-
-      setTimeout(() => {
-        document.addEventListener('click', outClickListener)
-      })
+      showSetting()
     })
 
     const index = [config.pictureInPicture && player.isPipEnabled, config.fullscreen].filter(Boolean).length
 
-    if (topEnabled) {
-      const parent = it.$controllerBar!.children[1]!
+    if (isTop) {
+      const parent = it.$controllerBar!.lastElementChild!
       parent.insertBefore(settingButton, parent.children[parent.children.length]!)
     } else {
-      const parent = it.$controllerBottom!.children[1]!
+      const parent = it.$controllerBottom!.lastElementChild!
       parent.insertBefore(settingButton, parent.children[parent.children.length - index]!)
     }
   }

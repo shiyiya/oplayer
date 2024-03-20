@@ -1,4 +1,4 @@
-import { $, isMobile, mergeDeep } from '@oplayer/core'
+import { $, mergeDeep } from '@oplayer/core'
 import { root } from './style'
 
 import {
@@ -21,23 +21,24 @@ import renderSetting from './components/Setting'
 import renderSubtitle, { Subtitle } from './components/Subtitle'
 import { render as renderLayer } from './components/layer'
 
-import type { Player } from '@oplayer/core'
+import type { PartialRequired, Player } from '@oplayer/core'
 import type { Highlight, MenuBar, Setting, Thumbnails, UiConfig, UIInterface } from './types'
 import { ICONS_MAP } from './functions/icons'
 
 const defaultConfig: UiConfig = {
+  theme: {
+    primaryColor: '#6668ab',
+    setting: { postion: 'auto' },
+    progress: { position: 'auto', mini: true },
+    controller: { coverButton: true, display: 'always', displayBehavior: 'hover' }
+  },
+
   fullscreen: true,
-  coverButton: true,
-  miniProgressBar: true,
   autoFocus: true,
   forceLandscapeOnFullscreen: true,
-
   settings: ['loop'],
-  showControls: 'always',
   keyboard: { focused: true },
-  theme: { primaryColor: '#6668ab' },
-  speeds: ['2.0', '1.5', '1.25', '1.0', '0.75', '0.5'],
-  ctrlHideBehavior: 'hover'
+  speeds: ['2.0', '1.5', '1.25', '1.0', '0.75', '0.5']
 }
 
 class UI implements UIInterface {
@@ -105,8 +106,10 @@ class UI implements UIInterface {
 
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[] = []
 
-  constructor(public config: UiConfig) {
-    this.config = mergeDeep({}, defaultConfig, config)
+  config: PartialRequired<UiConfig, 'theme'>
+
+  constructor(config: UiConfig) {
+    this.config = mergeDeep({}, defaultConfig, config) as any
     if (this.config.keyboard?.global) {
       this.config.keyboard!.focused = false
     }
@@ -129,13 +132,17 @@ class UI implements UIInterface {
     }
 
     this.icons = Icons.setupIcons(config.icons)
+
     startListening(player, config)
+    registerKeyboard(this)
 
     renderError(player, $root, config)
     renderNotice(this)
     renderLoading(player, $root)
 
-    if (config.coverButton) this.$coverButton = renderCoverButton(player, $root)
+    if (config.theme.controller?.coverButton) {
+      this.$coverButton = renderCoverButton(player, $root)
+    }
 
     renderController(this)
 
@@ -148,10 +155,6 @@ class UI implements UIInterface {
     registerSpeedSetting(this)
     registerSlide(this)
     registerFullScreenRotation(player, config)
-
-    if (!isMobile && (config.keyboard?.focused || config.keyboard?.global)) {
-      registerKeyboard(this)
-    }
 
     $.render($root, player.$root)
 

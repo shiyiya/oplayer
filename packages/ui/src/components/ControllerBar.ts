@@ -2,7 +2,7 @@ import { $, isMobile } from '@oplayer/core'
 
 import type { UIInterface } from '../types'
 import { controllerHidden, hidden } from '../style'
-import { controllers, dropdown, expand } from './ControllerBottom.style'
+import { controllers, dropdown, expand, withIcon } from './ControllerBottom.style'
 import { arrowSvg } from './Setting'
 
 export const controlBar = $.css({
@@ -55,10 +55,11 @@ const controlBarTitle = $.css(
 
 const render = (it: UIInterface, el: HTMLDivElement) => {
   const { player, config } = it
+  const header = config.theme.controller?.header
 
-  if (!config.controlBar) return
+  if (!header) return
 
-  const back = config.controlBar.back
+  const back = (header as any)?.back
   const backEnabled = back && isMobile
 
   const $dom = (it.$controllerBar = $.create(
@@ -66,7 +67,7 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
     {
       class: `${controlBar} ${controllers}`
     },
-    `<div>
+    `<div class="${withIcon}">
     ${
       backEnabled
         ? `<span role='button' class="${controlBarBackIcon} ${back == 'fullscreen' ? hidden : ''}">${arrowSvg(
@@ -76,7 +77,7 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
     }
       <h2 class='${controlBarTitle}'>${player.options?.source?.title || ''}</h2>
     </div>
-    <div></div>`
+    <div class="${withIcon}"></div>`
   ))
 
   const $controlBarTitle = $dom.querySelector<HTMLElement>(`.${controlBarTitle}`)!

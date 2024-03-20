@@ -3,11 +3,12 @@ import { isFocused } from '../listeners/focus'
 import { webFullScreen } from '../style'
 import { UIInterface } from '../types'
 import { formatTime, screenShot } from '../utils'
+import { isMobile } from '@oplayer/core'
 
 const VOLUME_SETUP = 10
 const SEEK_SETUP = 5
 
-const KEY_FN: Record<string, (player: Player) => void> = {
+const KEY_FN: Record<string, (player: Player, config: UIInterface['config']) => void> = {
   ArrowUp: (player: Player) => {
     const nextVolume = player.volume * 100 + VOLUME_SETUP
     player.setVolume(nextVolume / 100)
@@ -19,13 +20,13 @@ const KEY_FN: Record<string, (player: Player) => void> = {
     player.emit('notice', { text: player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`) })
   },
 
-  ArrowLeft: (player: Player) => {
+  ArrowLeft: (player: Player, config) => {
     if (player.options.isLive || player.hasError) return
-    const tar = player.currentTime - SEEK_SETUP
+    const tar = player.currentTime - (config.theme.progress?.backward || SEEK_SETUP)
     if (tar < 0) {
       player.seek(0)
     } else {
-      player.seek(player.currentTime - SEEK_SETUP)
+      player.seek(player.currentTime - (config.theme.progress?.forward || SEEK_SETUP))
     }
 
     player.emit('notice', {
@@ -64,6 +65,10 @@ const KEY_FN: Record<string, (player: Player) => void> = {
 export default function (it: UIInterface) {
   const { player, config } = it
 
+  if (isMobile && !config.keyboard?.focused && !config.keyboard?.global) {
+    return
+  }
+
   function keydown(e: KeyboardEvent) {
     if (
       document.activeElement?.tagName == 'INPUT' ||
@@ -82,7 +87,7 @@ export default function (it: UIInterface) {
 
     if (KEY_FN[key]) {
       e.preventDefault()
-      KEY_FN[key]!(player)
+      KEY_FN[key]!(player, config)
     }
   }
 
