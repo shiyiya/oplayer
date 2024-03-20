@@ -2,6 +2,12 @@
 
 ## UnRelease
 
+## [1.2.37-alpha.0] Break Changes
+
+- redefine config.
+- center progress.
+- auto position (menu, setting).
+
 ## [1.2.36-beta.4]
 
 - no repeat menu/setting.
