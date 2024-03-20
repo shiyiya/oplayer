@@ -21,28 +21,28 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
         pictureInPicture: true,
         menu: [
           {
-            name: '❤❤',
+            name: '❤',
             position: 'top',
             onClick() {
-              alert('❤❤')
+              alert('你也喜欢我么？')
             }
           },
           {
-            name: 'Custom',
+            name: '💕',
             position: 'top',
             children: [
               {
-                name: 'Custom 1',
+                name: '🍓',
                 default: true,
-                value: 1
+                value: '🍓'
               },
               {
-                name: 'Custom 2',
-                value: 2
+                name: '🍉',
+                value: '🍉'
               },
               {
-                name: 'Custom 3',
-                value: 3
+                name: '🍎',
+                value: '🍎'
               }
             ],
             onChange({ value, name }, elm) {
