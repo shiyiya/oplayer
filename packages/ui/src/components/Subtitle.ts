@@ -123,32 +123,36 @@ export class Subtitle {
   }
 
   createTrack() {
+    const { $video } = this.player
+
     this.$track = <HTMLTrackElement>$.render(
       $.create('track', {
         default: true,
         kind: 'metadata'
       }),
-      this.player.$video
+      $video
     )
 
     // video fullscreen
     if (!this.player._requestFullscreen) {
-      this.$iosTrack = <HTMLTrackElement>$.render(
+      const { track } = (this.$iosTrack = $.render<HTMLTrackElement>(
         $.create('track', {
           default: false,
-          kind: 'captions'
+          kind: 'captions',
+          id: '__Orz__'
         }),
-        this.player.$video
-      )
-      this.player.$video.textTracks[1]!.mode = 'hidden'
+        $video
+      ))
+
+      track.mode = 'hidden'
 
       this.player.on('fullscreenchange', ({ payload }) => {
         if (payload.isWeb) return
-        if (this.player.isFullScreen) {
-          if (this.isShow) this.player.$video.textTracks[1]!.mode = 'showing'
-        } else {
-          this.player.$video.textTracks[1]!.mode = 'hidden'
-        }
+
+        setTimeout(() => {
+          const display = this.player.isFullScreen && this.isShow
+          track.mode = display ? 'showing' : 'hidden'
+        })
       })
     }
   }

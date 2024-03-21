@@ -164,7 +164,6 @@ export default class PlaylistPlugin implements PlayerPlugin {
       .finally(() => {
         this.currentIndex = idx
         this._updateHeader()
-        console.log(this.$root.querySelector('.playlist-source__active'))
 
         this.$root.querySelector('.playlist-source__active')?.classList.remove('playlist-source__active')
         $target?.classList.add('playlist-source__active')
