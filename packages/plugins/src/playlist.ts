@@ -275,5 +275,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
     )} (${this.currentIndex !== undefined ? `${this.currentIndex + 1}/` : ''}${this.options.sources.length})`
   }
 
-  destroy() {}
+  destroy() {
+    this.currentIndex = undefined
+    this.options.sources = []
+    this.renderList([])
+  }
 }
