@@ -6,6 +6,7 @@ export default (player: Player) => {
     if (payload.isWeb) {
       player.$root.classList.toggle(webFullScreen)
     } else {
+      if (!player._requestFullscreen) return
       player.$root.classList.toggle(fullscreen)
     }
   })
