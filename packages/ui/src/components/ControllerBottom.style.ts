@@ -106,7 +106,7 @@ export const controllers = $.css({
   'box-sizing': 'border-box',
   'justify-content': 'space-between',
   'align-items': 'center',
-  'padding-bottom': isMobile ? 0 : '4px',
+  'padding-bottom': isMobile ? 0 : '0.25em',
 
   [`& .${icon}.${textIcon}`]: {
     width: 'auto',

@@ -49,28 +49,6 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
               alert(`${value}`)
             }
           },
-          !isMobile && {
-            name: 'Custom',
-            position: 'bottom',
-            children: [
-              {
-                name: 'Custom 1',
-                default: true,
-                value: 1
-              },
-              {
-                name: 'Custom 2',
-                value: 2
-              },
-              {
-                name: 'Custom 3',
-                value: 3
-              }
-            ],
-            onChange({ value, name }, elm) {
-              alert(`${value}`)
-            }
-          }
         ].filter(Boolean)
       }),
       hls({ forceHLS: true }),

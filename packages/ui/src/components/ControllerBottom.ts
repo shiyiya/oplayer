@@ -27,6 +27,7 @@ export const controllerBottomWrap = $.css({
   'z-index': 7,
   padding: '0 0.5em',
   transition: 'transform 0.3s ease, padding 0.3s ease',
+  'min-height': 'var(--control-bar-height)',
   '&::before': {
     position: 'absolute',
     content: "''",
@@ -47,10 +48,14 @@ export const controllerBottomWrap = $.css({
   // },
 
   [`@global .${controllerHidden} &`]: {
-    padding: 0,
     'pointer-events': 'none',
     transform: 'translateY(calc(100% - 0.55em))',
-    '&::before': { opacity: 0 }
+    '&::before': { opacity: 0 },
+    [`& .${centerProgressWrap}`]: {
+      transition: 'padding 0.3s ease',
+      'padding-left': 0,
+      'padding-right': 0
+    }
   }
 })
 
