@@ -61,6 +61,7 @@ export const progress = $.css(
       cursor: 'pointer',
       width: '100%',
       'font-size': '0.75em',
+      transition: 'padding 0.3s ease',
 
       [`&.${progressDragging} .${hit}, &.${progressDragging} .${thumbnailCls}, &.${progressDragging} .${vttThumbnailsCls}`]:
         {

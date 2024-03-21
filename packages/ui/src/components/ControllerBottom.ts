@@ -18,6 +18,7 @@ import {
   withIcon,
   centerProgressWrap
 } from './ControllerBottom.style'
+import { progress } from './Progress.style'
 
 export const controllerBottomWrap = $.css({
   position: 'absolute',
@@ -50,12 +51,13 @@ export const controllerBottomWrap = $.css({
   [`@global .${controllerHidden} &`]: {
     'pointer-events': 'none',
     transform: 'translateY(calc(100% - 0.55em))',
-    '&::before': { opacity: 0 },
-    [`& .${centerProgressWrap}`]: {
-      transition: 'padding 0.3s ease',
-      'padding-left': 0,
-      'padding-right': 0
-    }
+    padding: 0,
+    '&::before': { opacity: 0 }
+  },
+
+  [`@global .${controllerHidden} .${progress}`]: {
+    'padding-left': 0,
+    'padding-right': 0
   }
 })
 
