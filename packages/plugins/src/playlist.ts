@@ -252,7 +252,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
       source.poster
         ? `<img class="playlist-list-item-img" src="${source.poster}" alt="${
             source.title || ''
-          }" loading="lazy" />`
+          }" loading="lazy" onerror="this.classList.add('playlist-list-item-img__error');"/>`
         : '<span>EMPTY</span>'
     }
     </div>

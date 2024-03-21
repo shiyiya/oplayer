@@ -145,8 +145,9 @@ const player = Player.make<Ctx>('#player', {
           duration: '10:34'
         },
         {
-          title: 'BROKEN SOURCE',
+          title: 'BROKEN SOURCE & POSTER',
           src: '//',
+          poster: '//',
           duration: '00:00'
         },
         {

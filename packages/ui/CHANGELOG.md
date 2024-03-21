@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## [1.2.37-alpha.2]
+
+- fix ios subtitle not hidden
+
 ## [1.2.37-alpha.0] Break Changes
 
 - redefine config.

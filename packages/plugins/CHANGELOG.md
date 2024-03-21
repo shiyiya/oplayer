@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## 1.0.11-alpha.1
+
+- add error fallback for poster
+
 ## 1.0.10-beta.3
 
 - playlist
