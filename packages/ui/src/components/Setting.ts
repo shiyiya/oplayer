@@ -254,11 +254,10 @@ export default function (it: UIInterface) {
 
   if (config.settings === false) return
 
-  const setting = config.theme.setting
+  const position = config.theme.controller?.setting
   const options = config.settings || []
 
-  const isTop =
-    config.theme.controller?.header && (setting?.postion == 'top' || (isMobile && setting?.postion == 'auto'))
+  const isTop = config.theme.controller?.header && (position == 'top' || (isMobile && position == 'auto'))
 
   const $dom = $.create(`div.${settingCls(isTop ? 'top' : 'bottom')}`, {
     'aria-label': 'Setting'
@@ -363,7 +362,7 @@ export default function (it: UIInterface) {
       {
         class: `${icon} ${tooltip}`,
         'aria-label': player.locales.get('Settings'),
-        'data-tooltip-pos': config?.theme.setting?.postion == 'top' ? 'down' : undefined
+        'data-tooltip-pos': position == 'top' ? 'down' : ''
       },
       `${Icons.get('setting')}`
     )

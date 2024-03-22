@@ -103,7 +103,7 @@ export type UiConfig = {
        */
       display?: 'always' | 'played'
       /**
-       * default: if(source.title)
+       * default: false | only mobile
        */
       header?: boolean | { back?: 'always' | 'fullscreen' }
       /**
@@ -119,14 +119,11 @@ export type UiConfig = {
        * default: 'none'
        */
       slideToSeek?: 'none' | 'always' | 'long-touch'
-    }
-
-    setting?: {
       /**
        * default: 'auto'
        * auto: mobile->top pc->top
        */
-      postion?: 'auto' | 'top' | 'bottom'
+      setting?: 'auto' | 'top' | 'bottom'
     }
   }
   /**

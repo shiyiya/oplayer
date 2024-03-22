@@ -16,7 +16,7 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
     plugins={[
       ui({
         theme: {
-          controller: { header: 'always' },
+          controller: { header: true },
           progress: { position: 'top' }
         },
         pictureInPicture: true,
@@ -34,7 +34,6 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
             children: [
               {
                 name: '🍓',
-                default: true,
                 value: '🍓'
               },
               {
@@ -46,7 +45,7 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
                 value: '🍎'
               }
             ],
-            onChange({ value, name }, elm) {
+            onChange({ value }) {
               alert(`${value}`)
             }
           },

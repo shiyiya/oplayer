@@ -20,17 +20,21 @@ import renderNotice from './components/Notice'
 import renderSetting from './components/Setting'
 import renderSubtitle, { Subtitle } from './components/Subtitle'
 import { render as renderLayer } from './components/layer'
+import { ICONS_MAP } from './functions/icons'
 
 import type { PartialRequired, Player } from '@oplayer/core'
 import type { Highlight, MenuBar, Setting, Thumbnails, UiConfig, UIInterface } from './types'
-import { ICONS_MAP } from './functions/icons'
 
 const defaultConfig: UiConfig = {
   theme: {
     primaryColor: '#6668ab',
-    setting: { postion: 'auto' },
     progress: { position: 'auto', mini: true },
-    controller: { coverButton: true, display: 'always', displayBehavior: 'hover' }
+    controller: {
+      setting: 'auto',
+      display: 'always',
+      coverButton: true,
+      displayBehavior: 'hover'
+    }
   },
 
   fullscreen: true,
@@ -162,13 +166,6 @@ class UI implements UIInterface {
   }
 
   destroy() {}
-
-  /**
-   * @deprecated use changHighlightSource
-   */
-  highlight(highlights: Highlight[]) {
-    return this.changHighlightSource(highlights)
-  }
 }
 
 export default function create(config?: UiConfig) {
