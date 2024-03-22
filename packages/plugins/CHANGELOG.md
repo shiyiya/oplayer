@@ -2,6 +2,8 @@
 
 ## UnRelease
 
+- support danmaku
+
 ## 1.0.11-alpha.1
 
 - add error fallback for poster
