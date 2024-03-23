@@ -28,7 +28,7 @@ import type { Highlight, MenuBar, Setting, Thumbnails, UiConfig, UIInterface } f
 const defaultConfig: UiConfig = {
   theme: {
     primaryColor: '#6668ab',
-    progress: { position: 'auto', mini: true },
+    progress: { position: 'top', mini: true },
     controller: {
       setting: 'auto',
       display: 'always',

@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## [1.3.0]
+
+- beta and alpha
+
 ## [1.2.37-alpha.2]
 
 - fix ios subtitle not hidden

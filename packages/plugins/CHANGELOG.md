@@ -2,6 +2,8 @@
 
 ## UnRelease
 
+## 1.0.11
+
 - support danmaku
 
 ## 1.0.11-alpha.1
