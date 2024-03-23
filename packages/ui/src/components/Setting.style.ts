@@ -2,7 +2,7 @@ import { $ } from '@oplayer/core'
 
 export const activeCls = $.css('display: block;')
 
-export const setting = (position: 'top' | 'bottom') =>
+export const settingCls = (position: 'top' | 'bottom') =>
   $.css({
     'z-index': '8',
     'max-height': '75%',

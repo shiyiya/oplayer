@@ -15,7 +15,7 @@ import POSTER from '../../packages/docs/public/poster.png'
 import THUMB from '../../packages/docs/public/thumbnails.jpg'
 import SRT from '../../packages/docs/public/君の名は.srt'
 import JPSRT from '../../packages/docs/public/君の名は-jp.srt'
-// import SUPER_DANMAKU from '../../packages/docs/public/天气之子.xml'
+import SUPER_DANMAKU from '../../packages/docs/public/天气之子.xml'
 import FLV from '../../packages/docs/public/op.flv'
 import MP4 from '../../packages/docs/public/君の名は.mp4'
 import vercel from '../../packages/docs/public/vercel.svg'
@@ -66,15 +66,20 @@ const player = Player.make<Ctx>('#player', {
             class: 'watermark',
             crossOrigin: 'anonymous'
           }
+        },
+        primaryColor: '#6668ab',
+        progress: {},
+        controller: {
+          setting: 'auto',
+          display: 'always',
+          coverButton: true,
+          displayBehavior: 'hover',
+          header: { back: 'always' },
+          slideToSeek: 'always'
         }
       },
-      controlBar: { back: 'always' },
-      topSetting: isMobile,
-      slideToSeek: 'always',
-      // miniProgressBar: false,
       // autoFocus: true,
       keyboard: { global: true },
-      // speed: [],
       screenshot: true,
       settings: ['loop'],
       pictureInPicture: true,
@@ -106,6 +111,7 @@ const player = Player.make<Ctx>('#player', {
           poster: POSTER,
           src: MP4,
           duration: '01:32',
+          danmaku: SUPER_DANMAKU,
           thumbnails: {
             src: THUMB,
             number: 100
@@ -140,8 +146,9 @@ const player = Player.make<Ctx>('#player', {
           duration: '10:34'
         },
         {
-          title: 'BROKEN SOURCE',
+          title: 'BROKEN SOURCE & POSTER',
           src: '//',
+          poster: '//',
           duration: '00:00'
         },
         {

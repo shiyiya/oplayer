@@ -123,55 +123,53 @@ export class Subtitle {
   }
 
   createTrack() {
+    const { $video } = this.player
+
     this.$track = <HTMLTrackElement>$.render(
       $.create('track', {
         default: true,
-        kind: 'metadata'
+        kind: 'metadata',
+        id: 'primary'
       }),
-      this.player.$video
+      $video
     )
 
     // video fullscreen
     if (!this.player._requestFullscreen) {
-      this.$iosTrack = <HTMLTrackElement>$.render(
-        $.create('track', {
-          default: false,
-          kind: 'captions'
-        }),
-        this.player.$video
-      )
-      this.player.$video.textTracks[1]!.mode = 'hidden'
+      const { track } = (this.$iosTrack = $.create('track', {
+        default: false,
+        kind: 'captions',
+        id: '__Orz__'
+      }))
+
+      track.mode = 'hidden'
+      $.render(this.$iosTrack, $video)
 
       this.player.on('fullscreenchange', ({ payload }) => {
         if (payload.isWeb) return
-        if (this.player.isFullScreen) {
-          if (this.isShow) this.player.$video.textTracks[1]!.mode = 'showing'
-        } else {
-          this.player.$video.textTracks[1]!.mode = 'hidden'
-        }
+
+        setTimeout(() => {
+          const display = this.player.isFullScreen && this.isShow
+          track.mode = display ? 'showing' : 'hidden'
+        })
       })
     }
   }
 
   changeOffset() {
-    const offset = this.currentSubtitle!.offset
+    const offset = this.currentSubtitle?.offset
 
     if (offset) {
-      const cues = this.player.$video.textTracks[0]?.cues
-      const duration = this.player.duration
+      ;([this.$track, this.$iosTrack] as const).forEach(($track) => {
+        if (!$track) return
+        const cues = $track.track.cues
+        const duration = this.player.duration
 
-      Array.from(cues || []).forEach((cue) => {
-        cue.startTime = clamp(cue.startTime + offset, 0, duration)
-        cue.endTime = clamp(cue.endTime + offset, 0, duration)
-      })
-
-      //ios
-      if (this.$iosTrack) {
-        Array.from(this.player.$video.textTracks[1]?.cues || []).forEach((cue) => {
+        Array.from(cues || []).forEach((cue) => {
           cue.startTime = clamp(cue.startTime + offset, 0, duration)
           cue.endTime = clamp(cue.endTime + offset, 0, duration)
         })
-      }
+      })
     }
   }
 
@@ -181,11 +179,9 @@ export class Subtitle {
   }
 
   update = () => {
-    const { $dom, player } = this
-    const activeCues = player.$video.textTracks[0]?.activeCues
-
+    let html = ''
+    const activeCues = this.$track.track.activeCues
     if (activeCues?.length) {
-      let html = ''
       for (let i = 0; i < activeCues.length; i++) {
         const activeCue = activeCues[i] as VTTCue | undefined
         if (activeCue) {
@@ -200,10 +196,8 @@ export class Subtitle {
             .join('')
         }
       }
-      $dom.innerHTML = html
-    } else {
-      $dom.innerHTML = ''
     }
+    this.$dom.innerHTML = html
   }
 
   show() {

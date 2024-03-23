@@ -6,9 +6,15 @@ import { settingShown } from '../style'
 const FULL_SLIDE_DURATION = 60
 
 export default function (it: UIInterface) {
-  const { player, config, $mask: $dom } = it
+  const {
+    player,
+    config: { theme },
+    $mask: $dom
+  } = it
 
-  if (isMobile && !player.options.isLive && config.slideToSeek && config.slideToSeek != 'none') {
+  const slideToSeek = theme.controller?.slideToSeek
+
+  if (isMobile && !player.options.isLive && slideToSeek && slideToSeek != 'none') {
     player.once('loadedmetadata', () => {
       let startX = 0
       let startY = 0
@@ -17,7 +23,7 @@ export default function (it: UIInterface) {
       let touchedTimer: number
       const rect = player.$root.getBoundingClientRect()
 
-      if (config.slideToSeek == 'always') {
+      if (slideToSeek == 'always') {
         $dom.addEventListener('touchstart', (e) => {
           if (hasClass(player.$root, settingShown)) return
           const { clientX, clientY } = e.changedTouches[0]!
@@ -27,7 +33,7 @@ export default function (it: UIInterface) {
         $dom.addEventListener('touchend', end)
       }
 
-      if (config.slideToSeek == 'long-touch') {
+      if (slideToSeek == 'long-touch') {
         $dom.addEventListener('touchstart', (e) => {
           if (hasClass(player.$root, settingShown)) return
           const { clientX, clientY } = e.changedTouches[0]!
@@ -72,7 +78,7 @@ export default function (it: UIInterface) {
 
       function end() {
         if (startX == 0 && startY == 0) return
-        if (config.slideToSeek == 'long-touch' && touchedTime < 1000) {
+        if (slideToSeek == 'long-touch' && touchedTime < 1000) {
           if (touchedTimer) clearInterval(touchedTimer)
           $dom.removeEventListener('touchmove', moving)
         }

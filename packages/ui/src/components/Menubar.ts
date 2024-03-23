@@ -19,8 +19,8 @@ const setChecked = (elm: HTMLElement) => {
 export default (it: UIInterface) => {
   const initialState = it.config.menu
   const menus: MenuBar[] = []
-  const $top = it.$controllerBar?.children[1]
-  const $end = it.$controllerBottom.children[1]!
+  const $top = it.$controllerBar?.lastElementChild
+  const $end = it.$controllerBottom.lastElementChild!
   const $targets = [$top, $end].filter(Boolean) as HTMLDivElement[]
 
   function clickHandler(e: Event) {

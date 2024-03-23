@@ -35,7 +35,7 @@ export const root = (config: UiConfig) => {
       {
         '--primary-color': `${config.theme!.primaryColor}`,
         '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
-        '--control-bar-height': config.controlBar ? '2.5em' : 0,
+        '--control-bar-height': config.theme!.controller?.display ? '2.5em' : 0,
 
         position: 'absolute',
         top: '0',
@@ -79,6 +79,7 @@ export const icon = $.css({
   outline: 'none',
   font: 'inherit',
   color: 'inherit',
+  fill: '#fff',
   'line-height': 'inherit',
   'text-align': 'inherit',
   width: '100%',

@@ -5,6 +5,7 @@ import './playlist.css'
 
 interface Ctx {
   ui: UIInterface
+  danmaku?: any
 }
 
 interface Segment {
@@ -32,6 +33,8 @@ export interface PlaylistSource extends Omit<Source, 'src'> {
   subtitles?: SubtitleSource[]
   thumbnails?: Thumbnails
   highlights?: Highlight[]
+  // see @oplayer/danmaku
+  danmaku?: string | Function | any[]
 }
 
 export default class PlaylistPlugin implements PlayerPlugin {
@@ -136,7 +139,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
           throw new Error('Empty Source')
         }
 
-        const { src, poster, format, title, subtitles, thumbnails, highlights } = source
+        const { src, poster, format, title, subtitles, thumbnails, highlights, danmaku } = source
 
         return this.player.changeSource({ src, poster, format, title }).then(() => {
           if (subtitles) {
@@ -148,6 +151,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
           if (highlights) {
             this.player.context.ui.changHighlightSource(highlights)
           }
+          if (danmaku) {
+            this.player.context.danmaku?.bootstrap(danmaku)
+          }
         })
       })
       .then(() => {
@@ -155,7 +161,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         if (this.options.autoHide) {
           setTimeout(() => {
             this.hideUI()
-          }, 500)
+          }, 300)
         }
       })
       .catch((error) => {
@@ -164,14 +170,13 @@ export default class PlaylistPlugin implements PlayerPlugin {
       .finally(() => {
         this.currentIndex = idx
         this._updateHeader()
-        console.log(this.$root.querySelector('.playlist-source__active'))
 
         this.$root.querySelector('.playlist-source__active')?.classList.remove('playlist-source__active')
         $target?.classList.add('playlist-source__active')
         setTimeout(() => {
           this.$root.classList.remove('playlist__wait')
           $target?.classList.remove('playlist-source__progress')
-        }, 500)
+        }, 300)
       })
   }
 
@@ -253,7 +258,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
       source.poster
         ? `<img class="playlist-list-item-img" src="${source.poster}" alt="${
             source.title || ''
-          }" loading="lazy" />`
+          }" loading="lazy" onerror="this.classList.add('playlist-list-item-img__error');"/>`
         : '<span>EMPTY</span>'
     }
     </div>
@@ -276,5 +281,9 @@ export default class PlaylistPlugin implements PlayerPlugin {
     )} (${this.currentIndex !== undefined ? `${this.currentIndex + 1}/` : ''}${this.options.sources.length})`
   }
 
-  destroy() {}
+  destroy() {
+    this.currentIndex = undefined
+    this.options.sources = []
+    this.renderList([])
+  }
 }

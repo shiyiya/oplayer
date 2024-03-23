@@ -34,45 +34,138 @@ const player = Player.make('#player', {
 
 ## Full-Options
 
-```js
-OUI({
-  /* Default value, Optional */
-  fullscreen: true,
-  coverButton: true,
-  miniProgressBar: true,
-  autoFocus: true,
-  forceLandscapeOnFullscreen: true,
-  screenshot: false,
-  pictureInPicture: false,
-  showControls: 'always', // 'played'
-  keyboard: { focused: true, global: false },
-  settings: ['loop'],
-  theme: { primaryColor: '#6668ab' },
-  speeds: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5'],
-  slideToSeek: 'none', // 'always' | 'long-touch'
-  controlBar: false, // | { back:  'always' | 'fullscreen' } // appbar
-  topSetting: false, //show setting icon on appbar
-  /* Default value, Optional */
+```typescript
+export type UiConfig = {
+  theme?: {
+    primaryColor?: string
+    watermark?: {
+      /** img or svg */
+      src: string
+      // make screenshot include watermark?
+      // set positioning here [top, left, right, bottom]
+      style?: Record<string, string>
+      attrs?: Record<string, string>
+    }
 
-  /* Custom options */
-  subtitle: {
-    color: 'hotpink',
-    fontSize: 20,
-    fontFamily: '',
-    background: true,
-    source: [
-      {
-        name: 'Japanese',
-        default: true,
-        src: 'https://oplayer.vercel.app/君の名は-jp.srt'
-      },
-      {
-        name: 'CH & JP',
-        src: 'https://oplayer.vercel.app/君の名は.srt'
-      }
-    ]
+    progress?: {
+      /**
+       * default: 'auto'
+       * auto: mobile->top pc->top
+       */
+      position?: 'auto' | 'top' | 'center'
+      backward?: number
+      forward?: number
+      /**
+       * default: true
+       * work only top
+       */
+      mini?: boolean
+    }
+
+    controller?: {
+      /**
+       * default: 'always'
+       */
+      display?: 'always' | 'played'
+      /**
+       * default: if(source.title)
+       */
+      header?: boolean | { back?: 'always' | 'fullscreen' }
+      /**
+       * default: true
+       */
+      coverButton?: boolean
+      /**
+       * default: hover
+       *
+       */
+      displayBehavior?: 'hover' | 'delay' | 'none'
+      /**
+       * default: 'none'
+       */
+      slideToSeek?: 'none' | 'always' | 'long-touch'
+    }
+
+    setting?: {
+      /**
+       * default: 'auto'
+       * auto: mobile->top pc->top
+       */
+      postion?: 'auto' | 'top' | 'bottom'
+    }
   }
-})
+  /**
+   * default: false
+   */
+  autoFocus?: boolean
+
+  /**
+   * default: false
+   */
+  screenshot?: boolean
+  /**
+   * default: true
+   * 全屏（如果不可用将会降级为网页全屏）
+   */
+  fullscreen?: boolean
+  /**
+   * default: false
+   */
+  pictureInPicture?: boolean
+
+  /**
+   *  default: true
+   *  Whether or not the device should rotate to landscape mode when the video
+   *  enters fullscreen.  Note that this behavior is based on an experimental
+   *  browser API, and may not work on all platforms.
+   *  Defaults to true.
+   */
+  forceLandscapeOnFullscreen?: boolean
+
+  /**
+   * PC only - default: { focused: true }
+   */
+  keyboard?: { focused?: boolean; global?: boolean }
+
+  /**
+   * default: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
+   */
+  speeds?: string[]
+
+  subtitle?: Subtitle
+
+  /**
+   * default: ['loop', 'speed']
+   */
+  settings?: (Setting | 'loop')[] | false
+
+  thumbnails?: Thumbnails
+
+  highlight?: {
+    color?: string
+    source?: Highlight[]
+  }
+
+  menu?: MenuBar[]
+
+  errorBuilder?: (error: ErrorPayload, target: HTMLDivElement, cb: (error: ErrorPayload) => void) => void
+
+  icons?: {
+    play?: string
+    pause?: string
+    volume?: [string, string] //on off
+    fullscreen?: [string, string]
+    pip?: [string, string]
+    setting?: string
+    screenshot?: string
+    playbackRate?: string
+    loop?: string
+    progressIndicator?: string
+    loadingIndicator?: string
+    next?: string
+    previous?: string
+  }
+}
 ```
 
 ## Thumbnails
@@ -89,28 +182,6 @@ thumbnails = {
   x: 10,
   y: 10,
   number: 192
-}
-```
-
-## Custom icons
-
-```js
-{
-  icons: {
-    play: '',
-    pause: '',
-    volume: ['', ''], //on off
-    fullscreen: ['', ''], //on off
-    pip: '',
-    setting: '',
-    screenshot: '',
-    playbackRate: '',
-    loop: '',
-    progressIndicator: '',
-    loadingIndicator: '',
-    previous: '',// enable previous,next button
-    next: ''
-  }
 }
 ```
 
@@ -233,6 +304,7 @@ player.context.ui.notice('hello')
 - `f` toggle full-screen
 - `w` toggle full-screen web
 - `m` toggle mute
+- `c` toggle setting panel
 
 ## watermark
 

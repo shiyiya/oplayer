@@ -8,7 +8,17 @@ import { isFullscreen, isWebFullscreen } from '../listeners/fullscreen'
 
 import type { UIInterface } from '../types'
 
-import { controllers, dropdown, dropdownHoverable, expand, time, live } from './ControllerBottom.style'
+import {
+  controllers,
+  dropdown,
+  dropdownHoverable,
+  expand,
+  time,
+  live,
+  withIcon,
+  centerProgressWrap
+} from './ControllerBottom.style'
+import { progress } from './Progress.style'
 
 export const controllerBottomWrap = $.css({
   position: 'absolute',
@@ -16,8 +26,9 @@ export const controllerBottomWrap = $.css({
   right: 0,
   bottom: 0,
   'z-index': 7,
-  padding: '0 1em',
+  padding: '0 0.5em',
   transition: 'transform 0.3s ease, padding 0.3s ease',
+  'min-height': 'var(--control-bar-height)',
   '&::before': {
     position: 'absolute',
     content: "''",
@@ -38,10 +49,15 @@ export const controllerBottomWrap = $.css({
   // },
 
   [`@global .${controllerHidden} &`]: {
-    padding: 0,
     'pointer-events': 'none',
-    transform: 'translateY(calc(100% - 8px))',
+    transform: 'translateY(calc(100% - 0.55em))',
+    padding: 0,
     '&::before': { opacity: 0 }
+  },
+
+  [`@global .${controllerHidden} .${progress}`]: {
+    'padding-left': 0,
+    'padding-right': 0
   }
 })
 
@@ -50,15 +66,13 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   const el = $.render($.create(`div.${controllerBottomWrap}`), $el)
 
-  if (!config.miniProgressBar) {
+  if (!config.theme.progress?.mini) {
     $.css({
       [`@global .${controllerHidden} .${controllerBottomWrap}`]: {
         transform: 'translateY(100%)'
       }
     })
   }
-
-  renderProgress(it, el)
 
   const [playLabel, pauseLabel, screenshotLabel, pipLabel, fullscreenLabel, previousLabel, nextLabel] = [
     player.locales.get('Play'),
@@ -74,7 +88,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
   const $dom = (it.$controllerBottom = $.create(
     `div.${controllers}`,
     {},
-    `<div>
+    `<div class="${withIcon}">
 
     ${
       previousSvg &&
@@ -94,11 +108,13 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
       ${player.options.isLive ? `<span class="${live}"></span>` : ''}
 
       <span class=${time}>${
-      player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
-    }</span>
+        player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
+      }</span>
     </div>
 
-    <div>
+    <div class="${centerProgressWrap}"></div>
+
+    <div class="${withIcon}">
       <div class="${dropdown} ${dropdownHoverable}">
         <button class="${icon} ${player.isMuted ? on : off}" aria-label="Volume">
             ${Icons.get('volume')[0]}
@@ -136,6 +152,15 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
       }
     </div>`
   ))
+
+  if (
+    (config.theme.progress?.position == 'auto' && isMobile) ||
+    config.theme.progress?.position == 'center'
+  ) {
+    renderProgress(it, $dom.querySelector(`.${centerProgressWrap}`)!)
+  } else {
+    renderProgress(it, el)
+  }
 
   const $volume = $dom.querySelector<HTMLButtonElement>('button[aria-label=Volume]')!
   // IOS只能使用物理按键控制音量大小

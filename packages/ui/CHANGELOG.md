@@ -2,6 +2,20 @@
 
 ## UnRelease
 
+## [1.3.0]
+
+- beta and alpha
+
+## [1.2.37-alpha.2]
+
+- fix ios subtitle not hidden
+
+## [1.2.37-alpha.0] Break Changes
+
+- redefine config.
+- center progress.
+- auto position (menu, setting).
+
 ## [1.2.36-beta.4]
 
 - no repeat menu/setting.

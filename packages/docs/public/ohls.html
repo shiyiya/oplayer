@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -212,7 +212,7 @@
     <div id="oplayer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@1.2.36-beta.3/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
 
     <script>
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
@@ -270,6 +270,31 @@
       })
         .use([
           OUI({
+            theme: {
+              watermark,
+              controller: {
+                header: { back: 'fullscreen' },
+                slideToSeek: 'always'
+              }
+            },
+
+            /** @deprecated **/
+            slideToSeek: 'always',
+            controlBar: { back: 'fullscreen' },
+            topSetting: true,
+            /** @deprecated **/
+
+            subtitle,
+            keyboard: { global: true },
+            errorBuilder(e, t, builder) {
+              builder({
+                ...e,
+                message:
+                  e.message ||
+                  '' + '\n' + 'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
+              })
+            },
+
             icons: {
               play: `<svg style='transform:scale(2)' viewBox='0 0 24 24' > <rect width='24' height='24' fill='none'<path fill='white' fill-rule='evenodd' d='M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10' clip-rule='evenodd' opacity='0.4'/> <path fill='white' d='m15.414 13.059l-4.72 2.787C9.934 16.294 9 15.71 9 14.786V9.214c0-.924.934-1.507 1.694-1.059l4.72 2.787c.781.462.781 1.656 0 2.118' /></svg>`,
               // play: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z" /></svg>`,
@@ -291,20 +316,6 @@
               playbackRate: `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M19.46 10a1 1 0 0 0-.07 1a7.55 7.55 0 0 1 .52 1.81a8 8 0 0 1-.69 4.73a1 1 0 0 1-.89.53H5.68a1 1 0 0 1-.89-.54A8 8 0 0 1 13 6.06a7.69 7.69 0 0 1 2.11.56a1 1 0 0 0 1-.07a1 1 0 0 0-.17-1.76A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1a10 10 0 0 0 .55-8.89a1 1 0 0 0-1.75-.11" /><path fill="white" d="M10.59 12.59a2 2 0 0 0 2.83 2.83l5.66-8.49z" /></svg>`,
               loop: `<svg viewBox="0 0 256 256"><rect width="256" height="256" fill="none" /><path fill="white" d="M252 128a60 60 0 0 1-102.43 42.43l-.49-.53l-59.86-67.59a36 36 0 1 0 0 51.38l3.08-3.48a12 12 0 1 1 18 15.91l-3.35 3.78l-.49.53a60 60 0 1 1 0-84.86l.49.53l59.86 67.59a36 36 0 1 0 0-51.38l-3.08 3.48a12 12 0 1 1-18-15.91l3.35-3.78l.49-.53A60 60 0 0 1 252 128" /></svg>`,
               loadingIndicator: `<svg width="3em" height="3em" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5" /><path fill="white" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="0.9s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate" /></svg>`
-            },
-            keyboard: { global: true },
-            slideToSeek: 'always',
-            controlBar: { back: 'fullscreen' },
-            theme: { watermark },
-            subtitle,
-            topSetting: true,
-            errorBuilder(e, t, builder) {
-              builder({
-                ...e,
-                message:
-                  e.message ||
-                  '' + '\n' + 'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
-              })
             }
           })
         ])
@@ -393,8 +404,8 @@
           // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
           var $op = document.querySelector('#oplayer')
           // not in iframe
-          if (window.self == window.top && $op.clientWidth > 960) {
-            $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '24px' : '20px'
+          if (window.self == window.top && $op.clientWidth > 761) {
+            $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '24px' : '22px'
           }
         })
       }

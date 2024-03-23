@@ -15,60 +15,40 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
     }}
     plugins={[
       ui({
+        theme: {
+          controller: { header: true },
+          progress: { position: 'top' }
+        },
         pictureInPicture: true,
-        controlBar: { back: 'fullscreen' },
         menu: [
           {
-            name: '❤❤',
+            name: '❤',
             position: 'top',
             onClick() {
-              alert('❤❤')
+              alert('你也喜欢我么？')
             }
           },
           {
-            name: 'Custom',
+            name: '💕',
             position: 'top',
             children: [
               {
-                name: 'Custom 1',
-                default: true,
-                value: 1
+                name: '🍓',
+                value: '🍓'
               },
               {
-                name: 'Custom 2',
-                value: 2
+                name: '🍉',
+                value: '🍉'
               },
               {
-                name: 'Custom 3',
-                value: 3
+                name: '🍎',
+                value: '🍎'
               }
             ],
-            onChange({ value, name }, elm) {
+            onChange({ value }) {
               alert(`${value}`)
             }
           },
-          !isMobile && {
-            name: 'Custom',
-            position: 'bottom',
-            children: [
-              {
-                name: 'Custom 1',
-                default: true,
-                value: 1
-              },
-              {
-                name: 'Custom 2',
-                value: 2
-              },
-              {
-                name: 'Custom 3',
-                value: 3
-              }
-            ],
-            onChange({ value, name }, elm) {
-              alert(`${value}`)
-            }
-          }
         ].filter(Boolean)
       }),
       hls({ forceHLS: true }),
@@ -139,5 +119,7 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
       }),
       chromecast
     ].filter((it) => it?.apply)}
-  />
+
+/>
+
 </div>

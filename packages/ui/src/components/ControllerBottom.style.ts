@@ -4,7 +4,6 @@ import { icon } from '../style'
 export const time = $.css`
   font-variant-numeric: tabular-nums;
   font-size: 0.875em;
-  margin-top: 2px;
 `
 
 export const live = $.css(
@@ -89,28 +88,25 @@ export const dropItem = $.css({
 
 export const textIcon = $.cls('textIcon')
 
+export const withIcon = $.css({
+  display: 'flex',
+  'align-items': 'center',
+
+  [`& > .${icon}:last-child${
+    isMobile ? `, & >  .${icon}[aria-label="Play"], & >  .${icon}[aria-label="Pause"]` : ''
+  }`]: {
+    'margin-right': 0
+  }
+})
+
 export const controllers = $.css({
   color: '#fff',
-  fill: '#fff',
   height: '2.375em',
   display: 'flex',
   'box-sizing': 'border-box',
   'justify-content': 'space-between',
   'align-items': 'center',
-  'padding-bottom': isMobile ? 0 : '4px',
-
-  // left & right
-  '> div': {
-    display: 'flex',
-    'align-items': 'center',
-    margin: '0 -.5em',
-
-    [`& > .${icon}:last-child${
-      isMobile ? `, & >  .${icon}[aria-label="Play"], & >  .${icon}[aria-label="Pause"]` : ''
-    }`]: {
-      'margin-right': 0
-    }
-  },
+  'padding-bottom': isMobile ? 0 : '0.25em',
 
   [`& .${icon}.${textIcon}`]: {
     width: 'auto',
@@ -141,4 +137,15 @@ export const controllers = $.css({
       ? { '&:active > *': { transform: 'scale(.9)' } }
       : { '&:hover': { 'background-color': 'rgb(255 255 255 / .2)' } }
   )
+})
+
+export const centerProgressWrap = $.css({
+  flex: 1,
+  height: '100%',
+  'padding-left': '0.5em',
+  '> div': {
+    height: '100%',
+    display: 'flex',
+    'align-items': 'center'
+  }
 })

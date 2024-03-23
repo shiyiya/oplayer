@@ -16,8 +16,8 @@ export const highlightTextCls = $.css(`
 
 export const highlightCls = $.css({
   position: 'absolute',
-  width: '8px',
-  height: '4px',
+  width: '0.8em',
+  height: '0.33em',
   'background-color': 'var(--highlight-color)',
   transform: 'translateX(-3px)',
   transition: 'all 0.2s',

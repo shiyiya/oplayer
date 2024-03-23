@@ -1,7 +1,7 @@
-import { UIInterface, UiConfig } from '../types'
+import { UIInterface } from '../types'
 
-export const render = (it: UIInterface, config: UiConfig) => {
-  const watermark = config.theme?.watermark
+export const render = (it: UIInterface, config: UIInterface['config']) => {
+  const watermark = config.theme.watermark
   if (!watermark) return
 
   const wm = (it.$watermark = document.createElement('img'))

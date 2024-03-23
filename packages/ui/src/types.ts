@@ -1,4 +1,4 @@
-import Player, { PlayerPlugin } from '@oplayer/core'
+import Player, { PartialRequired, PlayerPlugin } from '@oplayer/core'
 import type { ICONS_MAP } from './functions/icons'
 import type { Subtitle as SubtitleInstance } from './components/Subtitle'
 
@@ -81,19 +81,56 @@ export type UiConfig = {
       style?: Record<string, string>
       attrs?: Record<string, string>
     }
+
+    progress?: {
+      /**
+       * default: 'auto'
+       * auto: mobile->top pc->top
+       */
+      position?: 'auto' | 'top' | 'center'
+      backward?: number
+      forward?: number
+      /**
+       * default: true
+       * work only top
+       */
+      mini?: boolean
+    }
+
+    controller?: {
+      /**
+       * default: 'always'
+       */
+      display?: 'always' | 'played'
+      /**
+       * default: false | only mobile
+       */
+      header?: boolean | { back?: 'always' | 'fullscreen' }
+      /**
+       * default: true
+       */
+      coverButton?: boolean
+      /**
+       * default: hover
+       *
+       */
+      displayBehavior?: 'hover' | 'delay' | 'none'
+      /**
+       * default: 'none'
+       */
+      slideToSeek?: 'none' | 'always' | 'long-touch'
+      /**
+       * default: 'auto'
+       * auto: mobile->top pc->top
+       */
+      setting?: 'auto' | 'top' | 'bottom'
+    }
   }
   /**
    * default: false
    */
   autoFocus?: boolean
-  /**
-   * PC only - default: { focused: true }
-   */
-  keyboard?: { focused?: boolean; global?: boolean }
-  /**
-   * default: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
-   */
-  speeds?: string[]
+
   /**
    * default: false
    */
@@ -107,25 +144,6 @@ export type UiConfig = {
    * default: false
    */
   pictureInPicture?: boolean
-  /**
-   * default: true
-   */
-  miniProgressBar?: boolean
-
-  /**
-   * default: true
-   */
-  coverButton?: boolean
-
-  /**
-   * default: 'always'
-   */
-  showControls?: 'always' | 'played'
-
-  /**
-   * default: 'none'
-   */
-  slideToSeek?: 'none' | 'always' | 'long-touch'
 
   /**
    *  default: true
@@ -136,25 +154,22 @@ export type UiConfig = {
    */
   forceLandscapeOnFullscreen?: boolean
 
+  /**
+   * PC only - default: { focused: true }
+   */
+  keyboard?: { focused?: boolean; global?: boolean }
+
+  /**
+   * default: ['2.0', '1.75', '1.25', '1.0', '0.75', '0.5']
+   */
+  speeds?: string[]
+
   subtitle?: Subtitle
+
   /**
    * default: ['loop', 'speed']
    */
   settings?: (Setting | 'loop')[] | false
-
-  /**
-   * default: false
-   * back only work on mobile
-   */
-  controlBar?: { back?: 'always' | 'fullscreen' } // | boolean
-
-  ctrlHideBehavior?: 'hover' | 'delay' | 'none'
-
-  /**
-   * default: false
-   * required -> controlBar: true
-   */
-  topSetting?: boolean
 
   thumbnails?: Thumbnails
 
@@ -172,7 +187,7 @@ export type UiConfig = {
     pause?: string
     volume?: [string, string] //on off
     fullscreen?: [string, string]
-    pip?: string
+    pip?: [string, string]
     setting?: string
     screenshot?: string
     playbackRate?: string
@@ -185,7 +200,7 @@ export type UiConfig = {
 
   /*  --- WIP ---  */
 
-  contextmenu?: []
+  // contextmenu?: []
 }
 
 export type ErrorPayload =
@@ -196,7 +211,7 @@ export type ErrorPayload =
     }
 
 export interface UIInterface extends PlayerPlugin {
-  config: UiConfig
+  config: PartialRequired<UiConfig, 'theme'>
 
   player: Player
 
