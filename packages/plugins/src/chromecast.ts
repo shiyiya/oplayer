@@ -10,10 +10,10 @@ class ChromeCast implements PlayerPlugin {
   public name = 'oplayer-plugin-chromecast'
   public version = __VERSION__
 
-  constructor(
-    public player: Player,
-    public _player?: cast.framework.RemotePlayer
-  ) {}
+  public player: Player
+  public _player?: cast.framework.RemotePlayer
+
+  constructor() {}
 
   apply(player: Player) {
     if (!this.canPlay()) return
