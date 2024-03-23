@@ -1,6 +1,8 @@
-import { PlayerPlugin, loadSDK } from '@oplayer/core'
+import { PlayerPlugin, loadSDK, isIOS } from '@oplayer/core'
 
 function noop() {}
+
+const IS_CHROME = !!window.chrome
 
 //TODO: sync event
 
@@ -8,6 +10,8 @@ export default <PlayerPlugin>{
   name: 'oplayer-plugin-chromecast',
   version: __VERSION__,
   apply(player) {
+    if (!IS_CHROME || isIOS) return
+
     let currentSession: chrome.cast.Session | undefined, currentMedia: chrome.cast.media.Media | undefined
     const ui = player.context.ui
 
