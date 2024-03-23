@@ -2,7 +2,7 @@ import { PlayerPlugin, loadSDK, isIOS } from '@oplayer/core'
 
 function noop() {}
 
-const IS_CHROME = !!window.chrome
+const IS_CHROME = !!globalThis.chrome
 
 //TODO: sync event
 
@@ -12,7 +12,8 @@ export default <PlayerPlugin>{
   apply(player) {
     if (!IS_CHROME || isIOS) return
 
-    let currentSession: chrome.cast.Session | undefined, currentMedia: chrome.cast.media.Media | undefined
+    let currentSession: chrome.cast.Session | undefined
+    let currentMedia: chrome.cast.media.Media | undefined
     const ui = player.context.ui
 
     function onError(e: chrome.cast.Error | Error) {
