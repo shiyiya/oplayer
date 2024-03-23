@@ -8,7 +8,7 @@ import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
 import torrent from '@oplayer/torrent'
-import { PlaylistPlugin } from '@oplayer/plugins'
+import { PlaylistPlugin, Chromecast } from '@oplayer/plugins'
 
 import DANMAKU from '../../packages/docs/public/danmaku.xml'
 import POSTER from '../../packages/docs/public/poster.png'
@@ -194,7 +194,8 @@ const player = Player.make<Ctx>('#player', {
       //     }
       //   }
       // },
-    })
+    }),
+    new Chromecast()
   ])
   .create()
 

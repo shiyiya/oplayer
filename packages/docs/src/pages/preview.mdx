@@ -6,7 +6,7 @@ import dash from '@oplayer/dash'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
 import danmaku from '@oplayer/danmaku'
-import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
+import { PlaylistPlugin, Chromecast } from '@oplayer/plugins'
 
 <div className="nx-rounded-sm nx-overflow-hidden" style={{ maxWidth: '1024px', margin: '1.25rem auto' }}>
   <Player
@@ -117,7 +117,7 @@ import { PlaylistPlugin, chromecast } from '@oplayer/plugins'
           }
         ]
       }),
-      chromecast
+      new Chromecast()
     ].filter((it) => it?.apply)}
 
 />
