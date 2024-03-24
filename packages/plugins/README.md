@@ -5,7 +5,7 @@ npm i @oplayer/plugins
 ```
 
 ```js
-import { PlaylistPlugin, vttThumbnails, chromecast, ad } from '@oplayer/plugins'
+import { PlaylistPlugin, Chromecast, ad, vttThumbnails } from '@oplayer/plugins'
 ```
 
 ```html
@@ -94,6 +94,8 @@ Player.make('#oplayer')
 
 ### Chromecast
 
-Player.make('#oplayer').use([chromecast]).create()
+```js
+Player.make('#oplayer').use([new Chromecast()]).create()
+```
 
 ### AD

@@ -6,6 +6,15 @@ const ICON = `<svg viewBox="0 0 1024 1024" style="scale: 0.9;"><path d="M895.66 
 
 // TODO: Sync remote controller state
 
+export interface ChromeCastOptions {
+  autoJoinPolicy?: chrome.cast.AutoJoinPolicy
+  language?: string | undefined
+  receiverApplicationId?: string | undefined
+  resumeSavedSession?: boolean | undefined
+  /** The following flag enables Cast Connect(requires Chrome 87 or higher) */
+  androidReceiverCompatible?: boolean | undefined
+}
+
 class ChromeCast implements PlayerPlugin {
   public name = 'oplayer-plugin-chromecast'
   public version = __VERSION__
@@ -13,13 +22,15 @@ class ChromeCast implements PlayerPlugin {
   public player: Player
   public _player?: cast.framework.RemotePlayer
 
-  constructor() {}
+  constructor(public options: ChromeCastOptions) {}
 
   apply(player: Player) {
     if (!this.canPlay()) return
 
     this.player = player
     this.registerUI()
+
+    return this
   }
 
   get cast() {
@@ -57,10 +68,10 @@ class ChromeCast implements PlayerPlugin {
       return
     }
 
-    //TODO: options
     this.cast.setOptions({
       receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-      autoJoinPolicy: chrome.cast.AutoJoinPolicy.TAB_AND_ORIGIN_SCOPED
+      autoJoinPolicy: chrome.cast.AutoJoinPolicy.TAB_AND_ORIGIN_SCOPED,
+      ...this.options
     })
 
     //@ts-ignore
@@ -165,7 +176,7 @@ class ChromeCast implements PlayerPlugin {
   }
 
   _notice(message: string) {
-    this.player.context.ui?.notice('Chromecast: ' + message)
+    this.player.context.ui?.notice(message)
   }
 }
 

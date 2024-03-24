@@ -5,16 +5,15 @@ npm i @oplayer/plugins
 ```
 
 ```js
-import { chromecast } from '@oplayer/plugins'
+import { Chromecast } from '@oplayer/plugins'
+
+Player.make('#oplayer').use([new Chromecast()]).create()
 ```
 
 ```html
-<!-- Chromecast -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js"></script>
-```
 
-### Chromecast
-
-```js
-Player.make('#oplayer').use([chromecast]).create()
+<script>
+  Player.make('#oplayer').use([new OChromecast()]).create()
+</script>
 ```
