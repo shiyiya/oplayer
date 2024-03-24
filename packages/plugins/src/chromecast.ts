@@ -22,7 +22,7 @@ class ChromeCast implements PlayerPlugin {
   public player: Player
   public _player?: cast.framework.RemotePlayer
 
-  constructor(public options: ChromeCastOptions) {}
+  constructor(public options?: ChromeCastOptions) {}
 
   apply(player: Player) {
     if (!this.canPlay()) return
