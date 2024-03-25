@@ -18,7 +18,8 @@ export const globals = {
   'hls.js': 'Hls',
   'hls.js/dist/hls.min.js': 'Hls',
   'mpegts.js/dist/mpegts.js': 'mpegts',
-  'webtorrent/dist/webtorrent.min.js': 'WebTorrent'
+  'webtorrent/dist/webtorrent.min.js': 'WebTorrent',
+  'webtorrent/webtorrent.min.js': 'WebTorrent'
 }
 
 const babelPlugins = [

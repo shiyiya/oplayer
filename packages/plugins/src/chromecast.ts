@@ -85,16 +85,12 @@ class ChromeCast implements PlayerPlugin {
   __buildRequest() {
     const { source, isLive } = this.player.options
     const mediaInfo = new chrome.cast.media.MediaInfo(source.src, source.type || 'video/mp4')
+    mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
 
-    mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata()
-    mediaInfo.metadata.title = source.title
-    mediaInfo.metadata.images = [{ url: source.poster }]
-
-    if (isLive) {
-      mediaInfo.streamType = chrome.cast.media.StreamType.LIVE
-    } else {
-      mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED
-    }
+    const metadata = new chrome.cast.media.GenericMediaMetadata()
+    if (source.title) metadata.title = source.title
+    if (source.poster) metadata.images = [{ url: source.poster, height: null, width: null }]
+    mediaInfo.metadata = metadata
 
     const subtitles = this.player.context.ui?.config.subtitle?.source as any[]
     mediaInfo.tracks = subtitles.map((sub, id) => {
@@ -103,7 +99,7 @@ class ChromeCast implements PlayerPlugin {
       track.name = sub.name
       track.trackContentId = sub.src
       track.trackContentType = sub.type || 'text/vtt' //TODO: url match
-      // track.language = sub.language
+      track.language = sub.language || sub.name
       track.subtype = chrome.cast.media.TextTrackType.CAPTIONS
 
       return track
