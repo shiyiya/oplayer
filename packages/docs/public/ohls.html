@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="no-referrer" />
-    <title>Start streaming now using OPlayer - Free HTML5 Player</title>
+    <title>OPlayer - Start streaming now using OPlayer</title>
     <meta name="keywords" content="oplayer,hls player,online hls player" />
     <style>
       body,
@@ -216,14 +216,18 @@
 
     <script>
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
-      var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
-      var playlistScriptCdn =
-        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12.beta.0/dist/playlist.min.js'
+
+      var dashSDKScriptCdn = 'https://cdn.dashjs.org/latest/dash.all.min.js'
+      var dashScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js'
+
+      var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
       var chromecastScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js'
+      var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
       var query = document.location.search.substring(1)
       var src, poster, subtitle, danmaku, title, watermark
       var playlist = []
+
       if (query.startsWith('http')) {
         src = query.endsWith('==')
           ? atob(query.substring(0, query.length - 2))
@@ -233,7 +237,7 @@
         src = safeDecodeURIComponent(search.get('src'))
         playlist = JSON.parse(safeDecodeURIComponent(search.get('playlist')) || '[]')
         poster = safeDecodeURIComponent(search.get('poster'))
-        title = safeDecodeURIComponent(search.get('title'))
+        title = safeDecodeURIComponent(search.get('title')) || '❤OPlayer'
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
 
         subtitle = search.get('subtitle')
@@ -248,7 +252,7 @@
             }
           : undefined
 
-        if (title) document.title = title
+        if (title && title != '❤OPlayer') document.title = title
 
         watermark = search.get('watermark')
           ? {
@@ -268,7 +272,7 @@
         source: {
           src: /m3u8(#|\?|$)/.test(src) || /.mpd(#|\?|$)/i.test(src) ? undefined : src,
           poster,
-          title: title || 'Free HTML5 Player'
+          title: title
         },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
@@ -331,7 +335,11 @@
         [
           chromecastScriptCdn,
           () => {
-            player.applyPlugin(new OChromecast())
+            if (OChromecast.constructor == Object) {
+              player.applyPlugin(OChromecast)
+            } else {
+              player.applyPlugin(new OChromecast())
+            }
           }
         ]
       ]
@@ -346,11 +354,11 @@
       }
 
       if (/.mpd(#|\?|$)/i.test(src) || playlist.some((it) => /.mpd(#|\?|$)/i.test(it.src))) {
-        deps.push(['https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js', () => {}])
+        deps.push([dashScriptCdn, () => {}])
         deps.push([
-          'https://cdn.dashjs.org/latest/dash.all.min.js',
+          dashSDKScriptCdn,
           () => {
-            const dash = ODash()
+            var dash = ODash()
             dash.constructor.library = dashjs
             player.applyPlugin(dash)
           }
@@ -371,66 +379,69 @@
         ])
       }
 
+      if (danmaku || playlist.some((it) => it.danmaku)) {
+        deps.push([
+          danmakuScriptCdn,
+          () => {
+            player.applyPlugin(ODanmaku({ source: danmaku }))
+          }
+        ])
+      }
+
       loadScripts(deps.map(([s]) => s)).then(() => {
-        deps.map(([_, fn]) => fn())
-        bootstrap()
+        try {
+          deps.map(([_, fn]) => fn())
+        } catch (error) {}
+        if (!player.options.source.src && src) player.changeSource({ src, poster, title })
       })
 
-      function bootstrap() {
-        if (!player.options.source.src && src) player.changeSource({ src, poster })
+      player.on('ratechange', () => {
+        if (!player.isSourceChanging)
+          localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+      })
 
-        if (danmaku) {
-          loadScripts([danmakuScriptCdn]).then((p) => {
-            player.applyPlugin(ODanmaku({ source: danmaku }))
+      player.on('volumechange', () => {
+        localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+      })
+
+      player.on('videosourcechange', (e) => {
+        document.title = e.payload.title
+        var prevTime = localStorage.getItem(e.payload.src)
+        if (prevTime) {
+          player.once('loadedmetadata', () => {
+            player.seek(prevTime)
           })
         }
+      })
 
-        player.on('ratechange', () => {
-          if (!player.isSourceChanging)
-            localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
-        })
+      player.on('timeupdate', () => {
+        localStorage.setItem(player.options.source.src, player.currentTime.toString())
+      })
 
-        player.on('volumechange', () => {
-          localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
-        })
-
-        if (src) {
-          player.on('timeupdate', () => {
-            localStorage.setItem(src, player.currentTime.toString())
-          })
-
-          var prevTime = localStorage.getItem(src)
-          if (prevTime) {
-            player.on('loadedmetadata', () => {
-              player.seek(prevTime)
-            })
-          }
+      new Promise(() => {
+        // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
+        var $op = document.querySelector('#oplayer')
+        // not in iframe
+        if (window.self == window.top && $op.clientWidth > 761) {
+          $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '24px' : '22px'
         }
-
-        new Promise(() => {
-          // https://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
-          var $op = document.querySelector('#oplayer')
-          // not in iframe
-          if (window.self == window.top && $op.clientWidth > 761) {
-            $op.firstElementChild.children[1].style.fontSize = $op.clientWidth > 1024 ? '24px' : '22px'
-          }
-        })
-      }
-
-      function safeDecodeURIComponent(uri) {
-        return uri ? decodeURIComponent(uri) : undefined
-      }
+      })
 
       function loadScripts(scripts) {
         return Promise.all(
           scripts.map((s) => {
-            return new Promise((r) => {
+            return new Promise((r, f) => {
               var t = document.body.appendChild(document.createElement('script'))
               t.src = s
               t.onload = r
+              t.onerror = f
             })
           })
         )
+      }
+
+      function safeDecodeURIComponent(uri) {
+        return uri ? decodeURIComponent(uri) : undefined
       }
     </script>
   </body>
