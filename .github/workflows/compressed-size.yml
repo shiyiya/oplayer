@@ -50,4 +50,4 @@ jobs:
         with:
           build-script: 'build:packs'
           repo-token: '${{ secrets.GIT_HUB_TOKEN }}'
-          pattern: './packages/*/{dist,compiled}/**/*.{js}'
+          pattern: './packages/*/{dist,compiled}/**/*.js'
