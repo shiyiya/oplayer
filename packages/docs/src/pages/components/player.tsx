@@ -5,6 +5,7 @@ import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import mpegts from '@oplayer/mpegts'
 import style from './player.module.scss'
+import { Chromecast } from '@oplayer/plugins'
 
 const userPreferencesPlugin: PlayerPlugin = {
   name: 'userPreferencesPlugin',
@@ -48,7 +49,8 @@ export default () => {
         hls({ forceHLS: true }),
         dash(),
         mpegts(),
-        userPreferencesPlugin
+        userPreferencesPlugin,
+        new Chromecast()
       ])
       .create()
       .on(console.log)
@@ -87,8 +89,8 @@ export default () => {
         </button>
       </div>
       <p className="tips">
-        Your streaming URL must be HTTPS-compatible, otherwise your stream may not play. Make sure
-        CORS is enabled on streaming server when using HLS and MPEG-DASH streams.
+        Your streaming URL must be HTTPS-compatible, otherwise your stream may not play. Make sure CORS is
+        enabled on streaming server when using HLS and MPEG-DASH streams.
       </p>
       <div
         id="oplayer"

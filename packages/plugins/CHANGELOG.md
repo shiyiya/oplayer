@@ -2,13 +2,17 @@
 
 ## UnRelease
 
+## 1.0.12-beta.0
+
+- chromecast: refactor
+
 ## 1.0.11
 
-- support danmaku
+- playlist: support danmaku
 
 ## 1.0.11-alpha.1
 
-- add error fallback for poster
+- playlist: add error fallback for poster
 
 ## 1.0.10-beta.3
 

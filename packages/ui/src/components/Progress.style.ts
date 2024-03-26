@@ -21,7 +21,7 @@ export const dot = $.css({
     height: '1.4em',
     top: '0',
     left: '0',
-    margin: '-0.5em 0 0 -0.5em',
+    margin: '-0.535em 0 0 -0.7em',
     transform: isMobile ? 'none' : 'scale(0)',
     transition: 'transform 0.3s ease',
     'z-index': '1'
@@ -30,7 +30,7 @@ export const dot = $.css({
   '& > *:not(svg)': {
     width: '1em',
     height: '1em',
-    margin: '-0.4em 0 0 -0.4em',
+    margin: '-0.335em 0 0 -0.5em',
     'border-radius': '50%',
     'background-color': '#fff'
   }

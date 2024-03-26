@@ -217,7 +217,8 @@
     <script>
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
-      var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
+      var playlistScriptCdn =
+        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12.beta.0/dist/playlist.min.js'
       var chromecastScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js'
 
       var query = document.location.search.substring(1)
@@ -264,7 +265,11 @@
       }
 
       var player = OPlayer.make('#oplayer', {
-        source: { src: !playlist.length ? src : undefined, poster, title: title || 'Free HTML5 Player' },
+        source: {
+          src: /m3u8(#|\?|$)/.test(src) || /.mpd(#|\?|$)/i.test(src) ? undefined : src,
+          poster,
+          title: title || 'Free HTML5 Player'
+        },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
@@ -326,7 +331,7 @@
         [
           chromecastScriptCdn,
           () => {
-            player.applyPlugin(OChromecast)
+            player.applyPlugin(new OChromecast())
           }
         ]
       ]
@@ -372,6 +377,8 @@
       })
 
       function bootstrap() {
+        if (!player.options.source.src && src) player.changeSource({ src, poster })
+
         if (danmaku) {
           loadScripts([danmakuScriptCdn]).then((p) => {
             player.applyPlugin(ODanmaku({ source: danmaku }))
