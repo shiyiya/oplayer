@@ -149,12 +149,15 @@ class ChromeCast implements PlayerPlugin {
         throw new Error(`Chrome Cast Error Code: ${errorCode}`)
       }
     } catch (error) {
-      const msg =
-        error instanceof chrome.cast.Error
-          ? `${error.code} - ${error.description} \n ${error.details}`
-          : (error as Error).message
+      let msg = 'UNKNOWN ERROR'
 
-      this._notice(msg)
+      if (error instanceof Error) {
+        msg = error.message
+      } else if (!!chrome.cast && error instanceof chrome.cast.Error) {
+        msg = `${error.code} - ${error.description} \n ${error.details}`
+      }
+
+      this.player.emit('notice', { text: msg })
     }
   }
 
@@ -169,10 +172,6 @@ class ChromeCast implements PlayerPlugin {
       icon: icons.chromecast || ICON,
       onClick: () => this.start()
     })
-  }
-
-  _notice(message: string) {
-    this.player.context.ui?.notice(message)
   }
 }
 
