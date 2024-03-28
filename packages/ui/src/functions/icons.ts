@@ -33,6 +33,7 @@ export const ICONS_MAP = {
   lang: langSvg,
   // plugins
   chromecast: null,
+  airplay: null,
   danmaku: null,
   playlist: null,
   previous: null,

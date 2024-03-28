@@ -9,7 +9,8 @@ import {
   EVENTS,
   OH_EVENTS,
   PLAYER_EVENTS,
-  VIDEO_EVENTS
+  VIDEO_EVENTS,
+  loadSDK
 } from '@oplayer/core'
 
 import ui from './index'
@@ -31,7 +32,8 @@ export default Object.assign(
     isiPad,
     isiPhone,
     isIOS,
-    isQQBrowser
+    isQQBrowser,
+    loadSDK
   },
   {
     ui: ui

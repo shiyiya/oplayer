@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## 1.0.12-beta.2
+
+- airplay support
+
 ## 1.0.12-beta.0
 
 - chromecast: refactor

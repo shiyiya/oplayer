@@ -23,6 +23,7 @@
 - **Preview thumbnails** - support for displaying preview thumbnails (spirit or [vtt](https://oplayer.vercel.app/plugins/vtt-thumbnails))
 - **No frameworks** - written in "vanilla" JavaScript, no dependencies required
 - **[Chromecast](https://oplayer.vercel.app/plugins/chromecast)** - cast video to your device
+- **[AirPlay](./packages/plugins/)** - cast video to apple device
 - **[Playlist](https://oplayer.vercel.app/plugins/playlist)** - supports playlist list ui
 - **[Danmaku](./packages/danmaku/)** - biu biu biu ~
 - **... and much more!**
@@ -30,9 +31,11 @@
 ## Who use OPlayer?
 
 - **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/116)**
-- [UPV](https://onime.netlify.app) : free anime no ad.
-- [Animex](https://www.animex.live/) : Watch Anime for free in HD quality with English subbed or dubbed.
-- ~~[NGEWIBU.TV](https://ngewibu.tv/) : Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis~~
+- [UPV](https://onime.netlify.app) - free anime no ad.
+- [Binged](https://binge.lol) - Binged - Watch Movies & TV Shows Free Without Ads
+- [Animex](https://www.animex.live/) - Watch Anime for free in HD quality with English subbed or dubbed.
+- [NUSANIME](https://play.google.com/store/apps/details?id=com.nusanime.app) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
+- ~~[NGEWIBU.TV](https://ngewibu.tv/) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis~~
 
 ## Support
 

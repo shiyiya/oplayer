@@ -5,7 +5,7 @@ npm i @oplayer/plugins
 ```
 
 ```js
-import { PlaylistPlugin, Chromecast, ad, vttThumbnails } from '@oplayer/plugins'
+import { PlaylistPlugin, Chromecast, AirPlay, ad, vttThumbnails } from '@oplayer/plugins'
 ```
 
 ```html
@@ -20,6 +20,9 @@ import { PlaylistPlugin, Chromecast, ad, vttThumbnails } from '@oplayer/plugins'
 
 <!-- Chromecast -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js"></script>
+
+<!-- AirPlay -->
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/airplay.min.js"></script>
 
 <!-- AD -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/ad.min.js"></script>
@@ -96,6 +99,12 @@ Player.make('#oplayer')
 
 ```js
 Player.make('#oplayer').use([new Chromecast()]).create()
+```
+
+### AirPlay
+
+```js
+Player.make('#oplayer').use([new AirPlay()]).create()
 ```
 
 ### AD
