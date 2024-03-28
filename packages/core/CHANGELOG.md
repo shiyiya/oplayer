@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## [1.2.34-beta.0]
+
+- fix index.ui.js
+
 ## [1.2.33]
 
 - pause before source changeing.

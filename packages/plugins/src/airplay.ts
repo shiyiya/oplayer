@@ -15,6 +15,7 @@ class AirPlay implements PlayerPlugin {
 
     this.player = player
 
+    //https://developer.apple.com/documentation/webkitjs/adding_an_airplay_button_to_your_safari_media_controls
     player.$video.addEventListener('webkitplaybacktargetavailabilitychanged', (e: any) => {
       if (e.availability === 'available') {
         this.registerUI()

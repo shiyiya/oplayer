@@ -1,4 +1,5 @@
-import Player, { PlayerPlugin, loadSDK, isIOS, Source } from '@oplayer/core'
+import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import { loadSDK, isIOS } from '@oplayer/core'
 
 const IS_CHROME = !!globalThis.chrome
 
