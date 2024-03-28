@@ -30,7 +30,7 @@ class AirPlay implements PlayerPlugin {
     return !!(globalThis as any).WebKitPlaybackTargetAvailabilityEvent
   }
 
-  async start() {
+  start() {
     const $media: any = this.player.$video
     if ($media.webkitShowPlaybackTargetPicker) {
       $media.webkitShowPlaybackTargetPicker()

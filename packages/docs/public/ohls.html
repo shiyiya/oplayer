@@ -213,6 +213,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.2/dist/airplay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.2/dist/chromecast.min.js"></script>
 
     <script>
       var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
@@ -221,7 +223,6 @@
       var dashScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js'
 
       var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
-      var chromecastScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/chromecast.min.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
       var query = document.location.search.substring(1)
@@ -326,23 +327,14 @@
               loop: `<svg viewBox="0 0 256 256"><rect width="256" height="256" fill="none" /><path fill="white" d="M252 128a60 60 0 0 1-102.43 42.43l-.49-.53l-59.86-67.59a36 36 0 1 0 0 51.38l3.08-3.48a12 12 0 1 1 18 15.91l-3.35 3.78l-.49.53a60 60 0 1 1 0-84.86l.49.53l59.86 67.59a36 36 0 1 0 0-51.38l-3.08 3.48a12 12 0 1 1-18-15.91l3.35-3.78l.49-.53A60 60 0 0 1 252 128" /></svg>`,
               loadingIndicator: `<svg width="3em" height="3em" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5" /><path fill="white" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="0.9s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate" /></svg>`
             }
-          })
+          }),
+          new OAirplay(),
+          new OChromecast()
         ])
         .create()
         .on(console.log)
 
-      var deps = [
-        [
-          chromecastScriptCdn,
-          () => {
-            if (OChromecast.constructor == Object) {
-              player.applyPlugin(OChromecast)
-            } else {
-              player.applyPlugin(new OChromecast())
-            }
-          }
-        ]
-      ]
+      var deps = []
 
       if (/m3u8(#|\?|$)/.test(src) || playlist.some((it) => /m3u8(#|\?|$)/.test(it.src))) {
         deps.push([
