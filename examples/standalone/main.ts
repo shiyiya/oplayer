@@ -10,14 +10,6 @@ import ui from '@oplayer/ui'
 import torrent from '@oplayer/torrent'
 import { PlaylistPlugin, Chromecast } from '@oplayer/plugins'
 
-import DANMAKU from '../../packages/docs/public/danmaku.xml'
-import POSTER from '../../packages/docs/public/poster.png'
-import THUMB from '../../packages/docs/public/thumbnails.jpg'
-import SRT from '../../packages/docs/public/君の名は.srt'
-import JPSRT from '../../packages/docs/public/君の名は-jp.srt'
-import SUPER_DANMAKU from '../../packages/docs/public/天气之子.xml'
-import FLV from '../../packages/docs/public/op.flv'
-import MP4 from '../../packages/docs/public/君の名は.mp4'
 import vercel from '../../packages/docs/public/vercel.svg'
 
 import emptyBuffer from './emptyBuffer'
@@ -33,6 +25,15 @@ interface Ctx {
 }
 
 const initialIndex = 0
+
+const POSTER = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png`
+const DANMAKU = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml`
+const THUMB = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/thumbnails.jpg`
+const SRT = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt`
+const JPSRT = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt`
+const SUPER_DANMAKU = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/天气之子.xml`
+const FLV = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/op.flv`
+const MP4 = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4`
 
 const player = Player.make<Ctx>('#player', {
   // muted: true,

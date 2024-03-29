@@ -1,13 +1,8 @@
-import flv from '../../packages/docs/public/op.flv'
-import MP4 from '../../packages/docs/public/君の名は.mp4'
-
 export const VIDEO_LIST = [
-  MP4,
   'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd',
   'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8',
   'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
   'https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/elephants_dream_480p_heaac5_1_https.mpd',
-  flv,
   'https://yun.ssdm.cc/SBDM/ShinigamiBocchantoKuroMaid02.m3u8',
   'https://test-streams.mux.dev/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8',
   'https://video.zidivo.com/live983/GrtjM_FNGC/playlist.m3u8', //live
@@ -41,7 +36,7 @@ export const FORMAT_MENU = [
   {
     name: 'MP4',
     default: true,
-    value: MP4
+    value: 'MP4'
   },
   {
     name: 'HLS',
@@ -53,7 +48,7 @@ export const FORMAT_MENU = [
   },
   {
     name: 'FLV',
-    value: flv
+    value: 'flv'
   }
 ]
 
