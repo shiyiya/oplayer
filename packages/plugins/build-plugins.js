@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import { build } from 'vite'
 import { globSync } from 'glob'
 import chokidar from 'chokidar'
@@ -16,7 +16,7 @@ const globals = {
 async function buildPlugin(name, dev) {
   const { version, description, author, homepage } = JSON.parse(fs.readFileSync(`package.json`, 'utf-8'))
   const outfileName = name
-  const pluginName = name=='index'?'@oplayer/plugins':`@oplayer/${outfileName}`
+  const pluginName = name == 'index' ? '@oplayer/plugins' : `@oplayer/${outfileName}`
   const now = Date.now()
   console.log(`👾 Start built ${pluginName} ··· `)
 

@@ -414,13 +414,13 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   ) {
     return new Promise<void>((resolve, reject) => {
       if (this.isSourceChanging) return reject(Error('Previous Source is Changing.'))
+      const { isPlaying, currentTime, volume, playbackRate } = this
 
       this.pause()
       this.hasError = false
       this.isSourceChanging = true
       this.emit(options.preEvent, sourceLike)
 
-      const { isPlaying, currentTime, volume, playbackRate } = this
       const { keepPlaying, keepTime } = options
       const isPreloadNone = this.options.preload == 'none'
       const canplay = isPreloadNone ? 'loadstart' : 'loadedmetadata'

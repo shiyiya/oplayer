@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## [1.3.0-beta.1]
+
+- fix index.ui banner
+
 ## [1.3.0]
 
 - beta and alpha
