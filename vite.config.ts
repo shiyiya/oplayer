@@ -96,21 +96,26 @@ export const viteBuild = (packageDirName: string, options: BuildOptions = {}): B
   )
 }
 
-export const viteConfig = (packageDirName: string, options: ViteUserConfig = {}) => {
+export const viteConfig = (
+  packageDirName: string,
+  options: ViteUserConfig = {},
+  withBanner: boolean = true
+) => {
   const vitePlugins = options.plugins ?? []
   const { name, version, description, author, homepage } = JSON.parse(
     fs.readFileSync(resolvePath(`packages/${packageDirName}/package.json`), { encoding: 'utf-8' })
   )
+  const defaultPlugins = withBanner
+    ? [
+        banner(
+          `/**\n * name: ${name}\n * version: v${version}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
+        )
+      ]
+    : []
   return defineConfig({
     ...options,
     build: viteBuild(packageDirName, options.build),
-    plugins: [
-      ...vitePlugins,
-      ...rollupPlugins,
-      banner(
-        `/**\n * name: ${name}\n * version: v${version}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
-      )
-    ] as any,
+    plugins: [...vitePlugins, ...rollupPlugins, ...defaultPlugins] as any,
     define: { __VERSION__: `'${version}'` }
   })
 }
