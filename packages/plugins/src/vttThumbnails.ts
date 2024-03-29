@@ -3,6 +3,7 @@ import { $, Player } from '@oplayer/core'
 
 type Thumbnails = {
   src: string
+  prefix?: string
   width?: number
   height?: number
 }
@@ -116,13 +117,7 @@ function plugin(player: Player, options?: Thumbnails) {
     const imageProps = getPropsFromDef(vttImageDef)
 
     cssObj.background =
-      'url("' +
-      mergeSrc(imageProps.image!) +
-      '") no-repeat -' +
-      imageProps.x +
-      'px -' +
-      imageProps.y +
-      'px'
+      'url("' + mergeSrc(imageProps.image!) + '") no-repeat -' + imageProps.x + 'px -' + imageProps.y + 'px'
     cssObj.width = imageProps.w + 'px'
     cssObj.height = imageProps.h + 'px'
     cssObj.url = mergeSrc(imageProps.image!)
@@ -147,7 +142,7 @@ function plugin(player: Player, options?: Thumbnails) {
       if (plain.startsWith('http://') && i < 7) return src + path
 
       const fileName = plain.substring(i + 1) // 不包含 '/'
-      cache[path] = src.replace(fileName, path)
+      cache[path] = (options?.prefix || '') + src.replace(fileName, path)
 
       return cache[path]
     }

@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## 1.0.12-beta.3
+
+- vtt thumbnails: `prefix` options
+
 ## 1.0.12-beta.2
 
 - airplay support
