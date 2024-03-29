@@ -10,9 +10,8 @@ export default viteConfig(
     build: {
       emptyOutDir: false,
       rollupOptions: {
-        external: []
-        //TODO: fix no banner & remove package.json cp
-        // output: { dir: '../core/dist' }
+        external: [],
+        output: { dir: '../core/dist' }
       },
       lib: {
         entry: './src/index.core.ts',
@@ -22,9 +21,10 @@ export default viteConfig(
       } as LibraryOptions
     },
     plugins: [
-      banner(
-        `/**\n * name: ${CoreName} + ${UIName}\n * version: v${CoreVersion} + v${UIVersion}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
-      )
+      banner({
+        outDir: '../core/dist',
+        content: `/**\n * name: ${CoreName} + ${UIName}\n * version: v${CoreVersion} + v${UIVersion}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
+      })
     ]
   },
   false
