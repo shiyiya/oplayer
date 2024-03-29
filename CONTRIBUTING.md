@@ -29,10 +29,12 @@ pnpm i
 2. Start dev mode.
 
    ```bash
-   pnpm run start
+   pnpm run build
+   pnpm --filter=@oplayer/<package_name> run start
+   pnpm run dev:exam
    ```
 
-   - standalone: http://localhost:3000/
+   - standalone: http://localhost:5173/
 
 3. Make your changes...
 
