@@ -140,10 +140,10 @@ class ChromeCast implements PlayerPlugin {
     try {
       await this._loadCast()
 
-      const State = window.cast.framework.CastState
-      if (this.cast.getCastState() === State.NO_DEVICES_AVAILABLE) {
-        throw new Error(`Chrome Cast Error Code: ${State.NO_DEVICES_AVAILABLE}`)
-      }
+     // const State = window.cast.framework.CastState
+      //if (this.cast.getCastState() === State.NO_DEVICES_AVAILABLE) {
+       // throw new Error(`Chrome Cast Error Code: ${State.NO_DEVICES_AVAILABLE}`)
+     // }
 
       const errorCode = await this.__requestChromeCast()
       if (errorCode) {
