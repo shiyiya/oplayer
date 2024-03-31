@@ -1,0 +1,19 @@
+## Chromecast
+
+```shell
+npm i @oplayer/plugins
+```
+
+```js
+import { AirPlay } from '@oplayer/plugins'
+
+Player.make('#oplayer').use([new AirPlay()]).create()
+```
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/airplay.min.js"></script>
+
+<script>
+  Player.make('#oplayer').use([new OAirPlay()]).create()
+</script>
+```

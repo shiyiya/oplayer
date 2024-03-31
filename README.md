@@ -13,7 +13,7 @@
 
 ## Feature
 
-- **Streaming** - support for [hls.js](https://oplayer.vercel.app/plugins/hls), [flv,mpegts](https://oplayer.vercel.app/plugins/mpegts), [webtorrent](https://oplayer.vercel.app/plugins/torrent), [dash.js](https://oplayer.vercel.app/plugins/dash) and any other custom streaming playback
+- **Streaming** - support for [hls.js](https://oplayer.vercel.app/hls), [flv,mpegts](https://oplayer.vercel.app/mpegts), [dash.js](https://oplayer.vercel.app/dash), [webtorrent](https://oplayer.vercel.app/torrent) and any other custom streaming playback
 - **Fullscreen** - supports native fullscreen with fallback to "full window" modes
 - **Shortcuts** - supports keyboard shortcuts
 - **Picture-in-Picture** - supports picture-in-picture mode
@@ -22,9 +22,9 @@
 - **Preview thumbnails** - support for displaying preview thumbnails (spirit or [vtt](https://oplayer.vercel.app/plugins/vtt-thumbnails))
 - **No frameworks** - written in "vanilla" JavaScript, no dependencies required
 - **[Chromecast](https://oplayer.vercel.app/plugins/chromecast)** - cast video to your device
-- **[AirPlay](./packages/plugins/)** - cast video to apple device
+- **[AirPlay](https://oplayer.vercel.app/plugins/airplay)** - cast video to apple device
 - **[Playlist](https://oplayer.vercel.app/plugins/playlist)** - supports playlist list ui
-- **[Danmaku](./packages/danmaku/)** - biu biu biu ~
+- **[Danmaku](https://oplayer.vercel.app/danmaku)** - biu biu biu ~
 - **... and much more!**
 
 ## Who use OPlayer?
