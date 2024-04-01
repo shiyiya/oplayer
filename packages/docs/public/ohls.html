@@ -58,10 +58,6 @@
         object-fit: contain !important;
       }
 
-      svg {
-        filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
-      }
-
       /* overriding */
       .css-1ftojuw {
         --primary-color: white !important;
@@ -85,7 +81,7 @@
       #oplayer .css-fy6n4p {
         border-radius: 1rem;
         background-color: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(5px);
+        /* backdrop-filter: blur(5px); */
       }
 
       #oplayer [role='menu'] {
@@ -144,7 +140,7 @@
         width: 4rem;
         height: 4rem;
         display: block;
-        filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+        /* filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)); */
         position: absolute;
         top: 50%;
         left: 50%;
@@ -212,15 +208,14 @@
     <div id="oplayer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@1.2.34-beta.1/dist/index.ui.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@1.2.25-beta.0/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@1.2.25-beta.0/dist/index.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.3/dist/airplay.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.4/dist/chromecast.min.js"></script>
 
     <script>
-      var hlsScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js'
-
-      var dashSDKScriptCdn = 'https://cdn.dashjs.org/latest/dash.all.min.js'
-      var dashScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js'
-
       var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
@@ -269,11 +264,7 @@
       }
 
       var player = OPlayer.make('#oplayer', {
-        source: {
-          src: /m3u8(#|\?|$)/.test(src) || /.mpd(#|\?|$)/i.test(src) ? undefined : src,
-          poster,
-          title: title
-        },
+        source: { src, poster, title: title },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
@@ -321,6 +312,8 @@
               loadingIndicator: `<svg width="3em" height="3em" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5" /><path fill="white" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="0.9s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate" /></svg>`
             }
           }),
+          OHls({ forceHLS: true, library: 'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js' }),
+          ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
           new OAirplay(),
           new OChromecast()
         ])
@@ -328,27 +321,6 @@
         .on(console.log)
 
       var deps = []
-
-      if (/m3u8(#|\?|$)/.test(src) || playlist.some((it) => /m3u8(#|\?|$)/.test(it.src))) {
-        deps.push([
-          hlsScriptCdn,
-          () => {
-            player.applyPlugin(OHls({ forceHLS: true }))
-          }
-        ])
-      }
-
-      if (/.mpd(#|\?|$)/i.test(src) || playlist.some((it) => /.mpd(#|\?|$)/i.test(it.src))) {
-        deps.push([dashScriptCdn, () => {}])
-        deps.push([
-          dashSDKScriptCdn,
-          () => {
-            var dash = ODash()
-            dash.constructor.library = dashjs
-            player.applyPlugin(dash)
-          }
-        ])
-      }
 
       if (playlist.length) {
         deps.push([
@@ -377,7 +349,6 @@
         try {
           deps.map(([_, fn]) => fn())
         } catch (error) {}
-        if (!player.options.source.src && src) player.changeSource({ src, poster, title })
       })
 
       player.on('ratechange', () => {

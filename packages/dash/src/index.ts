@@ -1,14 +1,14 @@
-import type { Player, PlayerPlugin, RequiredPartial, Source } from '@oplayer/core'
+import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
 import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
 
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
-// active inactive
 export type Active = (instance: MediaPlayerClass, library: typeof import('dashjs')) => void
 
 export interface DashPluginOptions {
+  library?: string
   matcher?: Matcher
   active?: Active
   inactive?: Active
@@ -66,7 +66,7 @@ class DashPlugin implements PlayerPlugin {
 
   instance?: MediaPlayerClass
 
-  options: RequiredPartial<DashPluginOptions, 'active' | 'inactive' | 'config'> = {
+  options: RequiredPartial<DashPluginOptions, 'active' | 'inactive' | 'config' | 'library'> = {
     textControl: true,
     audioControl: true,
     qualityControl: true,
@@ -85,11 +85,13 @@ class DashPlugin implements PlayerPlugin {
   }
 
   async load({ $video }: Player, source: Source) {
-    const { matcher } = this.options
+    const { matcher, library } = this.options
 
     if (!matcher($video, source)) return false
 
-    DashPlugin.library ??= (await import('dashjs')).default
+    if (!DashPlugin.library) {
+      DashPlugin.library = library ? await loadSDK(library, 'Hls') : (await import('dashjs')).default
+    }
 
     if (!DashPlugin.library.supportsMediaSource()) return false
 

@@ -1,4 +1,4 @@
-import type { Player, PlayerPlugin, RequiredPartial, Source } from '@oplayer/core'
+import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig, LevelSwitchedData } from 'hls.js'
 
@@ -9,6 +9,8 @@ export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolea
 export type Active = (instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void
 
 export interface HlsPluginOptions {
+  library?: string
+
   matcher?: Matcher
 
   /**
@@ -95,7 +97,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive'> = {
+  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive' | 'library'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -117,11 +119,15 @@ class HlsPlugin implements PlayerPlugin {
   }
 
   async load({ $video }: Player, source: Source) {
-    const { matcher, forceHLS } = this.options
+    const { matcher, forceHLS, library } = this.options
 
     if (!matcher($video, source, forceHLS)) return false
 
-    HlsPlugin.library ??= (await import('hls.js/dist/hls.min.js')).default
+    if (!HlsPlugin.library) {
+      HlsPlugin.library = library
+        ? await loadSDK(library, 'Hls')
+        : (await import('hls.js/dist/hls.min.js')).default
+    }
 
     if (!HlsPlugin.library.isSupported()) return false
 
