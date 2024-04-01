@@ -90,7 +90,7 @@ class DashPlugin implements PlayerPlugin {
     if (!matcher($video, source)) return false
 
     if (!DashPlugin.library) {
-      DashPlugin.library = library ? await loadSDK(library, 'Hls') : (await import('dashjs')).default
+      DashPlugin.library = library ? await loadSDK(library, 'dashjs') : (await import('dashjs')).default
     }
 
     if (!DashPlugin.library.supportsMediaSource()) return false
