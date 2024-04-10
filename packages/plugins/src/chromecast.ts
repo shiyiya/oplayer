@@ -93,18 +93,20 @@ class ChromeCast implements PlayerPlugin {
     if (source.poster) metadata.images = [{ url: source.poster, height: null, width: null }]
     mediaInfo.metadata = metadata
 
-    const subtitles = this.player.context.ui?.config.subtitle?.source as any[]
-    mediaInfo.tracks = subtitles.map((sub, id) => {
-      const track = new chrome.cast.media.Track(id, chrome.cast.media.TrackType.TEXT)
+    const subtitles = this.player.context.ui?.config.subtitle?.source as any[] | undefined
+    if (subtitles) {
+      mediaInfo.tracks = subtitles.map((sub, id) => {
+        const track = new chrome.cast.media.Track(id, chrome.cast.media.TrackType.TEXT)
 
-      track.name = sub.name
-      track.trackContentId = sub.src
-      track.trackContentType = sub.type || 'text/vtt' //TODO: url match
-      track.language = sub.language || sub.name
-      track.subtype = chrome.cast.media.TextTrackType.CAPTIONS
+        track.name = sub.name
+        track.trackContentId = sub.src
+        track.trackContentType = sub.type || 'text/vtt' //TODO: url match
+        track.language = sub.language || sub.name
+        track.subtype = chrome.cast.media.TextTrackType.CAPTIONS
 
-      return track
-    })
+        return track
+      })
+    }
 
     const request = new chrome.cast.media.LoadRequest(mediaInfo)
 
