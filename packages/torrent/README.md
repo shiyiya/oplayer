@@ -25,7 +25,7 @@ npm i @oplayer/core @oplayer/torrent webtorrent
   OPlayer.make('#oplayer', {
     source: {
       src: 'http://example.com/live/livestream.ts',
-      poster: 'https://oplayer.vercel.app/poster.png'
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
     .use([OTorrent()])

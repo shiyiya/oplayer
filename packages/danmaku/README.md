@@ -23,10 +23,10 @@ npm i @oplayer/core @oplayer/danmaku
   OPlayer.make('#oplayer', {
     source: {
       src: 'https://oplayer.vercel.app/君の名は.mp4',
-      poster: 'https://oplayer.vercel.app/poster.png'
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([ODanmaku({ source: 'https://oplayer.vercel.app/danmaku.xml' })])
+    .use([ODanmaku({ source: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml' })])
     .create()
 </script>
 ```
@@ -86,7 +86,7 @@ export interface Comment {
 ```ts
 const danmaku = ODanmaku({
   /* 1. 从 url 拉去 xml 格式弹幕，需遵循 B站 格式 */
-  source: 'https://oplayer.vercel.app/danmaku.xml',
+  source: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml',
   /* 2. 解析成 json 的弹幕 */
   source: [
     {

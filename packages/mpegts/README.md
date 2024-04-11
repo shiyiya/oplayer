@@ -24,8 +24,8 @@ npm i @oplayer/core @oplayer/mpegts mpegts.js
 <script>
   OPlayer.make('#oplayer', {
     source: {
-      src: 'http://example.com/live/livestream.ts',
-      poster: 'https://oplayer.vercel.app/poster.png'
+      src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/weathering-with-you.flv',
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
     .use([OMpegts()])

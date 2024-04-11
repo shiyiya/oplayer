@@ -28,7 +28,7 @@ const player = Player.make('#player', {
   source: {
     title: '君の名は',
     src: 'https://oplayer.vercel.app/君の名は.mp4',
-    poster: 'https://oplayer.vercel.app/poster.png'
+    poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
   }
 })
   .use([OUI()])

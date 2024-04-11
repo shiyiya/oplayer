@@ -30,7 +30,7 @@ npm i @oplayer/core @oplayer/hls hls.js
   OPlayer.make('#oplayer', {
     source: {
       src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      poster: 'https://oplayer.vercel.app/poster.png'
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
     .use([OHls()])
@@ -100,7 +100,7 @@ export interface HlsPluginOptions {
 OPlayer.make('#oplayer', {
   source: {
     src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    poster: 'https://oplayer.vercel.app/poster.png'
+    poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
   }
 })
   .use([

@@ -41,10 +41,10 @@ Player.make('#oplayer')
         {
           title: '君の名は - MP4',
           src: 'https://oplayer.vercel.app/君の名は.mp4',
-          poster: 'https://oplayer.vercel.app/poster.png',
+          poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png',
           duration: '01:32',
           thumbnails: {
-            src: 'https://oplayer.vercel.app/thumbnails.jpg',
+            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/thumbnails.jpg',
             number: 100
           },
           subtitles: [
@@ -68,7 +68,7 @@ Player.make('#oplayer')
         },
         {
           title: 'FLV',
-          src: 'https://oplayer.vercel.app/op.flv',
+          src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/op.flv',
           duration: '00:17'
         }
       ]

@@ -25,7 +25,7 @@ npm i @oplayer/core @oplayer/dash dashjs
   OPlayer.make('#oplayer', {
     source: {
       src: 'https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd',
-      poster: 'https://oplayer.vercel.app/poster.png'
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
     .use([ODash()])
