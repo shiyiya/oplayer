@@ -68,8 +68,8 @@ Player.make('#oplayer')
         },
         {
           title: 'FLV',
-          src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/op.flv',
-          duration: '00:17'
+          src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/weathering-with-you.flv',
+          duration: '02:02'
         }
       ]
     })

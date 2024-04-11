@@ -32,7 +32,7 @@ const THUMB = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/thumbnails.j
 const SRT = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt`
 const JPSRT = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt`
 const SUPER_DANMAKU = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/天气之子.xml`
-const FLV = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/op.flv`
+const FLV = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/weathering-with-you.flv`
 const MP4 = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4`
 
 const player = Player.make<Ctx>('#player', {
