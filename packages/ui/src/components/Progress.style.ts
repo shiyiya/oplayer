@@ -87,11 +87,8 @@ export const progressInner = $.css({
   height: '0.33em',
   width: '100%',
   'background-color': 'hsla(0, 0%, 100%, 0.2)',
-  'border-radius': '1em',
 
   [`& .${buffered}, & .${played}`]: {
-    'border-radius': '1em',
-    overflow: 'hidden',
     position: 'absolute',
     left: '0',
     top: '0',

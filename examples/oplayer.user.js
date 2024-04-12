@@ -22,15 +22,10 @@
 ;(function (window) {
   const mgmapi = {
     openInTab(url, open_in_background = false) {
-      return (typeof GM_openInTab === 'function' ? GM_openInTab : GM.openInTab)(
-        url,
-        open_in_background
-      )
+      return (typeof GM_openInTab === 'function' ? GM_openInTab : GM.openInTab)(url, open_in_background)
     },
     xmlHttpRequest(details) {
-      return (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM.xmlHttpRequest)(
-        details
-      )
+      return (typeof GM_xmlhttpRequest === 'function' ? GM_xmlhttpRequest : GM.xmlHttpRequest)(details)
     },
     copyText(text) {
       copyTextToClipboard(text)
@@ -72,11 +67,7 @@
   unsafeWindow.XMLHttpRequest.prototype.open = function (...args) {
     if (!isBlackList(args[1])) {
       this.addEventListener('readystatechange', () => {
-        if (
-          this.readyState == 3 &&
-          this.responseType == 'text' &&
-          checkContent(this.responseText)
-        ) {
+        if (this.readyState == 3 && this.responseType == 'text' && checkContent(this.responseText)) {
           if (!isBlackList(args[1])) openPlayerPage(args[1])
         }
       })
@@ -245,7 +236,7 @@
     }
     list.appendChild(
       createElementFromHTML(`
-      <a class="dropdown-item" href="https://ohplayer.netlify.app/ohls?${href}" target="_blank">
+      <a class="dropdown-item" href="https://ohplayer.netlify.app/oplayer?${href}" target="_blank">
         <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">
           ${pathname.substring(pathname.lastIndexOf('/') + 1)}
         </span>

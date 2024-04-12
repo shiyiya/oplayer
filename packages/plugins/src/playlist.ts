@@ -88,8 +88,11 @@ export default class PlaylistPlugin implements PlayerPlugin {
     const { initialIndex, m3uList, sources } = this.options
 
     if (m3uList && sources[0]?.src) {
-      //@ts-ignore
-      if (!PlaylistPlugin.m3u8Parser) PlaylistPlugin.m3u8Parser = await import('m3u8-parser')
+      if (!PlaylistPlugin.m3u8Parser) {
+        //@ts-ignore
+        PlaylistPlugin.m3u8Parser = globalThis.m3u8Parser || (await import('m3u8-parser'))
+      }
+
       fetch(sources[0].src)
         .then((resp) => resp.text())
         .then((manifest) => {

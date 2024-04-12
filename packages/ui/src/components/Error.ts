@@ -18,6 +18,7 @@ const errorCls = $.css(`
   padding: 0 10px;
   word-break: break-all;
   justify-content: center;
+  text-aligin: center;
 `)
 
 const showCls = $.css('display: flex;')

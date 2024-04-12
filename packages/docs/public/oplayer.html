@@ -222,12 +222,14 @@
 
       var query = document.location.search.substring(1)
       var src, poster, subtitle, danmaku, title, watermark
-      var playlist = []
+      var playlist = [],
+        deps = [],
+        isM3u = false
 
       if (query.startsWith('http')) {
         src = query.endsWith('==')
           ? atob(query.substring(0, query.length - 2))
-          : safeDecodeURIComponent(query)
+          : safeDecodeURIComponent(query.substring(0, query.length - 1))
       } else {
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
@@ -264,6 +266,13 @@
           : undefined
       }
 
+      if (/m3u(#|\?|$)/i.test(src)) {
+        playlist = [{ title: '-', src, poster }]
+        isM3u = true
+        src = undefined
+        deps.push(['https://cdn.jsdelivr.net/npm/m3u8-parser@7.1.0/dist/m3u8-parser.min.js'])
+      }
+
       var player = OPlayer.make('#oplayer', {
         source: { src, poster, title: title },
         playbackRate: localStorage.getItem('@oplayer/UserPreferences/speed') || 1,
@@ -285,8 +294,8 @@
               builder({
                 ...e,
                 message:
-                  e.message ||
-                  '' + '\n' + 'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
+                  (e.message ? `${e.message}\n\n` : `ErrorCode: ${e.code}\n\n`) +
+                  'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
               })
             },
 
@@ -313,7 +322,10 @@
               loadingIndicator: `<svg width="3em" height="3em" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5" /><path fill="white" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="0.9s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate" /></svg>`
             }
           }),
-          OHls({ forceHLS: true, library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js' }),
+          OHls({
+            forceHLS: true,
+            library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
+          }),
           ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
           OMpegts(),
           new OAirplay(),
@@ -322,16 +334,33 @@
         .create()
         .on(console.log)
 
-      var deps = []
-
       if (playlist.length) {
         deps.push([
           playlistScriptCdn,
           () => {
+            OPlaylist.m3u8Parser = m3u8Parser
             player.applyPlugin(
               new OPlaylist({
                 initialIndex: 0,
-                sources: playlist
+                sources: playlist,
+                m3uList: isM3u
+                  ? {
+                      sourceFormat(info) {
+                        try {
+                          const chunk = info.title.substring(3).split(' ')
+                          const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
+                          const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
+                          return {
+                            src: info.uri,
+                            title: titleWith.substring(1, titleWith.length),
+                            poster: posterWith?.substring(1, posterWith.length)
+                          }
+                        } catch (error) {
+                          return { src: info.uri, title: info.title }
+                        }
+                      }
+                    }
+                  : false
               })
             )
           }
@@ -349,7 +378,7 @@
 
       loadScripts(deps.map(([s]) => s)).then(() => {
         try {
-          deps.map(([_, fn]) => fn())
+          deps.map(([_, fn]) => fn && fn())
         } catch (error) {}
       })
 
