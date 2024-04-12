@@ -1,4 +1,4 @@
-# oplayer-plugin-torrent
+# oplayer-plugin-react
 
 [![npm](https://img.shields.io/npm/v/@oplayer/react?style=flat-square&label=@oplayer/react)](https://www.npmjs.com/package/@oplayer/react)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@oplayer/react?style=flat-square)
@@ -10,7 +10,7 @@ React wrapper for oplayer. (NOT WORKING ON REACT STRICT MODE)
 ## Install
 
 ```bash
-npm i @oplayer/core @oplayer/torrent
+npm i @oplayer/core @oplayer/react
 ```
 
 ```tsx

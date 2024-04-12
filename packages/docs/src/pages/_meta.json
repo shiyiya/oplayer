@@ -27,9 +27,14 @@
     "type": "separator",
     "title": "More"
   },
-  "qq": {
+  "QQ": {
     "title": "QQ ↗",
     "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB",
+    "newWindow": true
+  },
+  "Discord": {
+    "title": "Discord ↗",
+    "href": "https://discord.gg/hzjxYyPbKh",
     "newWindow": true
   },
   "preview": {
