@@ -226,10 +226,10 @@
         deps = [],
         isM3u = false
 
-      if (query.startsWith('http')) {
-        src = query.endsWith('==')
-          ? atob(query.substring(0, query.length - 2))
-          : safeDecodeURIComponent(query.substring(0, query.length - 1))
+      if (query.endsWith('==')) {
+        src = atob(query.substring(0, query.length - 2))
+      } else if (query.startsWith('http')) {
+        src = safeDecodeURIComponent(query.substring(0, query.length - 1))
       } else {
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
@@ -237,6 +237,7 @@
         poster = safeDecodeURIComponent(search.get('poster'))
         title = safeDecodeURIComponent(search.get('title')) || '❤OPlayer'
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
+        isM3u = Boolean(search.get('m3u'))
 
         subtitle = search.get('subtitle')
           ? {
@@ -266,7 +267,7 @@
           : undefined
       }
 
-      if (/m3u(#|\?|$)/i.test(src)) {
+      if (/m3u(#|\?|$)/i.test(src) || isM3u) {
         playlist = [{ title: '-', src, poster }]
         isM3u = true
         src = undefined
