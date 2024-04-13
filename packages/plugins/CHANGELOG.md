@@ -2,6 +2,8 @@
 
 ## UnRelease
 
+- playlist: fix error scroll position
+
 ## 1.0.12-beta.3
 
 - vtt thumbnails: `prefix` options

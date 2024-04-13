@@ -211,25 +211,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@1.2.25-beta.0/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@1.2.25-beta.1/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@1.2.23/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@1.2.24/dist/index.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.3/dist/airplay.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.5/dist/chromecast.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.6/dist/airplay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.6/dist/chromecast.min.js"></script>
 
     <script>
-      var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js'
+      var playlistScriptCdn =
+        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.6/dist/playlist.min.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
       var query = document.location.search.substring(1)
       var src, poster, subtitle, danmaku, title, watermark
       var playlist = [],
         deps = [],
-        isM3u = false
+        m3u = false,
+        p = 0
 
-      if (query.endsWith('==')) {
-        src = atob(query.substring(0, query.length - 2))
-      } else if (query.startsWith('http')) {
-        src = safeDecodeURIComponent(query.substring(0, query.length - 1))
+      var _query = decodeURIComponent(query || '')
+      if (_query.startsWith('http')) {
+        // ?https://xx.com= 有时候会自动带上 “=”
+        src = _query.endsWith('=') ? _query.substring(0, _query.length - 1) : query
+      } else if (_query.endsWith('=')) {
+        src = atob(_query)
       } else {
         var search = new URLSearchParams(document.location.search)
         src = safeDecodeURIComponent(search.get('src'))
@@ -237,7 +241,8 @@
         poster = safeDecodeURIComponent(search.get('poster'))
         title = safeDecodeURIComponent(search.get('title')) || '❤OPlayer'
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
-        isM3u = Boolean(search.get('m3u'))
+        m3u = safeDecodeURIComponent(search.get('m3u'))
+        p = search.get('p') || 0
 
         subtitle = search.get('subtitle')
           ? {
@@ -267,9 +272,9 @@
           : undefined
       }
 
-      if (/m3u(#|\?|$)/i.test(src) || isM3u) {
-        playlist = [{ title: '-', src, poster }]
-        isM3u = true
+      if (/m3u(#|\?|$)/i.test(src) || m3u) {
+        playlist = [{ title: '-', src: typeof m3u == 'string' ? m3u : src, poster }]
+        m3u = true
         src = undefined
         deps.push(['https://cdn.jsdelivr.net/npm/m3u8-parser@7.1.0/dist/m3u8-parser.min.js'])
       }
@@ -328,7 +333,7 @@
             library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
           }),
           ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
-          OMpegts(),
+          OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js/dist/mpegts.min.js' }),
           new OAirplay(),
           new OChromecast()
         ])
@@ -342,22 +347,24 @@
             OPlaylist.m3u8Parser = m3u8Parser
             player.applyPlugin(
               new OPlaylist({
-                initialIndex: 0,
+                initialIndex: p,
+                autoHide: false,
                 sources: playlist,
-                m3uList: isM3u
+                m3uList: m3u
                   ? {
                       sourceFormat(info) {
                         try {
-                          const chunk = info.title.substring(3).split(' ')
-                          const titleWith = chunk.find((it) => it.includes('title')).split('=')[1]
-                          const posterWith = chunk.find((it) => it.includes('logo'))?.split('=')[1]
+                          const chunk = info.title.substring(3).split('" ')
+                          const titleWith = /group-title="(.+",.+)/.exec(info.title)
+                          const posterWith = /tvg-logo="(.+)"/.exec(info.title)
                           return {
                             src: info.uri,
-                            title: titleWith.substring(1, titleWith.length),
-                            poster: posterWith?.substring(1, posterWith.length)
+                            format: 'm3u8',
+                            title: titleWith ? titleWith[1] : /group-title="(.+)"/.exec(info.title)[1],
+                            poster: posterWith && posterWith[1]
                           }
                         } catch (error) {
-                          return { src: info.uri, title: info.title }
+                          return { src: info.uri, title: info.title, format: 'm3u8' }
                         }
                       }
                     }

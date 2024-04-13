@@ -1,4 +1,4 @@
-import type { Player, PlayerPlugin, Source, PartialRequired } from '@oplayer/core'
+import { type Player, type PlayerPlugin, type Source, type PartialRequired, loadSDK } from '@oplayer/core'
 import type Mpegts from 'mpegts.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-mpegts'
@@ -14,6 +14,7 @@ export type Active = (
 export type MpegtsPluginOptions = {
   config?: Partial<Mpegts.Config>
   matcher?: Matcher
+  library?: string
 }
 
 const REG = /flv|ts|m2ts(#|\?|$)/i
@@ -52,12 +53,16 @@ class MpegtsPlugin implements PlayerPlugin {
   }
 
   async load({ $video, options }: Player, source: Source) {
-    const { matcher } = this.options
+    const { matcher, library } = this.options
 
     if (!matcher($video, source)) return false
 
-    //@ts-ignore
-    MpegtsPlugin.library ??= (await import('mpegts.js/dist/mpegts.js')).default
+    if (!MpegtsPlugin.library) {
+      MpegtsPlugin.library =
+        (globalThis as any).mpegts ||
+        //@ts-expect-error
+        (library ? await loadSDK(library, 'mpegts') : (await import('mpegts.js/dist/mpegts.js')).default)
+    }
 
     if (!MpegtsPlugin.library.isSupported()) return false
 
