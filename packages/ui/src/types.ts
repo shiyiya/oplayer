@@ -196,6 +196,13 @@ export type UiConfig = {
     loadingIndicator?: string
     next?: string
     previous?: string
+    subtitle?: string
+    quality?: string
+    lang?: string
+    chromecast?: string
+    airplay?: string
+    danmaku?: string
+    playlist?: string
   }
 
   /*  --- WIP ---  */

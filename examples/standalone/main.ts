@@ -1,7 +1,7 @@
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 
-import { Player, isMobile, PlayerEvent } from '@oplayer/core'
+import { Player, PlayerEvent } from '@oplayer/core'
 import danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'

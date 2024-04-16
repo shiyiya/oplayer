@@ -27,17 +27,17 @@ export const ICONS_MAP = {
   playbackRate: speedSvg,
   subtitle: subtitleSvg,
   loop: loopSvg,
-  progressIndicator: null,
-  loadingIndicator: null,
   quality: qualitySvg,
   lang: langSvg,
+  progressIndicator: null,
+  loadingIndicator: null,
+  previous: null,
+  next: null,
   // plugins
   chromecast: null,
   airplay: null,
   danmaku: null,
-  playlist: null,
-  previous: null,
-  next: null
+  playlist: null
 }
 
 export namespace Icons {
