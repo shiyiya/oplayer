@@ -162,7 +162,7 @@
   function injectUI() {
     pin = document.createElement('div')
     pin.className = 'media-list'
-    pin.style.cssText = `position: fixed;top:10vh;right:5vw;z-index: 99;display:none;`
+    pin.style.cssText = `position: fixed;top:10vh;right:5vw;z-index: 99999;display:none;`
     document.body.appendChild(pin)
     var _pin = pin.attachShadow({ mode: 'open' })
 

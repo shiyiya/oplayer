@@ -10,19 +10,12 @@
     <style>
       body,
       html {
-        background-color: rgba(0, 0, 0, 0.95);
         margin: 0;
         padding: 0;
         width: 100%;
         width: 100svw;
         height: 100vh;
         height: 100svh;
-        overflow: hidden;
-      }
-
-      a {
-        outline: none !important;
-        text-decoration: none !important;
       }
 
       a,
@@ -48,7 +41,6 @@
       #oplayer {
         width: 100% !important;
         height: 100% !important;
-        background-color: black;
       }
 
       video {
@@ -155,11 +147,6 @@
         }
       }
 
-      [aria-label='Play'][type='button'] svg,
-      [data-key='oplayer-plugin-hls-Quality'][role='menuitem'] svg {
-        display: none !important;
-      }
-
       [data-key='oplayer-plugin-hls-Quality'][role='menuitem'] .css-1i40n7c::before {
         content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'  viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='none'/%3E%3Cpath fill='white' fill-rule='evenodd' d='M13.354 8.75H4a.75.75 0 0 1 0-1.5h9.354a2.751 2.751 0 0 1 5.293 0H20a.75.75 0 0 1 0 1.5h-1.354a2.751 2.751 0 0 1-5.292 0M14.75 8a1.25 1.25 0 1 1 2.5 0a1.25 1.25 0 0 1-2.5 0m-4.103 8.75H20a.75.75 0 0 0 0-1.5h-9.353a2.751 2.751 0 0 0-5.293 0H4a.75.75 0 0 0 0 1.5h1.354a2.751 2.751 0 0 0 5.292 0M6.75 16a1.25 1.25 0 1 1 2.5 0a1.25 1.25 0 0 1-2.5 0' clip-rule='evenodd'/%3E%3C/svg%3E");
         width: 1.8rem;
@@ -223,11 +210,12 @@
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
       var query = document.location.search.substring(1)
-      var src, poster, subtitle, danmaku, title, watermark
+      var src, poster, subtitle, danmaku, watermark
       var playlist = [],
         deps = [],
         m3u = false,
-        p = undefined
+        p = undefined,
+        title = '❤OPlayer'
 
       var _query = decodeURIComponent(query || '')
       if (_query.startsWith('http')) {
@@ -258,8 +246,6 @@
             }
           : undefined
 
-        if (title && title != '❤OPlayer') document.title = title
-
         watermark = search.get('watermark')
           ? {
               src: decodeURIComponent(search.get('watermark')),
@@ -273,6 +259,8 @@
             }
           : undefined
       }
+
+      if (title && title != '❤OPlayer') document.title = title
 
       if (/m3u(#|\?|$)/i.test(src) || m3u) {
         playlist = [{ title: '-', src: typeof m3u == 'string' ? m3u : src, poster }]
@@ -297,12 +285,14 @@
             },
 
             subtitle,
+            pictureInPicture: true,
             keyboard: { global: true },
             errorBuilder(e, t, builder) {
               builder({
                 ...e,
                 message:
-                  (e.message ? `${e.message}\n\n` : `${e.code ? `ErrorCode:${e.code} \n\n` : ''}`) +
+                  (e.message ? `${e.message}\n\n` : '') +
+                  (e.code ? `ErrorCode:${e.code} \n\n` : '') +
                   'Open an issues https://github.com/shiyiya/oplayer/issues/new/choose'
               })
             },
@@ -327,7 +317,8 @@
               screenshot: `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><g fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="13" r="3" /><path d="M9.778 21h4.444c3.121 0 4.682 0 5.803-.735a4.408 4.408 0 0 0 1.226-1.204c.749-1.1.749-2.633.749-5.697c0-3.065 0-4.597-.749-5.697a4.407 4.407 0 0 0-1.226-1.204c-.72-.473-1.622-.642-3.003-.702c-.659 0-1.226-.49-1.355-1.125A2.064 2.064 0 0 0 13.634 3h-3.268c-.988 0-1.839.685-2.033 1.636c-.129.635-.696 1.125-1.355 1.125c-1.38.06-2.282.23-3.003.702A4.405 4.405 0 0 0 2.75 7.667C2 8.767 2 10.299 2 13.364c0 3.064 0 4.596.749 5.697c.324.476.74.885 1.226 1.204C5.096 21 6.657 21 9.778 21Z" /></svg>`,
               playbackRate: `<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M19.46 10a1 1 0 0 0-.07 1a7.55 7.55 0 0 1 .52 1.81a8 8 0 0 1-.69 4.73a1 1 0 0 1-.89.53H5.68a1 1 0 0 1-.89-.54A8 8 0 0 1 13 6.06a7.69 7.69 0 0 1 2.11.56a1 1 0 0 0 1-.07a1 1 0 0 0-.17-1.76A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1a10 10 0 0 0 .55-8.89a1 1 0 0 0-1.75-.11" /><path fill="white" d="M10.59 12.59a2 2 0 0 0 2.83 2.83l5.66-8.49z" /></svg>`,
               loop: `<svg viewBox="0 0 256 256"><rect width="256" height="256" fill="none" /><path fill="white" d="M252 128a60 60 0 0 1-102.43 42.43l-.49-.53l-59.86-67.59a36 36 0 1 0 0 51.38l3.08-3.48a12 12 0 1 1 18 15.91l-3.35 3.78l-.49.53a60 60 0 1 1 0-84.86l.49.53l59.86 67.59a36 36 0 1 0 0-51.38l-3.08 3.48a12 12 0 1 1-18-15.91l3.35-3.78l.49-.53A60 60 0 0 1 252 128" /></svg>`,
-              loadingIndicator: `<svg width="3em" height="3em" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5" /><path fill="white" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="0.9s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate" /></svg>`
+              loadingIndicator: `<svg width="3em" height="3em" viewBox="0 0 24 24"><rect width="24" height="24" fill="none" /><path fill="white" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity="0.5" /><path fill="white" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"><animateTransform attributeName="transform" dur="0.9s" from="0 12 12" repeatCount="indefinite" to="360 12 12" type="rotate" /></svg>`,
+              chromecast: `<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="2 2 20 20"><path stroke="none" d="M0 0h24v24H0z"></path><path d="M3 19h.01M7 19a4 4 0 0 0-4-4m8 4a8 8 0 0 0-8-8"></path><path d="M15 19h3a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-2.8 2"></path></svg>`
             }
           }),
           OHls({
@@ -407,7 +398,7 @@
         localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
       })
 
-      player.on('videosourcechange', (e) => {
+      function keepTime(e) {
         document.title = e.payload.title
         var prevTime = localStorage.getItem(e.payload.src)
         if (prevTime) {
@@ -415,7 +406,11 @@
             player.seek(prevTime)
           })
         }
-      })
+      }
+      player.on('videosourcechange', keepTime)
+      if (src) {
+        keepTime({ payload: { src, title } })
+      }
 
       player.on('timeupdate', () => {
         localStorage.setItem(player.options.source.src, player.currentTime.toString())
