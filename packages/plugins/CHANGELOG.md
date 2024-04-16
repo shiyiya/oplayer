@@ -3,6 +3,7 @@
 ## UnRelease
 
 - playlist: fix error scroll position
+- playlist: add `playlistchange` event
 
 ## 1.0.12-beta.3
 

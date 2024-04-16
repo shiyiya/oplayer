@@ -207,7 +207,8 @@
   <body>
     <div id="oplayer"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@1.2.34-beta.1/dist/index.ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@1.2.34-beta.1/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@1.3.0-beta.3/dist/index.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@1.2.25-beta.0/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@1.2.25-beta.1/dist/index.min.js"></script>
@@ -218,7 +219,7 @@
 
     <script>
       var playlistScriptCdn =
-        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.6/dist/playlist.min.js'
+        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.7/dist/playlist.min.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
       var query = document.location.search.substring(1)
@@ -226,7 +227,7 @@
       var playlist = [],
         deps = [],
         m3u = false,
-        p = 0
+        p = undefined
 
       var _query = decodeURIComponent(query || '')
       if (_query.startsWith('http')) {
@@ -242,7 +243,8 @@
         title = safeDecodeURIComponent(search.get('title')) || '❤OPlayer'
         danmaku = safeDecodeURIComponent(search.get('danmaku'))
         m3u = safeDecodeURIComponent(search.get('m3u'))
-        p = search.get('p') || 0
+        p = search.has('p') ? search.get('p') : undefined
+        p == '' ? (p = undefined) : (p = +p)
 
         subtitle = search.get('subtitle')
           ? {
@@ -388,6 +390,12 @@
         try {
           deps.map(([_, fn]) => fn && fn())
         } catch (error) {}
+
+        if (player.context.playlist && typeof p != 'number') {
+          player.once('playlistchange', () => {
+            player.context.playlist.showUI()
+          })
+        }
       })
 
       player.on('ratechange', () => {

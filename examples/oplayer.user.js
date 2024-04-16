@@ -236,7 +236,7 @@
     }
     list.appendChild(
       createElementFromHTML(`
-      <a class="dropdown-item" href="https://ohplayer.netlify.app/oplayer?${href}" target="_blank">
+      <a class="dropdown-item" href="https://ohplayer.netlify.app/oplayer.html?${href}" target="_blank">
         <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:85%;">
           ${pathname.substring(pathname.lastIndexOf('/') + 1)}
         </span>

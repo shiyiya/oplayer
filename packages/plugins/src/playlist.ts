@@ -69,7 +69,8 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   async _init() {
     const start = () => {
-      this.render()
+      this.renderContainer()
+      this.renderList(this.options.sources)
       if (typeof initialIndex == 'number') {
         this.changeSource(initialIndex)
       }
@@ -186,6 +187,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   changeSourceList(sources: PlaylistSource[]) {
     this.options.sources = sources
     this.renderList(sources)
+    this.player.emit('playlistchange', sources)
   }
 
   next() {
@@ -204,7 +206,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.$root.classList.remove('playlist__active')
   }
 
-  render() {
+  renderContainer() {
     const $playlist = `
     <div class="playlist-head">
       <span class="playlist-head-title">${this.player.locales.get('PLAYLIST')}</span>
@@ -233,7 +235,6 @@ export default class PlaylistPlugin implements PlayerPlugin {
       }
     }
 
-    this.renderList(this.options.sources)
     this.player.context.ui.$root.appendChild(this.$root)
 
     this.player.context.ui.menu.register({
