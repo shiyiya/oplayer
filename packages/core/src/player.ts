@@ -428,10 +428,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
       let finalSource: Source
 
-      const errorHandler = (e: any) => {
+      const errorHandler = (err: any) => {
         if (!this.$root) return
         this.off(canplay, canplayHandler)
-        this.emit(options.brokenEvent, finalSource || sourceLike)
+        this.emit(options.brokenEvent, { source: finalSource || sourceLike, error: err })
         if (options.event == 'videosourcechanged') {
           this.isSourceChanging = false
         } else {
@@ -441,7 +441,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
               this.isSourceChanging = false
             })
         }
-        reject(e)
+        reject(err)
       }
 
       const rollback = () => {

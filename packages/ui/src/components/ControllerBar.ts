@@ -104,10 +104,12 @@ const render = (it: UIInterface, el: HTMLDivElement) => {
   player.on('videosourcechange', ({ payload }) => {
     if (!payload.then) {
       $controlBarTitle.innerText = payload.title || ''
-    } else {
-      player.once('sourcechangeerror', () => {
-        $controlBarTitle.innerText = 'ERROR'
-      })
+    }
+  })
+
+  player.on('sourcechangeerror', ({ payload }) => {
+    if (!payload.source?.title) {
+      $controlBarTitle.innerText = (payload.e as Error)?.message || 'ERROR'
     }
   })
 
