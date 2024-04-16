@@ -70,7 +70,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   async _init() {
     const start = () => {
       this.renderContainer()
-      this.renderList(this.options.sources)
+      this.changeSourceList(this.options.sources)
       if (typeof initialIndex == 'number') {
         this.changeSource(initialIndex)
       }

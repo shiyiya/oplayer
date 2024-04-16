@@ -219,7 +219,7 @@
 
     <script>
       var playlistScriptCdn =
-        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.7/dist/playlist.min.js'
+        'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12-beta.8/dist/playlist.min.js'
       var danmakuScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/danmaku@latest/dist/index.min.js'
 
       var query = document.location.search.substring(1)
@@ -391,7 +391,7 @@
           deps.map(([_, fn]) => fn && fn())
         } catch (error) {}
 
-        if (player.context.playlist && typeof p != 'number') {
+        if (player.context.playlist && (isNaN(p) || typeof p != 'number')) {
           player.once('playlistchange', () => {
             player.context.playlist.showUI()
           })
