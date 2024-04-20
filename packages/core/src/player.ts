@@ -218,6 +218,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   applyPlugin(plugin: PlayerPlugin) {
+    if (plugin.key && this.plugins.some((p) => p.key == plugin.key)) {
+      return
+    }
+
     this.plugins.push(plugin)
     const returned = plugin.apply(this)
     const { name, key } = plugin

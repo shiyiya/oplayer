@@ -336,7 +336,6 @@
         deps.push([
           playlistScriptCdn,
           () => {
-            OPlaylist.m3u8Parser = m3u8Parser
             player.applyPlugin(
               new OPlaylist({
                 initialIndex: p,
@@ -377,15 +376,17 @@
       }
 
       loadScripts(deps.map(([s]) => s)).then(() => {
+        if (isNaN(p) || typeof p != 'number') {
+          player.once('playlistchange', () => {
+            setTimeout(() => {
+              player.context.playlist.showUI()
+            })
+          })
+        }
+
         try {
           deps.map(([_, fn]) => fn && fn())
         } catch (error) {}
-
-        if (player.context.playlist && (isNaN(p) || typeof p != 'number')) {
-          player.once('playlistchange', () => {
-            player.context.playlist.showUI()
-          })
-        }
       })
 
       player.on('ratechange', () => {
