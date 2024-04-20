@@ -6,7 +6,7 @@
     "node": ">=16",
     "pnpm": ">=6"
   },
-  "packageManager": "pnpm@8.6.1",
+  "packageManager": "pnpm@9.0.4",
   "author": "shiyiya",
   "keywords": [
     "oplayer",
