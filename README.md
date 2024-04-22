@@ -2,7 +2,7 @@
 
 ⚡ Oh! Another HTML5 video player.
 
-[📕 Documentation](https://oplayer.vercel.app) | [🧡 Donate](#support) | [💜 Contributing](./CONTRIBUTING.md)
+[📕 Documentation](https://oplayer.vercel.app) | [🧡 Donate](#support) | [💜 Contributing](./CONTRIBUTING.md) | [🎈 Demo](https://oplayer.vercel.app/oplayer.html?playlist=%5B%7B"title"%3A"Disney%27s+Oceans+-+MP4"%2C"src"%3A"https%3A%2F%2Fvjs.zencdn.net%2Fv%2Foceans.mp4"%2C"poster"%3A"https%3A%2F%2Fvjs.zencdn.net%2Fv%2Foceans.png"%2C"duration"%3A"00%3A46"%7D%2C%7B"title"%3A"Big+Buck+Bunny+-+HLS"%2C"src"%3A"https%3A%2F%2Ftest-streams.mux.dev%2Fx36xhzz%2Fx36xhzz.m3u8"%2C"poster"%3A"https%3A%2F%2Fd2zihajmogu5jn.cloudfront.net%2Fbig-buck-bunny%2Fbbb.png"%2C"duration"%3A"10%3A34"%7D%2C%7B"title"%3A"Big+Buck+Bunny+-+DASH"%2C"src"%3A"https%3A%2F%2Fdash.akamaized.net%2Fakamai%2Fbbb_30fps%2Fbbb_30fps.mpd"%2C"poster"%3A"https%3A%2F%2Fd2zihajmogu5jn.cloudfront.net%2Fbig-buck-bunny%2Fbbb.png"%2C"duration"%3A"10%3A34"%7D%5D&p=0)
 
 [![npm](https://img.shields.io/npm/v/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
 [![npm dt](https://img.shields.io/npm/dm/@oplayer/core?style=flat-square)](https://www.npmjs.com/package/@oplayer/core)
@@ -33,8 +33,6 @@
 - [UPV](https://onime.netlify.app) - free anime no ads
 - [Binged](https://binge.lol) - Binged - Watch Movies & TV Shows Free
 - [NUSANIME](https://play.google.com/store/apps/details?id=com.nusanime.app) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
-- [Demo](https://oplayer.vercel.app/oplayer.html?playlist=%5B%7B"title"%3A"Disney%27s+Oceans+-+MP4"%2C"src"%3A"https%3A%2F%2Fvjs.zencdn.net%2Fv%2Foceans.mp4"%2C"poster"%3A"https%3A%2F%2Fvjs.zencdn.net%2Fv%2Foceans.png"%2C"duration"%3A"00%3A46"%7D%2C%7B"title"%3A"Big+Buck+Bunny+-+HLS"%2C"src"%3A"https%3A%2F%2Ftest-streams.mux.dev%2Fx36xhzz%2Fx36xhzz.m3u8"%2C"poster"%3A"https%3A%2F%2Fd2zihajmogu5jn.cloudfront.net%2Fbig-buck-bunny%2Fbbb.png"%2C"duration"%3A"10%3A34"%7D%2C%7B"title"%3A"Big+Buck+Bunny+-+DASH"%2C"src"%3A"https%3A%2F%2Fdash.akamaized.net%2Fakamai%2Fbbb_30fps%2Fbbb_30fps.mpd"%2C"poster"%3A"https%3A%2F%2Fd2zihajmogu5jn.cloudfront.net%2Fbig-buck-bunny%2Fbbb.png"%2C"duration"%3A"10%3A34"%7D%5D) - json demo
-- [Demo2](https://oplayer.vercel.app/oplayer.html?src=https://jazzforlove.github.io/IPTV/Movie.m3u) - IPTV list
 - ~~[Animex](https://www.animex.live/) - Watch Anime for free in HD quality with English subbed or dubbed.~~
 - ~~[NGEWIBU.TV](https://ngewibu.tv/) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis~~
 

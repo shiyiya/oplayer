@@ -109,7 +109,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
           start()
         })
         .catch((err) => {
-          this.player.emit('notice', { pluginName: this.name, text: 'Playlist' + (<Error>err).message })
+          this.player.emit('notice', { pluginName: this.name, text: 'Playlist: ' + (<Error>err).message })
         })
     } else {
       start()

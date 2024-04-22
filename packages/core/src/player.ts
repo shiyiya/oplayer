@@ -83,7 +83,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   create() {
     this.render()
     this.initEvent()
-    this.plugins.forEach(this.applyPlugin.bind(this))
+    this.plugins.forEach((plugin) => this.applyPlugin(plugin, true))
     if (this.options.source.src) this.load(this.options.source)
     Player.players.push(this)
     return this
@@ -217,17 +217,16 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     return source
   }
 
-  applyPlugin(plugin: PlayerPlugin) {
-    if (plugin.key && this.plugins.some((p) => p.key == plugin.key)) {
-      return
+  applyPlugin(plugin: PlayerPlugin, init = false) {
+    const { name, key } = plugin
+    if (this.context[plugin.key || plugin.name]) {
+      throw new Error('duplicate plugin')
     }
 
-    this.plugins.push(plugin)
+    if (!init) this.plugins.push(plugin)
     const returned = plugin.apply(this)
-    const { name, key } = plugin
     if (returned) {
-      //@ts-ignore
-      this.context[key || name] = returned
+      ;(this.context as any)[key || name] = returned
     }
   }
 
