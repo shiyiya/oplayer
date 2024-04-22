@@ -1,0 +1,45 @@
+{
+  "name": "@oplayer/mkv",
+  "version": "0.0.1",
+  "description": "mkv plugin for oplayer",
+  "type": "module",
+  "main": "./dist/index.es.js",
+  "types": "./dist/src/index.d.ts",
+  "sideEffects": false,
+  "author": "shiyiya",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer-plugin",
+    "mkv"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
+    "tsc": "tsc --noEmit && echo",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "copy-dependencies": "npm run copy-libass && npm run copy-worker && npm run copy-worker-wasm",
+    "copy-worker": " cp node_modules/libav-wasm/build/worker.js w/libav.js",
+    "copy-worker-wasm": " cp node_modules/libav-wasm/build/libav.wasm w/libav.wasm",
+    "copy-libass": "cp -u  ./node_modules/jassub/dist/* ./w"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not op_mini all",
+    "IE 11"
+  ],
+  "peerDependencies": {
+    "@oplayer/core": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@oplayer/core": "workspace:*",
+    "jassub": "^1.7.1",
+    "p-queue": "^7.3.4",
+    "libav-wasm": "^0.3.4"
+  }
+}

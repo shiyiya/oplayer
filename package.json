@@ -17,6 +17,7 @@
     "start": "pnpm run watch",
     "dev": "pnpm --filter=!@oplayer/docs --parallel run start",
     "dev:exam": "cd examples/standalone && pnpm run start",
+    "dev:mkv": "pnpm --filter=@oplayer/mkv --parallel run start",
     "build": "pnpm --filter=!@oplayer/docs run build",
     "build:packs": "pnpm --filter=@oplayer/* run build",
     "build:core": "pnpm --filter=@oplayer/core run build",
