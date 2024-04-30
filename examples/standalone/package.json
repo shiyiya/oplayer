@@ -17,6 +17,7 @@
     "@oplayer/dash": "file:../../packages/dash",
     "@oplayer/hls": "file:../../packages/hls",
     "@oplayer/mpegts": "file:../../packages/mpegts",
+    "@oplayer/mkv": "file:../../packages/mkv",
     "@oplayer/plugins": "file:../../packages/plugins",
     "@oplayer/torrent": "file:../../packages/torrent",
     "@oplayer/ui": "file:../../packages/ui",

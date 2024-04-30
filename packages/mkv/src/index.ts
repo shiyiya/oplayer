@@ -78,7 +78,9 @@ class MkvPlugin implements PlayerPlugin {
         const res = await fetch(source.src, { headers: { Range: `bytes=${offset}-${size}` } })
         return _size ? res.body! : toBufferedStream(3)(toStreamChunkSize(baseBufferSize)(res.body!))
       },
+      //@ts-ignore
       subtitle: (title, language, subtitle) => {},
+      //@ts-ignore
       attachment: (filename: string, mimetype: string, buffer: ArrayBuffer) => {}
     }))
 
