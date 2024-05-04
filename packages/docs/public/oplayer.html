@@ -325,7 +325,11 @@
           })
         ])
         .create()
-        .on(console.log)
+        .on((e) => {
+          if (e.type != 'timeupdate' || e.type != 'progress') {
+            console.log(e)
+          }
+        })
 
       if (playlist.length) {
         deps.push([
