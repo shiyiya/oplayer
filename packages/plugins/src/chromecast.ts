@@ -14,6 +14,11 @@ export interface ChromeCastOptions {
   resumeSavedSession?: boolean | undefined
   /** The following flag enables Cast Connect(requires Chrome 87 or higher) */
   androidReceiverCompatible?: boolean | undefined
+  /**
+   *  DEBUG: 0, INFO: 800, WARNING: 900, ERROR: 1000, NONE: 1500
+   */
+  loggerLevel: number
+  loadRequestBuilder: (request: chrome.cast.media.LoadRequest) => chrome.cast.media.LoadRequest
 }
 
 class ChromeCast implements PlayerPlugin {
@@ -109,11 +114,10 @@ class ChromeCast implements PlayerPlugin {
     }
 
     const request = new chrome.cast.media.LoadRequest(mediaInfo)
-
     request.autoplay = this.player.isPlaying
     request.currentTime = this.player.currentTime
 
-    return request
+    return this.options?.loadRequestBuilder(request) || request
   }
 
   _loadCast() {
@@ -124,6 +128,9 @@ class ChromeCast implements PlayerPlugin {
         window.__onGCastApiAvailable == undefined
 
         if (isAvailable) {
+          if (typeof this.options?.loggerLevel != 'undefined') {
+            cast.framework.setLoggerLevel(this.options.loggerLevel)
+          }
           resolve()
         } else {
           reject(Error('CAST_NOT_AVAILABLE'))

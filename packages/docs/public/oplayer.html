@@ -147,19 +147,6 @@
         }
       }
 
-      [data-key='oplayer-plugin-hls-Quality'][role='menuitem'] .css-1i40n7c::before {
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'  viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='none'/%3E%3Cpath fill='white' fill-rule='evenodd' d='M13.354 8.75H4a.75.75 0 0 1 0-1.5h9.354a2.751 2.751 0 0 1 5.293 0H20a.75.75 0 0 1 0 1.5h-1.354a2.751 2.751 0 0 1-5.292 0M14.75 8a1.25 1.25 0 1 1 2.5 0a1.25 1.25 0 0 1-2.5 0m-4.103 8.75H20a.75.75 0 0 0 0-1.5h-9.353a2.751 2.751 0 0 0-5.293 0H4a.75.75 0 0 0 0 1.5h1.354a2.751 2.751 0 0 0 5.292 0M6.75 16a1.25 1.25 0 1 1 2.5 0a1.25 1.25 0 0 1-2.5 0' clip-rule='evenodd'/%3E%3C/svg%3E");
-        width: 1.8rem;
-        height: 1.8rem;
-        flex-shrink: 0;
-        display: block;
-        margin-right: 5px;
-      }
-
-      [data-ctrl-hidden='false'] video {
-        filter: brightness(0.85);
-      }
-
       @media (max-width: 640px) {
         [aria-label='Screenshot'] {
           display: none !important;
@@ -203,7 +190,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@1.2.24/dist/index.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12/dist/airplay.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12/dist/chromecast.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.13-chromecast.0/dist/chromecast.min.js"></script>
 
     <script>
       var playlistScriptCdn = 'https://cdn.jsdelivr.net/npm/@oplayer/plugins@1.0.12/dist/playlist.min.js'
@@ -328,7 +315,14 @@
           ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
           OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js/dist/mpegts.min.js' }),
           new OAirplay(),
-          new OChromecast()
+          new OChromecast({
+            loggerLevel: 0,
+            loadRequestBuilder(r) {
+              r.media.hlsSegmentFormat = 'fmp4'
+              r.media.hlsVideoSegmentFormat = 'fmp4'
+              return r
+            }
+          })
         ])
         .create()
         .on(console.log)
