@@ -144,7 +144,7 @@ class HlsPlugin implements PlayerPlugin {
     instance.once(HlsPlugin.library.Events.MEDIA_ATTACHED, (_, { media }: MediaAttachedData) => {
       const $source = document.createElement('source') as HTMLSourceElement
       $source.src = source.src
-      $source.type = source.type || 'application/x-mpegurl'
+      $source.type = source.type || (source.type = 'application/x-mpegurl')
       media.appendChild($source)
 
       instance.once(HlsPlugin.library.Events.DESTROYING, () => {
