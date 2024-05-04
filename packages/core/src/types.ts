@@ -20,10 +20,30 @@ export type Source = {
     | 'mpegts'
     /** other */
     | string
-  type?: 'string' // video/mp4 video/webm
+  type?: VideoMimeType | HLSMimeType | DASHMimeType
 }
 
 export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
+
+export type VideoMimeType =
+  | 'video/mp4'
+  | 'video/webm'
+  | 'video/3gp'
+  | 'video/ogg'
+  | 'video/avi'
+  | 'video/mpeg'
+  | 'video/object'
+
+export type HLSMimeType =
+  | 'application/vnd.apple.mpegurl'
+  | 'audio/mpegurl'
+  | 'audio/x-mpegurl'
+  | 'application/x-mpegurl'
+  | 'video/x-mpegurl'
+  | 'video/mpegurl'
+  | 'application/mpegurl'
+
+export type DASHMimeType = 'application/dash+xml'
 
 export interface PlayerOptions {
   source?: Source
