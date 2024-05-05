@@ -14,19 +14,14 @@ export interface ChromeCastOptions {
   resumeSavedSession?: boolean | undefined
   /** The following flag enables Cast Connect(requires Chrome 87 or higher) */
   androidReceiverCompatible?: boolean | undefined
-  /**
-   *  DEBUG: 0, INFO: 800, WARNING: 900, ERROR: 1000, NONE: 1500
-   */
-  loggerLevel: number
-  loadRequestBuilder: (request: chrome.cast.media.LoadRequest) => chrome.cast.media.LoadRequest
 }
 
 class ChromeCast implements PlayerPlugin {
-  public name = 'oplayer-plugin-chromecast'
-  public version = __VERSION__
+  readonly name = 'oplayer-plugin-chromecast'
+  readonly version = __VERSION__
 
   public player: Player
-  public _player?: cast.framework.RemotePlayer
+  protected _player?: cast.framework.RemotePlayer
 
   constructor(public options?: ChromeCastOptions) {}
 
@@ -76,15 +71,17 @@ class ChromeCast implements PlayerPlugin {
 
     this.cast.setOptions({
       receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-      autoJoinPolicy: chrome.cast.AutoJoinPolicy.TAB_AND_ORIGIN_SCOPED,
+      autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
+      resumeSavedSession: true,
+      androidReceiverCompatible: true,
       ...this.options
     })
 
-    //@ts-ignore
-    const errorCode = (await chrome.cast.requestSession()) as chrome.cast.ErrorCode
+    const errorCode = await this.cast.requestSession()
     if (errorCode) {
       throw new Error(`Chrome Cast Error Code: ${errorCode}`)
     }
+
     return this.cast.getCurrentSession()?.loadMedia(this.__buildRequest())
   }
 
@@ -117,57 +114,26 @@ class ChromeCast implements PlayerPlugin {
     request.autoplay = this.player.isPlaying
     request.currentTime = this.player.currentTime
 
-    return this.options?.loadRequestBuilder(request) || request
+    return request
   }
 
-  _loadCast() {
+  async _loadCast() {
     if (!!window.cast?.framework) return
 
-    return new Promise<void>((resolve, reject) => {
-      window.__onGCastApiAvailable = (isAvailable) => {
-        window.__onGCastApiAvailable == undefined
-
-        if (isAvailable) {
-          if (typeof this.options?.loggerLevel != 'undefined') {
-            cast.framework.setLoggerLevel(this.options.loggerLevel)
-          }
-          resolve()
-        } else {
-          reject(Error('CAST_NOT_AVAILABLE'))
-        }
-      }
-
-      loadSDK(
-        'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1',
-        'cast',
-        '__onGCastApiAvailable'
-      )
-    })
+    await loadSDK('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1', 'cast')
+    await customElements.whenDefined('google-cast-launcher')
   }
 
   async start() {
     try {
       await this._loadCast()
 
-      // const State = window.cast.framework.CastState
-      // if (this.cast.getCastState() === State.NO_DEVICES_AVAILABLE) {
-      // throw new Error(`Chrome Cast Error Code: ${State.NO_DEVICES_AVAILABLE}`)
-      // }
-
       const errorCode = await this.__requestChromeCast()
       if (errorCode) {
         throw new Error(`Chrome Cast Error Code: ${errorCode}`)
       }
     } catch (error) {
-      let msg = 'UNKNOWN ERROR'
-
-      if (error instanceof Error) {
-        msg = error.message
-      } else if (!!chrome.cast && error instanceof chrome.cast.Error) {
-        msg = `${error.code} - ${error.description} \n ${error.details}`
-      }
-
-      this.player.emit('notice', { text: msg })
+      this.player.emit('cast-error', error)
     }
   }
 

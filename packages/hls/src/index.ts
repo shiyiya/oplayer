@@ -1,6 +1,6 @@
 import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
 import type Hls from 'hls.js'
-import type { ErrorData, HlsConfig, LevelSwitchedData, MediaAttachedData } from 'hls.js'
+import type { ErrorData, HlsConfig, LevelSwitchedData } from 'hls.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
@@ -141,15 +141,14 @@ class HlsPlugin implements PlayerPlugin {
       active(instance, HlsPlugin.library)
     }
 
-    instance.once(HlsPlugin.library.Events.MEDIA_ATTACHED, (_, { media }: MediaAttachedData) => {
-      const $source = document.createElement('source') as HTMLSourceElement
-      $source.src = source.src
-      $source.type = source.type || (source.type = 'application/x-mpegurl')
-      media.appendChild($source)
+    const $source = document.createElement('source')
+    $source.setAttribute('src', source.src)
+    $source.setAttribute('type', source.type || (source.type = 'application/x-mpegurl'))
+    $source.setAttribute('data-hls', '')
+    $video.append($source)
 
-      instance.once(HlsPlugin.library.Events.DESTROYING, () => {
-        $source.remove()
-      })
+    instance.once(HlsPlugin.library.Events.DESTROYING, () => {
+      $source.remove()
     })
 
     instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
