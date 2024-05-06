@@ -52,12 +52,6 @@ export type Active = (
 export interface HlsPluginOptions {
   matcher?: Matcher
   /**
-   * active or inactive(returned fn)
-   *
-   * @type {Active}
-   */
-  active?: Active
-  /**
    * config for hls.js
    *
    * @type {Partial<HlsConfig>}

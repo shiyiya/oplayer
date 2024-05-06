@@ -108,6 +108,19 @@ const player = Player.make<Ctx>('#player', {
       initialIndex,
       sources: [
         {
+          title: 'HLS with SRT subtitle',
+          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+          poster: 'https://api.imlazy.ink/img?id19',
+          subtitles: [
+            {
+              name: 'Default',
+              src: SRT,
+              offset: 2
+            }
+          ],
+          duration: '10:34'
+        },
+        {
           title: '君の名は - MP4',
           poster: POSTER,
           src: MP4,
@@ -131,20 +144,6 @@ const player = Player.make<Ctx>('#player', {
             }
           ],
           highlights: highlight
-        },
-        {
-          title: 'HLS with default SRT subtitle',
-          src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-          poster: 'https://api.imlazy.ink/img?id19',
-          subtitles: [
-            {
-              name: 'Default',
-              default: true,
-              src: SRT,
-              offset: 2
-            }
-          ],
-          duration: '10:34'
         },
         {
           title: 'BROKEN SOURCE & POSTER',
@@ -222,7 +221,7 @@ render(actions(), document.getElementById('actions')!)
 player.on((e: PlayerEvent) => {
   render(actions(), document.getElementById('actions')!)
 
-  if ('timeupdate' == e.type || 'notice' === e.type) {
+  if ('timeupdate' == e.type || 'notice' === e.type || 'progress' === e.type) {
     return
   }
 

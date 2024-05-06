@@ -10,8 +10,6 @@ export type Active = (instance: MediaPlayerClass, library: typeof import('dashjs
 export interface DashPluginOptions {
   library?: string
   matcher?: Matcher
-  active?: Active
-  inactive?: Active
   /**
    * config for dashjs
    *
@@ -66,7 +64,7 @@ class DashPlugin implements PlayerPlugin {
 
   instance?: MediaPlayerClass
 
-  options: RequiredPartial<DashPluginOptions, 'active' | 'inactive' | 'config' | 'library'> = {
+  options: RequiredPartial<DashPluginOptions, 'config' | 'library'> = {
     textControl: true,
     audioControl: true,
     qualityControl: true,
@@ -98,11 +96,7 @@ class DashPlugin implements PlayerPlugin {
     this.instance = DashPlugin.library.MediaPlayer().create()
 
     const { player, instance } = this
-    const { config, active } = this.options
-
-    if (active) {
-      active(instance, DashPlugin.library)
-    }
+    const { config } = this.options
 
     if (config) instance.updateSettings(config)
     instance.initialize($video, source.src, $video.autoplay)
@@ -122,9 +116,7 @@ class DashPlugin implements PlayerPlugin {
 
   destroy() {
     if (this.instance) {
-      // prettier-ignore
-      const { player, instance, options: { inactive } } = this
-      if (inactive) inactive(instance, DashPlugin.library)
+      const { player, instance } = this
       if (player.context.ui?.setting) removeSetting(player)
       instance.destroy()
     }

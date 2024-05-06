@@ -21,14 +21,6 @@ export interface HlsPluginOptions {
    */
   errorHandler?: (player: Player, data: ErrorData, cb: typeof defaultErrorHandler) => void
   /**
-   * active
-   *
-   * @type {Active}
-   */
-  active?: Active
-
-  inactive?: Active
-  /**
    * config for hls.js
    *
    * @type {Partial<HlsConfig>}
@@ -79,11 +71,9 @@ const defaultMatcher: Matcher = (video, source, forceHLS) => {
 }
 
 const defaultErrorHandler = (player: Player, data: ErrorData) => {
-  if (data.fatal) {
-    const { type, details } = data
-    player.hasError = true
-    player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
-  }
+  const { type, details } = data
+  player.hasError = true
+  player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
 }
 
 class HlsPlugin implements PlayerPlugin {
@@ -97,7 +87,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: RequiredPartial<HlsPluginOptions, 'active' | 'inactive' | 'library'> = {
+  options: RequiredPartial<HlsPluginOptions, 'library'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -131,15 +121,12 @@ class HlsPlugin implements PlayerPlugin {
 
     if (!HlsPlugin.library.isSupported()) return false
 
-    const { config, active, errorHandler } = this.options
+    const { config, errorHandler } = this.options
 
     this.instance = new HlsPlugin.library(config)
+    this.instance.attachMedia($video)
 
     const { instance, player } = this
-
-    if (active) {
-      active(instance, HlsPlugin.library)
-    }
 
     const $source = document.createElement('source')
     $source.setAttribute('src', source.src)
@@ -152,11 +139,26 @@ class HlsPlugin implements PlayerPlugin {
     })
 
     instance.on(HlsPlugin.library.Events.ERROR, function (_, data) {
-      errorHandler(player, data, defaultErrorHandler)
+      if (data.fatal) {
+        switch (data.type) {
+          case 'mediaError':
+            instance.recoverMediaError()
+            break
+          case 'networkError':
+          default:
+            errorHandler(player, data, defaultErrorHandler)
+            break
+        }
+      }
+    })
+
+    instance.on(HlsPlugin.library.Events.LEVEL_LOADED, (_, data) => {
+      setTimeout(() => {
+        player.emit('canplay', data)
+      })
     })
 
     instance.loadSource(source.src)
-    instance.attachMedia($video)
 
     if (player.context.ui?.setting) {
       generateSetting(player, instance, this.options)
@@ -171,9 +173,7 @@ class HlsPlugin implements PlayerPlugin {
 
   destroy() {
     if (this.instance) {
-      // prettier-ignore
-      const { player, instance, options: { inactive } } = this
-      if (inactive) inactive(instance, HlsPlugin.library)
+      const { player, instance } = this
       if (player.context.ui?.setting) removeSetting(player)
       instance.destroy()
     }
@@ -189,8 +189,8 @@ export default function create(options?: HlsPluginOptions): PlayerPlugin {
 const generateSetting = (player: Player, instance: Hls, options: HlsPluginOptions = {}) => {
   const ui = player.context.ui
   if (options.qualityControl) {
-    instance.once(HlsPlugin.library!.Events.MANIFEST_PARSED, () => {
-      settingUpdater({
+    instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
+      injectSetting({
         icon: ui.icons.quality,
         name: 'Quality',
         settings() {
@@ -226,7 +226,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
     })
 
     instance.on(
-      HlsPlugin.library!.Events.LEVEL_SWITCHED,
+      HlsPlugin.library.Events.LEVEL_SWITCHED,
       function menuUpdater(_, { level }: LevelSwitchedData) {
         if (instance.autoLevelEnabled) {
           const height = instance.levels[level]!.height
@@ -240,8 +240,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
   }
 
   if (options.audioControl)
-    instance.on(HlsPlugin.library!.Events.AUDIO_TRACK_LOADED, () => {
-      settingUpdater({
+    instance.on(HlsPlugin.library.Events.LEVEL_LOADED, () => {
+      injectSetting({
         icon: ui.icons.lang,
         name: 'Language',
         settings() {
@@ -261,8 +261,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
     })
 
   if (options.textControl)
-    instance.on(HlsPlugin.library!.Events.SUBTITLE_TRACK_LOADED, () => {
-      settingUpdater({
+    instance.on(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
+      injectSetting({
         icon: ui.icons.subtitle,
         name: 'Subtitle',
         settings() {
@@ -289,7 +289,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
       })
     })
 
-  function settingUpdater(arg: {
+  function injectSetting(arg: {
     icon: string
     name: string
     settings: () => { name: string; default: boolean; value: any }[] | void

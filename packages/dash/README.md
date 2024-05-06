@@ -46,7 +46,6 @@ export type Active = (
 
 export interface DashPluginOptions {
   matcher?: Matcher
-  active?: Active
   /**
    * config for dashjs
    *
