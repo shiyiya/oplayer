@@ -5,8 +5,6 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
-export type Active = (instance: MediaPlayerClass, library: typeof import('dashjs')) => void
-
 export interface DashPluginOptions {
   library?: string
   matcher?: Matcher

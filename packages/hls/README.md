@@ -88,7 +88,7 @@ export interface HlsPluginOptions {
 }
 ```
 
-## Handle Hls.js Error **v1.2.24.beta.0+**
+## Handle Hls.js Error
 
 ```ts
 OPlayer.make('#oplayer', {
@@ -99,11 +99,14 @@ OPlayer.make('#oplayer', {
 })
   .use([
     OHls({
-      errorHandler(player, data, cb) {
+      errorHandler(player, data) {
         // skip bufferAppendError
         if (data.details == 'bufferAppendError') return
 
-        cb(player, data)
+        player.emit('error', {
+          ...data,
+          message: data.type + ': ' + data.details
+        })
       }
     })
   ])

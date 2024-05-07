@@ -6,8 +6,6 @@ const PLUGIN_NAME = 'oplayer-plugin-hls'
 
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
-export type Active = (instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void
-
 export interface HlsPluginOptions {
   library?: string
 
@@ -15,11 +13,8 @@ export interface HlsPluginOptions {
 
   /**
    * custom handle hls fatal error
-   * @param {Events}
-   * @param {ErrorData}
-   * @returns {boolean}
    */
-  errorHandler?: (player: Player, data: ErrorData, cb: typeof defaultErrorHandler) => void
+  errorHandler?: (player: Player, data: ErrorData) => void
   /**
    * config for hls.js
    *
@@ -70,12 +65,6 @@ const defaultMatcher: Matcher = (video, source, forceHLS) => {
   )
 }
 
-const defaultErrorHandler = (player: Player, data: ErrorData) => {
-  const { type, details } = data
-  player.hasError = true
-  player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
-}
-
 class HlsPlugin implements PlayerPlugin {
   key = 'hls'
   name = PLUGIN_NAME
@@ -87,7 +76,7 @@ class HlsPlugin implements PlayerPlugin {
 
   instance?: Hls
 
-  options: RequiredPartial<HlsPluginOptions, 'library'> = {
+  options: RequiredPartial<HlsPluginOptions, 'library' | 'errorHandler'> = {
     config: {},
     forceHLS: false,
     textControl: true,
@@ -95,8 +84,7 @@ class HlsPlugin implements PlayerPlugin {
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher,
-    errorHandler: defaultErrorHandler
+    matcher: defaultMatcher
   }
 
   constructor(options?: HlsPluginOptions) {
@@ -134,7 +122,7 @@ class HlsPlugin implements PlayerPlugin {
     $source.setAttribute('data-hls', '')
     $video.append($source)
 
-    instance.once(HlsPlugin.library.Events.DESTROYING, () => {
+    instance.on(HlsPlugin.library.Events.DESTROYING, () => {
       $source.remove()
     })
 
@@ -145,8 +133,21 @@ class HlsPlugin implements PlayerPlugin {
             instance.recoverMediaError()
             break
           case 'networkError':
+            if (!(data.networkDetails?.status === 404)) {
+              instance.startLoad()
+            }
+            break
           default:
-            errorHandler(player, data, defaultErrorHandler)
+            if (errorHandler) {
+              errorHandler(player, data)
+            } else {
+              player.hasError = true
+              player.emit('error', {
+                ...data,
+                pluginName: PLUGIN_NAME,
+                message: data.type + ': ' + data.details
+              })
+            }
             break
         }
       }
