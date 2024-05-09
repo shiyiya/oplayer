@@ -169,7 +169,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         }
       })
       .catch((error) => {
-        this.player.emit('playlistsourceerror', { error, idx })
+        this.player.emit('playlistsourceerror', { error: error?.payload || error, idx })
       })
       .finally(() => {
         this.currentIndex = idx

@@ -133,10 +133,6 @@ class HlsPlugin implements PlayerPlugin {
             instance.recoverMediaError()
             break
           case 'networkError':
-            if (!(data.networkDetails?.status === 404)) {
-              instance.startLoad()
-            }
-            break
           default:
             if (errorHandler) {
               errorHandler(player, data)
@@ -145,7 +141,7 @@ class HlsPlugin implements PlayerPlugin {
               player.emit('error', {
                 ...data,
                 pluginName: PLUGIN_NAME,
-                message: data.type + ': ' + data.details
+                message: data.type + ': ' + data.reason || data.details
               })
             }
             break
