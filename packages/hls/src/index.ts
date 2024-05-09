@@ -141,7 +141,7 @@ class HlsPlugin implements PlayerPlugin {
               player.emit('error', {
                 ...data,
                 pluginName: PLUGIN_NAME,
-                message: data.type + ': ' + data.reason || data.details
+                message: data.type + ': ' + (data.reason || data.details)
               })
             }
             break
