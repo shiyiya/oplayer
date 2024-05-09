@@ -48,8 +48,15 @@ export class Subtitle {
     this.processDefault(this.options.source)
 
     this.createContainer()
-    this.fetchSubtitle()
     this.loadSetting()
+
+    if (this.currentSubtitle) {
+      if (this.player.isSourceChanging || isNaN(this.player.duration) || this.player.duration < 1) {
+        this.player.once('loadedmetadata', () => this.fetchSubtitle())
+      } else {
+        this.fetchSubtitle()
+      }
+    }
 
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
     this.player.on('videoqualitychang', () => {

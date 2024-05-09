@@ -19,7 +19,7 @@ const defaultOptions = {
   muted: false,
   loop: false,
   volume: 1,
-  preload: '',
+  preload: 'metadata',
   playbackRate: 1,
   playsinline: true,
   lang: 'auto',
