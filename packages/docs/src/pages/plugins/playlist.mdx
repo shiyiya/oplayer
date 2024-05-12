@@ -17,12 +17,12 @@ npm i @oplayer/ui @oplayer/plugins
 ```jsx
 import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
-import { PlaylistPlugin } from '@oplayer/plugins'
+import { Playlist } from '@oplayer/plugins'
 
 Player.make('#player')
   .use([
     ui(),
-    new PlaylistPlugin({
+    new Playlist({
       initialIndex: 0,
       autoNext: true,
       sources: [

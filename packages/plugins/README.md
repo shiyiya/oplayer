@@ -5,7 +5,7 @@ npm i @oplayer/plugins
 ```
 
 ```js
-import { PlaylistPlugin, Chromecast, AirPlay, ad, vttThumbnails } from '@oplayer/plugins'
+import { Playlist, Chromecast, AirPlay, ad, vttThumbnails } from '@oplayer/plugins'
 ```
 
 ```html
@@ -33,7 +33,7 @@ import { PlaylistPlugin, Chromecast, AirPlay, ad, vttThumbnails } from '@oplayer
 ```js
 Player.make('#oplayer')
   .use([
-    new PlaylistPlugin({
+    new Playlist({
       initialIndex: 0, // default
       autoNext: true, // default
       autoHide: true, // default

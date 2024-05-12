@@ -6,7 +6,7 @@ import dash from '@oplayer/dash'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
 import danmaku from '@oplayer/danmaku'
-import { PlaylistPlugin, Chromecast, AirPlay } from '@oplayer/plugins'
+import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
 
 <div className="nx-rounded-sm nx-overflow-hidden" style={{ maxWidth: '1024px', margin: '1.25rem auto' }}>
   <Player
@@ -55,7 +55,7 @@ import { PlaylistPlugin, Chromecast, AirPlay } from '@oplayer/plugins'
       dash(),
       mpegts(),
       !isMobile && danmaku({ enable: false, fontSize: 0.75, displaySender: false }),
-      new PlaylistPlugin({
+      new Playlist({
         initialIndex: 0,
         autoNext: true,
         sources: [

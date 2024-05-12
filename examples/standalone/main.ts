@@ -8,7 +8,7 @@ import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
 import torrent from '@oplayer/torrent'
-import { PlaylistPlugin, Chromecast } from '@oplayer/plugins'
+import { Playlist, Chromecast } from '@oplayer/plugins'
 
 import vercel from '../../packages/docs/public/vercel.svg'
 
@@ -21,7 +21,7 @@ interface Ctx {
   dash: ReturnType<typeof dash>
   mpegts: ReturnType<typeof mpegts>
   danmaku: ReturnType<typeof danmaku>
-  playlist: PlaylistPlugin
+  playlist: Playlist
 }
 
 const initialIndex = 0
@@ -104,7 +104,7 @@ const player = Player.make<Ctx>('#player', {
       // displaySender: true,
       source: DANMAKU //SUPER_DANMAKU
     }),
-    new PlaylistPlugin({
+    new Playlist({
       initialIndex,
       sources: [
         {
