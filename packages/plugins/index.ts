@@ -4,4 +4,4 @@ import vttThumbnails from './src/vttThumbnails'
 import PlaylistPlugin from './src/playlist'
 import ad from './src/ad'
 
-export { Chromecast, AirPlay, vttThumbnails, ad, PlaylistPlugin }
+export { Chromecast, AirPlay, vttThumbnails, ad, PlaylistPlugin as Playlist }

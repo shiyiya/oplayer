@@ -45,18 +45,9 @@ export class Subtitle {
     }
 
     this.options = { source: [], ...options }
-    this.processDefault(this.options.source)
 
     this.createContainer()
-    this.loadSetting()
-
-    if (this.currentSubtitle) {
-      if (this.player.isSourceChanging || isNaN(this.player.duration) || this.player.duration < 1) {
-        this.player.once('loadedmetadata', () => this.fetchSubtitle())
-      } else {
-        this.fetchSubtitle()
-      }
-    }
+    this.changeSource(this.options.source)
 
     this.player.on(['destroy', 'videosourcechange'], this.destroy.bind(this))
     this.player.on('videoqualitychang', () => {
@@ -68,15 +59,14 @@ export class Subtitle {
   changeSource(payload: SubtitleSource[]) {
     this.setting?.unregister(SETTING_KEY)
     this.processDefault(payload)
-    const next = () => {
-      this.loadSetting()
-      this.player.emit('subtitlesourcechange', payload)
-      this.fetchSubtitle()
-    }
+    this.loadSetting()
+
+    if (!this.currentSubtitle) return
+
     if (this.player.isSourceChanging || isNaN(this.player.duration) || this.player.duration < 1) {
-      this.player.once('loadedmetadata', next)
+      this.player.once('loadedmetadata', this.fetchSubtitle.bind(this))
     } else {
-      next()
+      this.fetchSubtitle()
     }
   }
 

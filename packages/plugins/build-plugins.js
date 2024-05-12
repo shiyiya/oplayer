@@ -28,7 +28,7 @@ async function buildPlugin(name, dev) {
       lib: {
         entry: plugins[name],
         formats: dev ? ['es'] : ['es', 'umd'],
-        name: dev ? undefined : 'O' + outfileName.charAt(0).toUpperCase() + outfileName.slice(1),
+        name: name == 'index' ? 'OPlugin' : 'O' + outfileName.charAt(0).toUpperCase() + outfileName.slice(1),
         fileName: (format) => `${outfileName}.${{ es: 'es', umd: 'min' }[format]}.js`
       },
       rollupOptions: { external, output: { dir: 'dist', globals } }
