@@ -97,15 +97,15 @@ export default (it: UIInterface) => {
 
   function unregister(name: string) {
     $targets.forEach((it) => {
-      it.querySelector(`button[aria-label=${name}]`)?.remove()
-      it.querySelector(`div[aria-label=${name}]`)?.remove()
+      it.querySelector(`button[aria-label='${name}']`)?.remove()
+      it.querySelector(`div[aria-label='${name}]'`)?.remove()
     })
   }
 
   function select(name: string, index: number, shouldBeCallFn: Boolean = true) {
     $targets.forEach((it) => {
       const $target = it.querySelector<HTMLElement>(
-        `.${expand} > span[aria-label=${name}]:nth-child(${index + 1})`
+        `.${expand} > span[aria-label='${name}']:nth-child(${index + 1})`
       )
       if ($target) {
         setChecked($target)
