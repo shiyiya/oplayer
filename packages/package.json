@@ -1,0 +1,44 @@
+{
+  "name": "@oplayer/full",
+  "version": "0.0.0",
+  "description": "all loader in one",
+  "type": "module",
+  "main": "./dist/index.min.js",
+  "types": "./dist/src/index.d.ts",
+  "sideEffects": false,
+  "author": "shiyiya",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer",
+    "video-player",
+    "html5-player"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "echo empty",
+    "tsc": "tsc --noEmit && echo",
+    "build": "vite build && tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@oplayer/core": "workspace:*",
+    "@oplayer/dash": "workspace:*",
+    "@oplayer/hls": "workspace:*",
+    "@oplayer/mpegts": "workspace:*",
+    "@oplayer/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "hls.js": "*",
+    "dashjs": "*",
+    "mpegts.js": "*"
+  },
+  "files": [
+    "dist"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not op_mini all",
+    "IE 11"
+  ]
+}
