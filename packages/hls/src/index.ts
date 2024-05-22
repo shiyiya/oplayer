@@ -102,9 +102,9 @@ class HlsPlugin implements PlayerPlugin {
     if (!matcher($video, source, forceHLS)) return false
 
     if (!HlsPlugin.library) {
-      HlsPlugin.library = library
-        ? await loadSDK(library, 'Hls')
-        : (await import('hls.js/dist/hls.min.js')).default
+      HlsPlugin.library =
+        (globalThis as any).Hls ||
+        (library ? await loadSDK(library, 'Hls') : (await import('hls.js/dist/hls.min.js')).default)
     }
 
     if (!HlsPlugin.library.isSupported()) return false
@@ -176,8 +176,6 @@ class HlsPlugin implements PlayerPlugin {
     }
   }
 }
-
-HlsPlugin.library = (globalThis as any).Hls
 
 export default function create(options?: HlsPluginOptions): PlayerPlugin {
   return new HlsPlugin(options)
