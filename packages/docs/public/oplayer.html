@@ -191,11 +191,13 @@
   <body>
     <div id="oplayer"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
+    <!-- <script src="../../full/dist/index.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@latest/dist/index.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/mpegts@latest/dist/index.min.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/index.min.js"></script>
 
@@ -268,7 +270,7 @@
         volume: localStorage.getItem('@oplayer/UserPreferences/volume') || 1
       })
         .use([
-          OPlayer.ui({
+          OUI({
             theme: {
               watermark,
               controller: {
