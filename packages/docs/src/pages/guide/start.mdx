@@ -4,8 +4,9 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs'
 
 ### Install
 
-<Tabs items={['npm', 'script']}>
-  <Tab>
+<Tabs items={['npm', 'script', 'script all(~86KB)']}>
+
+<Tab>
 ```shell
 npm i @oplayer/core @oplayer/ui
 ```
@@ -24,9 +25,9 @@ Player.make('#oplayer', {
   .create()
 ```
 
-  </Tab>
+</Tab>
 
-  <Tab>
+<Tab>
 ```html filename="app.html"
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
 <script>
@@ -36,12 +37,27 @@ Player.make('#oplayer', {
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([OPlayer.ui()])
+    .use([OUI()])
     .create()
 </script>
 ```
-
 </Tab>
-</Tabs>
 
-<Callout>`@Oplayer/ui provides a basic set of skin styles.</Callout>
+<Tab>
+```html filename="app.html"
+<!-- Incloud ui & hls & dash & mpegts -->
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
+<script>
+  OPlayer.make('#oplayer', {
+    source: {
+      src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4',
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
+    }
+  })
+    .use([OUI(), OHls(), ODash(), OMpegts()])
+    .create()
+</script>
+```
+</Tab>
+
+</Tabs>
