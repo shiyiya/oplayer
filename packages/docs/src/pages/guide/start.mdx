@@ -54,7 +54,15 @@ Player.make('#oplayer', {
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([OUI(), OHls(), ODash(), OMpegts()])
+    .use([
+      OUI(),
+      OHls({
+        forceHLS: true,
+        library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
+      }),
+      ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
+      OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.min.js' }),
+    ])
     .create()
 </script>
 ```
