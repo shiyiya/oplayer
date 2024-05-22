@@ -4,7 +4,7 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs'
 
 ### Install
 
-<Tabs items={['npm', 'script', 'script all(~86KB)']}>
+<Tabs items={['npm', 'script', 'script all(~28kB)']}>
 
 <Tab>
 ```shell
@@ -29,6 +29,7 @@ Player.make('#oplayer', {
 
 <Tab>
 ```html filename="app.html"
+<!-- Includes ui -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
 <script>
   OPlayer.make('#oplayer', {
@@ -45,7 +46,7 @@ Player.make('#oplayer', {
 
 <Tab>
 ```html filename="app.html"
-<!-- Incloud ui & hls & dash & mpegts -->
+<!-- Includes ui & hls & dash & mpegts -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
 <script>
   OPlayer.make('#oplayer', {
