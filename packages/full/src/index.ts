@@ -1,20 +1,12 @@
-import { Player, $, isMobile, isiPad, isiPhone, isIOS, isQQBrowser, loadSDK } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import mepgts from '@oplayer/mpegts'
 
-const OPlayer = Object.assign(Player, {
-  $,
-  isMobile,
-  isiPad,
-  isiPhone,
-  isIOS,
-  isQQBrowser,
-  loadSDK
-})
+import Player from '@oplayer/core'
 
-export default OPlayer
+export default Player
+export * from '@oplayer/core'
 
 if (globalThis.window) {
   ;(globalThis.window as any).OUI = ui
