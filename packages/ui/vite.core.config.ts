@@ -3,6 +3,7 @@ import banner from 'vite-plugin-banner'
 import { viteConfig } from '../../vite.config'
 import { version as CoreVersion, name as CoreName, author, description, homepage } from '../core/package.json'
 import { version as UIVersion, name as UIName } from '../ui/package.json'
+import { plugin } from 'vite-plugin-merge-exports'
 
 export default viteConfig(
   'ui',
@@ -24,7 +25,8 @@ export default viteConfig(
       banner({
         outDir: '../core/dist',
         content: `/**\n * name: ${CoreName} + ${UIName}\n * version: v${CoreVersion} + v${UIVersion}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
-      })
+      }),
+      plugin()
     ]
   },
   false

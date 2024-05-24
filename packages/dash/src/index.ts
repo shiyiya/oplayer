@@ -86,7 +86,8 @@ class DashPlugin implements PlayerPlugin {
     if (!matcher($video, source)) return false
 
     if (!DashPlugin.library) {
-      DashPlugin.library = library ? await loadSDK(library, 'dashjs') : (await import('dashjs')).default
+      DashPlugin.library =
+        globalThis.dashjs || (library ? await loadSDK(library, 'dashjs') : (await import('dashjs')).default)
     }
 
     if (!DashPlugin.library.supportsMediaSource()) return false
@@ -120,8 +121,6 @@ class DashPlugin implements PlayerPlugin {
     }
   }
 }
-
-DashPlugin.library = globalThis.dashjs
 
 function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrate?: boolean) {
   const bitrateInfoList = instance.getBitrateInfoListFor(type)
