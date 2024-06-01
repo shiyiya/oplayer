@@ -32,11 +32,11 @@
   "peerDependencies": {
     "@oplayer/core": ">=1.0.0",
     "@types/webtorrent": "^0.109.8",
-    "webtorrent": "=1.9.7"
+    "webtorrent": "0.98.18"
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
     "@types/webtorrent": "^0.109.8",
-    "webtorrent": "1.9.7"
+    "webtorrent": "0.98.18"
   }
 }

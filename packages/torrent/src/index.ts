@@ -20,8 +20,6 @@ class TorrentPlugin implements PlayerPlugin {
 
   instance: Webtorrent.Instance
 
-  prePreload?: HTMLMediaElement['preload']
-
   constructor(public options: PluginOptions) {}
 
   apply(player: Player) {
@@ -36,9 +34,7 @@ class TorrentPlugin implements PlayerPlugin {
 
     if (!webtorrent.WEBRTC_SUPPORT) return false
 
-    this.prePreload ??= $video.preload
     const instance: Webtorrent.Instance = (this.instance = new webtorrent(config))
-    $video.preload = 'metadata'
 
     instance.on('error', (err) => {
       this.player.emit('error', {
@@ -49,20 +45,6 @@ class TorrentPlugin implements PlayerPlugin {
 
     //TODO: source list
     instance.add(source.src, (torrent) => {
-      const emit = () => {
-        this.player.emit('notice', {
-          pos: 'right',
-          text: `Size:${(torrent.length / 1000000).toFixed(1)}MB Peers:${torrent.numPeers} Progress:${(
-            100 * torrent.progress
-          ).toFixed(1)}% D:${(instance.downloadSpeed / 1000).toFixed(2)}Kb/s U:${(
-            instance.uploadSpeed / 1000
-          ).toFixed(2)}Kb/s`
-        })
-      }
-
-      torrent.on('download', emit)
-      torrent.on('upload', emit)
-
       let foundMp4 = false
       let subtitlePromise: Promise<any>[] = []
 
@@ -73,6 +55,9 @@ class TorrentPlugin implements PlayerPlugin {
             autoplay: $video.autoplay,
             controls: false,
             maxBlobLength: 2 * 1024 * 1000 * 1000 // 2 GB
+          })
+          this.player.once('loadedmetadata', (e) => {
+            this.player.emit('canplay', e)
           })
         } else if (file.name.endsWith('.srt')) {
           subtitlePromise.push(
@@ -104,8 +89,6 @@ class TorrentPlugin implements PlayerPlugin {
 
   async unload() {
     if (this.instance) await this.instance.destroy()
-    if (this.prePreload) this.player.$video.preload = this.prePreload
-    this.prePreload = undefined
   }
 
   async destroy() {

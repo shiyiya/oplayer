@@ -28,6 +28,6 @@
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "sass": "^1.77.2"
+    "sass": "^1.77.4"
   }
 }

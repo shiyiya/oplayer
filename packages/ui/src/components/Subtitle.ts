@@ -216,6 +216,22 @@ export class Subtitle {
     const { currentSubtitle, player, $track, $iosTrack } = this
     const { src, encoding, type = 'auto' } = currentSubtitle
 
+    if (src.startsWith('blob:')) {
+      $track.addEventListener(
+        'load',
+        () => {
+          this.changeOffset()
+          this.show()
+        },
+        { once: true }
+      )
+
+      $track.src = src
+      $iosTrack && ($iosTrack.src = src)
+
+      return
+    }
+
     return fetch(src)
       .then((response) => response.arrayBuffer())
       .then((buffer) => {
