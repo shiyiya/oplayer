@@ -217,18 +217,10 @@ export class Subtitle {
     const { src, encoding, type = 'auto' } = currentSubtitle
 
     if (src.startsWith('blob:')) {
-      $track.addEventListener(
-        'load',
-        () => {
-          this.changeOffset()
-          this.show()
-        },
-        { once: true }
-      )
-
+      this.changeOffset()
+      this.show()
       $track.src = src
       $iosTrack && ($iosTrack.src = src)
-
       return
     }
 

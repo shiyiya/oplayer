@@ -51,11 +51,7 @@ class TorrentPlugin implements PlayerPlugin {
       torrent.files.forEach((file) => {
         if (!foundMp4 && file.name.endsWith('.mp4') && file.renderTo) {
           foundMp4 = true
-          file.renderTo($video, {
-            autoplay: $video.autoplay,
-            controls: false,
-            maxBlobLength: 2 * 1024 * 1000 * 1000 // 2 GB
-          })
+          file.renderTo($video)
           this.player.once('loadedmetadata', (e) => {
             this.player.emit('canplay', e)
           })
