@@ -80,7 +80,11 @@ class TorrentPlugin implements PlayerPlugin {
       if (!medias.length) throw new Error('media not found')
 
       this.player.on('loadedmetadata', (e) => {
-        if (this.instance) this.player.emit('canplay', e)
+        if (this.instance) {
+          setTimeout(() => {
+            this.player.emit('canplay', e)
+          })
+        }
       })
 
       medias[0]!.renderTo($video, { controls: false })

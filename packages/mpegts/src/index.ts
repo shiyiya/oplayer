@@ -17,7 +17,7 @@ export type MpegtsPluginOptions = {
   library?: string
 }
 
-const REG = /flv|ts|m2ts(#|\?|$)/i
+const REG = /(flv|ts|m2ts)(#|\?|$)/i
 
 const defaultMatcher: Matcher = (_, source) => {
   if (source.format && ['flv', 'm2ts', 'mpegts'].includes(source.format)) {
