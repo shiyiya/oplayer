@@ -1,10 +1,13 @@
-import webtorrent from 'webtorrent/webtorrent.min.js'
-import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import { loadSDK, type Player, type PlayerPlugin, type Source } from '@oplayer/core'
 import type Webtorrent from 'webtorrent'
 
 export type PluginOptions = {
   config?: Record<string, any>
   matcher?: (src: Source) => boolean
+  /**
+   * https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js
+   */
+  library?: string
 }
 
 class TorrentPlugin implements PlayerPlugin {
@@ -16,11 +19,11 @@ class TorrentPlugin implements PlayerPlugin {
   static defaultMatcher: PluginOptions['matcher'] = (source) =>
     /magnet:?[^\"]+/.test(source.src) || /.*\.torrent/.test(source.src)
 
+  static library: Webtorrent.WebTorrent
+
   player!: Player
 
   instance: Webtorrent.Instance
-
-  prePreload?: HTMLMediaElement['preload']
 
   constructor(public options: PluginOptions) {}
 
@@ -30,62 +33,42 @@ class TorrentPlugin implements PlayerPlugin {
   }
 
   async load({ $video }: Player, source: Source) {
-    const { config = {}, matcher = TorrentPlugin.defaultMatcher } = this.options
+    const { config = {}, matcher = TorrentPlugin.defaultMatcher, library } = this.options
 
     if (!matcher!(source)) return false
 
+    if (!TorrentPlugin.library) {
+      TorrentPlugin.library =
+        (globalThis as any).Hls ||
+        (library
+          ? await loadSDK(library, 'WebTorrent')
+          : (await import('webtorrent/webtorrent.min.js')).default)
+    }
+
+    const webtorrent = TorrentPlugin.library
+
     if (!webtorrent.WEBRTC_SUPPORT) return false
 
-    this.prePreload ??= $video.preload
     const instance: Webtorrent.Instance = (this.instance = new webtorrent(config))
-    $video.preload = 'metadata'
 
-    instance.on('error', (err) => {
-      this.player.emit('error', {
-        message: (<Error>err)?.message || err,
-        pluginName: 'oplayer-plugin-torrent'
-      })
-    })
+    const medias: Webtorrent.TorrentFile[] = []
 
-    //TODO: source list
     instance.add(source.src, (torrent) => {
-      const emit = () => {
-        this.player.emit('notice', {
-          pos: 'right',
-          text: `Size:${(torrent.length / 1000000).toFixed(1)}MB Peers:${torrent.numPeers} Progress:${(
-            100 * torrent.progress
-          ).toFixed(1)}% D:${(instance.downloadSpeed / 1000).toFixed(2)}Kb/s U:${(
-            instance.uploadSpeed / 1000
-          ).toFixed(2)}Kb/s`
-        })
-      }
-
-      torrent.on('download', emit)
-      torrent.on('upload', emit)
-
-      let foundMp4 = false
-      let subtitlePromise: Promise<any>[] = []
-
       torrent.files.forEach((file) => {
-        if (!foundMp4 && file.name.endsWith('.mp4') && file.renderTo) {
-          foundMp4 = true
-          file.renderTo($video, {
-            autoplay: $video.autoplay,
-            controls: false,
-            maxBlobLength: 2 * 1024 * 1000 * 1000 // 2 GB
-          })
+        if (file.name.endsWith('.mp4')) {
+          medias.push(file)
         } else if (file.name.endsWith('.srt')) {
-          subtitlePromise.push(
-            new Promise((resolve) => {
-              file.getBlobURL((err, url) => {
-                if (err) return
-                resolve({
-                  name: file.name,
-                  src: url
-                })
-              })
-            })
-          )
+          // subtitlePromise.push(
+          //   new Promise((resolve) => {
+          //     file.getBlobURL((err, url) => {
+          //       if (err) return
+          //       resolve({
+          //         name: file.name,
+          //         src: url
+          //       })
+          //     })
+          //   })
+          // )
         } else if (file.name.startsWith('poster')) {
           file.getBlobURL((err, url) => {
             if (err || !url) return
@@ -94,8 +77,30 @@ class TorrentPlugin implements PlayerPlugin {
         }
       })
 
-      Promise.all(subtitlePromise).then((subtitles) => {
-        this.player.context.ui?.subtitle.changeSource(subtitles)
+      if (!medias.length) throw new Error('media not found')
+
+      this.player.on('loadedmetadata', (e) => {
+        if (this.instance) {
+          setTimeout(() => {
+            this.player.emit('canplay', e)
+          })
+        }
+      })
+
+      medias[0]!.renderTo($video, { controls: false })
+
+      this.player.context.ui?.menu.register({
+        name: 'Torrent',
+        position: 'top',
+        children: medias.map((media, i) => ({
+          name: media.name,
+          default: i == 0,
+          value: media
+        })),
+        onChange({ value, name }: any, elm: HTMLElement) {
+          elm.innerText = name
+          value.renderTo($video, { controls: false })
+        }
       })
     })
 
@@ -104,8 +109,6 @@ class TorrentPlugin implements PlayerPlugin {
 
   async unload() {
     if (this.instance) await this.instance.destroy()
-    if (this.prePreload) this.player.$video.preload = this.prePreload
-    this.prePreload = undefined
   }
 
   async destroy() {

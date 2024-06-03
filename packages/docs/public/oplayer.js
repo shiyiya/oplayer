@@ -120,6 +120,7 @@
       }),
       ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
       OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js/dist/mpegts.min.js' }),
+      OTorrent({ library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js' }),
       new OPlugin.AirPlay(),
       new OPlugin.Chromecast()
     ])

@@ -105,7 +105,7 @@ const player = Player.make<Ctx>('#player', {
       source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex,
+      initialIndex: 7,
       sources: [
         {
           title: 'HLS with SRT subtitle',
