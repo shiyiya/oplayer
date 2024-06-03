@@ -191,6 +191,9 @@ importers:
       '@oplayer/mpegts':
         specifier: workspace:*
         version: link:../mpegts
+      '@oplayer/torrent':
+        specifier: workspace:*
+        version: link:../torrent
       '@oplayer/ui':
         specifier: workspace:*
         version: link:../ui
@@ -203,6 +206,9 @@ importers:
       mpegts.js:
         specifier: '*'
         version: 1.7.3
+      webtorrent:
+        specifier: 0.98.18
+        version: 0.98.18
 
   packages/hls:
     devDependencies:

@@ -4,7 +4,6 @@ import { plugin } from 'vite-plugin-merge-exports'
 
 export default viteConfig('full', {
   build: {
-    emptyOutDir: false,
     lib: {
       name: 'OPlayer',
       formats: ['umd']

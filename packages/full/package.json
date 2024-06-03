@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/full",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "all loader in one",
   "type": "module",
   "main": "./dist/index.min.js",
@@ -24,12 +24,14 @@
     "@oplayer/dash": "workspace:*",
     "@oplayer/hls": "workspace:*",
     "@oplayer/mpegts": "workspace:*",
-    "@oplayer/ui": "workspace:*"
+    "@oplayer/ui": "workspace:*",
+    "@oplayer/torrent": "workspace:*"
   },
   "peerDependencies": {
     "hls.js": "*",
     "dashjs": "*",
-    "mpegts.js": "*"
+    "mpegts.js": "*",
+    "webtorrent": "0.98.18"
   },
   "files": [
     "dist"
