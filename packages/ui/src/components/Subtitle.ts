@@ -17,7 +17,7 @@ export default function (it: UIInterface) {
     player,
     $root: el,
     config: { subtitle },
-    setting
+    setting,
   } = it
 
   return (it.subtitle = new Subtitle(player, setting, el, subtitle))
@@ -73,7 +73,7 @@ export class Subtitle {
   createContainer() {
     const {
       el,
-      options: { color, shadow, fontSize, bottom, fontFamily, background, marginBottom }
+      options: { color, shadow, fontSize, bottom, fontFamily, background, marginBottom },
     } = this
 
     this.$dom = $.create(
@@ -100,19 +100,19 @@ export class Subtitle {
               '& span': {
                 'white-space': 'pre-wrap',
                 background: background ? 'rgba(8, 8, 8, 0.75)' : 'inherit',
-                padding: '0 0.25em'
-              }
-            }
+                padding: '0 0.25em',
+              },
+            },
           },
           !isMobile && {
             'margin-bottom': marginBottom || '2.2em',
             transition: 'margin 0.3s',
-            [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 }
+            [`@global .${controllerHidden} &`]: { 'margin-bottom': 0 },
           }
         )
       )}`,
       {
-        'aria-label': 'Subtitle'
+        'aria-label': 'Subtitle',
       }
     )
 
@@ -126,7 +126,7 @@ export class Subtitle {
       $.create('track', {
         default: true,
         kind: 'metadata',
-        id: 'primary'
+        id: 'primary',
       }),
       $video
     )
@@ -136,7 +136,7 @@ export class Subtitle {
       const { track } = (this.$iosTrack = $.create('track', {
         default: false,
         kind: 'captions',
-        id: '__Orz__'
+        id: '__Orz__',
       }))
 
       track.mode = 'hidden'
@@ -216,14 +216,6 @@ export class Subtitle {
     const { currentSubtitle, player, $track, $iosTrack } = this
     const { src, encoding, type = 'auto' } = currentSubtitle
 
-    if (src.startsWith('blob:')) {
-      this.changeOffset()
-      this.show()
-      $track.src = src
-      $iosTrack && ($iosTrack.src = src)
-      return
-    }
-
     return fetch(src)
       .then((response) => response.arrayBuffer())
       .then((buffer) => {
@@ -287,14 +279,14 @@ export class Subtitle {
         children: [
           {
             name: this.player.locales.get('OFF'),
-            default: !this.currentSubtitle
+            default: !this.currentSubtitle,
           },
           ...source?.map((s) => ({
             name: s.name,
             default: this.currentSubtitle?.src == s.src,
-            value: s
-          }))
-        ]
+            value: s,
+          })),
+        ],
       })
     }
   }
