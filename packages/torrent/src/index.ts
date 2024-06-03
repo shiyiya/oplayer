@@ -39,7 +39,7 @@ class TorrentPlugin implements PlayerPlugin {
 
     if (!TorrentPlugin.library) {
       TorrentPlugin.library =
-        (globalThis as any).Hls ||
+        (globalThis as any).WebTorrent ||
         (library
           ? await loadSDK(library, 'WebTorrent')
           : (await import('webtorrent/webtorrent.min.js')).default)
@@ -57,19 +57,21 @@ class TorrentPlugin implements PlayerPlugin {
       torrent.files.forEach((file) => {
         if (file.name.endsWith('.mp4')) {
           medias.push(file)
-        } else if (file.name.endsWith('.srt')) {
-          // subtitlePromise.push(
-          //   new Promise((resolve) => {
-          //     file.getBlobURL((err, url) => {
-          //       if (err) return
-          //       resolve({
-          //         name: file.name,
-          //         src: url
-          //       })
-          //     })
-          //   })
-          // )
-        } else if (file.name.startsWith('poster')) {
+        }
+        // else if (file.name.endsWith('.srt')) {
+        // subtitlePromise.push(
+        //   new Promise((resolve) => {
+        //     file.getBlobURL((err, url) => {
+        //       if (err) return
+        //       resolve({
+        //         name: file.name,
+        //         src: url
+        //       })
+        //     })
+        //   })
+        // )
+        // }
+        else if (file.name.startsWith('poster')) {
           file.getBlobURL((err, url) => {
             if (err || !url) return
             $video.poster = url
