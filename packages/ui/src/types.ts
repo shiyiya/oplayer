@@ -47,12 +47,15 @@ export type Setting<T = any> = {
    * selector 切换下个面板单选 1 ｜ 2 ｜ 3
    * switcher  当前面板切换 true or false
    */
-  type: 'selector' | 'switcher'
+  type: 'selector' | 'switcher' | 'slider'
   icon?: string
   children?: Setting[]
   onChange?: (a: T /* Setting | boolean */, b?: { index: number; player: Player }) => void | Promise<void>
   default?: any
   value?: T
+  min?: number
+  max?: number
+  step?: number
 }
 
 export type Thumbnails = {

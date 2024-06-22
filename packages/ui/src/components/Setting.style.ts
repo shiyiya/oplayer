@@ -102,7 +102,7 @@ export const settingItemCls = $.css({
   display: 'flex',
   overflow: 'hidden',
 
-  '& > *': { 'pointer-events': 'none' },
+  // '& > *': { 'pointer-events': 'none' },
 
   '&:hover': {
     'background-color': 'rgba(255, 255, 255, 0.1)'
@@ -137,6 +137,7 @@ export const settingItemLeft = $.css({
 export const settingItemRight = $.css(`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 `)
 
 export const backRow = $.css({
@@ -144,4 +145,35 @@ export const backRow = $.css({
   display: 'flex',
   'align-items': 'center',
   'border-bottom': '1px solid rgb(255 255 255 / 10%)'
+})
+
+export const sliderCls = $.css({
+  '-webkit-appearance': 'none',
+  width: '90%',
+  height: '0.6em',
+  outline: 'none',
+  'border-radius': '34px',
+  background: 'rgb(204, 204, 204)',
+  margin: '0',
+  cursor: 'pointer',
+  position: 'relative',
+
+  '&::-webkit-slider-thumb': {
+    '-webkit-appearance': 'none',
+    appearance: 'none',
+    background: '#fff',
+    height: '1.3em',
+    width: '1.3em',
+    'border-radius': '50%',
+    border: 'none'
+  },
+
+  '::before': {
+    position: 'absolute',
+    left: '-0.5em',
+    top: 0,
+    transform: 'translate(-100%, -0.3em)',
+    content: 'attr(value)',
+    color: 'rgba(255, 255, 255, 0.7)'
+  }
 })
