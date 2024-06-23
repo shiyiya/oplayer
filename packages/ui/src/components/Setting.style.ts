@@ -168,12 +168,17 @@ export const sliderCls = $.css({
     border: 'none'
   },
 
+  '&:hover::before': {
+    visibility: 'visible'
+  },
+
   '::before': {
     position: 'absolute',
-    left: '-0.5em',
+    left: '-0.3em',
     top: 0,
     transform: 'translate(-100%, -0.3em)',
     content: 'attr(value)',
-    color: 'rgba(255, 255, 255, 0.7)'
+    color: 'rgba(255, 255, 255, 0.7)',
+    visibility: 'hidden'
   }
 })
