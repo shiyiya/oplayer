@@ -12,6 +12,12 @@ export interface HlsPluginOptions {
   matcher?: Matcher
 
   /**
+   * -1 : auto
+   * default auto
+   */
+  defaultQuality?: number
+
+  /**
    * custom handle hls fatal error
    */
   errorHandler?: (player: Player, data: ErrorData) => void
@@ -84,7 +90,8 @@ class HlsPlugin implements PlayerPlugin {
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher
+    matcher: defaultMatcher,
+    defaultQuality: -1
   }
 
   constructor(options?: HlsPluginOptions) {
@@ -181,10 +188,12 @@ export default function create(options?: HlsPluginOptions): PlayerPlugin {
   return new HlsPlugin(options)
 }
 
-const generateSetting = (player: Player, instance: Hls, options: HlsPluginOptions = {}) => {
+const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['options']) => {
   const ui = player.context.ui
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
+      let defaultSelect = options.defaultQuality
+
       injectSetting({
         icon: ui.icons.quality,
         name: 'Quality',
@@ -200,6 +209,11 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
                   const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
                   name += ` (${number}${useMb ? 'm' : 'k'}bps)`
                 }
+
+                if (level.height <= options.defaultQuality) {
+                  defaultSelect = i
+                }
+
                 pre.push({ name, default: instance.currentLevel == i, value: i })
                 return pre
               },
@@ -218,6 +232,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPluginOption
           }
         }
       })
+
+      if (defaultSelect != -1) instance.currentLevel = defaultSelect
     })
 
     instance.on(

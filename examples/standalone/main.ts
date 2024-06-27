@@ -96,7 +96,7 @@ const player = Player.make<Ctx>('#player', {
       }
     }),
     torrent(),
-    hls({ forceHLS: true }),
+    hls({ forceHLS: true, defaultQuality: 1080 }),
     dash(),
     mpegts(),
     danmaku({
@@ -105,7 +105,7 @@ const player = Player.make<Ctx>('#player', {
       source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex: 7,
+      initialIndex: 0,
       sources: [
         {
           title: 'HLS with SRT subtitle',
