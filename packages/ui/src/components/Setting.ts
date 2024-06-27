@@ -16,7 +16,8 @@ import {
   switcherCls,
   switcherContainer,
   backIcon,
-  backRow
+  backRow,
+  sliderCls
 } from './Setting.style'
 
 export const arrowSvg = (className = nextIcon) =>
@@ -25,7 +26,7 @@ export const arrowSvg = (className = nextIcon) =>
   } viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
 
 // Selector Options
-export const selectorOption = (name: string, icon: string = '') =>
+const selectorOption = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
@@ -35,7 +36,7 @@ export const selectorOption = (name: string, icon: string = '') =>
     </svg>
 `
 
-export const nexter = (name: string, icon: string = '') =>
+const nexter = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
@@ -46,14 +47,14 @@ export const nexter = (name: string, icon: string = '') =>
     </div>
 `
 
-export const back = (name: string) =>
+const back = (name: string) =>
   `<div class="${backRow}">
       ${arrowSvg(backIcon)}
       <span>${name}</span>
     </div>
 `
 
-export const switcher = (name: string, icon: string = '') =>
+const switcher = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
     ${icon}
     <span>${name}</span>
@@ -65,13 +66,39 @@ export const switcher = (name: string, icon: string = '') =>
   </div>
 `
 
+export const slider = ({
+  name,
+  icon = '',
+  max = 1,
+  min = 0,
+  value = 0,
+  step = 1
+}: {
+  name: string
+  icon?: string
+  min: number
+  max: number
+  value: number
+  step: number
+}) =>
+  `<div class="${settingItemLeft}">
+    ${icon}
+    <span>${name}</span>
+  </div>
+  <div class=${settingItemRight}>
+   <input type="range" min="${min}" max="${max}" step="${step}" value="${value}" class="${sliderCls}" />
+  </div>`
+
 function createRow({
   type,
   key,
   name,
   icon,
   default: selected,
-  index
+  index,
+  max,
+  min,
+  step
 }: Omit<Setting, 'onChange' | 'children' | 'value'> & { index?: number; switcherLabe?: string }) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
@@ -94,6 +121,9 @@ function createRow({
       break
     case 'back' as any:
       $item.innerHTML = back(name)
+      break
+    case 'slider':
+      $item.innerHTML = slider({ name, max, min, icon, value: selected, step } as any)
       break
     default: // select option 不用 type
       $item.innerHTML = selectorOption(name, icon)
@@ -165,7 +195,7 @@ function createPanel(
   }
 
   for (let i = 0; i < setting.length; i++) {
-    const { name, type, key, children, icon, default: selected, onChange } = setting[i]!
+    const { name, type, key, children, icon, default: selected, onChange, max, min, step } = setting[i]!
 
     const { $row, $label } = createRow(
       Object.assign(
@@ -174,7 +204,10 @@ function createPanel(
           type,
           key: key,
           icon,
-          default: selected
+          default: selected,
+          max,
+          min,
+          step
         },
         !isRoot && isSelectorOptionsPanel && { index: i }
       )
@@ -234,14 +267,20 @@ function createPanel(
       }
     } else {
       if (type == 'switcher') {
-        //@ts-ignore
-        $row.select = function (shouldBeCallFn: boolean) {
+        ;($row as any).select = function (shouldBeCallFn: boolean) {
           const selected = this.getAttribute('aria-checked') == 'true'
           this.setAttribute('aria-checked', `${!selected}`)
           if (shouldBeCallFn) onChange?.(!selected)
         }
-        //@ts-ignore
-        $row.addEventListener('click', () => $row.select(true))
+        $row.addEventListener('click', () => ($row as any).select(true))
+      } else if (type == 'slider') {
+        const $input = $row.querySelector('input')!
+        $input.oninput = function (event: any) {
+          event.target.setAttribute('value', event.target.value)
+        }
+        $input.onchange = function (event: any) {
+          onChange?.(event.target.value)
+        }
       }
     }
   }

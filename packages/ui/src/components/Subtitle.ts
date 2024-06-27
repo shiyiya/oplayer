@@ -153,9 +153,7 @@ export class Subtitle {
     }
   }
 
-  changeOffset() {
-    const offset = this.currentSubtitle?.offset
-
+  changeOffset(offset?: number) {
     if (offset) {
       ;([this.$track, this.$iosTrack] as const).forEach(($track) => {
         if (!$track) return
@@ -214,7 +212,7 @@ export class Subtitle {
     if (!this.currentSubtitle) return
     if (!this.$track) this.createTrack()
     const { currentSubtitle, player, $track, $iosTrack } = this
-    const { src, encoding, type = 'auto' } = currentSubtitle
+    const { src, encoding, type = 'auto', offset } = currentSubtitle
 
     return fetch(src)
       .then((response) => response.arrayBuffer())
@@ -240,7 +238,7 @@ export class Subtitle {
         this.$track.addEventListener(
           'load',
           () => {
-            this.changeOffset()
+            this.changeOffset(offset)
             this.show()
           },
           { once: true }
