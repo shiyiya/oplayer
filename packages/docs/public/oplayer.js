@@ -131,35 +131,6 @@
       }
     })
 
-  if (playlist.length) {
-    player.applyPlugin(
-      new OPlugin.Playlist({
-        initialIndex: p,
-        autoHide: false,
-        sources: playlist,
-        m3uList: m3u
-          ? {
-              sourceFormat(info) {
-                try {
-                  const chunk = info.title.substring(3).split('" ')
-                  const titleWith = /group-title="(.+",.+)/.exec(info.title)
-                  const posterWith = /tvg-logo="(.+)"/.exec(info.title)
-                  return {
-                    src: info.uri,
-                    format: 'm3u8',
-                    title: titleWith ? titleWith[1] : /group-title="(.+)"/.exec(info.title)[1],
-                    poster: posterWith && posterWith[1]
-                  }
-                } catch (error) {
-                  return { src: info.uri, title: info.title, format: 'm3u8' }
-                }
-              }
-            }
-          : false
-      })
-    )
-  }
-
   if (danmaku || playlist.some((it) => it.danmaku)) {
     deps.push([
       danmakuScriptCdn,
@@ -181,6 +152,35 @@
     try {
       deps.map(([_, fn]) => fn && fn())
     } catch (error) {}
+
+    if (playlist.length) {
+      player.applyPlugin(
+        new OPlugin.Playlist({
+          initialIndex: p,
+          autoHide: false,
+          sources: playlist,
+          m3uList: m3u
+            ? {
+                sourceFormat(info) {
+                  try {
+                    const chunk = info.title.substring(3).split('" ')
+                    const titleWith = /group-title="(.+",.+)/.exec(info.title)
+                    const posterWith = /tvg-logo="(.+)"/.exec(info.title)
+                    return {
+                      src: info.uri,
+                      format: 'm3u8',
+                      title: titleWith ? titleWith[1] : /group-title="(.+)"/.exec(info.title)[1],
+                      poster: posterWith && posterWith[1]
+                    }
+                  } catch (error) {
+                    return { src: info.uri, title: info.title, format: 'm3u8' }
+                  }
+                }
+              }
+            : false
+        })
+      )
+    }
   })
 
   player.on('ratechange', () => {
