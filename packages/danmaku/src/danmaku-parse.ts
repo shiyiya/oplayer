@@ -22,6 +22,8 @@ export function getMode(key: number): Comment['mode'] {
 
 // http://jabbany.github.io/CommentCoreLibrary/docs/data-formats/bilibili-xml.html
 export function danmakuParseFromXml(xmlString: string) {
+  //TODO: Named capturing groups are only available when targeting 'ES2018' or later.
+  //@ts-ignore
   const matches = xmlString.matchAll(/<d (?:.*? )??p="(?<p>.+?)"(?: .*?)?>(?<text>.+?)<\/d>/gs)
   const result: Comment[] = []
   Array.from(matches).forEach((match) => {
