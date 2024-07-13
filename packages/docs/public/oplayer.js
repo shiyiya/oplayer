@@ -8,7 +8,8 @@
     deps = [],
     m3u = false,
     p = undefined,
-    title = '❤OPlayer'
+    title = '❤OPlayer',
+    txt = ''
 
   var _query = decodeURIComponent(query || '')
   if (_query.startsWith('http')) {
@@ -26,6 +27,7 @@
     m3u = safeDecodeURIComponent(search.get('m3u'))
     p = search.has('p') ? search.get('p') : undefined
     p == '' ? (p = undefined) : (p = +p)
+    txt = safeDecodeURIComponent(search.get('txt'))
 
     subtitle = search.get('subtitle')
       ? {
@@ -60,6 +62,19 @@
     m3u = true
     src = undefined
     deps.push(['https://cdn.jsdelivr.net/npm/m3u8-parser@7.1.0/dist/m3u8-parser.min.js'])
+  }
+
+  if (txt) {
+    fetch(txt)
+      .then((r) => r.text())
+      .then((text) => {
+        console.log(text.split('\n'))
+        playlist = text.split('\n').map((line) => {
+          const [title, src] = line.split(',')
+          return { title, src: src }
+        })
+      })
+      .then(applyPlaylist)
   }
 
   var player = OPlayer.make('#oplayer', {
@@ -153,6 +168,10 @@
       deps.map(([_, fn]) => fn && fn())
     } catch (error) {}
 
+    applyPlaylist()
+  })
+
+  function applyPlaylist() {
     if (playlist.length) {
       player.applyPlugin(
         new OPlugin.Playlist({
@@ -181,7 +200,7 @@
         })
       )
     }
-  })
+  }
 
   player.on('ratechange', () => {
     if (!player.isSourceChanging)
