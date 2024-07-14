@@ -68,13 +68,15 @@
     fetch(txt)
       .then((r) => r.text())
       .then((text) => {
-        console.log(text.split('\n'))
         playlist = text.split('\n').map((line) => {
           const [title, src] = line.split(',')
           return { title, src: src }
         })
       })
       .then(applyPlaylist)
+      .catch((e) => {
+        player.emit('error', e)
+      })
   }
 
   var player = OPlayer.make('#oplayer', {
