@@ -1,0 +1,58 @@
+{
+  "index": "Introduction",
+  "guide": "Guide",
+
+  "-- Plugins": {
+    "type": "separator",
+    "title": "Plugins"
+  },
+  "ui": "@oplayer/ui",
+  "danmaku": "@oplayer/danmaku",
+  "react": "@oplayer/react",
+  "plugins": "@oplayer/plugins",
+  "vast": "@oplayer/vast",
+  "wp_plugin": {
+    "title": "WorldPress ↗",
+    "href": "https://github.com/shiyiya/WordPress-Plugin-OPlayer",
+    "newWindow": true
+  },
+
+  "-- Loaders": {
+    "type": "separator",
+    "title": "Loaders"
+  },
+  "hls": "@oplayer/hls",
+  "dash": "@oplayer/dash",
+  "mpegts": "@oplayer/mpegts",
+  "torrent": "@oplayer/torrent",
+
+  "-- More": {
+    "type": "separator",
+    "title": "More"
+  },
+  "QQ": {
+    "title": "QQ ↗",
+    "href": "https://jq.qq.com/?_wv=1027&k=YzsRgkXB",
+    "newWindow": true
+  },
+  "Discord": {
+    "title": "Discord ↗",
+    "href": "https://discord.gg/hzjxYyPbKh",
+    "newWindow": true
+  },
+
+  "player": {
+    "title": "Player",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "playground": {
+    "title": "Playground",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  }
+}
