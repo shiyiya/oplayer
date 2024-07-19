@@ -1,5 +1,12 @@
 {
-  "index": "Introduction",
+  "index": {
+    "title": "OPlayer",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "doc": "Introduction",
   "guide": "Guide",
   "-- Plugins": {
     "type": "separator",
@@ -37,8 +44,9 @@
     "href": "https://discord.gg/hzjxYyPbKh",
     "newWindow": true
   },
+
   "preview": {
-    "title": "Preview",
+    "title": "Documentation",
     "type": "page",
     "theme": {
       "layout": "full"

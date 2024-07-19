@@ -3,7 +3,7 @@ import { useConfig } from 'nextra-theme-docs'
 import { useRouter } from 'next/router'
 
 export default {
-  logo: <span>Documentation</span>,
+  logo: <span>OPlayer</span>,
   project: { link: 'https://github.com/shiyiya/oplayer' },
   docsRepositoryBase: 'https://github.com/shiyiya/oplayer/tree/main/packages/docs',
   chat: {
