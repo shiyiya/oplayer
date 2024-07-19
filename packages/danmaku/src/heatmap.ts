@@ -9,13 +9,13 @@ const lib = {
     const s = Math.round(start / tick) * tick
     return Array.from(
       {
-        length: Math.floor((end - start) / tick)
+        length: Math.floor((end - start) / tick),
       },
       (_, k) => {
         return k * tick + s
       }
     )
-  }
+  },
 }
 
 const line = (pointA: number[], pointB: number[]) => {
@@ -23,17 +23,16 @@ const line = (pointA: number[], pointB: number[]) => {
   const lengthY = pointB[1]! - pointA[1]!
   return {
     length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
-    angle: Math.atan2(lengthY, lengthX)
+    angle: Math.atan2(lengthY, lengthX),
   }
 }
 
 export default function heatmap(player: Player, danmaku: DanmakuContext, customPoints: Options['heatmap']) {
-  const $progress = player.context.ui.$progress
+  const $progress = player.context.ui.$progress.firstElementChild
   const $wrap = document.createElement('div')
-  $wrap.style.cssText = `height: 8em;width:100%;pointer-events:none;padding-right:1em;`
+  $wrap.style.cssText = `position:absolute;bottom:0.33em;height: 8em;width:100%;pointer-events:none;`
   $progress.insertBefore($wrap, $progress.firstChild)
-  const { offsetHeight: h } = $wrap
-  const w = parseFloat(getComputedStyle($progress).getPropertyValue('padding-right'))
+  const { offsetHeight: h, offsetWidth: w } = $wrap
 
   const options = {
     xMin: 0,
@@ -46,7 +45,7 @@ export default function heatmap(player: Player, danmaku: DanmakuContext, customP
     sampling: Math.floor(w / 100),
     fill: 'rgba(255, 255, 255, 0.5)',
     smoothing: 0.2,
-    flattening: 0.2
+    flattening: 0.2,
   }
 
   type Point = [number, number]
@@ -105,21 +104,17 @@ export default function heatmap(player: Player, danmaku: DanmakuContext, customP
 
   const pathD = pointsPositions.reduce(
     (acc, e, i, a) =>
-      i === 0
-        ? `M ${a[a.length - 1]![0]},${h} L ${e[0]},${h} L ${e[0]},${e[1]}`
-        : `${acc} ${bezierCommand(e, i, a)}`,
+      i === 0 ? `M ${a[a.length - 1]![0]},${h} L ${e[0]},${h} L ${e[0]},${e[1]}` : `${acc} ${bezierCommand(e, i, a)}`,
     ''
   )
 
-  $wrap.style.position = 'absolute'
-  $wrap.style.bottom = '10px'
   const pa = $.css({
     position: 'absolute',
     bottom: 0,
     [`@global [data-ctrl-hidden=true] &`]: {
       opacity: 0,
-      transition: 'opacity .3s'
-    }
+      transition: 'opacity .3s',
+    },
   })
 
   $wrap.innerHTML = `
@@ -162,7 +157,7 @@ export default function heatmap(player: Player, danmaku: DanmakuContext, customP
       $wrap.style.display = 'none'
       player.off('timeupdate', updateProgress)
       player.off('seeked', updateProgress)
-    }
+    },
   }
 
   danmaku.heatmap.enable()
