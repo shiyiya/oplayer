@@ -30,7 +30,7 @@ const line = (pointA: number[], pointB: number[]) => {
 export default function heatmap(player: Player, danmaku: DanmakuContext, customPoints: Options['heatmap']) {
   const $progress = player.context.ui.$progress
   const $wrap = document.createElement('div')
-  $wrap.style.cssText = `height: 8em;width:100%;pointer-events:none`
+  $wrap.style.cssText = `height: 8em;width:100%;pointer-events:none;padding-right:1em;`
   $progress.insertBefore($wrap, $progress.firstChild)
   const { offsetWidth: w, offsetHeight: h } = $wrap
 
