@@ -32,7 +32,8 @@ export default function heatmap(player: Player, danmaku: DanmakuContext, customP
   const $wrap = document.createElement('div')
   $wrap.style.cssText = `height: 8em;width:100%;pointer-events:none;padding-right:1em;`
   $progress.insertBefore($wrap, $progress.firstChild)
-  const { offsetWidth: w, offsetHeight: h } = $wrap
+  const { offsetHeight: h } = $wrap
+  const w = parseFloat(getComputedStyle($progress).getPropertyValue('padding-right'))
 
   const options = {
     xMin: 0,
