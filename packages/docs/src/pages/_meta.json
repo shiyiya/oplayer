@@ -10,5 +10,19 @@
   "docs": {
     "type": "page",
     "title": "Documentation"
+  },
+  "player": {
+    "title": "Player",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "playground": {
+    "title": "Playground",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
   }
 }

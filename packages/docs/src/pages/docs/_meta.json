@@ -39,20 +39,5 @@
     "title": "Discord ↗",
     "href": "https://discord.gg/hzjxYyPbKh",
     "newWindow": true
-  },
-
-  "player": {
-    "title": "Player",
-    "type": "page",
-    "theme": {
-      "layout": "full"
-    }
-  },
-  "playground": {
-    "title": "Playground",
-    "type": "page",
-    "theme": {
-      "layout": "full"
-    }
   }
 }
