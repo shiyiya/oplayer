@@ -16,7 +16,8 @@ import {
   switcherCls,
   switcherContainer,
   backIcon,
-  backRow
+  backRow,
+  sliderCls
 } from './Setting.style'
 
 export const arrowSvg = (className = nextIcon) =>
@@ -25,7 +26,7 @@ export const arrowSvg = (className = nextIcon) =>
   } viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z" fill="#fff"></path></svg>`
 
 // Selector Options
-export const selectorOption = (name: string, icon: string = '') =>
+const selectorOption = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
@@ -35,7 +36,7 @@ export const selectorOption = (name: string, icon: string = '') =>
     </svg>
 `
 
-export const nexter = (name: string, icon: string = '') =>
+const nexter = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
       ${icon}
       <span>${name}</span>
@@ -46,14 +47,14 @@ export const nexter = (name: string, icon: string = '') =>
     </div>
 `
 
-export const back = (name: string) =>
+const back = (name: string) =>
   `<div class="${backRow}">
       ${arrowSvg(backIcon)}
       <span>${name}</span>
     </div>
 `
 
-export const switcher = (name: string, icon: string = '') =>
+const switcher = (name: string, icon: string = '') =>
   `<div class="${settingItemLeft}">
     ${icon}
     <span>${name}</span>
@@ -65,14 +66,52 @@ export const switcher = (name: string, icon: string = '') =>
   </div>
 `
 
+const normal = (name: string, icon: string = '') =>
+  `<div class="${settingItemLeft}">
+    ${icon}
+    <span>${name}</span>
+  </div>
+`
+
+export const slider = ({
+  name,
+  icon = '',
+  max = 1,
+  min = 0,
+  value = 0,
+  step = 1
+}: {
+  name: string
+  icon?: string
+  min: number
+  max: number
+  value: number
+  step: number
+}) =>
+  `<div class="${settingItemLeft}">
+    ${icon}
+    <span>${name}</span>
+  </div>
+  <div class=${settingItemRight}>
+   <input type="range" min="${min}" max="${max}" step="${step}" value="${value}" class="${sliderCls}" />
+  </div>`
+
 function createRow({
   type,
   key,
   name,
   icon,
   default: selected,
-  index
-}: Omit<Setting, 'onChange' | 'children' | 'value'> & { index?: number; switcherLabe?: string }) {
+  index,
+  max,
+  min,
+  step,
+  hasChildren
+}: Omit<Setting, 'onChange' | 'children' | 'value'> & {
+  hasChildren?: boolean
+  index?: number
+  switcherLabe?: string
+}) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
     role: Boolean(type) ? 'menuitem' : 'menuitemradio',
@@ -95,11 +134,21 @@ function createRow({
     case 'back' as any:
       $item.innerHTML = back(name)
       break
-    default: // select option 不用 type
+    case 'slider':
+      $item.innerHTML = slider({ name, max, min, icon, value: selected, step } as any)
+      break
+    case 'option':
       $item.innerHTML = selectorOption(name, icon)
       $item.setAttribute('aria-checked', selected || false)
       if (typeof index == 'number') {
         $item.setAttribute('data-index', index.toString())
+      }
+      break
+    default:
+      if (hasChildren) {
+        $item.innerHTML = nexter(name, icon)
+      } else {
+        $item.innerHTML = normal(name, icon)
       }
       break
   }
@@ -127,6 +176,7 @@ function createPanel(
     target: HTMLElement
     parent?: Panel
     isSelectorOptionsPanel?: boolean
+    parenOnChange?: Function
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
@@ -136,7 +186,7 @@ function createPanel(
   let key: string = parentKey! || 'root'
 
   if (panels[0] && key == 'root') {
-    panel = panels[0]! // 将 options 挂在第一个面板
+    panel = panels[0]!
     key = panels[0]!.key
   } else {
     //创建新的选项面板
@@ -165,16 +215,32 @@ function createPanel(
   }
 
   for (let i = 0; i < setting.length; i++) {
-    const { name, type, key, children, icon, default: selected, onChange } = setting[i]!
+    const {
+      name,
+      type,
+      key,
+      children,
+      icon,
+      default: selected,
+      onChange,
+      max,
+      min,
+      step,
+      value
+    } = setting[i]!
 
     const { $row, $label } = createRow(
       Object.assign(
         {
           name,
-          type,
+          type: isSelectorOptionsPanel ? 'option' : type,
           key: key,
           icon,
-          default: selected
+          default: selected,
+          max,
+          min,
+          step,
+          hasChildren: Boolean(children)
         },
         !isRoot && isSelectorOptionsPanel && { index: i }
       )
@@ -184,14 +250,16 @@ function createPanel(
 
     //处理 selector，因为依赖label，所以需先创建子 panel
     if (children) {
-      const nextIsSelectorOptionsPanel = type == 'selector' && children.every((it) => !Boolean(it.type))
+      const nextIsSelectorOptionsPanel =
+        type == 'selector' && children.every((it) => !Boolean(it.type) || it.type == 'option')
 
       const optionPanel = createPanel(player, panels, children, {
-        key,
+        key: key || 'name',
         target,
         parent: panel,
         isSelectorOptionsPanel: nextIsSelectorOptionsPanel,
-        name: type == ('selector' as any) ? name : undefined
+        name,
+        parenOnChange: onChange
       })!
 
       $row.addEventListener('click', () => {
@@ -234,14 +302,23 @@ function createPanel(
       }
     } else {
       if (type == 'switcher') {
-        //@ts-ignore
-        $row.select = function (shouldBeCallFn: boolean) {
+        ;($row as any).select = function (shouldBeCallFn: boolean) {
           const selected = this.getAttribute('aria-checked') == 'true'
           this.setAttribute('aria-checked', `${!selected}`)
           if (shouldBeCallFn) onChange?.(!selected)
         }
-        //@ts-ignore
-        $row.addEventListener('click', () => $row.select(true))
+        $row.addEventListener('click', () => ($row as any).select(true))
+      } else if (type == 'slider') {
+        const $input = $row.querySelector('input')!
+        $input.oninput = function (event: any) {
+          event.target.setAttribute('value', event.target.value)
+        }
+        $input.onchange = function (event: any) {
+          onChange?.(event.target.value)
+        }
+        // TODO: update methond
+      } else {
+        $row.addEventListener('click', (e) => (onChange || options.parenOnChange)?.(value, e))
       }
     }
   }
