@@ -114,7 +114,7 @@ function createRow({
 }) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
-    role: Boolean(type) ? 'menuitem' : 'menuitemradio',
+    role: type == 'option' ? 'menuitemradio' : 'menuitem',
     'aria-haspopup': type == 'selector'
   })
   const res = {
@@ -254,7 +254,7 @@ function createPanel(
         type == 'selector' && children.every((it) => !Boolean(it.type) || it.type == 'option')
 
       const optionPanel = createPanel(player, panels, children, {
-        key: key || 'name',
+        key: key || name,
         target,
         parent: panel,
         isSelectorOptionsPanel: nextIsSelectorOptionsPanel,
