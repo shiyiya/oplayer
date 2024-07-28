@@ -47,7 +47,7 @@ export type Setting<T = any> = {
    * selector 切换下个面板单选 1 ｜ 2 ｜ 3
    * switcher  当前面板切换 true or false
    */
-  type: 'selector' | 'switcher' | 'slider'
+  type?: 'selector' | 'switcher' | 'slider' | 'option'
   icon?: string
   children?: Setting[]
   onChange?: (a: T /* Setting | boolean */, b?: { index: number; player: Player }) => void | Promise<void>

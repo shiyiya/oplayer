@@ -66,6 +66,13 @@ const switcher = (name: string, icon: string = '') =>
   </div>
 `
 
+const normal = (name: string, icon: string = '') =>
+  `<div class="${settingItemLeft}">
+    ${icon}
+    <span>${name}</span>
+  </div>
+`
+
 export const slider = ({
   name,
   icon = '',
@@ -98,8 +105,13 @@ function createRow({
   index,
   max,
   min,
-  step
-}: Omit<Setting, 'onChange' | 'children' | 'value'> & { index?: number; switcherLabe?: string }) {
+  step,
+  hasChildren
+}: Omit<Setting, 'onChange' | 'children' | 'value'> & {
+  hasChildren?: boolean
+  index?: number
+  switcherLabe?: string
+}) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
     role: Boolean(type) ? 'menuitem' : 'menuitemradio',
@@ -125,11 +137,18 @@ function createRow({
     case 'slider':
       $item.innerHTML = slider({ name, max, min, icon, value: selected, step } as any)
       break
-    default: // select option 不用 type
+    case 'option':
       $item.innerHTML = selectorOption(name, icon)
       $item.setAttribute('aria-checked', selected || false)
       if (typeof index == 'number') {
         $item.setAttribute('data-index', index.toString())
+      }
+      break
+    default:
+      if (hasChildren) {
+        $item.innerHTML = nexter(name, icon)
+      } else {
+        $item.innerHTML = normal(name, icon)
       }
       break
   }
@@ -157,6 +176,7 @@ function createPanel(
     target: HTMLElement
     parent?: Panel
     isSelectorOptionsPanel?: boolean
+    parenOnChange?: Function
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
@@ -166,7 +186,7 @@ function createPanel(
   let key: string = parentKey! || 'root'
 
   if (panels[0] && key == 'root') {
-    panel = panels[0]! // 将 options 挂在第一个面板
+    panel = panels[0]!
     key = panels[0]!.key
   } else {
     //创建新的选项面板
@@ -195,19 +215,32 @@ function createPanel(
   }
 
   for (let i = 0; i < setting.length; i++) {
-    const { name, type, key, children, icon, default: selected, onChange, max, min, step } = setting[i]!
+    const {
+      name,
+      type,
+      key,
+      children,
+      icon,
+      default: selected,
+      onChange,
+      max,
+      min,
+      step,
+      value
+    } = setting[i]!
 
     const { $row, $label } = createRow(
       Object.assign(
         {
           name,
-          type,
+          type: isSelectorOptionsPanel ? 'option' : type,
           key: key,
           icon,
           default: selected,
           max,
           min,
-          step
+          step,
+          hasChildren: Boolean(children)
         },
         !isRoot && isSelectorOptionsPanel && { index: i }
       )
@@ -217,14 +250,16 @@ function createPanel(
 
     //处理 selector，因为依赖label，所以需先创建子 panel
     if (children) {
-      const nextIsSelectorOptionsPanel = type == 'selector' && children.every((it) => !Boolean(it.type))
+      const nextIsSelectorOptionsPanel =
+        type == 'selector' && children.every((it) => !Boolean(it.type) || it.type == 'option')
 
       const optionPanel = createPanel(player, panels, children, {
-        key,
+        key: key || 'name',
         target,
         parent: panel,
         isSelectorOptionsPanel: nextIsSelectorOptionsPanel,
-        name: type == ('selector' as any) ? name : undefined
+        name,
+        parenOnChange: onChange
       })!
 
       $row.addEventListener('click', () => {
@@ -281,6 +316,9 @@ function createPanel(
         $input.onchange = function (event: any) {
           onChange?.(event.target.value)
         }
+        // TODO: update methond
+      } else {
+        $row.addEventListener('click', (e) => (onChange || options.parenOnChange)?.(value, e))
       }
     }
   }
