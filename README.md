@@ -18,11 +18,11 @@
 - **Picture-in-Picture** - supports picture-in-picture mode
 - **Multiple captions** - support for multiple caption tracks(SRT, WEBVTT)
 - **i18n support** - support for internationalization of controls
-- **Preview thumbnails** - support for displaying preview thumbnails (spirit or [vtt](https://oplayer.vercel.app/plugins/vtt-thumbnails))
+- **Preview thumbnails** - support for displaying preview thumbnails (spirit or [vtt](https://oplayer.vercel.app/docs/plugins/vtt-thumbnails))
 - **No frameworks** - written in "vanilla" JavaScript, no dependencies required
-- **[Chromecast](https://oplayer.vercel.app/plugins/chromecast)** - cast video to your device
-- **[AirPlay](https://oplayer.vercel.app/plugins/airplay)** - cast video to apple device
-- **[Playlist](https://oplayer.vercel.app/plugins/playlist)** - supports playlist list ui
+- **[Chromecast](https://oplayer.vercel.app/docs/plugins/chromecast)** - cast video to your device
+- **[AirPlay](https://oplayer.vercel.app/docs/plugins/airplay)** - cast video to apple device
+- **[Playlist](https://oplayer.vercel.app/docs/plugins/playlist)** - supports playlist list ui
 - **[Danmaku](https://oplayer.vercel.app/danmaku)** - biu biu biu ~
 - **... and much more!**
 

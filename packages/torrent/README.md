@@ -9,7 +9,10 @@
 
 ## Install
 
+**MUST webtorrent@0.98.18**
+
 ```bash
+# webtorrent@0.98.18 !!
 npm i @oplayer/core @oplayer/torrent webtorrent@0.98.18
 ```
 

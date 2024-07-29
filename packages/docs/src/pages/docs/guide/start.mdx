@@ -45,6 +45,7 @@ Player.make('#oplayer', {
 <Tab>
 ```html filename="app.html"
 <!-- Includes ui & hls & dash & mpegts -->
+<!-- Lazy load hls.js dashjs ... -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
 <script>
   OPlayer.make('#oplayer', {
@@ -57,12 +58,15 @@ Player.make('#oplayer', {
       OUI(),
       OHls({
         forceHLS: true,
+
+        // lazy load
         library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
       }),
       ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
       OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.min.js' }),
     ])
     .create()
+
 </script>
 ```
 </Tab>
