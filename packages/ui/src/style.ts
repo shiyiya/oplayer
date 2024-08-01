@@ -37,11 +37,6 @@ export const root = (config: UiConfig) => {
         '--shadow-background-color': 'rgba(28 ,28 ,28 , .9)',
         '--control-bar-height': config.theme!.controller?.display ? '2.5em' : 0,
 
-        // fix tailwindcss
-        [`& .${loading}:before, & .${loading}:after`]: {
-          '--primary-color': `${config.theme!.primaryColor}`,
-        },
-
         position: 'absolute',
         top: '0',
         left: '0',

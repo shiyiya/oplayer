@@ -12,7 +12,7 @@
 
 ## Feature
 
-- **Streaming** - support for [hls.js](https://oplayer.vercel.app/hls), [flv,mpegts](https://oplayer.vercel.app/mpegts), [dash.js](https://oplayer.vercel.app/dash), [webtorrent](https://oplayer.vercel.app/torrent) and any other custom streaming playback
+- **Streaming** - support for [hls.js](https://oplayer.vercel.app/docs/hls), [flv,mpegts](https://oplayer.vercel.app/docs/mpegts), [dash.js](https://oplayer.vercel.app/docs/dash), [webtorrent](https://oplayer.vercel.app/docs/torrent) and any other custom streaming playback
 - **Fullscreen** - supports native fullscreen with fallback to "full window" modes
 - **Shortcuts** - supports keyboard shortcuts
 - **Picture-in-Picture** - supports picture-in-picture mode
