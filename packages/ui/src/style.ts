@@ -38,7 +38,7 @@ export const root = (config: UiConfig) => {
         '--control-bar-height': config.theme!.controller?.display ? '2.5em' : 0,
 
         // fix tailwindcss
-        [`& ${loading}:before, & ${loading}:after`]: {
+        [`& .${loading}:before, & .${loading}:after`]: {
           '--primary-color': `${config.theme!.primaryColor}`,
         },
 
