@@ -14,6 +14,7 @@ export const controlBar = $.css({
   padding: '0.5em 0.5em 0',
   transition: 'transform 0.3s ease',
   height: 'var(--control-bar-height)',
+  color: '#fff',
 
   // https://developer.mozilla.org/zh-CN/docs/Web/CSS/env
   //TODO: support display-mode
