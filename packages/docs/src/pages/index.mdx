@@ -55,7 +55,7 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      !isMobile && danmaku({ enable: true, fontSize: 0.75, displaySender: false }),
+      danmaku({ enable: !isMobile, fontSize: 0.75, displaySender: false }),
       new Playlist({
         initialIndex: 0,
         autoNext: true,
