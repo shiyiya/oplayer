@@ -90,7 +90,7 @@ class ChromeCast implements PlayerPlugin {
 
     const mediaInfo = new chrome.cast.media.MediaInfo(
       source.src,
-      this.player.loader.key == 'hls' ? 'application/x-mpegurl' : 'video/mp4'
+      this.player.loader?.key == 'hls' ? 'application/x-mpegurl' : 'video/mp4'
     )
     ;(mediaInfo as any).contentUrl = source.src
     mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
