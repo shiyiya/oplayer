@@ -74,7 +74,7 @@ class ChromeCast implements PlayerPlugin {
       autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
       resumeSavedSession: true,
       androidReceiverCompatible: true,
-      ...this.options,
+      ...this.options
     })
 
     const errorCode = await this.cast.requestSession()
@@ -90,7 +90,7 @@ class ChromeCast implements PlayerPlugin {
 
     const mediaInfo = new chrome.cast.media.MediaInfo(
       source.src,
-      !!this.player.context.hls ? 'application/x-mpegurl' : 'video/mp4'
+      this.player.loader.key == 'hls' ? 'application/x-mpegurl' : 'video/mp4'
     )
     mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
 
@@ -150,7 +150,7 @@ class ChromeCast implements PlayerPlugin {
       name: 'ChromeCast',
       position: 'top',
       icon: icons.chromecast || ICON,
-      onClick: () => this.start(),
+      onClick: () => this.start()
     })
   }
 }
