@@ -16,7 +16,7 @@ export interface ChromeCastOptions {
   androidReceiverCompatible?: boolean | undefined
 }
 
-class ChromeCast implements PlayerPlugin {
+class Chromecast implements PlayerPlugin {
   readonly name = 'oplayer-plugin-chromecast'
   readonly version = __VERSION__
 
@@ -87,7 +87,12 @@ class ChromeCast implements PlayerPlugin {
 
   __buildRequest() {
     const { source, isLive } = this.player.options
-    const mediaInfo = new chrome.cast.media.MediaInfo(source.src, source.type || 'video/mp4')
+
+    const mediaInfo = new chrome.cast.media.MediaInfo(
+      source.src,
+      this.player.loader?.key == 'hls' ? 'application/x-mpegurl' : 'video/mp4'
+    )
+    ;(mediaInfo as any).contentUrl = source.src
     mediaInfo.streamType = isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED
 
     const metadata = new chrome.cast.media.GenericMediaMetadata()
@@ -143,7 +148,7 @@ class ChromeCast implements PlayerPlugin {
     const { menu, icons } = this.player.context.ui
 
     menu?.register({
-      name: 'ChromeCast',
+      name: 'Chromecast',
       position: 'top',
       icon: icons.chromecast || ICON,
       onClick: () => this.start()
@@ -151,4 +156,4 @@ class ChromeCast implements PlayerPlugin {
   }
 }
 
-export default ChromeCast
+export default Chromecast
