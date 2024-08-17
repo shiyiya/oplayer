@@ -16,7 +16,7 @@ export interface ChromeCastOptions {
   androidReceiverCompatible?: boolean | undefined
 }
 
-class ChromeCast implements PlayerPlugin {
+class Chromecast implements PlayerPlugin {
   readonly name = 'oplayer-plugin-chromecast'
   readonly version = __VERSION__
 
@@ -74,7 +74,7 @@ class ChromeCast implements PlayerPlugin {
       autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
       resumeSavedSession: true,
       androidReceiverCompatible: true,
-      ...this.options,
+      ...this.options
     })
 
     const errorCode = await this.cast.requestSession()
@@ -148,12 +148,12 @@ class ChromeCast implements PlayerPlugin {
     const { menu, icons } = this.player.context.ui
 
     menu?.register({
-      name: 'ChromeCast',
+      name: 'Chromecast',
       position: 'top',
       icon: icons.chromecast || ICON,
-      onClick: () => this.start(),
+      onClick: () => this.start()
     })
   }
 }
 
-export default ChromeCast
+export default Chromecast
