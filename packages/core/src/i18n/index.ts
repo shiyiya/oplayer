@@ -34,7 +34,7 @@ export default class I18n {
         return false
       })
     }
-    if (!this.languages[this.lang]) this.lang = 'zh-CN'
+    if (!this.languages[this.lang]) this.lang = 'en'
   }
 
   get(key: string, ...arg: Array<string | number>): string {

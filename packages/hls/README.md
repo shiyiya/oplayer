@@ -38,56 +38,6 @@ npm i @oplayer/core @oplayer/hls hls.js
 </script>
 ```
 
-## Usage
-
-```ts
-export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
-
-// active inactive
-export type Active = (
-  instance: Hls,
-  library: typeof import('hls.js/dist/hls.min.js')
-) => void | ((instance: Hls, library: typeof import('hls.js/dist/hls.min.js')) => void)
-
-export interface HlsPluginOptions {
-  matcher?: Matcher
-  /**
-   * config for hls.js
-   *
-   * @type {Partial<HlsConfig>}
-   */
-  config?: Partial<HlsConfig>
-  /**
-   * force use hls.js
-   * @type {boolean} false
-   */
-  forceHLS?: boolean
-  /**
-   * enable quality control for the HLS stream, does not apply to the native (iPhone) clients.
-   * default: true
-   */
-  qualityControl?: boolean
-  /**
-   *  control how the stream quality is switched. default: immediate
-   *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
-   *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
-   */
-  qualitySwitch?: 'immediate' | 'smooth'
-  /**
-   * @default: false
-   */
-  withBitrate?: boolean
-  /**
-   * @default: true
-   */
-  audioControl?: boolean
-  /**
-   * @default: true
-   */
-  textControl?: boolean
-}
-```
-
 ## Handle Hls.js Error
 
 ```ts

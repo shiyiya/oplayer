@@ -133,7 +133,7 @@ const player = Player.make<Ctx>('#player', {
       }
     }),
     torrent(),
-    hls({ forceHLS: true, defaultQuality: 1080 }),
+    hls({ forceHLS: true }),
     dash(),
     mpegts(),
     danmaku({
@@ -144,6 +144,14 @@ const player = Player.make<Ctx>('#player', {
     new Playlist({
       initialIndex: 0,
       sources: [
+        {
+          title: 'hls - muti quality & subtitle & audio',
+          src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8'
+        },
+        {
+          title: 'dash - muti quality & subtitle & audio',
+          src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd'
+        },
         {
           title: 'HLS with SRT subtitle',
           src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',

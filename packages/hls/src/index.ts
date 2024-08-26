@@ -1,6 +1,6 @@
 import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
 import type Hls from 'hls.js'
-import type { ErrorData, HlsConfig, LevelSwitchedData } from 'hls.js'
+import type { ErrorData, HlsConfig, LevelSwitchedData, Level, MediaPlaylist } from 'hls.js'
 
 const PLUGIN_NAME = 'oplayer-plugin-hls'
 
@@ -12,10 +12,19 @@ export interface HlsPluginOptions {
   matcher?: Matcher
 
   /**
-   * -1 : auto
    * default auto
    */
-  defaultQuality?: number
+  defaultQuality?: (levels: Level[]) => number
+
+  /**
+   * default browser language
+   */
+  defaultAudio?: (tracks: MediaPlaylist[]) => number
+
+  /**
+   * default browser language
+   */
+  defaultSubtitle?: (tracks: MediaPlaylist[]) => number
 
   /**
    * custom handle hls fatal error
@@ -91,7 +100,9 @@ class HlsPlugin implements PlayerPlugin {
     withBitrate: false,
     qualitySwitch: 'immediate',
     matcher: defaultMatcher,
-    defaultQuality: -1
+    defaultQuality: () => -1,
+    defaultAudio: () => -1,
+    defaultSubtitle: () => -1
   }
 
   constructor(options?: HlsPluginOptions) {
@@ -192,35 +203,30 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
   const ui = player.context.ui
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
-      let defaultSelect = options.defaultQuality
+      if (instance.levels.length < 1) return
+      const defaultLevel = options.defaultQuality(instance.levels)
+      if (defaultLevel != -1) instance.currentLevel = defaultLevel
 
       injectSetting({
         icon: ui.icons.quality,
         name: 'Quality',
         settings() {
-          if (instance.levels.length > 1) {
-            return instance.levels.reduce(
-              (pre, level, i) => {
-                let name = (level.name || level.height).toString()
-                if (isFinite(+name)) name += 'p'
-                if (options.withBitrate) {
-                  const kb = level.bitrate / 1000
-                  const useMb = kb > 1000
-                  const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
-                  name += ` (${number}${useMb ? 'm' : 'k'}bps)`
-                }
+          return instance.levels.reduce(
+            (pre, level) => {
+              let name = (level.name || level.height).toString()
+              if (isFinite(+name)) name += 'p'
+              if (options.withBitrate) {
+                const kb = level.bitrate / 1000
+                const useMb = kb > 1000
+                const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
+                name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+              }
 
-                if (level.height <= options.defaultQuality) {
-                  defaultSelect = i
-                }
-
-                pre.push({ name, default: instance.currentLevel == i, value: i })
-                return pre
-              },
-              [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
-            )
-          }
-          return []
+              pre.push({ name, default: defaultLevel == level.id, value: level.id })
+              return pre
+            },
+            [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
+          )
         },
         onChange(it) {
           if (options.qualitySwitch == 'immediate') {
@@ -232,8 +238,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
           }
         }
       })
-
-      if (defaultSelect != -1) instance.currentLevel = defaultSelect
     })
 
     instance.on(
@@ -250,47 +254,64 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
     )
   }
 
-  if (options.audioControl)
-    instance.on(HlsPlugin.library.Events.LEVEL_LOADED, () => {
+  if (options.audioControl) {
+    instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
+      if (instance.audioTracks.length < 1) return
+
+      let defaultAudio: number | undefined = options.defaultAudio(instance.audioTracks)
+      if (defaultAudio == -1) {
+        defaultAudio = instance.audioTracks.find(({ lang }) => {
+          return lang === navigator.language || lang === navigator.language.split('-')[0]
+        })?.id
+      }
+
+      if (defaultAudio != -1 && defaultAudio != undefined) instance.audioTrack = defaultAudio
+
       injectSetting({
         icon: ui.icons.lang,
         name: 'Language',
         settings() {
-          if (instance.audioTracks.length > 1) {
-            return instance.audioTracks.map(({ name, lang, id }) => ({
-              name: lang || name,
-              default: instance.audioTrack == id,
-              value: id
-            }))
-          }
-          return []
+          return instance.audioTracks.map(({ name, lang, id }) => ({
+            name: lang || name,
+            default: defaultAudio == id,
+            value: id
+          }))
         },
         onChange(it) {
           instance.audioTrack = it.value
         }
       })
     })
+  }
 
   if (options.textControl)
-    instance.on(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
+    instance.once(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
+      if (instance.subtitleTracks.length < 1) return
+
+      let defaultSubtitle: number | undefined = options.defaultSubtitle(instance.subtitleTracks)
+      if (defaultSubtitle == -1) {
+        defaultSubtitle = instance.audioTracks.find(({ lang }) => {
+          return lang === navigator.language || lang === navigator.language.split('-')[0]
+        })?.id
+      }
+
+      if (defaultSubtitle != -1 && defaultSubtitle != undefined) instance.subtitleTrack = defaultSubtitle
+
       injectSetting({
         icon: ui.icons.subtitle,
         name: 'Subtitle',
         settings() {
-          if (instance.subtitleTracks.length > 1) {
-            return instance.subtitleTracks.reduce(
-              (pre, { name, lang, id }) => {
-                pre.push({
-                  name: lang || name,
-                  default: instance.subtitleTrack == id,
-                  value: id
-                })
-                return pre
-              },
-              [{ name: player.locales.get('Off'), default: !instance.subtitleDisplay, value: -1 }]
-            )
-          }
-          return []
+          return instance.subtitleTracks.reduce(
+            (pre, { name, lang, id }) => {
+              pre.push({
+                name: lang || name,
+                default: defaultSubtitle == id,
+                value: id
+              })
+              return pre
+            },
+            [{ name: player.locales.get('Off'), default: !instance.subtitleDisplay, value: -1 }]
+          )
         },
         onChange({ value }) {
           if ((instance.subtitleDisplay = !(value == -1))) {
