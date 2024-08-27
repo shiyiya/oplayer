@@ -203,7 +203,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
   const ui = player.context.ui
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
-      if (instance.levels.length < 1) return
+      if (instance.levels.length < 2) return
       const defaultLevel = options.defaultQuality(instance.levels)
       if (defaultLevel != -1) instance.currentLevel = defaultLevel
 
@@ -256,7 +256,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
 
   if (options.audioControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
-      if (instance.audioTracks.length < 1) return
+      if (instance.audioTracks.length < 2) return
 
       let defaultAudio: number | undefined = options.defaultAudio(instance.audioTracks)
       if (defaultAudio == -1) {
@@ -265,7 +265,9 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         })?.id
       }
 
-      if (defaultAudio != -1 && defaultAudio != undefined) instance.audioTrack = defaultAudio
+      if (defaultAudio != -1 && defaultAudio != undefined) {
+        instance.audioTrack = defaultAudio
+      }
 
       injectSetting({
         icon: ui.icons.lang,
@@ -286,7 +288,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
 
   if (options.textControl)
     instance.once(HlsPlugin.library.Events.SUBTITLE_TRACK_LOADED, () => {
-      if (instance.subtitleTracks.length < 1) return
+      if (instance.subtitleTracks.length < 2) return
 
       let defaultSubtitle: number | undefined = options.defaultSubtitle(instance.subtitleTracks)
       if (defaultSubtitle == -1) {
@@ -295,7 +297,9 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         })?.id
       }
 
-      if (defaultSubtitle != -1 && defaultSubtitle != undefined) instance.subtitleTrack = defaultSubtitle
+      if (defaultSubtitle != -1 && defaultSubtitle != undefined) {
+        instance.subtitleTrack = defaultSubtitle
+      }
 
       injectSetting({
         icon: ui.icons.subtitle,
@@ -324,12 +328,10 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
   function injectSetting(arg: {
     icon: string
     name: string
-    settings: () => { name: string; default: boolean; value: any }[] | void
+    settings: () => { name: string; default: boolean; value: any }[]
     onChange: (it: { value: any }) => void
   }) {
     const settings = arg.settings()
-    if (settings && settings.length < 2) return
-
     const { name, icon, onChange } = arg
 
     player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)

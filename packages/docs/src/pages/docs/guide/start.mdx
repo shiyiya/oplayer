@@ -6,20 +6,45 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs'
 
 <Tab>
 ```shell
-npm i @oplayer/core @oplayer/ui
+npm i @oplayer/core @oplayer/ui @oplayer/hls
 ```
 
 ```js filename="app.js"
 import Player from '@oplayer/core'
-import ui from '@oplayer/ui'
+import OUI from '@oplayer/ui'
+import OHls from '@oplayer/hls'
 
 Player.make('#oplayer', {
   source: {
+    title: '君の名は',
     src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4',
     poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
   }
 })
-  .use([ui()])
+  .use([
+    OUI({
+      subtitle: {
+        source: [
+          {
+            name: 'Japanese',
+            default: true,
+            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt',
+            offset: 2
+          },
+          {
+            name: 'CH & JP',
+            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt',
+            offset: 2
+          }
+        ]
+      },
+      thumbnails: {
+        src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/thumbnails.jpg',
+        number: 100
+      }
+    }),
+    OHls({ forceHLS: true })
+  ])
   .create()
 ```
 
@@ -27,25 +52,54 @@ Player.make('#oplayer', {
 
 <Tab>
 ```html filename="app.html"
-<!-- Includes ui -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.min.js"></script>
+
 <script>
   OPlayer.make('#oplayer', {
     source: {
+      title: '君の名は',
       src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4',
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([OUI()])
+    .use([
+      OUI({
+        subtitle: {
+          source: [
+            {
+              name: 'Japanese',
+              default: true,
+              src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt',
+              offset: 2
+            },
+            {
+              name: 'CH & JP',
+              src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt',
+              offset: 2
+            }
+          ]
+        },
+        thumbnails: {
+          src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/thumbnails.jpg',
+          number: 100
+        }
+      }),
+      OHls({
+        forceHLS: true,
+        // will lazy load hls.js
+        library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
+      })
+    ])
     .create()
 </script>
+
 ```
 </Tab>
 
 <Tab>
 ```html filename="app.html"
-<!-- Includes ui & hls & dash & mpegts -->
-<!-- Lazy load hls.js dashjs ... -->
+<!-- all in one (~28kB) -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
 <script>
   OPlayer.make('#oplayer', {
@@ -58,8 +112,6 @@ Player.make('#oplayer', {
       OUI(),
       OHls({
         forceHLS: true,
-
-        // lazy load
         library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
       }),
       ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
@@ -69,6 +121,7 @@ Player.make('#oplayer', {
 
 </script>
 ```
+
 </Tab>
 
 </Tabs>
