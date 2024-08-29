@@ -10,19 +10,12 @@
 ## Install
 
 ```bash
-npm i @oplayer/core @oplayer/hls hls.js
+npm i @oplayer/hls hls.js
 ```
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-
-<!-- 1 -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.index.js"></script>
-
-<!-- or -->
-<!-- hls + hls plugin -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/hls@latest/dist/index.hls.js"></script> -->
 
 <div id="oplayer" />
 
@@ -33,32 +26,56 @@ npm i @oplayer/core @oplayer/hls hls.js
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([OHls()])
+    .use([OHls({ library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js' })])
     .create()
 </script>
+```
+
+## Handle default Quality/Audio/Subtitle
+
+```js
+OHls({
+  forceHLS: true, // use hls.js not native
+  defaultQuality(levels) {
+    let index = -1 // -1 => 'auto'
+    for (const { height, id } of levels) {
+      if (height <= 1080) index = id
+    }
+    return i
+  },
+  defaultAudio(tracks) {
+    for (const { lang, id } of object) {
+      if (lang == 'en' || lang.startsWith('en')) {
+        return id
+      }
+    }
+
+    return -1 // -1 => brower lang
+  },
+  defaultSubtitle(tracks) {
+    for (const { lang, id } of object) {
+      if (lang == 'en' || lang.startsWith('en')) {
+        return id
+      }
+    }
+
+    return -1 // -1 => brower lang
+  }
+})
 ```
 
 ## Handle Hls.js Error
 
 ```ts
-OPlayer.make('#oplayer', {
-  source: {
-    src: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
+OHls({
+  errorHandler(player, data) {
+    // skip bufferAppendError
+    if (data.details == 'bufferAppendError') return
+
+    player.emit('error', {
+      ...data,
+      message: data.type + ': ' + data.details
+    })
   }
 })
-  .use([
-    OHls({
-      errorHandler(player, data) {
-        // skip bufferAppendError
-        if (data.details == 'bufferAppendError') return
-
-        player.emit('error', {
-          ...data,
-          message: data.type + ': ' + data.details
-        })
-      }
-    })
-  ])
-  .create()
 ```

@@ -24,6 +24,7 @@
 - **[AirPlay](https://oplayer.vercel.app/docs/plugins/airplay)** - cast video to apple device
 - **[Playlist](https://oplayer.vercel.app/docs/plugins/playlist)** - supports playlist list ui
 - **[Danmaku](https://oplayer.vercel.app/danmaku)** - biu biu biu ~
+- **[Wordpress Plugin](https://github.com/shiyiya/wordpress-plugin-oplayer)** - play video easy in wordpress
 - **... and much more!**
 
 ## Who use OPlayer?
