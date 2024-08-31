@@ -212,7 +212,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         name: 'Quality',
         settings() {
           return instance.levels.reduce(
-            (pre, level) => {
+            (pre, level, id) => {
               let name = (level.name || level.height).toString()
               if (isFinite(+name)) name += 'p'
               if (options.withBitrate) {
@@ -222,7 +222,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
                 name += ` (${number}${useMb ? 'm' : 'k'}bps)`
               }
 
-              pre.push({ name, default: defaultLevel == level.id, value: level.id })
+              pre.push({ name, default: defaultLevel == id, value: id })
               return pre
             },
             [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]

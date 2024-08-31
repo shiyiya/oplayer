@@ -37,11 +37,12 @@ npm i @oplayer/hls hls.js
 OHls({
   forceHLS: true, // use hls.js not native
   defaultQuality(levels) {
-    let index = -1 // -1 => 'auto'
-    for (const { height, id } of levels) {
-      if (height <= 1080) index = id
+    let id = -1 // -1 => 'auto'
+    for (let i = 0; i < levels.length; i++) {
+      if (levels[i].height <= 1080) id = i
     }
-    return i
+
+    return id
   },
   defaultAudio(tracks) {
     for (const { lang, id } of object) {

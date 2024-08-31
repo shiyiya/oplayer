@@ -252,27 +252,6 @@ function stopLoad() {
 
 let src: string = player.context.playlist.options.sources[initialIndex].src
 
-const actions = () =>
-  html`<p style="display:flex;">
-    <input type="text" @input=${(e: any) => (src = e.target.value)} style="width:100%;" .value=${live(src)} />
-
-    <button @click=${() => player.changeSource({ src })}>Load</button>
-
-    <button @click=${stopLoad}>StopLoad</button>
-  </p> `
-
-render(actions(), document.getElementById('actions')!)
-
-player.on((e: PlayerEvent) => {
-  render(actions(), document.getElementById('actions')!)
-
-  if ('timeupdate' == e.type || 'notice' === e.type || 'progress' === e.type) {
-    return
-  }
-
-  console.log(e)
-})
-
 render(
   html`
     <div>
