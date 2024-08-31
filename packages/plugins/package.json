@@ -26,8 +26,8 @@
     "@oplayer/ui": "workspace:*",
     "@types/chromecast-caf-sender": "^1.0.10",
     "chokidar": "^3.6.0",
-    "glob": "^10.4.2",
-    "m3u8-parser": "^7.1.0",
+    "glob": "^10.4.5",
+    "m3u8-parser": "^7.2.0",
     "vite-plugin-css-injected-by-js": "^3.5.1"
   }
 }
