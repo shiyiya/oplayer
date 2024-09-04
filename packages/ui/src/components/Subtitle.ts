@@ -139,8 +139,9 @@ export class Subtitle {
         id: '__Orz__'
       }))
 
-      track.mode = 'hidden'
       $.render(this.$iosTrack, $video)
+
+      track.mode = 'hidden'
 
       this.player.on('fullscreenchange', ({ payload }) => {
         if (payload.isWeb) return
