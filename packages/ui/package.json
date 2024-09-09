@@ -16,7 +16,7 @@
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
     "build": "vite build && tsc --emitDeclarationOnly && pnpm run build:extra",
-    "build:extra": "vite build --config vite.core.config.ts && cp ../core/dist/index.ui.min.js ./dist/"
+    "build:extra": "vite build --config vite.core.config.ts && cp ../core/dist/index.ui.js ./dist/"
   },
   "files": [
     "dist",
