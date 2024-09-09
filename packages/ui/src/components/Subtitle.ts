@@ -171,7 +171,7 @@ export class Subtitle {
 
   processDefault(payload: SubtitleSource[]) {
     this.options.source = payload
-    this.currentSubtitle = findDefault(payload)
+    this.currentSubtitle = payload.find((st) => st.default)
   }
 
   update = () => {
@@ -270,6 +270,7 @@ export class Subtitle {
               this.currentSubtitle = value
               this.$dom.innerHTML = ''
               this.fetchSubtitle()
+              this.options.onChange?.(value)
             }
           } else {
             this.hide()
@@ -302,8 +303,4 @@ export class Subtitle {
     this.isShow = false
     this.$track = this.$iosTrack = undefined as any
   }
-}
-
-function findDefault(o: SubtitleSource[]) {
-  return o.find((st) => st.default)
 }

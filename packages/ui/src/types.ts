@@ -23,6 +23,7 @@ export type Subtitle = {
   fontFamily?: string
   background?: boolean
   marginBottom?: string
+  onChange?: (s: SubtitleSource) => void
 }
 
 export type MenuBar<
