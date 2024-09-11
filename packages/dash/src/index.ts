@@ -232,8 +232,6 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
         instance.setCurrentTrack(audioTracks.find((t) => (t.id as unknown as number) == defaultAudio)!)
       }
 
-      console.log(audioTracks!)
-
       settingUpdater({
         name: 'Language',
         icon: player.context.ui.icons.lang,
