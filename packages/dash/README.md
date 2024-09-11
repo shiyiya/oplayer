@@ -15,8 +15,6 @@ npm i @oplayer/core @oplayer/dash dashjs
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-<!--  dash FIRST  -->
-<script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/dash@latest/dist/index.min.js"></script>
 
 <div id="oplayer" />
@@ -28,52 +26,7 @@ npm i @oplayer/core @oplayer/dash dashjs
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([ODash()])
+    .use([ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' })])
     .create()
 </script>
-```
-
-## Usage
-
-```ts
-export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
-
-// active inactive
-export type Active = (
-  instance: MediaPlayerClass,
-  library: typeof import('dashjs')
-) => void | ((instance: MediaPlayerClass, library: typeof import('dashjs')) => void)
-
-export interface DashPluginOptions {
-  matcher?: Matcher
-  /**
-   * config for dashjs
-   *
-   * @type {MediaPlayerSettingClass}
-   */
-  config?: MediaPlayerSettingClass
-  /**
-   * enable quality control for the stream, does not apply to the native (iPhone) clients.
-   * @default: true
-   */
-  qualityControl?: boolean
-  /**
-   *  control how the stream quality is switched. default: immediate
-   *  @value immediate: Trigger an immediate quality level switch to new quality level. This will abort the current fragment request if any, flush the whole buffer, and fetch fragment matching with current position and requested quality level.
-   *  @value smooth: Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
-   */
-  qualitySwitch?: 'immediate' | 'smooth'
-  /**
-   * @default: false
-   */
-  withBitrate?: boolean
-  /**
-   * @default: true
-   */
-  audioControl?: boolean
-  /**
-   * @default: true
-   */
-  textControl?: boolean
-}
 ```

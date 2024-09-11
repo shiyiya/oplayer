@@ -1,5 +1,10 @@
 import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
-import type { MediaPlayerClass, MediaPlayerSettingClass, QualityChangeRenderedEvent } from 'dashjs'
+import type {
+  BitrateInfo,
+  MediaPlayerClass,
+  MediaPlayerSettingClass,
+  QualityChangeRenderedEvent
+} from 'dashjs'
 
 const PLUGIN_NAME = 'oplayer-plugin-dash'
 
@@ -8,6 +13,22 @@ export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 export interface DashPluginOptions {
   library?: string
   matcher?: Matcher
+
+  /**
+   * default auto
+   */
+  defaultQuality?: (levels: BitrateInfo[]) => number
+
+  /**
+   * default browser language
+   */
+  defaultAudio?: (tracks: dashjs.MediaInfo[]) => number
+
+  /**
+   * default browser language
+   */
+  defaultSubtitle?: (tracks: dashjs.MediaInfo[]) => number
+
   /**
    * config for dashjs
    *
@@ -68,7 +89,10 @@ class DashPlugin implements PlayerPlugin {
     qualityControl: true,
     withBitrate: false,
     qualitySwitch: 'immediate',
-    matcher: defaultMatcher
+    matcher: defaultMatcher,
+    defaultQuality: () => -1,
+    defaultAudio: () => -1,
+    defaultSubtitle: () => -1
   }
 
   constructor(options?: DashPluginOptions) {
@@ -127,46 +151,49 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
   const isAuto = Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
   const videoQuality = instance.getQualityFor('video')
   if (bitrateInfoList.length > 1) {
-    return bitrateInfoList.map((it) => {
-      let name = it.height + 'p'
+    return bitrateInfoList
+      .toSorted((a, b) => b.bitrate - a.bitrate)
+      .map((it) => {
+        let name = it.height + 'p'
 
-      if (withBitrate) {
-        const kb = it.bitrate / 1000
-        const useMb = kb > 1000
-        const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
-        name += ` (${number}${useMb ? 'm' : 'k'}bps)`
-      }
+        if (withBitrate) {
+          const kb = it.bitrate / 1000
+          const useMb = kb > 1000
+          const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
+          name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+        }
 
-      return {
-        name,
-        default: isAuto ? false : videoQuality == it.qualityIndex,
-        value: it.qualityIndex
-      }
-    })
+        return {
+          name,
+          default: isAuto ? false : videoQuality == it.qualityIndex,
+          value: it.qualityIndex
+        }
+      })
   }
 
   return []
 }
 
-const generateSetting = (player: Player, instance: MediaPlayerClass, options: DashPluginOptions) => {
+const generateSetting = (player: Player, instance: MediaPlayerClass, options: DashPlugin['options']) => {
   instance.on(DashPlugin.library.MediaPlayer.events.STREAM_INITIALIZED, function () {
     if (options.qualityControl) {
+      const quality = instance.getBitrateInfoListFor('video')
+      if (quality.length < 2) return
+
+      const defaultLevel = options.defaultQuality(quality)
+      if (defaultLevel != -1) instance.setQualityFor('video', defaultLevel)
+
       settingUpdater({
         name: 'Quality',
         icon: player.context.ui.icons.quality,
-        settings() {
-          const ex = getSettingsByType(instance, 'video', options.withBitrate)
-
-          if (ex.length) {
-            ex.unshift({
+        settings: () =>
+          [
+            {
               name: player.locales.get('Auto'),
               default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
               value: -1
-            })
-          }
-
-          return ex
-        },
+            }
+          ].concat(getSettingsByType(instance, 'video', options.withBitrate)),
         onChange({ value }) {
           instance.updateSettings({
             streaming: { abr: { autoSwitchBitrate: { video: value == -1 } } }
@@ -191,11 +218,27 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
     }
 
     if (options.audioControl) {
+      const audioTracks = instance.getTracksFor('audio')
+      if (audioTracks.length < 2) return
+
+      let defaultAudio: number | undefined = options.defaultAudio(audioTracks)
+      if (defaultAudio == -1) {
+        defaultAudio = audioTracks.find(({ lang }) => {
+          return lang === navigator.language || lang === navigator.language.split('-')[0]
+        })?.id as unknown as number
+      }
+
+      if (defaultAudio != -1 && defaultAudio != undefined) {
+        instance.setCurrentTrack(audioTracks.find((t) => (t.id as unknown as number) == defaultAudio)!)
+      }
+
+      console.log(audioTracks!)
+
       settingUpdater({
         name: 'Language',
         icon: player.context.ui.icons.lang,
         settings() {
-          return instance.getTracksFor('audio').map((it) => ({
+          return audioTracks.map((it) => ({
             name: it.lang || 'unknown',
             default: instance.getCurrentTrackFor('audio')?.id == it.id,
             value: it
@@ -208,23 +251,38 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
     }
 
     if (options.textControl) {
+      const textTracks = instance.getTracksFor('text')
+      if (textTracks.length < 1) return
+
+      let defaultSubtitle: number | undefined = options.defaultSubtitle(textTracks)
+      if (defaultSubtitle == -1) {
+        defaultSubtitle = textTracks.find(({ lang }) => {
+          return lang === navigator.language || lang === navigator.language.split('-')[0]
+        })?.id as unknown as number
+      }
+
+      if (defaultSubtitle != -1 && defaultSubtitle != undefined) {
+        instance.enableText(true)
+        instance.setTextTrack(defaultSubtitle)
+      }
+
       settingUpdater({
         name: 'Subtitle',
         icon: player.context.ui.icons.subtitle,
         settings() {
-          const ex = instance.getTracksFor('text').map((it) => ({
-            name: it.lang || 'unknown',
-            default: instance.getCurrentTrackFor('text')?.id == it.id,
-            value: it.id
-          }))
-          if (ex.length) {
-            ex.unshift({
+          return [
+            {
               name: player.locales.get('Off'),
               default: !instance.isTextEnabled(),
               value: -1 as any
-            })
-          }
-          return ex
+            }
+          ].concat(
+            textTracks.map((it) => ({
+              name: it.lang || 'unknown',
+              default: instance.getCurrentTrackFor('text')?.id == it.id,
+              value: it.id
+            }))
+          )
         },
         onChange({ value }) {
           instance.enableText(value != -1)
@@ -245,8 +303,6 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
     onChange: (it: { value: any }) => void
   }) {
     const settings = arg.settings()
-    if (settings.length < 2) return
-
     const { name, icon, onChange } = arg
 
     player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)

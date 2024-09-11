@@ -211,22 +211,24 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         icon: ui.icons.quality,
         name: 'Quality',
         settings() {
-          return instance.levels.reduce(
-            (pre, level, id) => {
-              let name = (level.name || level.height).toString()
-              if (isFinite(+name)) name += 'p'
-              if (options.withBitrate) {
-                const kb = level.bitrate / 1000
-                const useMb = kb > 1000
-                const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
-                name += ` (${number}${useMb ? 'm' : 'k'}bps)`
-              }
+          return instance.levels
+            .toSorted((a, b) => b.bitrate - a.bitrate)
+            .reduce(
+              (pre, level, id) => {
+                let name = (level.name || level.height).toString()
+                if (isFinite(+name)) name += 'p'
+                if (options.withBitrate) {
+                  const kb = level.bitrate / 1000
+                  const useMb = kb > 1000
+                  const number = useMb ? (kb / 1000).toFixed(2) : Math.floor(kb)
+                  name += ` (${number}${useMb ? 'm' : 'k'}bps)`
+                }
 
-              pre.push({ name, default: defaultLevel == id, value: id })
-              return pre
-            },
-            [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
-          )
+                pre.push({ name, default: defaultLevel == id, value: id })
+                return pre
+              },
+              [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
+            )
         },
         onChange(it) {
           if (options.qualitySwitch == 'immediate') {
