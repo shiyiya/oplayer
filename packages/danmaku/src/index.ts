@@ -21,7 +21,7 @@ export default (options = {} as Options): PlayerPlugin => ({
     //@ts-ignore
     if (player.isNativeUI) return
 
-    const { speed = 144, opacity, engine = 'dom', displaySender, area = 0.8, fontSize } = options
+    const { speed = 144, opacity, engine = 'dom', displaySender, area = 1, fontSize } = options
 
     const $danmaku = $.render($.create('div'), player.$root)
     $danmaku.style.cssText = `font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
@@ -37,7 +37,7 @@ export default (options = {} as Options): PlayerPlugin => ({
       media: player.$video,
       engine: engine,
       comments: [],
-      speed: isMobile ? speed / 1.5 : speed,
+      speed: isMobile ? speed / 1.5 : speed
     }) as any
 
     danmaku.setFontSize = function setFontSize(value: number) {
@@ -139,7 +139,7 @@ export default (options = {} as Options): PlayerPlugin => ({
               } else {
                 danmaku.hide()
               }
-            },
+            }
           },
           {
             name: player.locales.get('Heatmap'),
@@ -149,7 +149,7 @@ export default (options = {} as Options): PlayerPlugin => ({
             onChange: (value: Boolean) => {
               if (value) danmaku.heatmap?.enable()
               else danmaku.heatmap?.disable()
-            },
+            }
           },
           {
             type: 'selector',
@@ -158,12 +158,12 @@ export default (options = {} as Options): PlayerPlugin => ({
             children: [0.5, 0.75, 1, 1.25].map((it) => ({
               name: `${it * 100}%`,
               value: it,
-              default: it == 1,
+              default: it == 1
             })),
             onChange: ({ value }: any) => {
               options.fontSize = value
               danmaku.setFontSize(value)
-            },
+            }
           },
           {
             type: 'selector',
@@ -172,11 +172,11 @@ export default (options = {} as Options): PlayerPlugin => ({
             children: [0.3, 0.5, 0.8, 1].map((it) => ({
               name: `${it * 100}%`,
               value: it,
-              default: it == (options?.opacity || 1),
+              default: it == (options?.opacity || 1)
             })),
             onChange: ({ value }: any) => {
               $danmaku.style.opacity = value
-            },
+            }
           },
           {
             type: 'selector',
@@ -185,15 +185,15 @@ export default (options = {} as Options): PlayerPlugin => ({
             children: [25, 50, 80, 100].map((it) => ({
               name: `${it}%`,
               value: it,
-              default: it == area * 100,
+              default: it == area * 100
             })),
             onChange: ({ value }: any) => {
               options.opacity = value
               $danmaku.style.height = `${value}%`
               danmaku.resize()
-            },
-          },
-        ],
+            }
+          }
+        ]
       })
     }
 
@@ -202,5 +202,5 @@ export default (options = {} as Options): PlayerPlugin => ({
     if (displaySender && !isMobile) registerInput(player, danmaku, options)
 
     return danmaku
-  },
+  }
 })

@@ -212,7 +212,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         name: 'Quality',
         settings() {
           return instance.levels
-            .toSorted((a, b) => b.bitrate - a.bitrate)
+            .sort((a, b) => b.bitrate - a.bitrate)
             .reduce(
               (pre, level, id) => {
                 let name = (level.name || level.height).toString()

@@ -115,7 +115,8 @@ function createRow({
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
     role: type == 'option' ? 'menuitemradio' : 'menuitem',
-    'aria-haspopup': type == 'selector'
+    'aria-haspopup': hasChildren ? 'menu' : false,
+    'aria-label': type || 'menuitem'
   })
   const res = {
     $row: $item,

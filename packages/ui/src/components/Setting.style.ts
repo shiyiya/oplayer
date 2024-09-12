@@ -102,7 +102,7 @@ export const settingItemCls = $.css({
   display: 'flex',
   overflow: 'hidden',
 
-  '& > *': { 'pointer-events': 'none' },
+  '&:not([aria-label=slider]) > *': { 'pointer-events': 'none' },
 
   '&:hover': {
     'background-color': 'rgba(255, 255, 255, 0.1)'
