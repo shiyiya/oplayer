@@ -49,6 +49,7 @@ jobs:
 
       - name: create versions or publish to npm registry
         uses: changesets/action@v1
+        id: changesets
         with:
           publish: pnpm release
           commit: 'ci(changeset): release oplayer'
