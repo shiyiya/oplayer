@@ -4,8 +4,8 @@ on:
   push:
     branches: main
     # paths-ignore:
-      # - '**/*.md'
-      # - 'examples/**/*.html'
+    # - '**/*.md'
+    # - 'examples/**/*.html'
 
 env:
   CI: true
@@ -55,6 +55,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: \@oplayer/full github version update
+        if: steps.changesets.outputs.published == 'true'
+        uses: wranders/commit-action@v0
+        with:
+          message: auto update @oplayer/full
+          files: |
+            packages/full/package.json
+
+      - name: \@oplayer/full npm publish
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          cd packages/full
+          pnpm version prerelease
+          pnpm set //registry.npmjs.org/:_authToken=$secrets.NPM_TOKEN
+          pnpm publish
 
       # 已被墙
       # - name: build websites
