@@ -84,7 +84,7 @@ export interface Comment {
 ### 直接加载弹幕
 
 ```ts
-const danmaku = ODanmaku({
+const danmaku = new ODanmaku({
   /* 1. 从 url 拉去 xml 格式弹幕，需遵循 B站 格式 */
   source: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml',
   /* 2. 解析成 json 的弹幕 */
