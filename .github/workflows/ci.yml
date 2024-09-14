@@ -12,7 +12,7 @@ env:
   PNPM_CACHE_FOLDER: .pnpm-store
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code repository
@@ -57,21 +57,29 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: \@oplayer/full github version update
-        if: steps.changesets.outputs.published == 'true'
-        uses: wranders/commit-action@v0
-        with:
-          message: auto update @oplayer/full
-          files: |
-            packages/full/package.json
-
+      ## @oplayer/full
       - name: \@oplayer/full npm publish
         if: steps.changesets.outputs.published == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd packages/full
-          pnpm version prerelease
-          pnpm set //registry.npmjs.org/:_authToken=$secrets.NPM_TOKEN
-          pnpm publish
+          pnpm version prerelease --no-commit-hooks --no-git-tag-version --allow-same-version
+          cd ../../
+          pnpm --filter=@oplayer/full run build
+          pnpm --filter=@oplayer/full publish --no-git-checks
+
+      # - uses: simenandre/publish-with-pnpm@v2
+      #   with:
+      #     npm-auth-token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push version changes to main branch
+        if: steps.changesets.outputs.published == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '[skip ci]chore: release ${{ github.event.release.tag_name }}'
+          branch: ${{ github.event.repository.default_branch }}
+          file_pattern: packages/full/package.json
 
       # 已被墙
       # - name: build websites

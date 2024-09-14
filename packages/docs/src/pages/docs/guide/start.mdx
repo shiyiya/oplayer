@@ -2,7 +2,7 @@ import { Callout, Tab, Tabs } from 'nextra-theme-docs'
 
 ## Install
 
-<Tabs items={['npm', 'script', 'script all(~28kB)']}>
+<Tabs items={['npm', 'script', 'script (with streams loader)(~28kB)']}>
 
 <Tab>
 ```shell
@@ -29,12 +29,10 @@ Player.make('#oplayer', {
             name: 'Japanese',
             default: true,
             src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt',
-            offset: 2
           },
           {
             name: 'CH & JP',
             src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt',
-            offset: 2
           }
         ]
       },
@@ -72,12 +70,10 @@ Player.make('#oplayer', {
               name: 'Japanese',
               default: true,
               src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt',
-              offset: 2
             },
             {
               name: 'CH & JP',
               src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt',
-              offset: 2
             }
           ]
         },
@@ -100,11 +96,12 @@ Player.make('#oplayer', {
 
 <Tab>
 ```html filename="app.html"
-<!-- all in one (~28kB) -->
+<!-- (gzip: 28.94 kB) include @oplayer/core @oplayer/ui @oplayer/hls @oplayer/dash @oplayer/mpegts -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
 <script>
   OPlayer.make('#oplayer', {
     source: {
+      title: '君の名は',
       src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4',
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
