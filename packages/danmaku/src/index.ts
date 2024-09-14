@@ -29,7 +29,7 @@ export default (options = {} as Options): PlayerPlugin => ({
 
     if (opacity) $danmaku.style.opacity = `${opacity}`
     if (options.enable == undefined) options.enable = true
-    let heatmapEnable = options.heatmap == undefined || options.heatmap
+    let heatmapEnable:boolean = options.heatmap == undefined || Boolean(options.heatmap)
 
     let loaded = false
     const danmaku: DanmakuContext = new Danmaku({
@@ -146,50 +146,48 @@ export default (options = {} as Options): PlayerPlugin => ({
             type: 'switcher',
             default: heatmapEnable,
             key: 'heatmap',
-            onChange: (value: Boolean) => {
+            onChange: (value: boolean) => {
+              heatmapEnable = value
               if (value) danmaku.heatmap?.enable()
               else danmaku.heatmap?.disable()
             }
           },
           {
-            type: 'selector',
+            type: 'slider',
             key: 'danmaku-font',
+            max: 1.25,
+            min: 0.25,
+            step: 0.25,
+            default: 1,
             name: player.locales.get('FontSize'),
-            children: [0.5, 0.75, 1, 1.25].map((it) => ({
-              name: `${it * 100}%`,
-              value: it,
-              default: it == 1
-            })),
             onChange: ({ value }: any) => {
               options.fontSize = value
               danmaku.setFontSize(value)
             }
           },
           {
-            type: 'selector',
+            type: 'slider',
             key: 'danmaku-opacity',
             name: player.locales.get('Opacity'),
-            children: [0.3, 0.5, 0.8, 1].map((it) => ({
-              name: `${it * 100}%`,
-              value: it,
-              default: it == (options?.opacity || 1)
-            })),
+            max: 1,
+            min: 0.1,
+            step: 0.1,
+            default: options?.opacity || 1,
             onChange: ({ value }: any) => {
               $danmaku.style.opacity = value
             }
           },
           {
-            type: 'selector',
+            type: 'slider',
             key: 'danmaku-area',
             name: player.locales.get('Display Area'),
-            children: [25, 50, 80, 100].map((it) => ({
-              name: `${it}%`,
-              value: it,
-              default: it == area * 100
-            })),
+            max: 1,
+            min: 0.1,
+            step: 0.1,
+            default: area,
             onChange: ({ value }: any) => {
-              options.opacity = value
-              $danmaku.style.height = `${value}%`
+              options.opacity = value * 100
+              $danmaku.style.height = `${value * 100}%`
               danmaku.resize()
             }
           }
