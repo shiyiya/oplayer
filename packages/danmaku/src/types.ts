@@ -9,7 +9,7 @@ export type Options = {
   opacity?: number
   fontSize?: number
   /**
-   * @default: 0.8
+   * @default: 1
    * */
   area?: number
   /**
