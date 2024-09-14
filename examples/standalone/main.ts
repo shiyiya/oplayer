@@ -1,8 +1,8 @@
 import { html, render } from 'lit'
 import { live } from 'lit/directives/live.js'
 
-import { Player, PlayerEvent } from '@oplayer/core'
-import danmaku from '@oplayer/danmaku'
+import { Player } from '@oplayer/core'
+import Danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
@@ -20,7 +20,7 @@ interface Ctx {
   hls: ReturnType<typeof hls>
   dash: ReturnType<typeof dash>
   mpegts: ReturnType<typeof mpegts>
-  danmaku: ReturnType<typeof danmaku>
+  danmaku: Danmaku
   playlist: Playlist
 }
 
@@ -136,13 +136,13 @@ const player = Player.make<Ctx>('#player', {
     hls({ forceHLS: true }),
     dash(),
     mpegts(),
-    danmaku({
-      enable: false,
+    new Danmaku({
+      enable: true,
       // displaySender: true,
       source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex: 0,
+      initialIndex: 3,
       sources: [
         {
           title: 'hls - muti quality & subtitle & audio',

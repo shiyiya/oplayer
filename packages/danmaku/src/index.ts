@@ -66,7 +66,9 @@ export default class Danmaku implements PlayerPlugin {
 
     this.registerSetting()
     this.bootstrap(this.options.source!)
-    if (this.options.displaySender && !isMobile) registerInput(player, danmaku, this.options as any)
+    if (this.options.displaySender && !isMobile) {
+      registerInput(player, danmaku, this.options as any)
+    }
   }
 
   bootstrap(source: Options['source']) {
@@ -102,7 +104,7 @@ export default class Danmaku implements PlayerPlugin {
       })
 
       this.loaded = true
-      if (fontSize) danmaku.setFontSize(fontSize)
+      this.setFontSize(fontSize)
       if (enable) danmaku.show()
       if (Boolean(heatmapEnable) && danmaku.comments.length > 0) {
         if (isNaN(player.duration)) {
@@ -129,7 +131,7 @@ export default class Danmaku implements PlayerPlugin {
 
   registerSetting() {
     const { danmaku, player, loaded } = this
-    const { enable, source, heatmap: heatmapEnable, opacity, area } = this.options
+    const { enable, heatmap: heatmapEnable, opacity, area } = this.options
 
     player.context.ui?.setting.register({
       name: player.locales.get('Danmaku'),
@@ -145,9 +147,9 @@ export default class Danmaku implements PlayerPlugin {
           key: 'danmaku-switcher',
           onChange: (value: boolean) => {
             this.options.enable = value
-            if (value) {
+            if (value && this.options.source) {
               if (!loaded) {
-                this.bootstrap(source!)
+                this.bootstrap(this.options.source)
                 return
               }
               danmaku.show()
@@ -175,9 +177,9 @@ export default class Danmaku implements PlayerPlugin {
           step: 0.25,
           default: 1,
           name: player.locales.get('FontSize'),
-          onChange: ({ value }: any) => {
+          onChange: (value: any) => {
             this.options.fontSize = value
-            danmaku.setFontSize(value)
+            this.setFontSize(value)
           }
         },
         {
@@ -188,7 +190,7 @@ export default class Danmaku implements PlayerPlugin {
           min: 0.1,
           step: 0.1,
           default: opacity,
-          onChange: ({ value }: any) => {
+          onChange: (value: any) => {
             this.options.opacity = value
             this.$root.style.opacity = value
           }
@@ -201,7 +203,7 @@ export default class Danmaku implements PlayerPlugin {
           min: 0.1,
           step: 0.1,
           default: area,
-          onChange: ({ value }: any) => {
+          onChange: (value: any) => {
             this.options.area = value
             this.$root.style.height = `${value * 100}%`
             danmaku.resize()
@@ -214,10 +216,10 @@ export default class Danmaku implements PlayerPlugin {
   render() {
     const { opacity, area, engine, speed } = this.options
     const player = this.player
-    const $danmaku = $.render($.create('div'), player.$root)
-    $danmaku.style.cssText = `height:${area * 100}%;opacity:${opacity};font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
+    this.$root = $.render($.create('div'), player.$root)
+    this.$root.style.cssText = `height:${area * 100}%;opacity:${opacity};font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
     this.danmaku = new _Danmaku({
-      container: $danmaku,
+      container: this.$root,
       media: player.$video,
       engine: engine,
       comments: [],
