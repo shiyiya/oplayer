@@ -18,8 +18,6 @@ npm i @oplayer/core @oplayer/torrent webtorrent@0.98.18
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
-<!--  webtorrent FIRST  -->
-<script src="https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/torrent@latest/dist/index.min.js"></script>
 
 <div id="oplayer" />
@@ -27,11 +25,12 @@ npm i @oplayer/core @oplayer/torrent webtorrent@0.98.18
 <script>
   OPlayer.make('#oplayer', {
     source: {
-      src: 'http://example.com/live/livestream.ts',
+      title: 'sintel',
+      src: 'https://webtorrent.io/torrents/sintel.torrent',
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([OTorrent()])
+    .use([OTorrent({ library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js' })])
     .create()
 </script>
 ```

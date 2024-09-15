@@ -21,8 +21,7 @@
     "@oplayer/torrent": "file:../../packages/torrent",
     "@oplayer/ui": "file:../../packages/ui",
     "dashjs": "^4.6.0",
-    "hls.js": "^1.4.0",
-    "lit": "^2.7.2",
-    "webtorrent": "0.98.18"
+    "hls.js": "^1.5.15",
+    "lit": "^2.7.2"
   }
 }

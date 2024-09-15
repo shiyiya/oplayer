@@ -1,5 +1,4 @@
 import { html, render } from 'lit'
-import { live } from 'lit/directives/live.js'
 
 import { Player } from '@oplayer/core'
 import Danmaku from '@oplayer/danmaku'
@@ -132,17 +131,19 @@ const player = Player.make<Ctx>('#player', {
     </svg>`
       }
     }),
-    torrent(),
+    torrent({
+      library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js'
+    }),
     hls({ forceHLS: true }),
     dash(),
     mpegts(),
     new Danmaku({
-      enable: true,
+      enable: true
       // displaySender: true,
-      source: DANMAKU //SUPER_DANMAKU
+      // source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex: 3,
+      initialIndex: 6,
       sources: [
         {
           title: 'hls - muti quality & subtitle & audio',
@@ -170,7 +171,7 @@ const player = Player.make<Ctx>('#player', {
           poster: POSTER,
           src: MP4,
           duration: '01:32',
-          danmaku: SUPER_DANMAKU,
+          danmaku: DANMAKU,
           thumbnails: {
             src: THUMB,
             number: 100
