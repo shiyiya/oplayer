@@ -26,7 +26,7 @@ npm i @oplayer/core @oplayer/danmaku
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([ODanmaku({ source: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml' })])
+    .use([new ODanmaku({ source: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml' })])
     .create()
 </script>
 ```

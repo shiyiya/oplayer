@@ -49,13 +49,13 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
             onChange({ value }) {
               alert(`${value}`)
             }
-          },
+          }
         ]
       }),
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      danmaku({ enable: !isMobile, fontSize: 0.75, displaySender: false }),
+      new ODanmaku({ enable: !isMobile, fontSize: 0.75, displaySender: false }),
       new Playlist({
         initialIndex: 0,
         autoNext: true,
@@ -118,13 +118,13 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
             duration: '02:02'
           },
           {
-          title: 'webtorrent - MP4 + subtitle + poster',
-          src: 'https://webtorrent.io/torrents/sintel.torrent',
+            title: 'webtorrent - MP4 + subtitle + poster',
+            src: 'https://webtorrent.io/torrents/sintel.torrent'
           }
         ]
       }),
       new Chromecast(),
       new AirPlay()
     ].filter((it) => it?.apply)}
-/>
+  />
 </div>
