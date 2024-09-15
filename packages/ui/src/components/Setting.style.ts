@@ -175,8 +175,8 @@ export const sliderCls = $.css({
   '::before': {
     position: 'absolute',
     left: '-0.3em',
-    top: 0,
-    transform: 'translate(-100%, -0.3em)',
+    top: '50%',
+    transform: 'translate(-100%, -50%)',
     content: 'attr(value)',
     color: 'rgba(255, 255, 255, 0.7)',
     visibility: 'hidden'

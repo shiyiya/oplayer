@@ -1,8 +1,7 @@
 import { html, render } from 'lit'
-import { live } from 'lit/directives/live.js'
 
-import { Player, PlayerEvent } from '@oplayer/core'
-import danmaku from '@oplayer/danmaku'
+import { Player } from '@oplayer/core'
+import Danmaku from '@oplayer/danmaku'
 import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
@@ -20,7 +19,7 @@ interface Ctx {
   hls: ReturnType<typeof hls>
   dash: ReturnType<typeof dash>
   mpegts: ReturnType<typeof mpegts>
-  danmaku: ReturnType<typeof danmaku>
+  danmaku: Danmaku
   playlist: Playlist
 }
 
@@ -47,7 +46,7 @@ const player = Player.make<Ctx>('#player', {
     poster: POSTER,
     title: '君の名は'
   },
-  videoAttr: { crossorigin: 'anonymous' }, // screenshot
+  // videoAttr: { crossorigin: 'anonymous' }, // screenshot
   lang: 'en'
   // isNativeUI: () => true
 })
@@ -132,17 +131,19 @@ const player = Player.make<Ctx>('#player', {
     </svg>`
       }
     }),
-    torrent(),
+    torrent({
+      library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js'
+    }),
     hls({ forceHLS: true }),
     dash(),
     mpegts(),
-    danmaku({
-      enable: false,
+    new Danmaku({
+      enable: true
       // displaySender: true,
-      source: DANMAKU //SUPER_DANMAKU
+      // source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex: 0,
+      initialIndex: 6,
       sources: [
         {
           title: 'hls - muti quality & subtitle & audio',
@@ -170,7 +171,7 @@ const player = Player.make<Ctx>('#player', {
           poster: POSTER,
           src: MP4,
           duration: '01:32',
-          danmaku: SUPER_DANMAKU,
+          danmaku: DANMAKU,
           thumbnails: {
             src: THUMB,
             number: 100

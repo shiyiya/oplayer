@@ -5,7 +5,8 @@ import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
-import danmaku from '@oplayer/danmaku'
+import Danmaku from '@oplayer/danmaku'
+import torrent from '@oplayer/torrent'
 import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
 
 <div className="nx-rounded-sm nx-overflow-hidden" style={{ maxWidth: '1024px', margin: '2.5rem auto' }}>
@@ -49,13 +50,14 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
             onChange({ value }) {
               alert(`${value}`)
             }
-          },
+          }
         ]
       }),
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      danmaku({ enable: !isMobile, fontSize: 0.75, displaySender: false }),
+      torrent({ library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js' }),
+      new Danmaku({ enable: !isMobile && globalThis?.navigator?.language.includes('zh'), fontSize: 0.75 }),
       new Playlist({
         initialIndex: 0,
         autoNext: true,
@@ -118,13 +120,13 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
             duration: '02:02'
           },
           {
-          title: 'webtorrent - MP4 + subtitle + poster',
-          src: 'https://webtorrent.io/torrents/sintel.torrent',
+            title: 'webtorrent - MP4 + subtitle + poster',
+            src: 'https://webtorrent.io/torrents/sintel.torrent'
           }
         ]
       }),
       new Chromecast(),
       new AirPlay()
-    ].filter((it) => it?.apply)}
-/>
+    ]}
+  />
 </div>

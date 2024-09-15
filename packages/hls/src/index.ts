@@ -204,7 +204,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
       if (instance.levels.length < 2) return
-      const defaultLevel = options.defaultQuality(instance.levels)
+      const defaultLevel = options.defaultQuality(instance.levels.toSorted((a, b) => b.bitrate - a.bitrate))
       if (defaultLevel != -1) instance.currentLevel = defaultLevel
 
       injectSetting({
@@ -212,7 +212,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         name: 'Quality',
         settings() {
           return instance.levels
-            .sort((a, b) => b.bitrate - a.bitrate)
+            .toSorted((a, b) => b.bitrate - a.bitrate)
             .reduce(
               (pre, level, id) => {
                 let name = (level.name || level.height).toString()
@@ -224,7 +224,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
                   name += ` (${number}${useMb ? 'm' : 'k'}bps)`
                 }
 
-                pre.push({ name, default: defaultLevel == id, value: id })
+                pre.push({ name, default: defaultLevel == id, value: instance.levels.length - 1 - id })
                 return pre
               },
               [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
@@ -250,7 +250,7 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
           ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         } else {
-          ui.setting.select(`${PLUGIN_NAME}-Quality`, level + 1, false)
+          ui.setting.select(`${PLUGIN_NAME}-Quality`, level - instance.levels.length, false)
         }
       }
     )
