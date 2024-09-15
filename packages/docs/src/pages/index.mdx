@@ -57,7 +57,7 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
       dash(),
       mpegts(),
       torrent({ library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js' }),
-      new Danmaku({ enable: !isMobile && navigator?.language.includes('zh'), fontSize: 0.75 }),
+      new Danmaku({ enable: !isMobile && globalThis?.navigator?.language.includes('zh'), fontSize: 0.75 }),
       new Playlist({
         initialIndex: 0,
         autoNext: true,
