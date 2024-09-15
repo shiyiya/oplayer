@@ -169,6 +169,7 @@ class HlsPlugin implements PlayerPlugin {
 
     instance.on(HlsPlugin.library.Events.LEVEL_LOADED, (_, data) => {
       setTimeout(() => {
+        player.emit('loadedmetadata', data)
         player.emit('canplay', data)
       })
     })
