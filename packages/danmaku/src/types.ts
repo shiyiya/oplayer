@@ -1,7 +1,7 @@
 import type Danmaku from 'danmaku'
 
 export type Options = {
-  source: string | Function | Comment[]
+  source?: string | Function | Comment[]
   /**
    * @default:144
    * */

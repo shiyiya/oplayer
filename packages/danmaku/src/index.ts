@@ -61,17 +61,24 @@ export default class Danmaku implements PlayerPlugin {
     window.addEventListener('resize', resize)
     player.on('destroy', () => {
       danmaku.destroy()
+      this.options.source = undefined
+      this.loaded = false
+      this.danmaku = null as any
+      this.$root = null as any
       window.removeEventListener('resize', resize)
     })
 
     this.registerSetting()
-    this.bootstrap(this.options.source!)
+    this.bootstrap(this.options.source)
     if (this.options.displaySender && !isMobile) {
       registerInput(player, danmaku, this.options as any)
     }
+
+    return this
   }
 
   bootstrap(source: Options['source']) {
+    if (!source) return
     this.loaded = false
     this.options.source = source
     this.danmaku.clear()
@@ -87,7 +94,7 @@ export default class Danmaku implements PlayerPlugin {
       } else if (typeof source === 'string') {
         danmakus = (await danmakuParseFromUrl(source)) as any
       } else {
-        danmakus = source
+        danmakus = source!
       }
 
       const { danmaku, player } = this
@@ -147,12 +154,12 @@ export default class Danmaku implements PlayerPlugin {
           key: 'danmaku-switcher',
           onChange: (value: boolean) => {
             this.options.enable = value
-            if (value && this.options.source) {
+            if (value) {
               if (!loaded) {
                 this.bootstrap(this.options.source)
-                return
+              } else {
+                danmaku.show()
               }
-              danmaku.show()
             } else {
               danmaku.hide()
             }
