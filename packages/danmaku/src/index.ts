@@ -3,10 +3,9 @@ import { $, isMobile } from '@oplayer/core'
 import { default as _Danmaku } from 'danmaku'
 import { danmakuParseFromUrl } from './danmaku-parse'
 import type { Comment, DanmakuContext, Options } from './types'
-
 import danmakuSvg from './danmaku.svg?raw'
-import heatmap from './heatmap'
 import { registerInput } from './sender'
+import Heatmap from './heatmap'
 
 export * from './types'
 
@@ -20,11 +19,12 @@ export default class Danmaku implements PlayerPlugin {
 
   player: Player
   danmaku: DanmakuContext
+  heatmap: Heatmap
 
   loaded: boolean = false
   $root: HTMLDivElement
 
-  options: RequiredPartial<Options, 'source' | 'onEmit'> = {
+  options: RequiredPartial<Options, 'source' | 'onEmit' | 'customHeatmap'> = {
     speed: 144,
     opacity: 1,
     engine: 'dom',
@@ -69,7 +69,7 @@ export default class Danmaku implements PlayerPlugin {
     })
 
     this.registerSetting()
-    this.bootstrap(this.options.source)
+    this.changeSource(this.options.source)
     if (this.options.displaySender && !isMobile) {
       registerInput(player, danmaku, this.options as any)
     }
@@ -77,16 +77,16 @@ export default class Danmaku implements PlayerPlugin {
     return this
   }
 
-  bootstrap(source: Options['source']) {
+  changeSource(source: Options['source'], customHeatmap?: Options['customHeatmap']) {
     if (!source) return
     this.loaded = false
     this.options.source = source
     this.danmaku.clear()
     if (!this.options.enable) return
-    this._fetchSource(source)
+    this._fetchSource(source, customHeatmap)
   }
 
-  async _fetchSource(source: Options['source']) {
+  async _fetchSource(source: Options['source'], customHeatmap?: Options['customHeatmap']) {
     try {
       let danmakus: Comment[]
       if (typeof source === 'function') {
@@ -97,8 +97,8 @@ export default class Danmaku implements PlayerPlugin {
         danmakus = source!
       }
 
-      const { danmaku, player } = this
-      const { fontSize, enable, heatmap: heatmapEnable } = this.options
+      const { danmaku, options } = this
+      const { fontSize, enable, heatmap } = options
 
       //@ts-ignore
       if (!danmaku._) return
@@ -113,15 +113,7 @@ export default class Danmaku implements PlayerPlugin {
       this.loaded = true
       this.setFontSize(fontSize)
       if (enable) danmaku.show()
-      if (Boolean(heatmapEnable) && danmaku.comments.length > 0) {
-        if (isNaN(player.duration)) {
-          player.once('loadedmetadata', () => {
-            heatmap(player, danmaku, heatmapEnable)
-          })
-        } else {
-          heatmap(player, danmaku, heatmapEnable)
-        }
-      }
+      if (heatmap) this.heatmap.enable(customHeatmap)
     } catch (error) {
       this.player.emit('notice', { text: 'danmaku: ' + (<Error>error).message })
       throw error
@@ -137,7 +129,7 @@ export default class Danmaku implements PlayerPlugin {
   }
 
   registerSetting() {
-    const { danmaku, player, loaded } = this
+    const { danmaku, player } = this
     const { enable, heatmap: heatmapEnable, opacity, area } = this.options
 
     player.context.ui?.setting.register({
@@ -155,8 +147,8 @@ export default class Danmaku implements PlayerPlugin {
           onChange: (value: boolean) => {
             this.options.enable = value
             if (value) {
-              if (!loaded) {
-                this.bootstrap(this.options.source)
+              if (!this.loaded) {
+                this.changeSource(this.options.source)
               } else {
                 danmaku.show()
               }
@@ -172,8 +164,8 @@ export default class Danmaku implements PlayerPlugin {
           key: 'heatmap',
           onChange: (value: boolean) => {
             this.options.heatmap = value
-            if (value) danmaku.heatmap?.enable()
-            else danmaku.heatmap?.disable()
+            if (value) this.heatmap.enable()
+            else this.heatmap.disable()
           }
         },
         {
@@ -221,7 +213,7 @@ export default class Danmaku implements PlayerPlugin {
   }
 
   render() {
-    const { opacity, area, engine, speed } = this.options
+    const { opacity, area, engine, speed, heatmap, customHeatmap } = this.options
     const player = this.player
     this.$root = $.render($.create('div'), player.$root)
     this.$root.style.cssText = `height:${area * 100}%;opacity:${opacity};font-weight: normal;position: absolute;left: 0;top: 0;width: 100%;height: 100%;overflow: hidden;pointer-events: none;text-shadow: rgb(0 0 0) 1px 0px 1px, rgb(0 0 0) 0px 1px 1px, rgb(0 0 0) 0px -1px 1px, rgb(0 0 0) -1px 0px 1px;color:#fff;`
@@ -232,5 +224,6 @@ export default class Danmaku implements PlayerPlugin {
       comments: [],
       speed: isMobile ? speed / 1.5 : speed
     }) as any
+    this.heatmap = new Heatmap(player, this.danmaku, heatmap, customHeatmap)
   }
 }

@@ -28,11 +28,11 @@ Player.make('#oplayer', {
           {
             name: 'Japanese',
             default: true,
-            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt',
+            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は-jp.srt'
           },
           {
             name: 'CH & JP',
-            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt',
+            src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.srt'
           }
         ]
       },
@@ -91,12 +91,12 @@ Player.make('#oplayer', {
     .create()
 </script>
 
-```
+````
 </Tab>
 
 <Tab>
 ```html filename="app.html"
-<!-- (gzip: 28.94 kB) include @oplayer/core @oplayer/ui @oplayer/hls @oplayer/dash @oplayer/mpegts -->
+<!-- (gzip: 28.94 kB) include @oplayer/core @oplayer/ui @oplayer/hls @oplayer/dash @oplayer/mpegts @oplayer/torrent -->
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
 <script>
   OPlayer.make('#oplayer', {
@@ -114,11 +114,12 @@ Player.make('#oplayer', {
       }),
       ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' }),
       OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.min.js' }),
+      OTorrent({ library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js' })
     ])
     .create()
 
 </script>
-```
+````
 
 </Tab>
 

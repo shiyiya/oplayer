@@ -150,7 +150,7 @@ export const backRow = $.css({
 export const sliderCls = $.css({
   '-webkit-appearance': 'none',
   width: '90%',
-  height: '0.6em',
+  height: '0.4em',
   outline: 'none',
   'border-radius': '34px',
   background: 'rgb(204, 204, 204)',
@@ -162,8 +162,8 @@ export const sliderCls = $.css({
     '-webkit-appearance': 'none',
     appearance: 'none',
     background: '#fff',
-    height: '1.3em',
-    width: '1.3em',
+    height: '1em',
+    width: '1em',
     'border-radius': '50%',
     border: 'none'
   },
@@ -179,6 +179,7 @@ export const sliderCls = $.css({
     transform: 'translate(-100%, -50%)',
     content: 'attr(value)',
     color: 'rgba(255, 255, 255, 0.7)',
-    visibility: 'hidden'
+    visibility: 'hidden',
+    'font-size': '0.8em'
   }
 })

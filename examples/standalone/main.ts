@@ -148,6 +148,7 @@ const player = Player.make<Ctx>('#player', {
         {
           title: 'hls - muti quality & subtitle & audio',
           src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8'
+          // danmaku: SUPER_DANMAKU
         },
         {
           title: 'dash - muti quality & subtitle & audio',

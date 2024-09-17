@@ -156,7 +156,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
             this.player.context.ui.changHighlightSource(highlights)
           }
           if (danmaku) {
-            this.player.context.danmaku?.bootstrap(danmaku)
+            this.player.context.danmaku?.changeSource(danmaku)
           }
         })
       })

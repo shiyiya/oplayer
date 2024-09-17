@@ -33,15 +33,14 @@
 - [UPV](https://onime.netlify.app) - free anime no ads
 - [Binged](https://binge.lol) - Binged - Watch Movies & TV Shows Free
 - [NUSANIME](https://play.google.com/store/apps/details?id=com.nusanime.app) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
-- ~~[Animex](https://www.animex.live/) - Watch Anime for free in HD quality with English subbed or dubbed.~~
-- ~~[NGEWIBU.TV](https://ngewibu.tv/) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis~~
 
 ## Support
 
 If you think this is super cool, or useful, and want to donate a little, then you are also super cool!
 
 - [Paypal](https://www.paypal.com/paypalme/ShiYiYa)
-- [WeChat Pay](https://www.oaii.me/wechat_donate.png)
+- [QQ](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=lZb5hM-3CL_UBknmASPHsNuPDgvFObvQ&authKey=h2A2BFkynQX3HhbIxHhMZiSt%2Fp87gljDQ5Q%2FFVwsYdZ%2B7FP7n%2BWdR8WZ1Z0fX3Ss&noverify=0&group_code=861379856)
+- [WeChat Pay](https://cdn.jsdelivr.net/gh/shiyiya/shiyiya.github.io@master/source/wechat_donate.png)
 
 - ![Star](https://img.shields.io/github/stars/shiyiya/oplayer?style=social)
 

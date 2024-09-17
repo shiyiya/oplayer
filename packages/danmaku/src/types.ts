@@ -15,7 +15,8 @@ export type Options = {
   /**
    * @default: true
    * */
-  heatmap?: boolean | Array<[number, number]>
+  heatmap?: boolean
+  customHeatmap?: Array<[number, number]>
   /**
    * @default 'dom'
    */
@@ -54,10 +55,4 @@ export interface Comment {
 
 export interface DanmakuContext extends Danmaku {
   comments: Comment[]
-  heatmap?: {
-    enable: () => void
-    disable: () => void
-  }
-  bootstrap: (source: Options['source']) => Promise<void>
-  setFontSize: (size: number) => void
 }
