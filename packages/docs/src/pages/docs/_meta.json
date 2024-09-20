@@ -1,6 +1,7 @@
 {
   "index": "Introduction",
-  "guide": "Guide",
+  "start": "Install",
+  "player-configuration": "Configuration",
 
   "-- Plugins": {
     "type": "separator",

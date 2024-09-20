@@ -4,7 +4,7 @@ import { Callout } from 'nextra-theme-docs'
 
 <Callout>
   `@oplayer/core` does not provide any ui related functions such as thumbnail, subtitles, etc. If
-  you need these functions please install `@oplayer/ui`
+  you need these functions please install `[@oplayer/ui](./ui)`
 </Callout>
 
 ```js
@@ -61,4 +61,28 @@ export interface PlayerOptions {
   videoAttr?: Record<string, boolean | string>
   isNativeUI?: () => boolean
 }
+```
+
+## persisted state
+
+```js
+player.on('ratechange', () => {
+  if (!player.isSourceChanging)
+    localStorage.setItem('@oplayer/UserPreferences/speed', player.playbackRate.toString())
+})
+
+player.on('volumechange', () => {
+  localStorage.setItem('@oplayer/UserPreferences/volume', player.volume.toString())
+})
+
+player.on('timeupdate', () => {
+  localStorage.setItem(player.options.source.src, player.currentTime.toString())
+})
+
+player.on('loadedmetadata', () => {
+  var prevTime = localStorage.getItem(e.payload.src)
+  if (prevTime) {
+    player.seek(prevTime - 3)
+  }
+})
 ```
