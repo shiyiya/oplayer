@@ -10,7 +10,7 @@
 ## Basic
 
 ```js
-const player = Player.make('#player', {
+const player = OPlayer.make('#player', {
   source: {
     title: '君の名は',
     src: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4',

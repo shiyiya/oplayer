@@ -216,7 +216,19 @@ function createPanel(
   }
 
   for (let i = 0; i < setting.length; i++) {
-    const { name, type, key, children, icon, default: selected, onChange, max, min, step } = setting[i]!
+    const {
+      name,
+      type,
+      key,
+      children,
+      icon,
+      default: selected,
+      onChange,
+      max,
+      min,
+      step,
+      value
+    } = setting[i]!
 
     const { $row, $label } = createRow(
       Object.assign(
@@ -237,7 +249,6 @@ function createPanel(
     $.render($row, panel.$ref)
     $.render(panel.$ref, target)
 
-    //处理 selector，因为依赖label，所以需先创建子 panel
     if (children) {
       const nextIsSelectorOptionsPanel =
         type == 'selector' && children.every((it) => !Boolean(it.type) || it.type == 'option')
@@ -308,7 +319,7 @@ function createPanel(
         // TODO: update methond
       } else {
         if (type == 'option' || (type == undefined && !isSelectorOptionsPanel)) {
-          $row.addEventListener('click', (e) => (onChange || options.parenOnChange)?.(e))
+          $row.addEventListener('click', (event) => (onChange || options.parenOnChange)?.({ value, event }))
         }
       }
     }

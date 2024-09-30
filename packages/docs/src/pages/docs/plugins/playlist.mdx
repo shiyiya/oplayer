@@ -10,7 +10,7 @@ npm i @oplayer/ui @oplayer/plugins
 <script src="https://cdn.jsdelivr.net/npm/@oplayer/plugins@latest/dist/playlist.min.js"></script>
 
 <script>
-  Player.make('#player') .use([new OPlaylist(...)]).create()
+  OPlayer.make('#player') .use([new OPlaylist(...)]).create()
 </script>
 ```
 
@@ -19,7 +19,7 @@ import Player from '@oplayer/core'
 import ui from '@oplayer/ui'
 import { Playlist } from '@oplayer/plugins'
 
-Player.make('#player')
+OPlayer.make('#player')
   .use([
     ui(),
     new Playlist({
