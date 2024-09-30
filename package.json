@@ -7,18 +7,15 @@
     "pnpm": ">=6"
   },
   "author": "shiyiya",
-  "keywords": [
-    "oplayer",
-    "video-player"
-  ],
+  "keywords": ["oplayer", "video-player"],
   "scripts": {
     "watch": "pnpm --parallel run start",
     "start": "pnpm run watch",
     "dev": "pnpm --filter=!@oplayer/docs --parallel run start",
     "dev:exam": "cd examples/standalone && pnpm run start",
     "dev:ui": "pnpm --filter=@oplayer/ui run start",
-    "build": "pnpm --filter=!@oplayer/docs run build",
-    "build:packs": "pnpm --filter=@oplayer/* run build",
+    "build": "pnpm --filter=!@oplayer/docs run build && cp -r packages/ui/dist/index.ui.js packages/core/dist",
+    "build:packs": "pnpm --filter=@oplayer/* run build && cp -r packages/ui/dist/index.ui.js packages/core/dist",
     "build:core": "pnpm --filter=@oplayer/core run build",
     "build:docs": "pnpm --filter=@oplayer/docs run build",
     "build:plugins": "pnpm --filter=@oplayer/plugins run build",

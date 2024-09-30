@@ -4,7 +4,6 @@ import { viteConfig } from '../../vite.config'
 import { version as CoreVersion, name as CoreName, author, description, homepage } from '../core/package.json'
 import { version as UIVersion, name as UIName } from '../ui/package.json'
 import { plugin } from 'vite-plugin-merge-exports'
-import { cpSync } from 'node:fs'
 
 export default viteConfig(
   'ui',
@@ -12,8 +11,7 @@ export default viteConfig(
     build: {
       emptyOutDir: false,
       rollupOptions: {
-        external: [],
-        output: { dir: '../core/dist' }
+        external: []
       },
       lib: {
         entry: './src/index.core.ts',
@@ -24,15 +22,9 @@ export default viteConfig(
     },
     plugins: [
       banner({
-        outDir: '../core/dist',
         content: `/**\n * name: ${CoreName} + ${UIName}\n * version: v${CoreVersion} + v${UIVersion}\n * description: ${description}\n * author: ${author}\n * homepage: ${homepage}\n */`
       }),
-      plugin(),
-      {
-        closeBundle() {
-          cpSync('../core/dist/index.ui.js', './dist/index.ui.js')
-        }
-      }
+      plugin()
     ]
   },
   false

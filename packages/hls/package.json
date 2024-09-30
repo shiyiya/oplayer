@@ -16,8 +16,7 @@
   "scripts": {
     "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
     "tsc": "tsc --noEmit && echo",
-    "build:extra": "vite build --config vite.all.config.ts",
-    "build": "vite build && tsc --emitDeclarationOnly && pnpm run build:extra"
+    "build": "vite build && tsc --emitDeclarationOnly"
   },
   "files": [
     "dist",
