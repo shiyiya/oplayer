@@ -143,7 +143,7 @@ const player = Player.make<Ctx>('#player', {
       // source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex: 6,
+      initialIndex: 3,
       sources: [
         {
           title: 'hls - muti quality & subtitle & audio',
@@ -178,6 +178,11 @@ const player = Player.make<Ctx>('#player', {
             number: 100
           },
           subtitles: [
+            {
+              name: 'ass',
+              type: 'ass',
+              src: `https://web.opendrive.com/api/v1/download/file.json/MjBfMzA2MTA2OThf?temp_key=%EF%BF%BD%11%2Bj*%EF%BF%BD%EF%BF%BD%EF%BF%BDC%EF%BF%BDD%EF%BF%BD%EF%BF%BD%EF%BF%BDn%EF%BF%BDm%01%EF%BF%BD%D6%B6%D1%86%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%06%EF%BF%BD%EF%BF%BD%EF%BF%BDm%06%EF%BF%BD%EF%BF%BDv%EF%BF%BD%27%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BDz6%D1%8B%EF%BF%BD%7Bm0%EF%BF%BDm%0C%EF%BF%BDv%EF%BF%BD%EF%BF%BDM%EF%BF%BD%EF%BF%BD%5D%EF%BF%BD%EF%BF%BD%1E%EF%BF%BD%D2%9EC%EF%BF%BD%13.%EF%BF%BD%D8%A9%EF%BF%BD%EF%BF%BD%EF%BF%BDJ%EF%BF%BD%EF%BF%BD%EF%BF%BD%5E%EF%BF%BD%3Bki%EF%BF%BD9%EF%BF%BD%EF%BF%BD%DA%B2&inline=1` //'https://mentoor-st.s3.ir-thr-at1.arvanstorage.ir/media/courses/videos/a220374676eb40e4/001f4770a44497047661e446/subtitle/001f4770a44497047661e446_subtitle.srt', //SRT,
+            },
             {
               name: 'Default',
               default: true,

@@ -319,7 +319,7 @@ function createPanel(
         // TODO: update methond
       } else {
         if (type == 'option' || (type == undefined && !isSelectorOptionsPanel)) {
-          $row.addEventListener('click', (event) => (onChange || options.parenOnChange)?.({ value, event }))
+          $row.addEventListener('click', () => (onChange || options.parenOnChange)?.(value))
         }
       }
     }

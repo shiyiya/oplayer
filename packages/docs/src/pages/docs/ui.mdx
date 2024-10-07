@@ -74,8 +74,13 @@ OUI({
     onChange(source) {
       // persistedstate
       localStorage.setItem('pre-subtitle', source.src)
+
+      if (source.src == 'abc') {
+        // or custom fetch
+        return yourFetch(`https://abc.com/subtile/${source.src}`, { mode: 'cors' })
+      }
     }
-  },
+  }
 })
 ```
 

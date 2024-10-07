@@ -212,15 +212,23 @@ export class Subtitle {
   fetchSubtitle() {
     if (!this.currentSubtitle) return
     if (!this.$track) this.createTrack()
-    const { currentSubtitle, player, $track, $iosTrack } = this
+    const { currentSubtitle, player, $track, $iosTrack, options } = this
     const { src, encoding, type = 'auto', offset } = currentSubtitle
 
-    return fetch(src)
-      .then((response) => response.arrayBuffer())
-      .then((buffer) => {
-        const decoder = new TextDecoder(encoding)
-        const text = decoder.decode(buffer)
+    return Promise.resolve(options.onChange?.(currentSubtitle))
+      .then((rsp) => {
+        if (rsp == undefined) {
+          return fetch(src)
+            .then((response) => response.arrayBuffer())
+            .then((buffer) => {
+              return new TextDecoder(encoding).decode(buffer)
+            })
+        }
 
+        return rsp
+      })
+      .then((text) => {
+        if (!text) throw new Error('Empty Subtitle')
         switch (type == 'auto' ? /srt|ass|vtt(#|\?|$)/i.exec(src)?.[0] : type) {
           case 'srt':
             return vttToBlob(srtToVtt(text))
@@ -270,7 +278,6 @@ export class Subtitle {
               this.currentSubtitle = value
               this.$dom.innerHTML = ''
               this.fetchSubtitle()
-              this.options.onChange?.(value)
             }
           } else {
             this.hide()
