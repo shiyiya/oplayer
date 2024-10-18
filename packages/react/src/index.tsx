@@ -35,7 +35,7 @@ const ReactOPlayer = forwardRef((props: ReactOPlayerProps, ref: Ref<Player | nul
   const onRefChange = useCallback((node: HTMLDivElement) => {
     if (node !== null && !isReady) {
       player.current = Player.make(node, rest).use(plugins).create()
-      if (source instanceof Promise || (source as Source).src) player.current.changeSource(source!)
+      if (source instanceof Promise || (source as Source)?.src) player.current.changeSource(source!)
       if (typeof duration == 'number') player.current.seek(duration / 1000)
       if (onEvent) {
         player.current.on((payload: PlayerEvent) => onEventRef.current?.(payload))
