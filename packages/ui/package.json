@@ -1,15 +1,11 @@
 {
   "name": "@oplayer/ui",
-  "version": "1.3.4-beta.0",
+  "version": "1.3.4-beta.1",
   "description": "ui plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/src/index.d.ts",
   "browser": "./dist/index.min.js",
-  "exports": {
-    "import": "./dist/index.es.js",
-    "require": "./dist/index.min.js"
-  },
   "sideEffects": false,
   "author": "shiyiya",
   "homepage": "https://github.com/shiyiya/oplayer",

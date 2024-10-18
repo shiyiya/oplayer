@@ -6,10 +6,6 @@
   "main": "./dist/index.es.js",
   "types": "./dist/src/index.d.ts",
   "browser": "./dist/index.min.js",
-  "exports": {
-    "import": "./dist/index.es.js",
-    "require": "./dist/index.min.js"
-  },
   "sideEffects": false,
   "author": "shiyiya",
   "homepage": "https://github.com/shiyiya/oplayer",
