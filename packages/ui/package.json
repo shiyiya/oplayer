@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/index.es.js",
   "types": "./dist/src/index.d.ts",
-  "browser": "./dist/index.min.js",
+  "jsdelivr": "./dist/index.min.js",
   "sideEffects": false,
   "author": "shiyiya",
   "homepage": "https://github.com/shiyiya/oplayer",
