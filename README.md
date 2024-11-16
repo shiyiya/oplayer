@@ -31,8 +31,6 @@
 
 - **Feel free to submit yours in [Let me know!](https://github.com/shiyiya/oplayer/discussions/116)**
 - [UPV](https://onime.netlify.app) - free anime no ads
-- [Binged](https://binge.lol) - Binged - Watch Movies & TV Shows Free
-- [NUSANIME](https://play.google.com/store/apps/details?id=com.nusanime.app) - Nonton Anime Sub Indo | Nonton Anime Subtitle Indonesia Gratis
 
 ## Support
 

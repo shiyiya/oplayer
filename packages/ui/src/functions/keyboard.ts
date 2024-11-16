@@ -43,7 +43,7 @@ const KEY_FN: Record<string, (player: Player, config: UIInterface['config']) => 
   },
 
   ' ': (player: Player) => player.togglePlay(),
-  k: (player: Player) => player.togglePlay(),
+  K: (player: Player) => player.togglePlay(),
 
   Escape: (player: Player) => {
     if (player.isFullScreen) {
@@ -53,13 +53,13 @@ const KEY_FN: Record<string, (player: Player, config: UIInterface['config']) => 
     }
   },
 
-  f: (player: Player) => player.toggleFullScreen(),
+  F: (player: Player) => player.toggleFullScreen(),
 
-  w: (player: Player) => player.emit('fullscreenchange', { isWeb: true }),
+  W: (player: Player) => player.emit('fullscreenchange', { isWeb: true }),
 
-  s: screenShot,
+  S: screenShot,
 
-  m: (player: Player) => (player.isMuted ? player.unmute() : player.mute())
+  M: (player: Player) => (player.isMuted ? player.unmute() : player.mute())
 }
 
 export default function (it: UIInterface) {
@@ -83,7 +83,7 @@ export default function (it: UIInterface) {
       return
     }
 
-    const key = e.key
+    const key = e.key.toLocaleUpperCase()
 
     if (KEY_FN[key]) {
       e.preventDefault()
