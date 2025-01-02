@@ -148,7 +148,7 @@ class Chromecast implements PlayerPlugin {
     const { menu, icons } = this.player.context.ui
 
     menu?.register({
-      name: 'Chromecast',
+      name: this.player.locales.get('Chromecast'),
       position: 'top',
       icon: icons.chromecast || ICON,
       onClick: () => this.start()

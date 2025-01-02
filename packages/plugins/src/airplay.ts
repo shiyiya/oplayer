@@ -44,7 +44,7 @@ class AirPlay implements PlayerPlugin {
     const { menu, icons } = this.player.context.ui
 
     menu?.register({
-      name: 'AirPlay',
+      name: this.player.locales.get('AirPlay'),
       position: 'top',
       icon: icons.airplay || ICON,
       onClick: () => this.start()

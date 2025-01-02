@@ -1,17 +1,20 @@
 import type { Lang } from '../types'
 import { mergeDeep } from '../utils'
 import CN from './zh-CN.json'
-
+import FA from "./fa.json"
+import PA from "./pa.json"
 export default class I18n {
   public lang: Lang
 
   private languages: Partial<Record<Lang, any>> = {
     zh: CN,
     'zh-CN': CN,
+    fa: FA,
+    pa: PA,
     en: Object.keys(CN).reduce<Record<string, string>>(
       (previous, current) => ((previous[current] = current), previous),
       {}
-    )
+    ),
   }
 
   constructor(defaultLang: Lang) {
