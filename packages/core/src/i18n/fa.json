@@ -1,0 +1,39 @@
+{
+  "Play": "پخش",
+  "Next": "بعدی",
+  "Previous": "قبلی",
+  "Pause": "توقف",
+  "Loop": "تکرار",
+  "Volume": "حجم صدا",
+  "Volume: %s": "حجم صدا: %s",
+  "Mute": "بی‌صدا کردن",
+  "Speed": "سرعت",
+  "LIVE": "زنده",
+  "WebFullscreen":"تمام صفحه وب",
+  "Chromecast": "کروم کاست",
+  "AirPlay":"ایر پلی",
+
+  "Language": "زبان",
+  "Screenshot": "عکس صفحه",
+  "Subtitle": "زیرنویس",
+  "Quality": "کیفیت",
+  "Fullscreen": "تمام صفحه",
+  "TextDecoder Not Supported": "رمزگشای متن پشتیبانی نمی‌شود",
+  "Settings": "تنظیمات",
+  "Picture in Picture": "تصویر در تصویر",
+  
+  "Danmaku": "دانماکو",
+  "Display": "نمایش",
+  "Opacity": "شفافیت",
+  "FontSize": "اندازه فونت",
+  "Display Area": "ناحیه نمایش",
+  
+  "Off": "خاموش",
+  "Auto": "خودکار",
+  "Default": "پیش‌فرض",
+  "Normal": "عادی",
+  
+  "%ss": "%s ثانیه",
+  "Close": "بستن",
+  "Can be closed after %ss": "قابل بستن پس از %s ثانیه"
+}

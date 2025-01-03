@@ -23,7 +23,7 @@ export type Source = {
   type?: VideoMimeType | HLSMimeType | DASHMimeType
 }
 
-export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en'
+export type Lang = 'auto' | 'zh' | 'zh-CN' | 'en' | 'fa' | 'pa'
 
 export type VideoMimeType =
   | 'video/mp4'
