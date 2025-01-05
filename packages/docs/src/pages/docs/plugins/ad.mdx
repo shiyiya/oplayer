@@ -1,0 +1,22 @@
+## Ad
+
+```jsx
+import Player from '@oplayer/react'
+import ui from '@oplayer/ui'
+import { vttThumbnails } from '@oplayer/plugins'
+
+OPlayer.make('#player').use([ui(),     
+  Ad({
+      autoplay: false,
+      image: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
+      video: videoSource,
+      duration: 200,
+      skipDuration: 10,
+      target: 'https://oplayer.vercel.app',
+      plugins: [hls({ qualityControl: false })],
+      position:{
+      bottom: "10%",
+      left: "0.3em",
+      },
+      })
+```

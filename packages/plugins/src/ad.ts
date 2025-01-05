@@ -4,7 +4,11 @@ const topRight = $.css({
   position: 'absolute',
   right: '0.5em',
   top: '0.5em',
-  'z-index': 1
+  'z-index': 1,
+  display: "flex",
+  gap: "5px",
+  "align-items": "center",
+  "justify-content": "center"
 })
 
 const area = $.css(
@@ -28,7 +32,13 @@ const mute = $.css({
 
 type Options = {
   video?: string
-  image?: string
+  image?: string,
+  position?:{
+    left?: string;
+    bottom?: string;
+    top?: string;
+    right?: string;
+  },
   autoplay?: boolean
   plugins?: PlayerPlugin[]
   skipDuration?: number
@@ -45,10 +55,12 @@ export default ({
   plugins,
   target,
   autoplay,
-  onSkip
+  onSkip,
+  position
 }: Options): PlayerPlugin => ({
   name: 'oplayer-plugin-ad',
   version: __VERSION__,
+  key:"Ad",
   apply: (player) => {
     if (autoplay) {
       bootstrap()
@@ -83,7 +95,18 @@ export default ({
           cursor: 'pointer'
         })}`,
         {},
-        `<div class=${topRight}>
+        `<div class=${position ? 
+          $.css({
+          ...position,   
+          position: 'absolute',
+          'z-index': 1,
+          display: "flex",
+          gap: "5px",
+          "align-items": "center",
+          "justify-content": "center"
+        }) : 
+          topRight
+        }>
             ${
               skipDuration
                 ? `<div class=${area} skipDuration>${player.locales.get(
@@ -98,8 +121,8 @@ export default ({
             ${
               video
                 ? `
-               <div class='${area} ${mute}' volume>
-                <svg width="1em" height="1em" viewBox="0 0 1024 1024" version="1.1">
+              <div class='${area} ${mute}' volume> 
+                <svg width="1em" height="1.5em" viewBox="0 0 1024 1024" version="1.1">
                   <path d="M552.96 152.064v719.872c0 16.118-12.698 29.184-28.365 29.184a67.482 67.482 0 0 1-48.394-20.644L329.359 729.354a74.547 74.547 0 0 0-53.493-22.794H250.47c-104.386 0-189.03-87.101-189.03-194.56s84.644-194.56 189.03-194.56h25.396c20.07 0 39.3-8.192 53.473-22.794L476.18 143.503a67.482 67.482 0 0 1 48.436-20.623c15.646 0 28.344 13.066 28.344 29.184z m216.965 101.58a39.936 39.936 0 0 1 0-57.425 42.25 42.25 0 0 1 58.778 0c178.483 174.408 178.483 457.154 0 631.562a42.25 42.25 0 0 1-58.778 0 39.936 39.936 0 0 1 0-57.405 359.506 359.506 0 0 0 0-516.752zM666.542 373.884a39.731 39.731 0 0 1 0-55.235 37.52 37.52 0 0 1 53.944 0c104.305 106.783 104.305 279.921 0 386.704a37.52 37.52 0 0 1-53.944 0 39.731 39.731 0 0 1 0-55.235c74.486-76.288 74.486-199.946 0-276.234z" />
                 </svg>
               </div>`
@@ -125,7 +148,10 @@ export default ({
           .use(plugins || ([] as any))
           .create()
 
-        $volume!.addEventListener('click', () => {
+        $volume!.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation(); // Prevent the click event from bubbling to the $container
+          
           instance.isMuted ? instance.unmute() : instance.mute()
           $volume!.classList.toggle(mute)
         })
