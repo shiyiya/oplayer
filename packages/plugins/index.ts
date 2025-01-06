@@ -1,8 +1,8 @@
 import Chromecast from './src/chromecast'
 import AirPlay from './src/airplay'
-import vttThumbnails from './src/vttThumbnails'
 import Playlist from './src/playlist'
-import Ad from "./src/ad"
 
+import ad from './src/ad'
+import vttThumbnails from './src/vttThumbnails'
 
-export { Chromecast, AirPlay, vttThumbnails, Playlist, Ad }
+export { Chromecast, AirPlay, Playlist, ad, vttThumbnails }

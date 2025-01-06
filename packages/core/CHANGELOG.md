@@ -2,6 +2,10 @@
 
 ## UnRelease
 
+## [1.2.38-beta.0]
+
+- add Farsi (fa) and Pashto (pa) locales for internationalization of controls (#147)
+
 ## [1.2.34-beta.1]
 
 - fix(changeQuality): keep playing

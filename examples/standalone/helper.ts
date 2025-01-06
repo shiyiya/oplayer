@@ -1,7 +1,7 @@
 import { Player } from '@oplayer/core'
 import { MenuBar } from '@oplayer/ui/src/types'
 import { FORMAT_MENU } from './constants'
-import { vttThumbnails, Ad } from '@oplayer/plugins'
+import { vttThumbnails, ad } from '@oplayer/plugins'
 import hls from '@oplayer/hls'
 
 export const register = (player: Player) => {
@@ -35,14 +35,14 @@ export const register = (player: Player) => {
   )
 
   player.applyPlugin(
-    Ad({
+    ad({
       autoplay: false,
       image: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
       // video: VIDEO_LIST[1],
       duration: 10,
       skipDuration: 5,
       target: 'https://oplayer.vercel.app',
-      plugins: [hls({ qualityControl: false })],
+      plugins: [hls({ qualityControl: false })]
     })
   )
 }
