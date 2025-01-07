@@ -9,30 +9,30 @@
   "Mute": "غلی کول",
   "Speed": "چټکتیا",
   "LIVE": "ژوندی",
-  "WebFullscreen":"د تمام صفحه وب",
+  "WebFullscreen": "د تمام صفحه وب",
   "Chromecast": "کروم کاسټ",
-  "AirPlay":"ایر پلی",
-  
+  "AirPlay": "ایر پلی",
+
   "Language": "ژبه",
   "Screenshot": "سکرین شاټ",
   "Subtitle": "لاندې لیک",
   "Quality": "کیفیت",
   "Fullscreen": "پوره پرده",
-  "TextDecoder Not Supported": "د متن ډیکوډر ملاتړ نه لري",
+  "": "د متن ډیکوډر ملاتړ نه لري",
   "Settings": "ترتیبات",
   "Picture in Picture": "انځور په انځور",
-  
+
   "Danmaku": "دانماکو",
   "Display": "ښکاره کول",
   "Opacity": "روڼوالی",
   "FontSize": "د خط اندازه",
   "Display Area": "د ښودلو ساحه",
-  
+
   "Off": "بند",
   "Auto": "خودکار",
   "Default": "پېل شوی",
   "Normal": "عادي",
-  
+
   "%ss": "%s ثانیه",
   "Close": "بندول",
   "Can be closed after %ss": "د %s ثانیو وروسته تړل کېدای شي"
