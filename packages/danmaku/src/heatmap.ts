@@ -40,6 +40,7 @@ export default class Heatmap {
     public heatmap: boolean,
     public customHeatmap?: Options['customHeatmap']
   ) {
+    if(!player.context.ui.$progress) return
     const $progress = player.context.ui.$progress.firstElementChild
     const $root = document.createElement('div')
     this.$root = $root
