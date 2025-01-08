@@ -50,7 +50,7 @@ export const controllerBottomWrap = $.css({
 
   [`@global .${controllerHidden} &`]: {
     'pointer-events': 'none',
-    transform: 'translateY(calc(100% - 0.35em))',
+    transform: 'translateY(calc(100% - 0.55em))',
     padding: 0,
     '&::before': { opacity: 0 }
   },
@@ -66,7 +66,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   const el = $.render($.create(`div.${controllerBottomWrap}`), $el)
 
-  if (!config.theme.progress?.mini) {
+  if (!config.theme.progress?.mini || player.options.isLive) {
     $.css({
       [`@global .${controllerHidden} .${controllerBottomWrap}`]: {
         transform: 'translateY(100%)'
