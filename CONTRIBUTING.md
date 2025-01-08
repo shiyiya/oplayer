@@ -10,6 +10,10 @@ This project uses [pnpm](https://pnpm.io/) as package manager, please [install](
 npm i -g pnpm
 ```
 
+## Get-started
+
+https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project
+
 ## Clone & Install
 
 ```bash
