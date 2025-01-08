@@ -50,7 +50,7 @@ export const controllerBottomWrap = $.css({
 
   [`@global .${controllerHidden} &`]: {
     'pointer-events': 'none',
-    transform: 'translateY(calc(100% - 0.55em))',
+    transform: 'translateY(calc(100% - 0.35em))',
     padding: 0,
     '&::before': { opacity: 0 }
   },

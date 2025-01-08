@@ -57,7 +57,7 @@ export const progress = $.css(
     {
       position: 'relative',
       'box-sizing': 'border-box',
-      padding: '0.5em',
+      padding: '0.1em',
       cursor: 'pointer',
       width: '100%',
       'font-size': '0.75em',
