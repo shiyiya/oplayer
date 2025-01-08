@@ -11,7 +11,9 @@
   "LIVE": "زنده",
   "WebFullscreen": "تمام صفحه وب",
   "Chromecast": "کروم کاست",
-  "AirPlay": "ایر پلی",
+  "AirPlay":"ایر پلی",
+  "Playlist":"پلی‌لیست",
+  "Heatmap":"نقشهٔ حرارتی",
 
   "Language": "زبان",
   "Screenshot": "عکس صفحه",

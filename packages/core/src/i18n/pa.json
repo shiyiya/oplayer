@@ -11,7 +11,9 @@
   "LIVE": "ژوندی",
   "WebFullscreen": "د تمام صفحه وب",
   "Chromecast": "کروم کاسټ",
-  "AirPlay": "ایر پلی",
+  "AirPlay":"ایر پلی",
+  "Playlist":"پلې‌لسټ",
+  "Heatmap":"د ډېرو کتلو نقشه",
 
   "Language": "ژبه",
   "Screenshot": "سکرین شاټ",

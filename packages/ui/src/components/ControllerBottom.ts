@@ -66,7 +66,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   const el = $.render($.create(`div.${controllerBottomWrap}`), $el)
 
-  if (!config.theme.progress?.mini) {
+  if (!config.theme.progress?.mini || player.options.isLive) {
     $.css({
       [`@global .${controllerHidden} .${controllerBottomWrap}`]: {
         transform: 'translateY(100%)'
