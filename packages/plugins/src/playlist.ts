@@ -209,7 +209,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
   renderContainer() {
     const $playlist = `
     <div class="playlist-head">
-      <span class="playlist-head-title">${this.player.locales.get('PLAYLIST')}</span>
+      <span class="playlist-head-title">${this.player.locales.get('Playlist')}</span>
       <div class="playlist-back">${
         this.player.context.ui.icons.playlist ||
         `<svg viewBox="0 0 32 32"><path d="m 12.59,20.34 4.58,-4.59 -4.58,-4.59 1.41,-1.41 6,6 -6,6 z"></path></svg>`
@@ -238,7 +238,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
     this.player.context.ui.$root.appendChild(this.$root)
 
     this.player.context.ui.menu.register({
-      name: this.player.locales.get('PLAYLIST'),
+      name: this.player.locales.get('Playlist'),
       
       icon: `<svg style="transform: scale(1.2);" viewBox="0 0 1024 1024"><path d="M213.333333 426.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666666s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666666z m0-170.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666666H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667z m0 341.333333h256c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666667z m384 37.546667v180.48c0 16.64 17.92 26.88 32.426667 18.346667l150.613333-90.453334c13.653333-8.106667 13.653333-28.16 0-36.693333l-150.613333-90.453333a21.674667 21.674667 0 0 0-32.426667 18.773333z"></path></svg>`,
       position: 'top',
@@ -282,7 +282,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
 
   _updateHeader() {
     this.$root.querySelector('.playlist-head-title')!.textContent = `${this.player.locales.get(
-      'PLAYLIST'
+      'Playlist'
     )} (${this.currentIndex !== undefined ? `${this.currentIndex + 1}/` : ''}${this.options.sources.length})`
   }
 
