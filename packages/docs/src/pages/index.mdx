@@ -8,6 +8,7 @@ import ui from '@oplayer/ui'
 import Danmaku from '@oplayer/danmaku'
 import torrent from '@oplayer/torrent'
 import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
+import { ad } from '@oplayer/plugins'
 
 <div className="nx-rounded-sm nx-overflow-hidden" style={{ maxWidth: '1024px', margin: '2.5rem auto' }}>
   <Player
@@ -127,6 +128,15 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
       }),
       new Chromecast(),
       new AirPlay(),
+      ad({
+      autoplay: false,
+      image: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
+      // video: VIDEO_LIST[1],
+      duration: 10,
+      skipDuration: 2,
+      target: 'https://oplayer.vercel.app',
+      plugins: [hls({ qualityControl: false })]
+    })
     ]}
   />
 </div>
