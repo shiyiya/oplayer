@@ -175,7 +175,7 @@ export default ({
         if (skipDuration !== undefined) {
           count++
 
-          if (skipDuration - count > -1) {
+          if (skipDuration - count > 0) {
             $skip!.innerText = player.locales.get('Can be closed after %ss', skipDuration - count)
           } else {
             $skip!.innerText = player.locales.get('Close')
@@ -186,7 +186,7 @@ export default ({
           }
         }
 
-        if (duration - count > -1) {
+        if (duration - count > 0) {
           $duration.innerText = player.locales.get('%ss', duration - count)
         } else {
           destroy()
