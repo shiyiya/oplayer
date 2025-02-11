@@ -387,6 +387,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {
+    this.hasError = false
     return this._loader(source, {
       keepPlaying: true,
       keepTime: true,
@@ -397,6 +398,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   changeSource(source: Source | Promise<Source>, keepPlaying: boolean = true) {
+    this.hasError = false
     return this._loader(source, {
       keepPlaying,
       preEvent: 'videosourcechange',

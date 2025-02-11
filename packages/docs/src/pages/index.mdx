@@ -15,7 +15,7 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
     onEvent={(payload) => {
       console.log(payload)
     }}
-    source={{} as any}
+    source={{}}
     plugins={[
       ui({
         theme: {
@@ -127,7 +127,7 @@ import { Playlist, Chromecast, AirPlay } from '@oplayer/plugins'
         ]
       }),
       new Chromecast(),
-      new AirPlay(),
+      new AirPlay()
     ]}
   />
 </div>
