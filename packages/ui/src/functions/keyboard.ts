@@ -9,18 +9,18 @@ const VOLUME_SETUP = 10
 const SEEK_SETUP = 5
 
 const KEY_FN: Record<string, (player: Player, config: UIInterface['config']) => void> = {
-  ArrowUp: (player: Player) => {
+  ARROWUP: (player: Player) => {
     const nextVolume = player.volume * 100 + VOLUME_SETUP
     player.setVolume(nextVolume / 100)
     player.emit('notice', { text: player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`) })
   },
-  ArrowDown: (player: Player) => {
+  ARROWDOWN: (player: Player) => {
     const nextVolume = player.volume * 100 - VOLUME_SETUP
     player.setVolume(nextVolume / 100)
     player.emit('notice', { text: player.locales.get('Volume: %s', `${~~(player.volume * 100)}%`) })
   },
 
-  ArrowLeft: (player: Player, config) => {
+  ARROWLEFT: (player: Player, config) => {
     if (player.options.isLive || player.hasError) return
     const tar = player.currentTime - (config.theme.progress?.backward || SEEK_SETUP)
     if (tar < 0) {
@@ -33,7 +33,7 @@ const KEY_FN: Record<string, (player: Player, config: UIInterface['config']) => 
       text: `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
     })
   },
-  ArrowRight: (player: Player) => {
+  ARROWRIGHT: (player: Player) => {
     if (player.options.isLive || player.hasError) return
     player.seek(player.currentTime + SEEK_SETUP)
 
@@ -45,7 +45,7 @@ const KEY_FN: Record<string, (player: Player, config: UIInterface['config']) => 
   ' ': (player: Player) => player.togglePlay(),
   K: (player: Player) => player.togglePlay(),
 
-  Escape: (player: Player) => {
+  ESCAPE: (player: Player) => {
     if (player.isFullScreen) {
       player.exitFullscreen()
     } else if (player.$root.classList.contains(webFullScreen)) {

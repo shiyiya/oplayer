@@ -232,13 +232,15 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
         instance.setCurrentTrack(audioTracks.find((t) => (t.id as unknown as number) == defaultAudio)!)
       }
 
+      const currentAudio = instance.getCurrentTrackFor('audio')
+
       settingUpdater({
         name: 'Language',
         icon: player.context.ui.icons.lang,
         settings() {
           return audioTracks.map((it) => ({
             name: it.lang || 'unknown',
-            default: instance.getCurrentTrackFor('audio')?.id == it.id,
+            default: currentAudio?.index != null && currentAudio.index == it.index,
             value: it
           }))
         },
@@ -264,6 +266,8 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
         instance.setTextTrack(defaultSubtitle)
       }
 
+      const currentTrack = instance.getCurrentTrackFor('text')
+
       settingUpdater({
         name: 'Subtitle',
         icon: player.context.ui.icons.subtitle,
@@ -277,8 +281,8 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
           ].concat(
             textTracks.map((it) => ({
               name: it.lang || 'unknown',
-              default: instance.getCurrentTrackFor('text')?.id == it.id,
-              value: it.id
+              default: currentTrack?.index != null && currentTrack.index == it.index,
+              value: it.index
             }))
           )
         },
