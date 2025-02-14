@@ -67,9 +67,6 @@ importers:
       lint-staged:
         specifier: ^15.4.3
         version: 15.4.3
-      nextra:
-        specifier: 2.13.4
-        version: 2.13.4(patch_hash=lzd3lp6asxwn5o55s2tjjsvp3q)(next@14.2.24(@babel/core@7.26.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nx:
         specifier: ^19.8.14
         version: 19.8.14
@@ -157,6 +154,9 @@ importers:
       next:
         specifier: ^14.2.24
         version: 14.2.24(@babel/core@7.26.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.0)
+      nextra:
+        specifier: 2.13.4
+        version: 2.13.4(patch_hash=lzd3lp6asxwn5o55s2tjjsvp3q)(next@14.2.24(@babel/core@7.26.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nextra-theme-docs:
         specifier: 2.13.4
         version: 2.13.4(next@14.2.24(@babel/core@7.26.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.0))(nextra@2.13.4(patch_hash=lzd3lp6asxwn5o55s2tjjsvp3q)(next@14.2.24(@babel/core@7.26.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

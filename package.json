@@ -2,10 +2,7 @@
   "name": "oplayer",
   "version": "0.0.0",
   "private": true,
-  "engines": {
-    "node": ">=16",
-    "pnpm": ">=6"
-  },
+  "packageManager": "pnpm@9.12.3",
   "author": "shiyiya",
   "keywords": [
     "oplayer",
@@ -62,8 +59,7 @@
     "vite": "^5.4.14",
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-merge-exports": "^0.0.0",
-    "vitest": "^1.6.1",
-    "nextra": "2.13.4"
+    "vitest": "^1.6.1"
   },
   "pnpm": {
     "patchedDependencies": {
