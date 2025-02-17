@@ -62,9 +62,15 @@ class MpegtsPlugin implements PlayerPlugin {
         (globalThis as any).mpegts ||
         //@ts-expect-error
         (library ? await loadSDK(library, 'mpegts') : (await import('mpegts.js/dist/mpegts.js')).default)
+
+      MpegtsPlugin.library.LoggingControl.applyConfig({
+        enableAll: false
+      })
     }
 
     if (!MpegtsPlugin.library.isSupported()) return false
+
+    MpegtsPlugin.library.LoggingControl.addLogListener(this.logListener.bind(this))
 
     this.instance = MpegtsPlugin.library.createPlayer(
       {
@@ -75,25 +81,21 @@ class MpegtsPlugin implements PlayerPlugin {
       this.options.config
     )
 
-    const { player, instance } = this
-
-    instance.on(MpegtsPlugin.library.Events.ERROR, function (_, data) {
-      const { type, details, fatal } = data
-
-      if (fatal) {
-        player.hasError = true
-        player.emit('error', { ...data, pluginName: PLUGIN_NAME, message: type + ': ' + details })
-      }
-    })
-
-    instance.attachMediaElement($video)
-    instance.load()
+    this.instance.attachMediaElement($video)
+    this.instance.load()
 
     return this
   }
 
   destroy() {
     this.instance?.destroy()
+    MpegtsPlugin.library.LoggingControl.removeLogListener(this.logListener.bind(this))
+  }
+
+  logListener(level: string, msg: string) {
+    if (level === 'error') {
+      this.player.emit('error', { level, msg, pluginName: PLUGIN_NAME, message: msg })
+    }
   }
 }
 
