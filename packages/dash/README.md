@@ -33,20 +33,23 @@ npm i @oplayer/core @oplayer/dash dashjs
 
 ## DRM
 
-```js
-var protData = {
-  'com.widevine.alpha': {
-    serverURL: 'https://drm-widevine-licensing.axtest.net/AcquireLicense',
-    httpRequestHeaders: {
-      'X-AxDRM-Message':
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA'
-    },
-    priority: 0
+```ts
+// https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd
+ODash({
+  drm: {
+    'com.widevine.alpha': {
+      serverURL: 'https://drm-widevine-licensing.axtest.net/AcquireLicense',
+      httpRequestHeaders: {
+        'X-AxDRM-Message':
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA'
+      },
+      priority: 0
+    }
   }
-}
-
-player.changeSource({ src: 'https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd' })
-player.once('loaderchange', () => {
-  player.context.dash.instance.setProtectionData(protData)
 })
+
+// update drm
+player.context.dash.options.drm = {
+  // ...
+}
 ```

@@ -143,8 +143,16 @@ const player = Player.make<Ctx>('#player', {
       // source: DANMAKU //SUPER_DANMAKU
     }),
     new Playlist({
-      initialIndex: 3,
+      initialIndex: 0,
       sources: [
+        {
+          title: 'DASH DRM',
+          id: 'dash-drm'
+        },
+        {
+          title: 'Hls DRM',
+          id: 'hls-drm'
+        },
         {
           title: 'hls - muti quality & subtitle & audio',
           src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8'
@@ -198,12 +206,6 @@ const player = Player.make<Ctx>('#player', {
           highlights: highlight
         },
         {
-          title: 'BROKEN SOURCE & POSTER',
-          src: '//',
-          poster: '//',
-          duration: '00:00'
-        },
-        {
           title: "Disney's Oceans - MP4",
           src: 'https://vjs.zencdn.net/v/oceans.mp4',
           poster: 'https://vjs.zencdn.net/v/oceans.png',
@@ -232,7 +234,45 @@ const player = Player.make<Ctx>('#player', {
           // 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent',
           poster: 'https://api.imlazy.ink/img?webtorrent'
         }
-      ]
+      ],
+      customFetcher(player, source) {
+        if (source.id === 'dash-drm') {
+          ;(player.context.dash as ReturnType<typeof dash>).options.drm = {
+            'com.widevine.alpha': {
+              serverURL: 'https://drm-widevine-licensing.axtest.net/AcquireLicense',
+              httpRequestHeaders: {
+                'X-AxDRM-Message':
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJjb21fa2V5X2lkIjoiYjMzNjRlYjUtNTFmNi00YWUzLThjOTgtMzNjZWQ1ZTMxYzc4IiwibWVzc2FnZSI6eyJ0eXBlIjoiZW50aXRsZW1lbnRfbWVzc2FnZSIsImtleXMiOlt7ImlkIjoiOWViNDA1MGQtZTQ0Yi00ODAyLTkzMmUtMjdkNzUwODNlMjY2IiwiZW5jcnlwdGVkX2tleSI6ImxLM09qSExZVzI0Y3Iya3RSNzRmbnc9PSJ9XX19.4lWwW46k-oWcah8oN18LPj5OLS5ZU-_AQv7fe0JhNjA'
+              },
+              priority: 0
+            }
+          }
+          return {
+            ...source,
+            src: 'https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd'
+          }
+        } else if (source.id == 'hls-drm') {
+          ;(player.context.hls as ReturnType<typeof hls>).options.config = {
+            ...player.context.hls.options.config,
+            emeEnabled: true,
+            drmSystems: {
+              'com.widevine.alpha': {
+                licenseUrl: 'https://widevine-proxy.appspot.com/proxy'
+              }
+            },
+            licenseXhrSetup(xhr) {
+              xhr.setRequestHeader('content-type', 'application/octet-stream')
+              xhr.setRequestHeader('Authorization', 'Bearer token') // or other headers
+            }
+          }
+
+          return {} //TODO
+        } else {
+          ;(player.context.dash as ReturnType<typeof dash>).options.drm = null
+          ;(player.context.hls as ReturnType<typeof hls>).options.config.emeEnabled = false
+        }
+        return source
+      }
       // m3uList: {
       //   sourceFormat(info) {
       //     const chunk = info.title.substring(3).split(' ')
@@ -256,8 +296,6 @@ function stopLoad() {
   const u8 = Uint8Array.from(emptyBuffer)
   player.$video.src = URL.createObjectURL(new Blob([u8.buffer]))
 }
-
-let src: string = player.context.playlist.options.sources[initialIndex].src
 
 render(
   html`

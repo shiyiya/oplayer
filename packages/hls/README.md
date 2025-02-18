@@ -80,3 +80,28 @@ OHls({
   }
 })
 ```
+
+## DRM
+
+```ts
+OHls({
+  forceHLS: true, // use hls.js not native
+  config: {
+    emeEnabled: true,
+    drmSystems: {
+      'com.widevine.alpha': {
+        licenseUrl: 'https://widevine-proxy.appspot.com/proxy'
+      }
+    },
+    licenseXhrSetup(xhr) {
+      xhr.setRequestHeader('content-type', 'application/octet-stream')
+      xhr.setRequestHeader('Authorization', 'Bearer token') // or other headers
+    }
+  }
+})
+
+// update
+player.context.hls.options.config = {
+  //...
+}
+```
