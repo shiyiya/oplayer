@@ -195,7 +195,7 @@ class HlsPlugin implements PlayerPlugin {
   }
 }
 
-export default function create(options?: HlsPluginOptions): PlayerPlugin {
+export default function create(options?: HlsPluginOptions) {
   return new HlsPlugin(options)
 }
 

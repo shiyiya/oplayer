@@ -3,6 +3,7 @@ import type {
   BitrateInfo,
   MediaPlayerClass,
   MediaPlayerSettingClass,
+  ProtectionDataSet,
   QualityChangeRenderedEvent
 } from 'dashjs'
 
@@ -35,6 +36,8 @@ export interface DashPluginOptions {
    * @type {MediaPlayerSettingClass}
    */
   config?: MediaPlayerSettingClass
+
+  drm?: ProtectionDataSet
 
   // qualityLabelBuilder?: (instance: MediaPlayerClass) => {
   //   name: string
@@ -83,7 +86,7 @@ class DashPlugin implements PlayerPlugin {
 
   instance?: MediaPlayerClass
 
-  options: RequiredPartial<DashPluginOptions, 'config' | 'library'> = {
+  options: RequiredPartial<DashPluginOptions, 'config' | 'library' | 'drm'> = {
     textControl: true,
     audioControl: true,
     qualityControl: true,
@@ -119,9 +122,10 @@ class DashPlugin implements PlayerPlugin {
     this.instance = DashPlugin.library.MediaPlayer().create()
 
     const { player, instance } = this
-    const { config } = this.options
+    const { drm, config } = this.options
 
     if (config) instance.updateSettings(config)
+    if (drm) instance.setProtectionData(drm)
     instance.initialize($video, source.src, $video.autoplay)
 
     instance.on(DashPlugin.library.MediaPlayer.events.ERROR, function (event: any) {
@@ -325,6 +329,6 @@ const removeSetting = (player: Player) => {
   )
 }
 
-export default function create(options?: DashPluginOptions): PlayerPlugin {
+export default function create(options?: DashPluginOptions) {
   return new DashPlugin(options)
 }
