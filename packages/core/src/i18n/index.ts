@@ -1,8 +1,8 @@
 import type { Lang } from '../types'
 import { mergeDeep } from '../utils'
 import CN from './zh-CN.json'
-import FA from "./fa.json"
-import PA from "./pa.json"
+import FA from './fa.json'
+import PA from './pa.json'
 export default class I18n {
   public lang: Lang
 
@@ -14,11 +14,16 @@ export default class I18n {
     en: Object.keys(CN).reduce<Record<string, string>>(
       (previous, current) => ((previous[current] = current), previous),
       {}
-    ),
+    )
   }
 
-  constructor(defaultLang: Lang) {
+  constructor(defaultLang: Lang, userLanguages?: Partial<Record<Lang, any>>) {
     this.lang = defaultLang === 'auto' ? (navigator.language as Lang) : defaultLang
+
+    if (userLanguages) {
+      mergeDeep(this.languages, userLanguages)
+    }
+
     if (!this.languages[this.lang]) {
       navigator.languages.some((lang) => {
         if (this.languages[lang as Lang]) {
@@ -37,6 +42,7 @@ export default class I18n {
         return false
       })
     }
+
     if (!this.languages[this.lang]) this.lang = 'en'
   }
 
