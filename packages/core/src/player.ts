@@ -11,6 +11,7 @@ import type {
   PlayerListener,
   PlayerOptions,
   PlayerPlugin,
+  RequiredPartial,
   Source
 } from './types'
 
@@ -28,13 +29,13 @@ const defaultOptions = {
   isLive: false,
   autopause: true,
   isNativeUI: () => isQQBrowser
-}
+} as const
 
 export class Player<Context extends Record<string, any> = Record<string, any>> {
   static players: Player[] = []
 
   container: HTMLElement
-  options: Required<PlayerOptions>
+  options: RequiredPartial<PlayerOptions, 'languages'>
 
   locales: I18n
   eventEmitter: EventEmitter
@@ -62,7 +63,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
       typeof options === 'string' ? { source: { src: options } } : options
     )
 
-    this.locales = new I18n(this.options.lang)
+    this.locales = new I18n(this.options.lang, this.options.languages)
     this.eventEmitter = new EventEmitter()
   }
 

@@ -57,6 +57,7 @@ export interface PlayerOptions {
   playsinline?: boolean
   preload?: 'auto' | 'metadata' | 'none'
   lang?: Lang
+  languages?: Partial<Record<Lang, any>> 
   isLive?: boolean
   videoAttr?: Record<string, boolean | string>
   isNativeUI?: () => boolean
