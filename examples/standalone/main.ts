@@ -38,7 +38,7 @@ function stopLoad() {
   player.$video.src = URL.createObjectURL(new Blob([u8.buffer]))
 }
 
-let player: Player
+let player: Player<Ctx>
 
 render(
   html`
