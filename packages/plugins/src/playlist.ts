@@ -85,7 +85,7 @@ export default class PlaylistPlugin implements PlayerPlugin {
         })
       }
       this.player.context.ui.keyboard?.register({
-        l: () => {
+        L: () => {
           this.$root.classList.toggle('playlist__active')
         }
       })
