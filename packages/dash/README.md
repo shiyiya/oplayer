@@ -26,7 +26,7 @@ npm i @oplayer/core @oplayer/dash dashjs
       poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
     }
   })
-    .use([ODash({ library: 'https://cdn.dashjs.org/latest/dash.all.min.js' })])
+    .use([ODash({ library: 'https://cdn.dashjs.org/v4.7.4/dash.all.min.js' })])
     .create()
 </script>
 ```
