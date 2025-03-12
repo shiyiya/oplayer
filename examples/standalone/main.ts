@@ -163,7 +163,9 @@ const init = () => {
         library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js'
       }),
       hls({ forceHLS: true }),
-      dash(),
+      dash({
+        library: 'http://cdn.dashjs.org/latest/modern/umd/dash.all.min.js'
+      }),
       mpegts(),
       new Danmaku({
         enable: true
@@ -171,7 +173,7 @@ const init = () => {
         // source: DANMAKU //SUPER_DANMAKU
       }),
       new Playlist({
-        initialIndex: 0,
+        initialIndex: 8,
         sources: [
           {
             title: 'DASH DRM',

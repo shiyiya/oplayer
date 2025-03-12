@@ -11,6 +11,12 @@ const PLUGIN_NAME = 'oplayer-plugin-dash'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
+interface MediaPlayerClassCombine extends MediaPlayerClass {
+  getRepresentationsByType: (type: string) => any
+  getCurrentRepresentationForType: (type: string) => any
+  setRepresentationForTypeByIndex: (index: any) => any
+}
+
 export interface DashPluginOptions {
   library?: string
   matcher?: Matcher
@@ -84,7 +90,7 @@ class DashPlugin implements PlayerPlugin {
 
   player!: Player
 
-  instance?: MediaPlayerClass
+  instance?: MediaPlayerClassCombine
 
   options: RequiredPartial<DashPluginOptions, 'config' | 'library' | 'drm'> = {
     textControl: true,
@@ -119,7 +125,7 @@ class DashPlugin implements PlayerPlugin {
 
     if (!DashPlugin.library.supportsMediaSource()) return false
 
-    this.instance = DashPlugin.library.MediaPlayer().create()
+    this.instance = DashPlugin.library.MediaPlayer().create() as MediaPlayerClassCombine
 
     const { player, instance } = this
     const { drm, config } = this.options
@@ -135,6 +141,13 @@ class DashPlugin implements PlayerPlugin {
     })
 
     if (player.context.ui?.setting) {
+      // @ts-ignore
+      if (DashPlugin.library.Version.startsWith('5.')) {
+        instance.getBitrateInfoListFor = instance.getRepresentationsByType
+        instance.getQualityFor = instance.getCurrentRepresentationForType
+        instance.setQualityFor = instance.setRepresentationForTypeByIndex
+      }
+
       generateSetting(player, instance, this.options)
     }
 
@@ -150,14 +163,14 @@ class DashPlugin implements PlayerPlugin {
   }
 }
 
-function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrate?: boolean) {
-  const bitrateInfoList = instance.getBitrateInfoListFor(type)
+function getVideoQualityOptions(instance: MediaPlayerClass, withBitrate?: boolean) {
+  const bitrateInfoList = instance.getBitrateInfoListFor('video')
   const isAuto = Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video)
   const videoQuality = instance.getQualityFor('video')
   if (bitrateInfoList.length > 1) {
     return bitrateInfoList
       .toSorted((a, b) => b.bitrate - a.bitrate)
-      .map((it) => {
+      .map((it: any) => {
         let name = it.height + 'p'
 
         if (withBitrate) {
@@ -169,8 +182,8 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
 
         return {
           name,
-          default: isAuto ? false : videoQuality == it.qualityIndex,
-          value: it.qualityIndex
+          default: isAuto ? false : videoQuality == (it.qualityIndex || it.absoluteIndex),
+          value: it.qualityIndex || it.absoluteIndex
         }
       })
   }
@@ -197,10 +210,16 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
               default: Boolean(instance.getSettings().streaming?.abr?.autoSwitchBitrate?.video),
               value: -1
             }
-          ].concat(getSettingsByType(instance, 'video', options.withBitrate)),
+          ].concat(getVideoQualityOptions(instance, options.withBitrate)),
         onChange({ value }) {
+          //TODO: immediate auto
           instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { video: value == -1 } } }
+            streaming: {
+              abr: { autoSwitchBitrate: { video: value == -1 } },
+              buffer: {
+                fastSwitchEnabled: true
+              }
+            }
           })
           if (value != -1) {
             instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
