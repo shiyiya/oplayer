@@ -135,7 +135,12 @@ class DashPlugin implements PlayerPlugin {
     })
 
     if (player.context.ui?.setting) {
-      generateSetting(player, instance, this.options)
+      // @ts-ignore
+      if (instance.getBitrateInfoListFor) {
+        generateSetting(player, instance, this.options)
+      } else {
+        console.warn('https://github.com/shiyiya/oplayer/issues/155')
+      }
     }
 
     return this
