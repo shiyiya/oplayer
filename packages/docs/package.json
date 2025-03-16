@@ -16,6 +16,7 @@
     "@oplayer/mpegts": "workspace:*",
     "@oplayer/plugins": "workspace:*",
     "@oplayer/react": "workspace:*",
+    "@oplayer/shaka": "workspace:*",
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "mdx-embed": "^1.1.2",
@@ -23,11 +24,12 @@
     "nextra": "2.13.4",
     "nextra-theme-docs": "2.13.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "shaka-player": "^4.14.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "sass": "^1.85.0"
+    "sass": "^1.85.1"
   }
 }
