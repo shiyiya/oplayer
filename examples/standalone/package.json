@@ -20,8 +20,10 @@
     "@oplayer/plugins": "file:../../packages/plugins",
     "@oplayer/torrent": "file:../../packages/torrent",
     "@oplayer/ui": "file:../../packages/ui",
+    "@oplayer/shaka": "file:../../packages/shaka",
     "dashjs": "^4.6.0",
     "hls.js": "^1.5.15",
-    "lit": "^2.8.0"
+    "lit": "^2.8.0",
+    "shaka-player": "^4.14.1"
   }
 }

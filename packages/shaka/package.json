@@ -1,0 +1,40 @@
+{
+  "name": "@oplayer/shaka",
+  "version": "1.2.26-beta.0",
+  "description": "shaka-player plugin for oplayer",
+  "type": "module",
+  "main": "./dist/index.es.js",
+  "types": "./dist/src/index.d.ts",
+  "sideEffects": false,
+  "author": "shiyiya",
+  "homepage": "https://github.com/shiyiya/oplayer",
+  "keywords": [
+    "oplayer-plugin",
+    "shaka-player"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently -n es,dts \"vite build --watch\"  \"tsc --emitDeclarationOnly --watch\"",
+    "tsc": "tsc --noEmit && echo",
+    "build": "vite build && tsc --emitDeclarationOnly"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not op_mini all",
+    "IE 11"
+  ],
+  "peerDependencies": {
+    "@oplayer/core": ">=1.0.0",
+    "shaka-player": "^3"
+  },
+  "devDependencies": {
+    "@oplayer/core": "workspace:*",
+    "shaka-player": "^4.14.1"
+  }
+}

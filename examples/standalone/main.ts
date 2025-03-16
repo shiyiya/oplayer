@@ -6,6 +6,7 @@ import dash from '@oplayer/dash'
 import hls from '@oplayer/hls'
 import mpegts from '@oplayer/mpegts'
 import ui from '@oplayer/ui'
+import shaka from '@oplayer/shaka'
 import torrent from '@oplayer/torrent'
 import { Playlist, Chromecast } from '@oplayer/plugins'
 
@@ -165,6 +166,7 @@ const init = () => {
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
+      shaka(),
       new Danmaku({
         enable: true
         // displaySender: true,
@@ -174,15 +176,8 @@ const init = () => {
         initialIndex: 0,
         sources: [
           {
-            title: 'DASH DRM',
-            id: 'dash-drm'
-          },
-          {
-            title: 'Hls DRM',
-            id: 'hls-drm'
-          },
-          {
             title: 'hls - muti quality & subtitle & audio',
+            format: 'shaka',
             src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8'
             // danmaku: SUPER_DANMAKU
           },
@@ -261,6 +256,14 @@ const init = () => {
             src: 'https://webtorrent.io/torrents/sintel.torrent',
             // 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent',
             poster: 'https://api.imlazy.ink/img?webtorrent'
+          },
+          {
+            title: 'DASH DRM',
+            id: 'dash-drm'
+          },
+          {
+            title: 'Hls DRM',
+            id: 'hls-drm'
           }
         ],
         customFetcher(player, source) {
