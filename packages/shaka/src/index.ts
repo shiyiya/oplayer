@@ -95,6 +95,12 @@ class ShakaPlugin implements PlayerPlugin {
       this.instance.getNetworkingEngine()?.registerRequestFilter(requestFilter)
     }
 
+    //TODO: listen quality/audio/text change
+    // const listener = new ShakaPlugin.library.util.EventManager()
+    // listener.listen(this.instance, `mediaqualitychanged`, (event: any) => {
+    //   console.log(event)
+    // })
+
     this.instance.addEventListener('error', function (event) {
       player.emit('error', { pluginName: ShakaPlugin.name, ...event })
     })

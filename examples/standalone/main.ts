@@ -166,7 +166,9 @@ const init = () => {
       hls({ forceHLS: true }),
       dash(),
       mpegts(),
-      shaka(),
+      shaka({
+        library: 'https://cdn.jsdelivr.net/npm/shaka-player@2.5.10/dist/shaka-player.compiled.debug.js'
+      }),
       new Danmaku({
         enable: true
         // displaySender: true,
