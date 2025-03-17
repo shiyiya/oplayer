@@ -276,7 +276,6 @@ const setupAudioSelection = (player: Player, instance: shaka.Player) => {
 
   if (!(audioTracks.length > 1)) return
 
-  const current = audioTracks[0]
   const levels = audioTracks
     .sort((a, b) => {
       return a.language.localeCompare(b.language)
@@ -285,7 +284,7 @@ const setupAudioSelection = (player: Player, instance: shaka.Player) => {
       return {
         //@ts-expect-error
         name: `${level.language} ${ShakaPlugin.library.util.MimeUtils.getNormalizedCodec?.(level.codecs) || level.codecs}`,
-        default: level == current,
+        default: level.active,
         value: level
       }
     })
