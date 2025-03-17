@@ -24,12 +24,12 @@ export interface ShakaPluginOptions {
 }
 
 const defaultMatcher: Matcher = (source) => {
-  if (source.format && ['m3u8', 'mdp', 'shaka'].includes(source.format)) {
+  if (source.format && ['m3u8', 'mpd', 'shaka'].includes(source.format)) {
     return true
   }
   return (
     (source.format === 'auto' || typeof source.format === 'undefined') &&
-    /(m3u8|mdp|shaka)(#|\?|$)/i.test(source.src)
+    /(m3u8|mpd|shaka)(#|\?|$)/i.test(source.src)
   )
 }
 
@@ -93,6 +93,14 @@ class ShakaPlugin implements PlayerPlugin {
     // TODO: listen quality/audio/text change
     const eventManager = new ShakaPlugin.library.util.EventManager()
 
+    eventManager.listen(this.instance, 'loaded', (event) => {
+      player.emit('canplay', event)
+    })
+
+    eventManager.listen(this.instance, 'loading', (event) => {
+      player.emit('waiting', event)
+    })
+
     eventManager.listen(this.instance, 'error', (event) => {
       player.emit('error', { pluginName: ShakaPlugin.name, ...event })
     })
@@ -104,10 +112,20 @@ class ShakaPlugin implements PlayerPlugin {
     }
 
     if (player.options.isLive) {
-      player.$root.querySelector('[aria-label="time"')?.parentElement?.addEventListener('click', () => {
-        player.seek(this.instance?.seekRange().end || 0)
-      })
+      const button = player.$root.querySelector('[aria-label="time"')?.parentElement
+      if (button) {
+        eventManager.listen(button, 'click', () => {
+          player.seek(this.instance?.seekRange().end || 0)
+        })
+      }
+
       //TODO: seekable
+      player.listeners.seeking = () => {
+        // console.log('seeking')
+      }
+      // player.listeners.waiting = () => {
+      //   console.log('waiting')
+      // }
       Object.defineProperty(player, 'currentTime', () => 0)
     }
 

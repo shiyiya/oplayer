@@ -18,8 +18,8 @@ const loadingListener = (player: Player) => {
     if (player.$video.preload == 'none') removeClass()
   })
 
-  player.on(['seeking', 'videoqualitychange', 'videosourcechange'], addClass)
-  player.on(['canplaythrough', 'playing', 'pause', 'seeked', 'error'], removeClass)
+  player.on(['loading', 'seeking', 'videoqualitychange', 'videosourcechange'], addClass)
+  player.on(['loaded', 'canplaythrough', 'playing', 'pause', 'seeked', 'error'], removeClass)
 
   // safari 不预加载, 当 autoplay = true 才触发 canplay(预加载), 改变视频地址后默认预加载(或者是有用户交互?)
   // chrome 自动播放失败也可能无 canplay 事件
@@ -31,11 +31,15 @@ const loadingListener = (player: Player) => {
 
   // why playing:  暂停很久后在播放可能会卡很久
   player.on(['waiting', 'playing'], ({ type }) => {
+    const timeWhenWaiting = player.currentTime
+
+    if (!timeWhenWaiting) return
+
     if (type == 'waiting') addClass()
 
     // Browsers may emit a timeupdate event after a waiting event. In order to prevent
     // premature removal of the waiting class, wait for the time to change.
-    const timeWhenWaiting = player.currentTime
+
     const timeUpdateListener = () => {
       if (timeWhenWaiting !== player.currentTime) {
         removeClass()

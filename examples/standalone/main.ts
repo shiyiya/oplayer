@@ -60,7 +60,7 @@ const init = () => {
   player = Player.make<Ctx>('#player', {
     // muted: true,
     volume: 0.5,
-    // isLive: true,
+    isLive: true,
     // autoplay: true,
     // preload: 'none',
     source: {
@@ -180,7 +180,7 @@ const init = () => {
           {
             title: 'shaka mdp',
             format: 'shaka',
-            src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd'
+            src: 'https://bpcdnmanprod.nexttv.ht.hr/bpk-tv/HRT1/default/index.mpd'
           },
           {
             title: 'hls - muti quality & subtitle & audio',
