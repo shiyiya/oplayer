@@ -18,13 +18,8 @@ export interface ShakaPluginOptions {
 
   qualityControl?: boolean
 
-  /**
-   * @default: true
-   */
   audioControl?: boolean
-  /**
-   * @default: true
-   */
+
   textControl?: boolean
 }
 
@@ -34,7 +29,7 @@ const defaultMatcher: Matcher = (source) => {
   }
   return (
     (source.format === 'auto' || typeof source.format === 'undefined') &&
-    /(m3u8|mdp)(#|\?|$)/i.test(source.src)
+    /(m3u8|mdp|shaka)(#|\?|$)/i.test(source.src)
   )
 }
 
@@ -68,7 +63,7 @@ class ShakaPlugin implements PlayerPlugin {
   async load(player: Player, source: Source) {
     if (!this.options.matcher(source)) return false
 
-    const { library, config, requestFilter } = this.options
+    const { library, config, requestFilter, qualityControl, audioControl, textControl } = this.options
 
     if (!ShakaPlugin.library) {
       ShakaPlugin.library =
@@ -95,13 +90,10 @@ class ShakaPlugin implements PlayerPlugin {
       this.instance.getNetworkingEngine()?.registerRequestFilter(requestFilter)
     }
 
-    //TODO: listen quality/audio/text change
-    // const listener = new ShakaPlugin.library.util.EventManager()
-    // listener.listen(this.instance, `mediaqualitychanged`, (event: any) => {
-    //   console.log(event)
-    // })
+    // TODO: listen quality/audio/text change
+    const eventManager = new ShakaPlugin.library.util.EventManager()
 
-    this.instance.addEventListener('error', function (event) {
+    eventManager.listen(this.instance, 'error', (event) => {
       player.emit('error', { pluginName: ShakaPlugin.name, ...event })
     })
 
@@ -111,8 +103,37 @@ class ShakaPlugin implements PlayerPlugin {
       player.emit('error', { pluginName: ShakaPlugin.name, ...error })
     }
 
+    if (player.options.isLive) {
+      Object.defineProperty(player.$video, 'currentTime', {
+        get: () => {
+          return this.instance!.seekRange().end
+        }
+      })
+      Object.defineProperty(player.$video, 'duration', {
+        get: () => {
+          return this.instance!.seekRange().end - this.instance!.seekRange().start
+        }
+      })
+    }
+
     if (player.context.ui) {
-      setupQuality(player, this.instance, this.options)
+      if (qualityControl) {
+        setupQuality(player, this.instance)
+        // eventManager.listen(this.instance, 'variantchanged', () => {})
+        // eventManager.listen(this.instance, 'trackschanged', () => {})
+      }
+
+      if (audioControl) {
+        setupAudioSelection(player, this.instance!)
+        // eventManager.listen(this.instance, 'audiotrackschanged', () => {})
+      }
+
+      if (textControl) {
+        setupTextSelection(player, this.instance!)
+        // eventManager.listen(this.instance, 'texttrackvisibility', () => {})
+        // eventManager.listen(this.instance, 'textchanged', (e) => {})
+        // eventManager.listen(this.instance, 'trackschanged', () => {})
+      }
     }
 
     return this
@@ -131,137 +152,263 @@ export default function create(options?: ShakaPluginOptions) {
   return new ShakaPlugin(options)
 }
 
-const setupQuality = (player: Player, instance: shaka.Player, options: ShakaPlugin['options']) => {
-  if (options.qualityControl) {
-    const variantList = instance.getVariantTracks().filter((t) => t.type === 'variant')
+const setupQuality = (player: Player, instance: shaka.Player) => {
+  // https://github.com/shaka-project/shaka-player/blob/1f336dd319ad23a6feb785f2ab05a8bc5fc8e2a2/ui/resolution_selection.js#L90
+  let tracks: shaka.extern.Track[] = []
 
-    if (variantList.length < 2) return
+  if (instance.getLoadMode() != shaka.Player.LoadMode.SRC_EQUALS) {
+    tracks = instance.getVariantTracks()
+  }
 
-    const levels = variantList
-      .sort((a, b) => {
-        if (a.language == b.language) {
-          const vsHeight = !(!a.height || !b.height)
-          if (vsHeight && a.height == b.height) {
-            return a.bandwidth - b.bandwidth
-          }
-          return !a.height || !b.height ? a.bandwidth - b.bandwidth : a.height - b.height
-        }
-        return a.language.localeCompare(b.language)
-      })
-      .map((level) => {
-        return {
-          name: (level.height || level.bandwidth) + ' ' + level.language,
-          default: false,
-          value: level
-        }
-      })
-    settingUpdater({
-      name: 'Quality',
-      icon: player.context.ui.icons.quality,
-      settings: [
-        {
-          name: player.locales.get('Auto'),
-          default: true,
-          value: -1
-        }
-      ].concat(levels as any),
-      onChange({ value }) {
-        const isAuto = value == -1
-        instance.configure({ abr: { enabled: isAuto } })
-        if (!isAuto) {
-          instance.selectVariantTrack(value, /* clearBuffer */ true)
-        }
+  const selectedTrack = tracks.find((track) => track.active)
+
+  if (selectedTrack) {
+    tracks = tracks.filter((track) => {
+      if (track.language != selectedTrack.language) {
+        return false
       }
+      if (
+        track.channelsCount &&
+        selectedTrack.channelsCount &&
+        track.channelsCount != selectedTrack.channelsCount
+      ) {
+        return false
+      }
+      if (JSON.stringify(track.audioRoles) != JSON.stringify(selectedTrack.audioRoles)) {
+        return false
+      }
+      return true
     })
   }
 
-  if (options.audioControl) {
-    const variantList = instance.getAudioLanguagesAndRoles()
+  if (instance.isAudioOnly()) {
+    tracks = tracks.filter((track, idx) => {
+      return tracks.findIndex((t) => t.bandwidth == track.bandwidth) == idx
+    })
+  } else {
+    const audiosIds = [...new Set(tracks.map((t) => t.audioId))].filter((t) => t !== null)
 
-    if (variantList.length < 2) return
+    if (audiosIds.length > 1) {
+      tracks = tracks.filter((track, idx) => {
+        const otherIdx = tracks.findIndex((t) => {
+          const ret =
+            t.height == track.height &&
+            t.videoBandwidth == track.videoBandwidth &&
+            t.frameRate == track.frameRate &&
+            t.hdr == track.hdr &&
+            t.videoLayout == track.videoLayout
+          return ret
+        })
+        return otherIdx == idx
+      })
+    } else {
+      tracks = tracks.filter((track, idx) => {
+        const otherIdx = tracks.findIndex((t) => {
+          const ret =
+            t.height == track.height &&
+            t.bandwidth == track.bandwidth &&
+            t.frameRate == track.frameRate &&
+            t.hdr == track.hdr &&
+            t.videoLayout == track.videoLayout
 
-    const current = variantList[0]
-    const levels = variantList
+          return ret
+        })
+        return otherIdx == idx
+      })
+    }
+  }
+
+  if (!(tracks.length > 1)) return
+
+  if (instance.isAudioOnly()) {
+    tracks.sort((t1, t2) => {
+      return t2.bandwidth - t1.bandwidth
+    })
+  } else {
+    tracks.sort((t1, t2) => {
+      if (t2.height == t1.height || t1.height == null || t2.height == null) {
+        return t2.bandwidth - t1.bandwidth
+      }
+      return t2.height - t1.height
+    })
+  }
+
+  const abrEnabled = instance.getConfiguration().abr.enabled
+
+  const settings = tracks.map((t) => {
+    return {
+      name:
+        !instance.isAudioOnly() && t.height && t.width
+          ? getResolutionLabel_(t, tracks)
+          : t.bandwidth
+            ? Math.round(t.bandwidth / 1000) + ' kbits/s'
+            : 'Unknown',
+      default: !abrEnabled && t == selectedTrack,
+      value: t
+    }
+  })
+
+  settingUpdater({
+    player,
+    name: 'Quality',
+    icon: player.context.ui.icons.quality,
+    settings: [
+      {
+        name: player.locales.get('Auto'),
+        default: abrEnabled,
+        value: -1
+      }
+    ].concat(settings as any),
+    onChange({ value }) {
+      const isAuto = value == -1
+      instance.configure({ abr: { enabled: isAuto } })
+      if (!isAuto) {
+        instance.selectVariantTrack(value, /* clearBuffer */ true)
+      } else {
+        setupQuality(player, instance)
+      }
+    }
+  })
+}
+
+const setupAudioSelection = (player: Player, instance: shaka.Player) => {
+  const audioTracks = instance.getAudioLanguagesAndRoles()
+
+  if (!(audioTracks.length > 1)) return
+
+  const current = audioTracks[0]
+  const levels = audioTracks
+    .sort((a, b) => {
+      return a.language.localeCompare(b.language)
+    })
+    .map((level) => {
+      return {
+        name: level.language,
+        default: level == current,
+        value: level
+      }
+    })
+  settingUpdater({
+    player,
+    name: 'Language',
+    icon: player.context.ui.icons.lang,
+    settings: levels,
+    onChange({ value }) {
+      instance.selectAudioLanguage(value.language, value.role)
+    }
+  })
+}
+
+const setupTextSelection = (player: Player, instance: shaka.Player) => {
+  const tracks = instance.getTextTracks()
+
+  if (!(tracks.length > 1)) return
+
+  const isTextTrackVisible = instance.isTextTrackVisible()
+
+  const levels = [
+    {
+      name: player.locales.get('Off'),
+      default: !isTextTrackVisible,
+      value: -1
+    }
+  ].concat(
+    tracks
       .sort((a, b) => {
         return a.language.localeCompare(b.language)
       })
       .map((level) => {
         return {
           name: level.language,
-          default: level == current,
+          default: isTextTrackVisible && level.active,
           value: level
         }
-      })
-    settingUpdater({
-      name: 'Language',
-      icon: player.context.ui.icons.lang,
-      settings: levels,
-      onChange({ value }) {
-        instance.selectAudioLanguage(value.language, value.role)
-      }
-    })
-  }
+      }) as any
+  )
 
-  if (options.textControl) {
-    const variantList = instance.getTextTracks()
+  console.log(levels)
 
-    if (variantList.length < 2) return
+  settingUpdater({
+    player,
+    name: 'Subtitle',
+    icon: player.context.ui.icons.lang,
+    settings: levels,
+    onChange({ value }) {
+      if (value != -1) instance.selectTextTrack(value)
+      instance.setTextTrackVisibility(value != -1)
+    }
+  })
+}
 
-    const current = variantList[0]
-    const isEnable = instance.isTextTrackVisible()
-
-    const levels = variantList
-      .sort((a, b) => {
-        return a.language.localeCompare(b.language)
-      })
-      .map((level) => {
-        return {
-          name: level.language,
-          default: isEnable && level == current,
-          value: level
-        }
-      })
-
-    settingUpdater({
-      name: 'Subtitle',
-      icon: player.context.ui.icons.subtitle,
-      settings: [
-        {
-          name: player.locales.get('Off'),
-          default: !isEnable,
-          value: -1
-        }
-      ].concat(levels as any),
-      onChange({ value }) {
-        if (value != -1) {
-          instance.selectTextTrack(value)
-        }
-        instance.setTextTrackVisibility(value !== -1)
-      }
-    })
-  }
-
-  function settingUpdater(arg: {
-    icon: string
+function settingUpdater(arg: {
+  icon: string
+  name: string
+  settings: {
     name: string
-    settings: {
-      name: string
-      default: boolean
-      value: any
-    }[]
-    onChange: (it: { value: any }) => void
-  }) {
-    const settings = arg.settings
-    const { name, icon, onChange } = arg
+    default: boolean
+    value: any
+  }[]
+  player: Player
+  onChange: (it: { value: any }) => void
+}) {
+  const { name, icon, onChange, player, settings } = arg
 
-    player.context.ui.setting.unregister(`${ShakaPlugin.name}-${name}`)
-    player.context.ui.setting.register({
-      name: player.locales.get(name),
-      icon,
-      onChange,
-      type: 'selector',
-      key: `${ShakaPlugin.name}-${name}`,
-      children: settings
-    })
+  player.context.ui.setting.unregister(`${ShakaPlugin.name}-${name}`)
+  player.context.ui.setting.register({
+    name: player.locales.get(name),
+    icon,
+    onChange,
+    type: 'selector',
+    key: `${ShakaPlugin.name}-${name}`,
+    children: settings
+  })
+}
+
+function getResolutionLabel_(track: Shaka.extern.Track, tracks: Shaka.extern.Track[]) {
+  const trackHeight = track.height || 0
+  const trackWidth = track.width || 0
+  let height = trackHeight
+  const aspectRatio = trackWidth / trackHeight
+  if (aspectRatio > 16 / 9) {
+    height = Math.round((trackWidth * 9) / 16)
   }
+  let text = height + 'p'
+  if (height == 2160) {
+    text = '4K'
+  }
+  const frameRates = new Set()
+  for (const item of tracks) {
+    if (item.frameRate) {
+      frameRates.add(Math.round(item.frameRate))
+    }
+  }
+  if (frameRates.size > 1) {
+    const frameRate = track.frameRate
+    if (frameRate && (frameRate >= 50 || frameRate <= 20)) {
+      text += Math.round(frameRate)
+    }
+  }
+  if (track.hdr == 'PQ' || track.hdr == 'HLG') {
+    text += ' (HDR)'
+  }
+  if (track.videoLayout == 'CH-STEREO') {
+    text += ' (3D)'
+  }
+  const hasDuplicateResolution = tracks.some((otherTrack) => {
+    return otherTrack != track && otherTrack.height == track.height
+  })
+  if (hasDuplicateResolution) {
+    const hasDuplicateBandwidth = tracks.some((otherTrack) => {
+      return (
+        otherTrack != track &&
+        otherTrack.height == track.height &&
+        (otherTrack.videoBandwidth || otherTrack.bandwidth) == (track.videoBandwidth || track.bandwidth)
+      )
+    })
+    if (!hasDuplicateBandwidth) {
+      const bandwidth = track.videoBandwidth || track.bandwidth
+      text += ' (' + Math.round(bandwidth / 1000) + ' kbits/s)'
+    }
+  }
+  return text
 }

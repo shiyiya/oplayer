@@ -167,7 +167,7 @@ const init = () => {
       dash(),
       mpegts(),
       shaka({
-        library: 'https://cdn.jsdelivr.net/npm/shaka-player@2.5.10/dist/shaka-player.compiled.debug.js'
+        library: 'https://cdn.jsdelivr.net/npm/shaka-player@4.14.1/dist/shaka-player.compiled.debug.js'
       }),
       new Danmaku({
         enable: true
@@ -178,8 +178,12 @@ const init = () => {
         initialIndex: 0,
         sources: [
           {
-            title: 'hls - muti quality & subtitle & audio',
+            title: 'shaka mdp',
             format: 'shaka',
+            src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd'
+          },
+          {
+            title: 'hls - muti quality & subtitle & audio',
             src: 'https://storage.googleapis.com/shaka-demo-assets/angel-one-hls/hls.m3u8'
             // danmaku: SUPER_DANMAKU
           },

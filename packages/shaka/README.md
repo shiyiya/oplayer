@@ -28,7 +28,7 @@ npm i @oplayer/hls shaka-player
   })
     .use([
       OShaka({
-        library: 'https://cdn.jsdelivr.net/npm/shaka-player@2.5.10/dist/shaka-player.compiled.min.js'
+        library: 'https://cdn.jsdelivr.net/npm/shaka-player@4.14.1/dist/shaka-player.compiled.min.js'
       })
     ])
     .create()
