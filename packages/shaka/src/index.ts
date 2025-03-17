@@ -107,6 +107,8 @@ class ShakaPlugin implements PlayerPlugin {
       player.$root.querySelector('[aria-label="time"')?.parentElement?.addEventListener('click', () => {
         player.seek(this.instance?.seekRange().end || 0)
       })
+      //TODO: seekable
+      Object.defineProperty(player, 'currentTime', () => 0)
     }
 
     if (player.context.ui) {
