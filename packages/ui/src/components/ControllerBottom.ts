@@ -16,7 +16,8 @@ import {
   time,
   live,
   withIcon,
-  centerProgressWrap
+  centerProgressWrap,
+  textIcon
 } from './ControllerBottom.style'
 import { progress } from './Progress.style'
 
@@ -105,11 +106,19 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
       ${nextSvg && `<button class="${icon} ${tooltip}" aria-label="${nextLabel}">${nextSvg}</button>`}
 
-      ${player.options.isLive ? `<span class="${live}"></span>` : ''}
+      ${
+        player.options.isLive
+          ? `<button class="${icon} ${textIcon} ${tooltip}">
+            <span class="${live}"></span>
+          <span class=${time} aria-label="time">
+            ${player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'}
+           </span>
+          </button>`
+          : `<span class=${time} aria-label="time">${
+              player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
+            }</span>`
+      }
 
-      <span class=${time}>${
-        player.options.isLive || player.$video.preload == 'none' ? '00:00' : '00:00 / --:--'
-      }</span>
     </div>
 
     <div class="${centerProgressWrap}"></div>
@@ -195,7 +204,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   player.on('volumechange', () => switcher($volume, player.isMuted))
   player.on(['durationchange', 'timeupdate', 'seeking', 'seeked'], () => {
-    $time.innerText = `${formatTime(player.currentTime)} ${
+    $time.innerText = `${player.currentTime || !player.options.isLive ? formatTime(player.currentTime) : 'Live'} ${
       player.options.isLive ? '' : `/ ${formatTime(player.duration)}`
     }`
   })

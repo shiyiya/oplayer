@@ -12,6 +12,7 @@ export const globals = {
   '@oplayer/mpegts': 'OMpegts',
   '@oplayer/torrent': 'OTorrent',
   '@oplayer/danmaku': 'ODanmaku',
+  '@oplayer/shaka': 'OShaka',
   react: 'React',
   // 'react/jsx-runtime':'',
   dashjs: 'dashjs',
@@ -19,7 +20,8 @@ export const globals = {
   'hls.js/dist/hls.min.js': 'Hls',
   'mpegts.js/dist/mpegts.js': 'mpegts',
   'webtorrent/dist/webtorrent.min.js': 'WebTorrent',
-  'webtorrent/webtorrent.min.js': 'WebTorrent'
+  'webtorrent/webtorrent.min.js': 'WebTorrent',
+  'shaka-player/dist/shaka-player.com piled': 'shaka'
 }
 
 const babelPlugins = [

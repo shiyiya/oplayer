@@ -3,6 +3,7 @@ import Player, { PlayerPlugin } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
+import shaka from '@oplayer/shaka'
 import mpegts from '@oplayer/mpegts'
 import style from './player.module.scss'
 import { Chromecast } from '@oplayer/plugins'
@@ -46,6 +47,7 @@ export default () => {
             }
           ]
         }),
+        shaka(),
         hls({ forceHLS: true }),
         dash(),
         mpegts(),

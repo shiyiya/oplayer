@@ -7,7 +7,7 @@ export const time = $.css`
 `
 
 export const live = $.css(
-  `width:0.5em;height:0.5em;background-color:var(--primary-color);border-radius:50%;margin-right:0.5em`
+  `width:0.5em!important;height:0.5em!important;;background-color:var(--primary-color);border-radius:50%;margin-right:0.5em`
 )
 
 export const expand = $.css(`
@@ -113,7 +113,12 @@ export const controllers = $.css({
     'min-width': '2em',
     'font-size': '0.875em',
     padding: '0 4px',
-    'border-radius': '2px'
+    'border-radius': '2px',
+
+    '& > *': {
+      height: 'auto',
+      width: 'auto'
+    }
   },
 
   [`& .${icon}`]: Object.assign(
@@ -128,8 +133,7 @@ export const controllers = $.css({
       '& > *': {
         height: '1.5em',
         width: '1.5em',
-        'pointer-events': 'none',
-        transition: 'transform .2s ease-in-out'
+        'pointer-events': 'none'
       }
     },
 
