@@ -272,7 +272,7 @@ const setupQuality = (player: Player, instance: shaka.Player) => {
 }
 
 const setupAudioSelection = (player: Player, instance: shaka.Player) => {
-  const audioTracks = instance.getAudioLanguagesAndRoles()
+  const audioTracks = instance.getAudioTracks()
 
   if (!(audioTracks.length > 1)) return
 
@@ -283,7 +283,8 @@ const setupAudioSelection = (player: Player, instance: shaka.Player) => {
     })
     .map((level) => {
       return {
-        name: level.language,
+        //@ts-expect-error
+        name: `${level.language} ${ShakaPlugin.library.util.MimeUtils.getNormalizedCodec?.(level.codecs) || level.codecs}`,
         default: level == current,
         value: level
       }
@@ -294,7 +295,7 @@ const setupAudioSelection = (player: Player, instance: shaka.Player) => {
     icon: player.context.ui.icons.lang,
     settings: levels,
     onChange({ value }) {
-      instance.selectAudioLanguage(value.language, value.role)
+      instance.selectAudioTrack(value)
     }
   })
 }
@@ -325,8 +326,6 @@ const setupTextSelection = (player: Player, instance: shaka.Player) => {
         }
       }) as any
   )
-
-  console.log(levels)
 
   settingUpdater({
     player,

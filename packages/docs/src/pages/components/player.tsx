@@ -47,10 +47,10 @@ export default () => {
             }
           ]
         }),
+        shaka(),
         hls({ forceHLS: true }),
         dash(),
         mpegts(),
-        shaka(),
         userPreferencesPlugin,
         new Chromecast()
       ])
