@@ -104,15 +104,8 @@ class ShakaPlugin implements PlayerPlugin {
     }
 
     if (player.options.isLive) {
-      Object.defineProperty(player.$video, 'currentTime', {
-        get: () => {
-          return this.instance!.seekRange().end
-        }
-      })
-      Object.defineProperty(player.$video, 'duration', {
-        get: () => {
-          return this.instance!.seekRange().end - this.instance!.seekRange().start
-        }
+      player.$root.querySelector('[aria-label="time"')?.parentElement?.addEventListener('click', () => {
+        player.seek(this.instance?.seekRange().end || 0)
       })
     }
 
