@@ -42,7 +42,7 @@ class ShakaPlugin implements PlayerPlugin {
 
   player!: Player
 
-  instance?: shaka.Player & { eventManager: Shaka.util.EventManager; timer?: NodeJS.Timeout }
+  instance?: shaka.Player & { eventManager: Shaka.util.EventManager }
 
   options: PartialRequired<ShakaPluginOptions, 'matcher'> = {
     matcher: defaultMatcher,
@@ -62,8 +62,6 @@ class ShakaPlugin implements PlayerPlugin {
 
   async load(player: Player, source: Source) {
     if (!this.options.matcher(source)) return false
-
-    this.player.options.isLive = true
 
     const { library, config, requestFilter, qualityControl, audioControl, textControl } = this.options
 
@@ -125,6 +123,7 @@ class ShakaPlugin implements PlayerPlugin {
         })
       }
 
+      //TODO: revert
       Object.defineProperty(player.$video, 'duration', { get: () => this._duration })
       Object.defineProperty(player, 'currentTime', { get: () => this.getCurrentTime() })
       Object.defineProperty(player, 'seek', {
@@ -133,9 +132,7 @@ class ShakaPlugin implements PlayerPlugin {
         }
       })
 
-      this.instance.timer = setInterval(() => {
-        player.emit('timeupdate')
-
+      const updateTime = () => {
         const timeBehindLiveEdge = this.seekRange.end - player.$video.currentTime
         // var streamPosition = Date.now() / 1000 - timeBehindLiveEdge
 
@@ -144,7 +141,9 @@ class ShakaPlugin implements PlayerPlugin {
         } else {
           dot.style.cssText = ''
         }
-      }, 1000)
+      }
+
+      this.instance.eventManager.listen(player.$video, 'timeupdate', updateTime)
     }
 
     if (player.context.ui) {
@@ -191,7 +190,6 @@ class ShakaPlugin implements PlayerPlugin {
     ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
       this.player.context.ui.setting.unregister(`${ShakaPlugin.name}-${it}`)
     )
-    clearInterval(this.instance?.timer)
     this.instance?.eventManager.removeAll()
     await this.instance?.unload()
     await this.instance?.destroy()
