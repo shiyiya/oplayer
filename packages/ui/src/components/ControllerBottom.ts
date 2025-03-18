@@ -204,9 +204,11 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
 
   player.on('volumechange', () => switcher($volume, player.isMuted))
   player.on(['durationchange', 'timeupdate', 'seeking', 'seeked'], () => {
-    $time.innerText = `${player.currentTime || !player.options.isLive ? formatTime(player.currentTime) : 'Live'} ${
-      player.options.isLive ? '' : `/ ${formatTime(player.duration)}`
-    }`
+    if (player.options.isLive) {
+      $time.innerText = `Live ${player.currentTime ? formatTime(player.currentTime) : ''}`
+      return
+    }
+    $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}}`
   })
 
   player.on('videosourcechange', () => {
