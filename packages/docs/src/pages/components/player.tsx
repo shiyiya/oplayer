@@ -30,7 +30,7 @@ export default () => {
   const createPlayer = useCallback((src: string) => {
     player.current = Player.make('#oplayer', {
       source: { src },
-      isLive: input.includes('live'),
+      isLive: src.includes('live'),
       playbackRate: +(localStorage.getItem('@oplayer/UserPreferences/speed') || 1),
       volume: +(localStorage.getItem('@oplayer/UserPreferences/volume') || 1)
     })
