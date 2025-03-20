@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Player, { PlayerPlugin } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
@@ -26,11 +26,11 @@ const userPreferencesPlugin: PlayerPlugin = {
 export default () => {
   const player = useRef<Player>()
   const [input, setInput] = useState(globalThis.location?.search.substring(1))
-  const [isFirst, setIsFirst] = useState(true)
 
-  useEffect(() => {
+  const createPlayer = useCallback((src: string) => {
     player.current = Player.make('#oplayer', {
-      source: { src: input },
+      source: { src },
+      isLive: input.includes('live'),
       playbackRate: +(localStorage.getItem('@oplayer/UserPreferences/speed') || 1),
       volume: +(localStorage.getItem('@oplayer/UserPreferences/volume') || 1)
     })
@@ -57,10 +57,6 @@ export default () => {
       .create()
       .on(console.log)
 
-    if (input) {
-      setIsFirst(false)
-    }
-
     return () => {
       player.current!.destroy()
     }
@@ -81,10 +77,7 @@ export default () => {
           className="nx-rounded-md"
           type="button"
           onClick={() => {
-            if (input) {
-              player.current!.changeSource({ src: input })
-              setIsFirst(false)
-            }
+            if (input) createPlayer(input)
           }}
         >
           PLAY
@@ -94,11 +87,7 @@ export default () => {
         Your streaming URL must be HTTPS-compatible, otherwise your stream may not play. Make sure CORS is
         enabled on streaming server when using HLS and MPEG-DASH streams.
       </p>
-      <div
-        id="oplayer"
-        className="nx-bg-black/[.05] dark:nx-bg-gray-50/10 nx-rounded-sm"
-        aria-disabled={isFirst}
-      />
+      <div id="oplayer" className="nx-bg-black/[.05] dark:nx-bg-gray-50/10 nx-rounded-sm" />
     </div>
   )
 }
