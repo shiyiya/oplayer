@@ -208,7 +208,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
       $time.innerText = `Live ${player.currentTime ? formatTime(player.currentTime) : ''}`
       return
     }
-    $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}}`
+    $time.innerText = `${formatTime(player.currentTime)} / ${formatTime(player.duration)}`
   })
 
   player.on('videosourcechange', () => {

@@ -10,7 +10,7 @@
 ## Install
 
 ```bash
-npm i @oplayer/hls shaka-player
+npm i @oplayer/shaka shaka-player
 ```
 
 ```html
