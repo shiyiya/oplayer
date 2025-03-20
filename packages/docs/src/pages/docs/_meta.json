@@ -25,6 +25,7 @@
   "hls": "@oplayer/hls",
   "dash": "@oplayer/dash",
   "mpegts": "@oplayer/mpegts",
+  "shaka": "@oplayer/shaka",
   "torrent": "@oplayer/torrent",
 
   "-- More": {
