@@ -28,6 +28,7 @@ export default () => {
   const [input, setInput] = useState(globalThis.location?.search.substring(1))
 
   const createPlayer = useCallback((src: string) => {
+    player.current?.destroy()
     player.current = Player.make('#oplayer', {
       source: { src },
       isLive: src.includes('live'),
@@ -56,10 +57,6 @@ export default () => {
       ])
       .create()
       .on(console.log)
-
-    return () => {
-      player.current!.destroy()
-    }
   }, [])
 
   return (

@@ -124,7 +124,13 @@ class ShakaPlugin implements PlayerPlugin {
       }
 
       //TODO: revert
-      Object.defineProperty(player, 'duration', {
+      // Object.defineProperty(player, 'duration', {
+      //   get: () => {
+      //     if (this.instance) return this._duration
+      //     return player.$video.duration
+      //   }
+      // })
+      Object.defineProperty(player.$video, 'duration', {
         get: () => {
           if (this.instance) return this._duration
           return player.$video.duration
@@ -143,7 +149,7 @@ class ShakaPlugin implements PlayerPlugin {
         }
       })
 
-      const updateTime = () => {
+      const updateIsLive = () => {
         const timeBehindLiveEdge = this.seekRange.end - player.$video.currentTime
         // var streamPosition = Date.now() / 1000 - timeBehindLiveEdge
 
@@ -154,7 +160,7 @@ class ShakaPlugin implements PlayerPlugin {
         }
       }
 
-      this.instance.eventManager.listen(player.$video, 'timeupdate', updateTime)
+      this.instance.eventManager.listen(player.$video, 'timeupdate', updateIsLive)
     }
 
     if (player.context.ui) {
