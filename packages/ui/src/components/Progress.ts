@@ -4,20 +4,10 @@ import { UIInterface } from '../types'
 import { DRAG_EVENT_MAP, formatTime } from '../utils'
 import renderHighlight, { highlightCls } from './highlight'
 import renderThumbnail, { vttThumbnailsCls } from './Thumbnail'
-import {
-  buffered,
-  dot,
-  hit,
-  played,
-  progress,
-  progressDragging,
-  progressInner
-} from './Progress.style'
+import { buffered, dot, hit, played, progress, progressDragging, progressInner } from './Progress.style'
 
 const render = (it: UIInterface, el: HTMLElement) => {
   const { player, config } = it
-
-  if (player.options.isLive) return
 
   const $dom = (it.$progress = $.create(
     `div.${progress}`,
@@ -53,8 +43,7 @@ const render = (it: UIInterface, el: HTMLElement) => {
   const getSlidingValue = (event: MouseEvent | TouchEvent) => {
     const rect = $dom.getBoundingClientRect()
     const value =
-      (((<MouseEvent>event).clientX || (<TouchEvent>event).changedTouches[0]!.clientX) -
-        rect.left) /
+      (((<MouseEvent>event).clientX || (<TouchEvent>event).changedTouches[0]!.clientX) - rect.left) /
       rect.width
     return value >= 1 ? 1 : value <= 0 ? 0 : value
   }
@@ -137,7 +126,7 @@ const render = (it: UIInterface, el: HTMLElement) => {
     const buffered = player.buffered.length
       ? (player.buffered.end(player.buffered.length - 1) / player.duration) * 100
       : 0
-    $buffered.style.width = buffered + '%'
+    $buffered.style.width = Math.min(buffered, 100) + '%'
   })
 
   player.on('videosourcechange', () => {

@@ -1,6 +1,6 @@
 import { loadSDK, PartialRequired, type Player, type PlayerPlugin, type Source } from '@oplayer/core'
 //@ts-ignore
-import type Shaka from 'shaka-player'
+import type shaka from 'shaka-player'
 
 export type Matcher = (source: Source) => boolean
 
@@ -42,7 +42,7 @@ class ShakaPlugin implements PlayerPlugin {
 
   player!: Player
 
-  instance?: shaka.Player
+  instance?: shaka.Player & { eventManager: shaka.util.EventManager }
 
   options: PartialRequired<ShakaPluginOptions, 'matcher'> = {
     matcher: defaultMatcher,
@@ -79,7 +79,10 @@ class ShakaPlugin implements PlayerPlugin {
 
     if (!ShakaPlayer.isBrowserSupported()) return false
 
-    this.instance = new ShakaPlayer()
+    this.instance = new ShakaPlayer() as unknown as shaka.Player & {
+      eventManager: shaka.util.EventManager
+      timer: any
+    }
     await this.instance.attach(player.$video)
 
     if (config) {
@@ -90,8 +93,7 @@ class ShakaPlugin implements PlayerPlugin {
       this.instance.getNetworkingEngine()?.registerRequestFilter(requestFilter)
     }
 
-    // TODO: listen quality/audio/text change
-    const eventManager = new ShakaPlugin.library.util.EventManager()
+    const eventManager = (this.instance.eventManager = new ShakaPlugin.library.util.EventManager())
 
     eventManager.listen(this.instance, 'loaded', (event) => {
       player.emit('canplay', event)
@@ -113,20 +115,52 @@ class ShakaPlugin implements PlayerPlugin {
 
     if (player.options.isLive) {
       const button = player.$root.querySelector('[aria-label="time"')?.parentElement
+      const dot = button?.firstElementChild as HTMLSpanElement
+
       if (button) {
         eventManager.listen(button, 'click', () => {
-          player.seek(this.instance?.seekRange().end || 0)
+          player.$video.currentTime = this.seekRange.end
         })
       }
 
-      //TODO: seekable
-      player.listeners.seeking = () => {
-        // console.log('seeking')
+      //TODO: revert
+      // Object.defineProperty(player, 'duration', {
+      //   get: () => {
+      //     if (this.instance) return this._duration
+      //     return player.$video.duration
+      //   }
+      // })
+      Object.defineProperty(player.$video, 'duration', {
+        get: () => {
+          if (this.instance) return this._duration
+          return player.$video.duration
+        }
+      })
+      Object.defineProperty(player, 'currentTime', {
+        get: () => {
+          if (this.instance) return this.getCurrentTime()
+          else return player.$video.currentTime
+        }
+      })
+      Object.defineProperty(player, 'seek', {
+        value: (v: number) => {
+          if (this.instance) player.$video.currentTime = this.seekRange.start + v
+          else player.$video.currentTime = v
+        }
+      })
+
+      const updateIsLive = () => {
+        const timeBehindLiveEdge = this.seekRange.end - player.$video.currentTime
+        // var streamPosition = Date.now() / 1000 - timeBehindLiveEdge
+
+        if (timeBehindLiveEdge > 5) {
+          dot.style.backgroundColor = '#ccc'
+        } else {
+          dot.style.cssText = ''
+        }
       }
-      // player.listeners.waiting = () => {
-      //   console.log('waiting')
-      // }
-      Object.defineProperty(player, 'currentTime', () => 0)
+
+      this.instance.eventManager.listen(player.$video, 'timeupdate', updateIsLive)
     }
 
     if (player.context.ui) {
@@ -152,12 +186,31 @@ class ShakaPlugin implements PlayerPlugin {
     return this
   }
 
-  destroy() {
+  getCurrentTime() {
+    if (!this.instance) return 0
+    const mediaElement = this.instance.getMediaElement()
+    return mediaElement ? mediaElement.currentTime - this.seekRange.start : 0
+  }
+
+  get seekRange() {
+    if (!this.instance) return { start: 0, end: 0 }
+    return this.instance.seekRange()
+  }
+
+  get _duration() {
+    if (!this.instance) return 0
+
+    return this.seekRange.end - this.seekRange.start
+  }
+
+  async destroy() {
     ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
       this.player.context.ui.setting.unregister(`${ShakaPlugin.name}-${it}`)
     )
-    this.instance?.unload()
-    this.instance?.destroy()
+    this.instance?.eventManager.removeAll()
+    await this.instance?.unload()
+    await this.instance?.destroy()
+    this.instance = undefined
   }
 }
 
@@ -169,7 +222,7 @@ const setupQuality = (player: Player, instance: shaka.Player) => {
   // https://github.com/shaka-project/shaka-player/blob/1f336dd319ad23a6feb785f2ab05a8bc5fc8e2a2/ui/resolution_selection.js#L90
   let tracks: shaka.extern.Track[] = []
 
-  if (instance.getLoadMode() != shaka.Player.LoadMode.SRC_EQUALS) {
+  if (instance.getLoadMode() != ShakaPlugin.library.Player.LoadMode.SRC_EQUALS) {
     tracks = instance.getVariantTracks()
   }
 
@@ -375,7 +428,7 @@ function settingUpdater(arg: {
   })
 }
 
-function getResolutionLabel_(track: Shaka.extern.Track, tracks: Shaka.extern.Track[]) {
+function getResolutionLabel_(track: shaka.extern.Track, tracks: shaka.extern.Track[]) {
   const trackHeight = track.height || 0
   const trackWidth = track.width || 0
   let height = trackHeight

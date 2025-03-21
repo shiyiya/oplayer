@@ -484,7 +484,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     })
   }
 
-  destroy() {
+  async destroy() {
     Player.players.splice(Player.players.indexOf(this), 1)
 
     const { eventEmitter, loader, plugins, container, $root, $video, isPlaying, isFullScreen, isInPip } = this
@@ -492,8 +492,13 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     eventEmitter.emit('destroy')
     eventEmitter.offAll()
 
-    loader?.destroy()
-    plugins.forEach((it) => !it.load && it.destroy?.())
+    await loader?.destroy()
+
+    for await (const plugin of plugins) {
+      if (!plugin.load && plugin?.destroy) {
+        await plugin.destroy()
+      }
+    }
 
     if (isPlaying) this.pause()
     if (isFullScreen) this.exitFullscreen()
