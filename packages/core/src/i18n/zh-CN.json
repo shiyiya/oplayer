@@ -6,7 +6,8 @@
   "Volume: %s": "音量：%s",
   "Mute": "静音",
   "Speed": "播放速度",
-  "LIVE": "直播",
+  "Live": "直播",
+  "Back to Live": "回到直播",
 
   "Language": "语言",
   "Screenshot": "截图",

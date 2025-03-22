@@ -202,7 +202,7 @@ const render = (it: UIInterface, $el: HTMLDivElement) => {
     switcher($play, player.isPlaying)
   })
 
-  const LIVE = player.locales.get('LIVE')
+  const LIVE = player.locales.get('Live')
   player.on('volumechange', () => switcher($volume, player.isMuted))
   player.on(['durationchange', 'timeupdate', 'seeking', 'seeked'], () => {
     if (player.options.isLive) {

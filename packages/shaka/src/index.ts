@@ -107,6 +107,10 @@ class ShakaPlugin implements PlayerPlugin {
       player.emit('error', { pluginName: ShakaPlugin.name, ...event })
     })
 
+    // eventManager.listen(this.instance, 'play', () => {
+    //   player.$video.currentTime = this.seekRange.end
+    // })
+
     try {
       await this.instance.load(source.src)
     } catch (error: any) {
@@ -115,12 +119,28 @@ class ShakaPlugin implements PlayerPlugin {
 
     if (player.options.isLive) {
       const button = player.$root.querySelector('[aria-label="time"')?.parentElement
-      const dot = button?.firstElementChild as HTMLSpanElement
+      const dot = button?.firstElementChild as HTMLSpanElement | undefined
 
-      if (button) {
+      if (button && dot) {
         eventManager.listen(button, 'click', () => {
           player.$video.currentTime = this.seekRange.end
         })
+
+        const backText = player.locales.get('Back to Live')
+        const updateIsLive = () => {
+          const timeBehindLiveEdge = this.seekRange.end - player.$video.currentTime
+          // var streamPosition = Date.now() / 1000 - timeBehindLiveEdge
+
+          if (timeBehindLiveEdge > 5) {
+            dot.style.backgroundColor = '#ccc'
+            button.ariaLabel = backText
+          } else {
+            dot.style.cssText = ''
+            button.removeAttribute('aria-label')
+          }
+        }
+
+        this.instance.eventManager.listen(player.$video, 'timeupdate', updateIsLive)
       }
 
       //TODO: revert
@@ -148,19 +168,6 @@ class ShakaPlugin implements PlayerPlugin {
           else player.$video.currentTime = v
         }
       })
-
-      const updateIsLive = () => {
-        const timeBehindLiveEdge = this.seekRange.end - player.$video.currentTime
-        // var streamPosition = Date.now() / 1000 - timeBehindLiveEdge
-
-        if (timeBehindLiveEdge > 5) {
-          dot.style.backgroundColor = '#ccc'
-        } else {
-          dot.style.cssText = ''
-        }
-      }
-
-      this.instance.eventManager.listen(player.$video, 'timeupdate', updateIsLive)
     }
 
     if (player.context.ui) {
