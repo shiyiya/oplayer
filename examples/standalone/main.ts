@@ -167,6 +167,7 @@ const init = () => {
       dash(),
       mpegts(),
       shaka({
+        // qualityControlType: 'setting',
         library: 'https://cdn.jsdelivr.net/npm/shaka-player@4.14.1/dist/shaka-player.compiled.debug.js'
       }),
       new Danmaku({
