@@ -24,6 +24,7 @@
     "@oplayer/dash": "workspace:*",
     "@oplayer/hls": "workspace:*",
     "@oplayer/mpegts": "workspace:*",
+    "@oplayer/shaka": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "@oplayer/torrent": "workspace:*"
   },

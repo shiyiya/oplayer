@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/shaka",
-  "version": "1.2.26-beta.2",
+  "version": "1.2.26-beta.3",
   "description": "shaka-player plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*",
-    "shaka-player": "^4.14.1"
+    "shaka-player": "^4.14.2"
   }
 }
