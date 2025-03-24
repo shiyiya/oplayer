@@ -102,21 +102,24 @@ class ShakaPlugin implements PlayerPlugin {
 
     const eventManager = (this.instance.eventManager = new ShakaPlugin.library.util.EventManager())
 
-    eventManager.listen(this.instance, 'loaded', (event) => {
-      player.emit('canplay', event)
+    eventManager.listen(this.instance, 'loading', (event) => {
+      player.emit('loading', event)
     })
 
-    eventManager.listen(this.instance, 'loading', (event) => {
-      player.emit('waiting', event)
+    eventManager.listen(this.instance, 'loaded', (event) => {
+      player.emit('loaded', event)
     })
 
     eventManager.listen(this.instance, 'error', (event) => {
       player.emit('error', { pluginName: ShakaPlugin.name, ...event })
     })
 
-    // eventManager.listen(this.instance, 'play', () => {
-    //   player.$video.currentTime = this.seekRange.end
-    // })
+    eventManager.listenOnce(player.$video, 'seeking', () => {
+      // ignore first seeking ?
+      setTimeout(() => {
+        player.emit('seeked')
+      })
+    })
 
     try {
       await this.instance.load(source.src)
@@ -125,6 +128,10 @@ class ShakaPlugin implements PlayerPlugin {
     }
 
     if (player.options.isLive) {
+      eventManager.listenOnce(player.$video, 'loadedmetadata', () => {
+        player.$video.currentTime = this.seekRange.end
+      })
+
       const button = player.$root.querySelector('[aria-label="time"')?.parentElement
       const dot = button?.firstElementChild as HTMLSpanElement | undefined
 
