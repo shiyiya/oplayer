@@ -12,6 +12,7 @@
   "react": "@oplayer/react",
   "plugins": "@oplayer/plugins",
   "vast": "@oplayer/vast",
+  "maccms": "maccms",
   "wp_plugin": {
     "title": "WorldPress ↗",
     "href": "https://github.com/shiyiya/WordPress-Plugin-OPlayer",

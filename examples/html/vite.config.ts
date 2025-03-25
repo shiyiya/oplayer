@@ -5,7 +5,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        nested: resolve(__dirname, 'ep.html')
+        index: resolve(__dirname, 'src/index.html'),
+        shaka: resolve(__dirname, 'src/shaka-live.html')
       }
     }
   }

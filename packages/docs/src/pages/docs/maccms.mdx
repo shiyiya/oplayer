@@ -1,0 +1,72 @@
+## maccms
+
+```html filename="oplayer.html"
+<!--
+1. 上传至苹果CMS的目录“/static/player/”, 文件名oplayer.html
+2.登录苹果CMS后台：“视频→播放器→添加”
+3.基本设置好了以后，点击“播放器代码”，并粘贴：
+MacPlayer.Html = '<iframe border="0" src="'+maccms.path+'/static/player/oplayer.html" width="100%" height="100%" marginWidth="0" frameSpacing="0" marginHeight="0" frameBorder="0" scrolling="no" vspale="0" noResize></iframe>';
+MacPlayer.Show();
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OPlayer</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta name="referrer" content="never" />
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@oplayer/full@latest/dist/index.min.js"></script>
+  </head>
+  <body marginwidth="0" marginheight="0">
+    <div id="oplayer"></div>
+    <script type="text/javascript">
+      var player = OPlayer.make('#oplayer', {
+        source: {
+          // title: '',
+          // poster: ''
+          src: parent.MacPlayer.PlayUrl
+        },
+        autoplay: true
+      })
+        .use([
+          OUI({
+            theme: {
+              primaryColor: '#6668ab',
+              controller: {
+                slideToSeek: 'always'
+              }
+            },
+            keyboard: { global: true },
+            screenshot: true,
+            pictureInPicture: true
+          }),
+          OHls({
+            forceHLS: true,
+            library: 'https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js'
+          }),
+          ODash({ library: 'https://cdn.dashjs.org/v4.7.4/dash.all.min.js' }),
+          OMpegts({ library: 'https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.min.js' }),
+          OTorrent({ library: 'https://cdn.jsdelivr.net/npm/webtorrent@0.98.18/webtorrent.min.js' })
+        ])
+        .create()
+
+      if (parent.MacPlayer.PlayLinkNext != '') {
+        player.on('ended', function () {
+          top.location.href = parent.MacPlayer.PlayLinkNext
+        })
+      }
+    </script>
+  </body>
+</html>
+```

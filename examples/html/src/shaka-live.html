@@ -1,0 +1,31 @@
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@1.3.4-beta.8/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@oplayer/shaka@1.2.26-beta.5/dist/index.min.js"></script>
+
+<div id="oplayer" />
+
+<script>
+  window.player = OPlayer.make('#oplayer', {
+    isLive: true,
+    source: {
+      src: 'https://rr.cdn.vodafone.pt/LIVE/sdash/LIVE$151/index.mpd/Manifest?start=LIVE&end=END&device=DASH_AVC_HD',
+      format: 'shaka',
+      poster: 'https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png'
+    }
+  })
+    .use([
+      OUI(),
+      OShaka({
+        library: 'https://cdn.jsdelivr.net/npm/shaka-player@4.14.1/dist/shaka-player.compiled.min.js',
+        config: {
+          drm: {
+            clearKeys: {
+              ca42f3ec39d7471ebb0b7544ed9d536e: '73c581bee2b04083e04538e3ea559166'
+            }
+          }
+        }
+      })
+    ])
+    .create()
+    .on(console.log)
+</script>

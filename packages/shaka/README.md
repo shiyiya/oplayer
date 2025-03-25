@@ -28,7 +28,14 @@ npm i @oplayer/shaka shaka-player
   })
     .use([
       OShaka({
-        library: 'https://cdn.jsdelivr.net/npm/shaka-player@4.14.1/dist/shaka-player.compiled.min.js'
+        library: 'https://cdn.jsdelivr.net/npm/shaka-player@4.14.1/dist/shaka-player.compiled.min.js',
+        config: {
+          drm: {
+            clearKeys: {
+              xxxxxxxxxx: 'xxxxxxxxxxx'
+            }
+          }
+        }
       })
     ])
     .create()
