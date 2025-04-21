@@ -157,14 +157,7 @@ class ShakaPlugin implements PlayerPlugin {
         this.instance.eventManager.listen(player.$video, 'timeupdate', updateIsLive)
       }
 
-      //TODO: revert
-      // Object.defineProperty(player, 'duration', {
-      //   get: () => {
-      //     if (this.instance) return this._duration
-      //     return player.$video.duration
-      //   }
-      // })
-      Object.defineProperty(player.$video, 'duration', {
+      Object.defineProperty(player, 'duration', {
         get: () => {
           if (this.instance) return this._duration
           return player.$video.duration

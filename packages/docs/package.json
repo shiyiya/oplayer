@@ -20,16 +20,16 @@
     "@oplayer/torrent": "workspace:*",
     "@oplayer/ui": "workspace:*",
     "mdx-embed": "^1.1.2",
-    "next": "^14.2.26",
+    "next": "^14.2.28",
     "nextra": "2.13.4",
     "nextra-theme-docs": "2.13.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "shaka-player": "^4.14.4"
+    "shaka-player": "^4.14.8"
   },
   "devDependencies": {
     "@types/react": "^18.3.20",
-    "@types/react-dom": "^18.3.5",
-    "sass": "^1.86.0"
+    "@types/react-dom": "^18.3.6",
+    "sass": "^1.86.3"
   }
 }
