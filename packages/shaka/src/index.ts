@@ -77,7 +77,7 @@ class ShakaPlugin implements PlayerPlugin {
         (globalThis as any).shaka ||
         (library
           ? await loadSDK(library, 'shaka')
-          : (await import('shaka-player/dist/shaka-player.compiled')).default)
+          : (await import('shaka-player/dist/shaka-player.compiled.js')).default)
 
       ShakaPlugin.library.polyfill.installAll()
     }
