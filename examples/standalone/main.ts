@@ -176,7 +176,7 @@ const init = () => {
         // source: DANMAKU //SUPER_DANMAKU
       }),
       new Playlist({
-        initialIndex: 0,
+        initialIndex: 1,
         sources: [
           {
             title: 'shaka mdp',
