@@ -26,38 +26,43 @@ const userPreferencesPlugin: PlayerPlugin = {
 export default () => {
   const player = useRef<Player>()
   const [input, setInput] = useState(globalThis.location?.search.substring(1))
+  const [format, setFormat] = useState('auto')
 
-  const createPlayer = useCallback((src: string) => {
-    player.current?.destroy()
-    player.current = Player.make('#oplayer', {
-      source: { src },
-      isLive: src.includes('live'),
-      playbackRate: +(localStorage.getItem('@oplayer/UserPreferences/speed') || 1),
-      volume: +(localStorage.getItem('@oplayer/UserPreferences/volume') || 1)
-    })
-      .use([
-        ui({
-          keyboard: { global: true },
-          menu: [
-            {
-              name: 'WEBFULL',
-              icon: `<svg viewBox="0 0 1024 1024" style="transform: scale(0.7)"><path d="M85.333333 768v170.666667h170.666667v85.333333H0v-256h85.333333z m938.666667 0v256h-256v-85.333333h170.666667v-170.666667h85.333333zM640 256a128 128 0 0 1 128 128v256a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V384a128 128 0 0 1 128-128h256zM256 0v85.333333H85.333333v170.666667H0V0h256z m768 0v256h-85.333333V85.333333h-170.666667V0h256z"></path></svg>`,
-              onClick() {
-                player.current?.emit('fullscreenchange', { isWeb: true })
+  const createPlayer = useCallback(
+    (src: string) => {
+      player.current?.destroy()
+
+      player.current = Player.make('#oplayer', {
+        source: { src, format },
+        isLive: src.includes('live'),
+        playbackRate: +(localStorage.getItem('@oplayer/UserPreferences/speed') || 1),
+        volume: +(localStorage.getItem('@oplayer/UserPreferences/volume') || 1)
+      })
+        .use([
+          ui({
+            keyboard: { global: true },
+            menu: [
+              {
+                name: 'WEBFULL',
+                icon: `<svg viewBox="0 0 1024 1024" style="transform: scale(0.7)"><path d="M85.333333 768v170.666667h170.666667v85.333333H0v-256h85.333333z m938.666667 0v256h-256v-85.333333h170.666667v-170.666667h85.333333zM640 256a128 128 0 0 1 128 128v256a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V384a128 128 0 0 1 128-128h256zM256 0v85.333333H85.333333v170.666667H0V0h256z m768 0v256h-85.333333V85.333333h-170.666667V0h256z"></path></svg>`,
+                onClick() {
+                  player.current?.emit('fullscreenchange', { isWeb: true })
+                }
               }
-            }
-          ]
-        }),
-        shaka(),
-        hls({ forceHLS: true }),
-        dash(),
-        mpegts(),
-        userPreferencesPlugin,
-        new Chromecast()
-      ])
-      .create()
-      .on(console.log)
-  }, [])
+            ]
+          }),
+          shaka(),
+          hls({ forceHLS: true }),
+          dash(),
+          mpegts(),
+          userPreferencesPlugin,
+          new Chromecast()
+        ])
+        .create()
+        .on(console.log)
+    },
+    [format]
+  )
 
   return (
     <div className={style.container}>
@@ -70,6 +75,18 @@ export default () => {
           onChange={(e) => setInput(e.target.value)}
           className="nx-mr-2 nx-block nx-w-full nx-appearance-none nx-rounded-sm nx-px-3 nx-py-2 nx-transition-colors nx-text-base nx-leading-tight md:nx-text-sm nx-bg-black/[.05] dark:nx-bg-gray-50/10 focus:nx-bg-white dark:focus:nx-bg-dark placeholder:nx-text-gray-500 dark:placeholder:nx-text-gray-400 contrast-more:nx-border contrast-more:nx-border-current"
         />
+        <select
+          name="format"
+          className="nx-mx-2 nx-text-center"
+          value={format}
+          onChange={(e) => setFormat(e.target.value)}
+        >
+          <option value="auto">auto</option>
+          <option value="shaka">shaka</option>
+          <option value="hls">hls</option>
+          <option value="dash">dash</option>
+          <option value="dash">mpegts</option>
+        </select>
         <button
           className="nx-rounded-md"
           type="button"
