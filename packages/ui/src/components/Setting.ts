@@ -418,11 +418,7 @@ export default function (it: UIInterface) {
     createPanel(player, panels, settings, { target: $dom })
   }
 
-  function showSetting() {
-    player.$root.classList.add(settingShown)
-    panels[0]!.$ref.classList.add(activeCls)
-
-    function outClickListener(e: Event) {
+   function outClickListener(e: Event) {
       if (!$dom.contains(<HTMLElement>e.target)) {
         player.$root.classList.remove(settingShown)
         panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
@@ -430,13 +426,16 @@ export default function (it: UIInterface) {
       }
     }
 
+  function showSetting() {
+    player.$root.classList.add(settingShown)
+    panels[0]!.$ref.classList.add(activeCls)
     setTimeout(() => {
       document.addEventListener('click', outClickListener)
     })
   }
 
   player.on('destroy', () => {
-    document.removeEventListener('click', showSetting)
+    document.removeEventListener('click', outClickListener)
   })
 
   function renderSettingMenu() {
