@@ -435,6 +435,10 @@ export default function (it: UIInterface) {
     })
   }
 
+  player.on('destroy', () => {
+    document.removeEventListener('click', showSetting)
+  })
+
   function renderSettingMenu() {
     const settingButton = $.create(
       'button',
