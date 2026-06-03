@@ -155,10 +155,10 @@ export default class PlaylistPlugin implements PlayerPlugin {
             this.player.context.ui.subtitle.changeSource(subtitles)
           }
           if (thumbnails) {
-            this.player.context.ui.changThumbnails(thumbnails)
+            this.player.context.ui.changeThumbnails(thumbnails)
           }
           if (highlights) {
-            this.player.context.ui.changHighlightSource(highlights)
+            this.player.context.ui.changeHighlightSource(highlights)
           }
           if (danmaku) {
             this.player.context.danmaku?.changeSource(danmaku)

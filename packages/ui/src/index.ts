@@ -104,9 +104,9 @@ class UI implements UIInterface {
 
   toggleController!: () => void
 
-  changHighlightSource!: (highlights: Highlight[]) => void
+  changeHighlightSource!: (highlights: Highlight[]) => void
 
-  changThumbnails!: (src: Thumbnails) => void
+  changeThumbnails!: (src: Thumbnails) => void
 
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[] = []
 

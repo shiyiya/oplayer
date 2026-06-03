@@ -17,7 +17,7 @@ https://docs.github.com/en/get-started/exploring-projects-on-github/contributing
 ## Clone & Install
 
 ```bash
-git clonegit@github.com:shiyiya/oplayer.git --depth=1
+git clone git@github.com:shiyiya/oplayer.git --depth=1
 cd oplayer
 pnpm i
 ```

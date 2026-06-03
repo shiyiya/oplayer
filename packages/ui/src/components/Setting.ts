@@ -110,7 +110,7 @@ function createRow({
 }: Omit<Setting, 'onChange' | 'children' | 'value'> & {
   hasChildren?: boolean
   index?: number
-  switcherLabe?: string
+  switcherLabel?: string
 }) {
   let $item: HTMLElement = $.create(`div.${settingItemCls}`, {
     'data-key': key,
@@ -177,7 +177,7 @@ function createPanel(
     target: HTMLElement
     parent?: Panel
     isSelectorOptionsPanel?: boolean
-    parenOnChange?: Function
+    parentOnChange?: Function
   } = {} as any
 ): Panel | void {
   if (!setting || setting.length == 0) return
@@ -259,7 +259,7 @@ function createPanel(
         parent: panel,
         isSelectorOptionsPanel: nextIsSelectorOptionsPanel,
         name,
-        parenOnChange: onChange
+        parentOnChange: onChange
       })!
 
       $row.addEventListener('click', () => {
@@ -319,7 +319,7 @@ function createPanel(
         // TODO: update methond
       } else {
         if (type == 'option' || (type == undefined && !isSelectorOptionsPanel)) {
-          $row.addEventListener('click', () => (onChange || options.parenOnChange)?.(value))
+          $row.addEventListener('click', () => (onChange || options.parentOnChange)?.(value))
         }
       }
     }

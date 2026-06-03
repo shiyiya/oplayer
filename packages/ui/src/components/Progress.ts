@@ -38,7 +38,7 @@ const render = (it: UIInterface, el: HTMLElement) => {
   const $played = $dom.querySelector<HTMLDivElement>(`.${played}`)!
   const $playedDto = $dom.querySelector<HTMLDivElement>(`.${dot}`)!
   const $hit = $dom.querySelector<HTMLDivElement>(`.${hit}`)!
-  let isDargMoving = false
+  let isDragMoving = false
 
   const getSlidingValue = (event: MouseEvent | TouchEvent) => {
     const rect = $dom.getBoundingClientRect()
@@ -60,7 +60,7 @@ const render = (it: UIInterface, el: HTMLElement) => {
 
   // dragging
   $dom.addEventListener(DRAG_EVENT_MAP.dragStart, (e) => {
-    isDargMoving = true
+    isDragMoving = true
     $dom.classList.add(progressDragging)
     const rate = sync(e)
     it.progressHoverCallback.forEach((cb) => cb(rate))
@@ -76,7 +76,7 @@ const render = (it: UIInterface, el: HTMLElement) => {
       DRAG_EVENT_MAP.dragEnd,
       (e) => {
         $dom.classList.remove(progressDragging)
-        isDargMoving = false
+        isDragMoving = false
         document.removeEventListener(DRAG_EVENT_MAP.dragMove, moving)
         if (!isNaN(player.duration)) player.seek(getSlidingValue(e) * player.duration)
       },
@@ -86,14 +86,14 @@ const render = (it: UIInterface, el: HTMLElement) => {
 
   if (!isMobile) {
     $dom.addEventListener('mouseenter', () => {
-      if (isDargMoving) return
+      if (isDragMoving) return
       it.progressHoverCallback.forEach((cb) => cb())
     })
 
     $dom.addEventListener(
       'mousemove',
       (e) => {
-        if (isDargMoving) return
+        if (isDragMoving) return
         $dom.classList.add(progressDragging)
         if ((<HTMLDivElement>e.target).classList.contains(highlightCls)) {
           $hit.style.display = 'none'
@@ -110,12 +110,12 @@ const render = (it: UIInterface, el: HTMLElement) => {
     )
 
     $dom.addEventListener('mouseleave', () => {
-      if (!isDargMoving) $dom.classList.remove(progressDragging)
+      if (!isDragMoving) $dom.classList.remove(progressDragging)
     })
   }
 
   player.on(['timeupdate', 'seeking'], () => {
-    if (isDargMoving) return
+    if (isDragMoving) return
     const { currentTime, duration } = player
     const playedWidth = (currentTime / duration) * 100 || 0
     $played.style.width = playedWidth + '%'

@@ -74,5 +74,5 @@ export default function (it: UIInterface, container: HTMLElement) {
     $highlights = []
   })
 
-  it.changHighlightSource = change
+  it.changeHighlightSource = change
 }

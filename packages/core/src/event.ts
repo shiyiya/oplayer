@@ -25,11 +25,11 @@ export default class EventEmitter {
   off(name: string, callback: PlayerListener) {
     if (!this.events[name]) return
 
-    for (let i = 0; i < this.events[name]!.length; i++) {
-      const queue = this.events[name]![i]
+    const queue = this.events[name]!
+    for (let i = queue.length - 1; i >= 0; i--) {
       //@ts-ignore
-      if (queue == callback || callback == queue.raw) {
-        this.events[name]!.splice(i, 1) // TODO: fix 一边 emit（循环） 一边 off（删除） 错误
+      if (queue[i] == callback || callback == queue[i]?.raw) {
+        queue.splice(i, 1)
       }
     }
   }
@@ -44,13 +44,17 @@ export default class EventEmitter {
 
   emit(name: string, payload?: any) {
     const onceOffQueue: any[] = []
-    this.events[name]?.forEach((callback) => {
+    // Clone the arrays to avoid mutation during iteration (off() may modify the array)
+    const listeners = this.events[name]?.slice() ?? []
+    const wildcardListeners = this.events['*']?.slice() ?? []
+
+    listeners.forEach((callback) => {
       callback({ type: name, payload })
       //@ts-ignore
       if (callback.raw) onceOffQueue.push(callback)
     })
 
-    this.events['*']?.forEach((callback) => {
+    wildcardListeners.forEach((callback) => {
       callback({ type: name, payload })
       //@ts-ignore
       if (callback.raw) onceOffQueue.push(callback)

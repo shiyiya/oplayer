@@ -38,6 +38,9 @@ class MpegtsPlugin implements PlayerPlugin {
 
   instance?: Mpegts.Player
 
+  // Bound reference for proper cleanup in destroy()
+  private _boundLogListener!: (level: string, msg: string) => void
+
   options: PartialRequired<MpegtsPluginOptions, 'matcher'> = {
     matcher: defaultMatcher,
     config: undefined
@@ -70,7 +73,8 @@ class MpegtsPlugin implements PlayerPlugin {
 
     if (!MpegtsPlugin.library.isSupported()) return false
 
-    MpegtsPlugin.library.LoggingControl.addLogListener(this.logListener.bind(this))
+    this._boundLogListener = this.logListener.bind(this)
+    MpegtsPlugin.library.LoggingControl.addLogListener(this._boundLogListener)
 
     this.instance = MpegtsPlugin.library.createPlayer(
       {
@@ -89,7 +93,9 @@ class MpegtsPlugin implements PlayerPlugin {
 
   destroy() {
     this.instance?.destroy()
-    MpegtsPlugin.library.LoggingControl.removeLogListener(this.logListener.bind(this))
+    if (this._boundLogListener) {
+      MpegtsPlugin.library.LoggingControl.removeLogListener(this._boundLogListener)
+    }
   }
 
   logListener(level: string, msg: string) {

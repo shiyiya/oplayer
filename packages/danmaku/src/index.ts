@@ -137,7 +137,7 @@ export default class Danmaku implements PlayerPlugin {
       type: 'selector',
       default: true,
       key: 'danmaku',
-      icon: player.context.ui?.icons.danmalu ?? danmakuSvg,
+      icon: player.context.ui?.icons.danmaku ?? danmakuSvg,
       children: [
         {
           name: player.locales.get('Display'),

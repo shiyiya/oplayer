@@ -223,7 +223,7 @@ function plugin(player: Player, options?: Thumbnails) {
   }
 
   player.context.ui.progressHoverCallback.push(updateThumbnailStyle)
-  player.context.ui.changThumbnails = ({ src }: any) => bootstrap(src)
+  player.context.ui.changeThumbnails = ({ src }: any) => bootstrap(src)
 }
 
 export default (options?: Thumbnails): PlayerPlugin => ({

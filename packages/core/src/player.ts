@@ -53,6 +53,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   hasError: boolean = false
   isSourceChanging: boolean = false
 
+  // Track pending handlers for cleanup during rapid source changes
+  private _pendingCanplayHandler?: Function
+  private _pendingErrorHandler?: Function
+
   constructor(el: HTMLElement | string, options?: PlayerOptions | string) {
     this.container = typeof el == 'string' ? document.querySelector(el)! : el
     if (!this.container) throw new Error((typeof el == 'string' ? el : 'Element') + 'does not exist')
@@ -389,7 +393,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {
     this.hasError = false
-    return this._loader(source, {
+    return this.changeSourceInternal(source as Source | Promise<Source>, {
       keepPlaying: true,
       keepTime: true,
       preEvent: 'videoqualitychange',
@@ -400,7 +404,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   changeSource(source: Source | Promise<Source>, keepPlaying: boolean = true) {
     this.hasError = false
-    return this._loader(source, {
+    return this.changeSourceInternal(source, {
       keepPlaying,
       preEvent: 'videosourcechange',
       event: 'videosourcechanged',
@@ -408,7 +412,11 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     })
   }
 
-  _loader(
+  /**
+   * Internal method for switching video sources.
+   * Handles loading, event management, and rollback on failure.
+   */
+  private changeSourceInternal(
     sourceLike: Source | Promise<Source>,
     options: {
       event: string
@@ -434,9 +442,19 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
       let finalSource: Source
 
+      // Clean up any pending handlers from a previous source change
+      if (this._pendingCanplayHandler) {
+        this.off(canplay, this._pendingCanplayHandler as PlayerListener)
+      }
+      if (this._pendingErrorHandler) {
+        this.off('error', this._pendingErrorHandler as PlayerListener)
+      }
+
       const errorHandler = (err: any) => {
         if (!this.$root) return
         this.off(canplay, canplayHandler)
+        this._pendingCanplayHandler = undefined
+        this._pendingErrorHandler = undefined
         this.emit(options.brokenEvent, { source: finalSource || sourceLike, error: err })
         if (options.event == 'videosourcechanged') {
           this.isSourceChanging = false
@@ -449,6 +467,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         }
         reject(err)
       }
+      this._pendingErrorHandler = errorHandler
 
       const rollback = () => {
         if (volume != this.volume) this.setVolume(volume)
@@ -456,17 +475,21 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         if (isPreloadNone && keepTime) this.$video.load()
         if (keepTime && !this.options.isLive) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
-        Object.assign(this.options.source, finalSource)
+        // Merge into a new object to avoid mutating the original source
+        this.options.source = { ...this.options.source, ...finalSource }
       }
 
       const canplayHandler = () => {
         if (!this.$root) return
         this.off('error', errorHandler)
+        this._pendingCanplayHandler = undefined
+        this._pendingErrorHandler = undefined
         rollback()
         this.isSourceChanging = false
         this.emit(options.event, finalSource)
         resolve()
       }
+      this._pendingCanplayHandler = canplayHandler
 
       return (sourceLike instanceof Promise ? sourceLike : Promise.resolve(sourceLike))
         .then((source) => {
@@ -485,7 +508,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   async destroy() {
-    Player.players.splice(Player.players.indexOf(this), 1)
+    Player.players = Player.players.filter((p) => p !== this)
 
     const { eventEmitter, loader, plugins, container, $root, $video, isPlaying, isFullScreen, isInPip } = this
 
@@ -505,9 +528,30 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     if (isInPip) this.exitPip()
     if ($video.src) URL.revokeObjectURL($video.src)
 
+    // Clean up native event listeners added in initEvent
+    for (const eventName of Object.keys(this.listeners)) {
+      const handler = this.listeners[eventName as keyof typeof this.listeners]
+      if (typeof handler === 'function') {
+        $video.removeEventListener(eventName, handler as EventListener)
+        $root.removeEventListener(eventName, handler as EventListener)
+      }
+    }
+
     container.removeChild($root)
-    // prettier-ignore
-    this.eventEmitter = this.locales = this.options = this.listeners = this.context = this.plugins = this.container = this.$root = this.$video = this.loader = undefined as any
+
+    // Clear all references to allow garbage collection
+    this.eventEmitter = null as any
+    this.locales = null as any
+    this.options = null as any
+    this.listeners = null as any
+    this.context = null as any
+    this.plugins = null as any
+    this.container = null as any
+    this.$root = null as any
+    this.$video = null as any
+    this.loader = null as any
+    this._pendingCanplayHandler = undefined
+    this._pendingErrorHandler = undefined
   }
 
   get isNativeUI() {
