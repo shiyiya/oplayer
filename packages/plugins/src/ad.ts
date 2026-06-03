@@ -1,4 +1,4 @@
-import { Player, PlayerPlugin, $ } from '@oplayer/core'
+import { Player, PlayerPluginV2, type PluginMeta, $ } from '@oplayer/core'
 
 const topRight = $.css({
   position: 'absolute',
@@ -40,7 +40,7 @@ type Options = {
     right?: string
   }
   autoplay?: boolean
-  plugins?: PlayerPlugin[]
+  plugins?: PlayerPluginV2[]
   skipDuration?: number
   duration: number
   target?: string
@@ -57,11 +57,10 @@ export default ({
   autoplay,
   onSkip,
   position
-}: Options): PlayerPlugin => ({
-  name: 'oplayer-plugin-ad',
-  version: __VERSION__,
-  key: 'ad',
-  apply: (player) => {
+}: Options): PlayerPluginV2 => ({
+  meta: { name: 'ad' } as PluginMeta,
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    const player = ctx.player
     if (autoplay) {
       bootstrap()
     } else {
@@ -151,7 +150,7 @@ export default ({
 
         $volume!.addEventListener('click', (e) => {
           e.preventDefault()
-          e.stopPropagation() // Prevent the click event from bubbling to the $container
+          e.stopPropagation()
 
           instance.isMuted ? instance.unmute() : instance.mute()
           $volume!.classList.toggle(mute)
@@ -170,7 +169,6 @@ export default ({
         player.play()
       }
 
-      //TODO: fix hotkey
       const timer = setInterval(() => {
         if (skipDuration !== undefined) {
           count++

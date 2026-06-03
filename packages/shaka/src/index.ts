@@ -1,6 +1,16 @@
-import { loadSDK, PartialRequired, type Player, type PlayerPlugin, type Source } from '@oplayer/core'
+import {
+  loadSDK,
+  PartialRequired,
+  type Player,
+  type PlayerPluginV2,
+  type PluginMeta,
+  type Source,
+  type LoadSourceContext
+} from '@oplayer/core'
 //@ts-ignore
 import type shaka from 'shaka-player'
+
+const PLUGIN_NAME = 'shaka'
 
 export type Matcher = (source: Source) => boolean
 
@@ -38,14 +48,13 @@ const defaultMatcher: Matcher = (source) => {
   )
 }
 
-class ShakaPlugin implements PlayerPlugin {
-  key = 'shaka'
-  name = 'oplayer-plugin-shaka'
-  version = __VERSION__
+class ShakaPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: PLUGIN_NAME }
+  static readonly pluginName = PLUGIN_NAME
 
   static library: typeof shaka
 
-  player!: Player
+  private player!: Player
 
   instance?: shaka.Player & { eventManager: shaka.util.EventManager }
 
@@ -61,16 +70,17 @@ class ShakaPlugin implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
-    this.player = player
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
     return this
   }
 
-  async load(player: Player, source: Source) {
-    if (!this.options.matcher(source)) return false
+  async loadSource(ctx: LoadSourceContext) {
+    if (!this.options.matcher(ctx.source)) return false
 
     const { library, config, requestFilter, qualityControl, audioControl, textControl, qualityControlType } =
       this.options
+    const player = this.player
 
     if (!ShakaPlugin.library) {
       ShakaPlugin.library =
@@ -90,7 +100,7 @@ class ShakaPlugin implements PlayerPlugin {
       eventManager: shaka.util.EventManager
       timer: any
     }
-    await this.instance.attach(player.$video)
+    await this.instance.attach(ctx.video)
 
     if (config) {
       this.instance.configure(config)
@@ -111,10 +121,10 @@ class ShakaPlugin implements PlayerPlugin {
     })
 
     eventManager.listen(this.instance, 'error', (event) => {
-      player.emit('error', { pluginName: ShakaPlugin.name, ...event })
+      player.emit('error', { pluginName: PLUGIN_NAME, ...event })
     })
 
-    eventManager.listenOnce(player.$video, 'seeking', () => {
+    eventManager.listenOnce(ctx.video, 'seeking', () => {
       // ignore first seeking ?
       setTimeout(() => {
         player.emit('seeked')
@@ -122,14 +132,14 @@ class ShakaPlugin implements PlayerPlugin {
     })
 
     try {
-      await this.instance.load(source.src)
+      await this.instance.load(ctx.source.src)
     } catch (error: any) {
-      player.emit('error', { pluginName: ShakaPlugin.name, ...error })
+      player.emit('error', { pluginName: PLUGIN_NAME, ...error })
     }
 
     if (player.options.isLive) {
-      eventManager.listenOnce(player.$video, 'loadedmetadata', () => {
-        player.$video.currentTime = this.seekRange.end
+      eventManager.listenOnce(ctx.video, 'loadedmetadata', () => {
+        ctx.video.currentTime = this.seekRange.end
       })
 
       const button = player.$root.querySelector('[aria-label="time"')?.parentElement
@@ -137,14 +147,12 @@ class ShakaPlugin implements PlayerPlugin {
 
       if (button && dot) {
         eventManager.listen(button, 'click', () => {
-          player.$video.currentTime = this.seekRange.end
+          ctx.video.currentTime = this.seekRange.end
         })
 
         const backText = player.locales.get('Back to Live')
         const updateIsLive = () => {
-          const timeBehindLiveEdge = this.seekRange.end - player.$video.currentTime
-          // var streamPosition = Date.now() / 1000 - timeBehindLiveEdge
-
+          const timeBehindLiveEdge = this.seekRange.end - ctx.video.currentTime
           if (timeBehindLiveEdge > 5) {
             dot.style.backgroundColor = '#ccc'
             button.ariaLabel = backText
@@ -154,46 +162,41 @@ class ShakaPlugin implements PlayerPlugin {
           }
         }
 
-        this.instance.eventManager.listen(player.$video, 'timeupdate', updateIsLive)
+        this.instance.eventManager.listen(ctx.video, 'timeupdate', updateIsLive)
       }
 
       Object.defineProperty(player, 'duration', {
         get: () => {
           if (this.instance) return this._duration
-          return player.$video.duration
+          return ctx.video.duration
         }
       })
       Object.defineProperty(player, 'currentTime', {
         get: () => {
           if (this.instance) return this.getCurrentTime()
-          else return player.$video.currentTime
+          else return ctx.video.currentTime
         }
       })
       Object.defineProperty(player, 'seek', {
         value: (v: number) => {
-          if (this.instance) player.$video.currentTime = this.seekRange.start + v
-          else player.$video.currentTime = v
+          if (this.instance) ctx.video.currentTime = this.seekRange.start + v
+          else ctx.video.currentTime = v
         }
       })
     }
 
-    if (player.context.ui) {
+    const ui = player.pluginManager.getPlugin<any>('ui') as any
+    if (ui) {
       if (qualityControl) {
-        this.setupQuality(player, this.instance, qualityControlType)
-        // eventManager.listen(this.instance, 'variantchanged', () => {})
-        // eventManager.listen(this.instance, 'trackschanged', () => {})
+        this.setupQuality(player, this.instance, qualityControlType, ui)
       }
 
       if (audioControl) {
-        this.setupAudioSelection(player, this.instance)
-        // eventManager.listen(this.instance, 'audiotrackschanged', () => {})
+        this.setupAudioSelection(player, this.instance, ui)
       }
 
       if (textControl) {
-        this.setupTextSelection(player, this.instance)
-        // eventManager.listen(this.instance, 'texttrackvisibility', () => {})
-        // eventManager.listen(this.instance, 'textchanged', (e) => {})
-        // eventManager.listen(this.instance, 'trackschanged', () => {})
+        this.setupTextSelection(player, this.instance, ui)
       }
     }
 
@@ -218,10 +221,13 @@ class ShakaPlugin implements PlayerPlugin {
   }
 
   async destroy() {
-    ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-      this.player.context.ui.setting.unregister(`${ShakaPlugin.name}-${it}`)
-    )
-    this.player.context.ui.menu.unregister(`${ShakaPlugin.name}-${'Quality'}`)
+    const ui = this.player.pluginManager.getPlugin<any>('ui') as any
+    if (ui?.setting) {
+      ;['Quality', 'Language', 'Subtitle'].forEach((it) => ui.setting.unregister(`${PLUGIN_NAME}-${it}`))
+    }
+    if (ui?.menu) {
+      ui.menu.unregister(`${PLUGIN_NAME}-${'Quality'}`)
+    }
     this.instance?.eventManager.removeAll()
     await this.instance?.unload()
     await this.instance?.destroy()
@@ -231,9 +237,9 @@ class ShakaPlugin implements PlayerPlugin {
   setupQuality = (
     player: Player,
     instance: shaka.Player,
-    qualityControlType: ShakaPluginOptions['qualityControlType']
+    qualityControlType: ShakaPluginOptions['qualityControlType'],
+    ui: any
   ) => {
-    // https://github.com/shaka-project/shaka-player/blob/1f336dd319ad23a6feb785f2ab05a8bc5fc8e2a2/ui/resolution_selection.js#L90
     let tracks: shaka.extern.Track[] = []
 
     if (instance.getLoadMode() != ShakaPlugin.library.Player.LoadMode.SRC_EQUALS) {
@@ -328,12 +334,12 @@ class ShakaPlugin implements PlayerPlugin {
       }
     })
 
-    const ctrl = qualityControlType == 'menu' ? player.context.ui.menu : player.context.ui.setting
+    const ctrl = qualityControlType == 'menu' ? ui.menu : ui.setting
     const autoText = player.locales.get('Auto')
 
-    ctrl.unregister(`${ShakaPlugin.name}-Quality`)
+    ctrl.unregister(`${PLUGIN_NAME}-Quality`)
     ctrl.register({
-      icon: qualityControlType == 'setting' ? player.context.ui.icons.quality : undefined,
+      icon: qualityControlType == 'setting' ? ui.icons.quality : undefined,
       name:
         qualityControlType == 'setting'
           ? 'Quality'
@@ -341,7 +347,7 @@ class ShakaPlugin implements PlayerPlugin {
             ? this.getResolutionLabel_(selectedTrack, [])
             : autoText,
       type: 'selector',
-      key: `${ShakaPlugin.name}-Quality`,
+      key: `${PLUGIN_NAME}-Quality`,
       children: [
         {
           name: player.locales.get('Auto'),
@@ -358,13 +364,12 @@ class ShakaPlugin implements PlayerPlugin {
           instance.selectVariantTrack(value, /* clearBuffer */ true)
         } else {
           dom.textContent = autoText
-          // setupQuality(player, instance)
         }
       }
     })
   }
 
-  setupAudioSelection = (player: Player, instance: shaka.Player) => {
+  setupAudioSelection = (player: Player, instance: shaka.Player, ui: any) => {
     const audioTracks = instance.getAudioTracks()
 
     if (!(audioTracks.length > 1)) return
@@ -375,7 +380,7 @@ class ShakaPlugin implements PlayerPlugin {
       })
       .map((level) => {
         return {
-          //@ts-expect-error
+          //@ts-ignore - optional method that may not exist
           name: `${level.language} ${ShakaPlugin.library.util.MimeUtils.getNormalizedCodec?.(level.codecs) || level.codecs}`,
           default: level.active,
           value: level
@@ -384,7 +389,7 @@ class ShakaPlugin implements PlayerPlugin {
     this.settingUpdater({
       player,
       name: 'Language',
-      icon: player.context.ui.icons.lang,
+      icon: ui.icons.lang,
       settings: levels,
       onChange({ value }) {
         instance.selectAudioTrack(value)
@@ -392,7 +397,7 @@ class ShakaPlugin implements PlayerPlugin {
     })
   }
 
-  setupTextSelection = (player: Player, instance: shaka.Player) => {
+  setupTextSelection = (player: Player, instance: shaka.Player, ui: any) => {
     const tracks = instance.getTextTracks()
 
     if (!(tracks.length > 1)) return
@@ -422,7 +427,7 @@ class ShakaPlugin implements PlayerPlugin {
     this.settingUpdater({
       player,
       name: 'Subtitle',
-      icon: player.context.ui.icons.lang,
+      icon: ui.icons.subtitle,
       settings: levels,
       onChange({ value }) {
         if (value != -1) instance.selectTextTrack(value)
@@ -443,14 +448,15 @@ class ShakaPlugin implements PlayerPlugin {
     onChange: (it: { value: any }) => void
   }) {
     const { name, icon, onChange, player, settings } = arg
+    const ui = player.pluginManager.getPlugin<any>('ui') as any
 
-    player.context.ui.setting.unregister(`${ShakaPlugin.name}-${name}`)
-    player.context.ui.setting.register({
+    ui.setting?.unregister(`${PLUGIN_NAME}-${name}`)
+    ui.setting?.register({
       name: player.locales.get(name),
       icon,
       onChange,
       type: 'selector',
-      key: `${ShakaPlugin.name}-${name}`,
+      key: `${PLUGIN_NAME}-${name}`,
       children: settings
     })
   }

@@ -1,7 +1,15 @@
-import { type Player, type PlayerPlugin, type Source, type PartialRequired, loadSDK } from '@oplayer/core'
+import {
+  type Player,
+  type PlayerPluginV2,
+  type Source,
+  type PartialRequired,
+  type PluginMeta,
+  type LoadSourceContext,
+  loadSDK
+} from '@oplayer/core'
 import type Mpegts from 'mpegts.js'
 
-const PLUGIN_NAME = 'oplayer-plugin-mpegts'
+const PLUGIN_NAME = 'mpegts'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
@@ -27,14 +35,12 @@ const defaultMatcher: Matcher = (_, source) => {
   return (source.format === 'auto' || typeof source.format === 'undefined') && REG.test(source.src)
 }
 
-class MpegtsPlugin implements PlayerPlugin {
-  key = 'mpegts'
-  name = PLUGIN_NAME
-  version = __VERSION__
+class MpegtsPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: PLUGIN_NAME }
 
   static library: typeof Mpegts = (globalThis as any).mpegts
 
-  player!: Player
+  private player!: Player
 
   instance?: Mpegts.Player
 
@@ -50,15 +56,15 @@ class MpegtsPlugin implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
-    this.player = player
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
     return this
   }
 
-  async load({ $video, options }: Player, source: Source) {
+  async loadSource(ctx: LoadSourceContext) {
     const { matcher, library } = this.options
 
-    if (!matcher($video, source)) return false
+    if (!matcher(ctx.video, ctx.source)) return false
 
     if (!MpegtsPlugin.library) {
       MpegtsPlugin.library =
@@ -78,14 +84,14 @@ class MpegtsPlugin implements PlayerPlugin {
 
     this.instance = MpegtsPlugin.library.createPlayer(
       {
-        url: source.src,
-        isLive: options.isLive,
-        type: source.format || REG.exec(source.src)?.[0]! // could also be mpegts, m2ts, flv
+        url: ctx.source.src,
+        isLive: ctx.options.isLive,
+        type: ctx.source.format || REG.exec(ctx.source.src)?.[0]! // could also be mpegts, m2ts, flv
       },
       this.options.config
     )
 
-    this.instance.attachMediaElement($video)
+    this.instance.attachMediaElement(ctx.video)
     this.instance.load()
 
     return this
@@ -105,6 +111,6 @@ class MpegtsPlugin implements PlayerPlugin {
   }
 }
 
-export default function create(options?: MpegtsPluginOptions): PlayerPlugin {
+export default function create(options?: MpegtsPluginOptions): PlayerPluginV2 {
   return new MpegtsPlugin(options)
 }

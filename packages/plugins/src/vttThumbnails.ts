@@ -1,4 +1,4 @@
-import { PlayerPlugin } from '@oplayer/core'
+import { PlayerPluginV2, type PluginMeta } from '@oplayer/core'
 import { $, Player } from '@oplayer/core'
 
 type Thumbnails = {
@@ -11,7 +11,9 @@ type Thumbnails = {
 type Def = { start: number; end: number; css: any }
 
 function plugin(player: Player, options?: Thumbnails) {
-  const { $progress } = player.context.ui
+  const ui = player.pluginManager.getPlugin<any>('ui')
+  if (!ui) return
+  const { $progress } = ui
   const container = $progress.firstElementChild
 
   let vttData = [] as Def[]
@@ -19,7 +21,7 @@ function plugin(player: Player, options?: Thumbnails) {
   let lastStyle: Def
   let isActive = false
   let src = options?.src
-  const $dom = $.render($.create(`div.${player.context.ui.vttThumbnailsCls}`), container)
+  const $dom = $.render($.create(`div.${ui.vttThumbnailsCls}`), container)
 
   $dom.style.width = (options?.width || 160) + 'px'
   $dom.style.height = (options?.height || 90) + 'px'
@@ -40,8 +42,8 @@ function plugin(player: Player, options?: Thumbnails) {
   if (options?.src) bootstrap(options.src)
 
   player.on('videosourcechange', () => {
-    player.context.ui.progressHoverCallback.splice(
-      player.context.ui.progressHoverCallback.findIndex((it: any) => it == updateThumbnailStyle),
+    ui?.progressHoverCallback.splice(
+      ui?.progressHoverCallback.findIndex((it: any) => it == updateThumbnailStyle),
       1
     )
     isActive = false
@@ -222,12 +224,13 @@ function plugin(player: Player, options?: Thumbnails) {
     }
   }
 
-  player.context.ui.progressHoverCallback.push(updateThumbnailStyle)
-  player.context.ui.changeThumbnails = ({ src }: any) => bootstrap(src)
+  ui.progressHoverCallback.push(updateThumbnailStyle)
+  ui.changeThumbnails = ({ src }: any) => bootstrap(src)
 }
 
-export default (options?: Thumbnails): PlayerPlugin => ({
-  name: 'oplayer-vtt-thumbnails',
-  version: __VERSION__,
-  apply: (player) => plugin(player, options)
+export default (options?: Thumbnails): PlayerPluginV2 => ({
+  meta: { name: 'vtt-thumbnails' } as PluginMeta,
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    plugin(ctx.player, options)
+  }
 })

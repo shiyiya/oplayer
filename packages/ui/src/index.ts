@@ -1,4 +1,4 @@
-import { $, mergeDeep } from '@oplayer/core'
+import { $, mergeDeep, type PlayerPluginV2, type PluginMeta } from '@oplayer/core'
 import { root } from './style'
 
 import {
@@ -46,9 +46,8 @@ const defaultConfig: UiConfig = {
 }
 
 class UI implements UIInterface {
-  key = 'ui'
-  version = __VERSION__
-  name = 'oplayer-theme-ui'
+  readonly meta: PluginMeta = { name: 'ui', priority: 10 }
+  name = 'ui'
 
   player!: Player
 
@@ -119,12 +118,12 @@ class UI implements UIInterface {
     }
   }
 
-  apply(player: Player) {
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
     const { config } = this
+    const player = ctx.player
     this.player = player
 
     const $root = (this.$root = $.create(`div.${root(config)}`))
-
     renderLayer(this, config)
 
     if (player.isNativeUI) {
@@ -132,7 +131,7 @@ class UI implements UIInterface {
       renderCoverButton(player, $root)
       renderLoading(player, $root)
       $.render($root, player.$root)
-      return
+      return this
     }
 
     this.icons = Icons.setupIcons(config.icons)

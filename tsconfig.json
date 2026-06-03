@@ -12,7 +12,7 @@
     "sourceMap": true,
 
     "importHelpers": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "useUnknownInCatchVariables": true,
     "preserveWatchOutput": true,

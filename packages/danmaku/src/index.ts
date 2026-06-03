@@ -1,4 +1,4 @@
-import type { Player, PlayerPlugin, RequiredPartial } from '@oplayer/core'
+import type { Player, PlayerPluginV2, PluginMeta, RequiredPartial } from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { default as _Danmaku } from 'danmaku'
 import { danmakuParseFromUrl } from './danmaku-parse'
@@ -12,17 +12,15 @@ export * from './types'
 // oic=cid
 // https://cors-flame.vercel.app/api/stream?url=https://api.bilibili.com/x/v1/dm/list.so?oid=144541892
 
-export default class Danmaku implements PlayerPlugin {
-  key = 'danmaku'
-  name = 'oplayer-plugin-danmaku'
-  version = __VERSION__
+export default class Danmaku implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'danmaku' }
 
-  player: Player
-  danmaku: DanmakuContext
-  heatmap: Heatmap
+  private player!: Player
+  danmaku!: DanmakuContext
+  heatmap!: Heatmap
 
   loaded: boolean = false
-  $root: HTMLDivElement
+  $root!: HTMLDivElement
 
   options: RequiredPartial<Options, 'source' | 'onEmit' | 'customHeatmap'> = {
     speed: 144,
@@ -39,7 +37,8 @@ export default class Danmaku implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    const player = ctx.player
     if (player.isNativeUI) return
     this.player = player
 
@@ -132,12 +131,13 @@ export default class Danmaku implements PlayerPlugin {
     const { danmaku, player } = this
     const { enable, heatmap: heatmapEnable, opacity, area } = this.options
 
-    player.context.ui?.setting.register({
+    const ui = player.pluginManager.getPlugin<any>('ui') as any
+    ui?.setting?.register({
       name: player.locales.get('Danmaku'),
       type: 'selector',
       default: true,
       key: 'danmaku',
-      icon: player.context.ui?.icons.danmaku ?? danmakuSvg,
+      icon: ui?.icons?.danmaku ?? danmakuSvg,
       children: [
         {
           name: player.locales.get('Display'),

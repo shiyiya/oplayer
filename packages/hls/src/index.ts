@@ -1,8 +1,16 @@
-import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
+import {
+  loadSDK,
+  type Player,
+  type PlayerPluginV2,
+  type PluginMeta,
+  type RequiredPartial,
+  type Source,
+  type LoadSourceContext
+} from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig, LevelSwitchedData, Level, MediaPlaylist } from 'hls.js'
 
-const PLUGIN_NAME = 'oplayer-plugin-hls'
+const PLUGIN_NAME = 'hls'
 
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
@@ -80,14 +88,12 @@ const defaultMatcher: Matcher = (video, source, forceHLS) => {
   )
 }
 
-class HlsPlugin implements PlayerPlugin {
-  key = 'hls'
-  name = PLUGIN_NAME
-  version = __VERSION__
+class HlsPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: PLUGIN_NAME }
 
   static library: typeof import('hls.js/dist/hls.min.js')
 
-  player!: Player
+  private player!: Player
 
   instance?: Hls
 
@@ -109,15 +115,15 @@ class HlsPlugin implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
-    this.player = player
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
     return this
   }
 
-  async load({ $video }: Player, source: Source) {
+  async loadSource(ctx: LoadSourceContext) {
     const { matcher, forceHLS, library } = this.options
 
-    if (!matcher($video, source, forceHLS)) return false
+    if (!matcher(ctx.video, ctx.source, forceHLS)) return false
 
     if (!HlsPlugin.library) {
       HlsPlugin.library =
@@ -128,17 +134,18 @@ class HlsPlugin implements PlayerPlugin {
     if (!HlsPlugin.library.isSupported()) return false
 
     const { config, errorHandler } = this.options
+    const { video } = ctx
 
     this.instance = new HlsPlugin.library(config)
-    this.instance.attachMedia($video)
+    this.instance.attachMedia(video)
 
     const { instance, player } = this
 
     const $source = document.createElement('source')
-    $source.setAttribute('src', source.src)
-    $source.setAttribute('type', source.type || (source.type = 'application/x-mpegurl'))
+    $source.setAttribute('src', ctx.source.src)
+    $source.setAttribute('type', ctx.source.type || (ctx.source.type = 'application/x-mpegurl'))
     $source.setAttribute('data-hls', '')
-    $video.append($source)
+    video.append($source)
 
     instance.on(HlsPlugin.library.Events.DESTROYING, () => {
       $source.remove()
@@ -173,23 +180,25 @@ class HlsPlugin implements PlayerPlugin {
       })
     })
 
-    instance.loadSource(source.src)
+    instance.loadSource(ctx.source.src)
 
-    if (player.context.ui?.setting) {
-      generateSetting(player, instance, this.options)
+    const ui = this.player.pluginManager.getPlugin<any>('ui') as any
+    if (ui?.setting) {
+      generateSetting(player, instance, this.options, ui)
     }
 
     return this
   }
 
-  unload() {
+  unloadSource() {
     this.instance?.stopLoad()
   }
 
   destroy() {
     if (this.instance) {
       const { player, instance } = this
-      if (player.context.ui?.setting) removeSetting(player)
+      const ui = this.player.pluginManager.getPlugin<any>('ui') as any
+      if (ui?.setting) removeSetting(player)
       instance.destroy()
     }
   }
@@ -199,8 +208,7 @@ export default function create(options?: HlsPluginOptions) {
   return new HlsPlugin(options)
 }
 
-const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['options']) => {
-  const ui = player.context.ui
+const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['options'], ui: any) => {
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
       if (instance.levels.length < 2) return
@@ -336,8 +344,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
     const settings = arg.settings()
     const { name, icon, onChange } = arg
 
-    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
-    player.context.ui.setting.register({
+    ui.setting?.unregister(`${PLUGIN_NAME}-${name}`)
+    ui.setting?.register({
       name: player.locales.get(name),
       icon,
       onChange,
@@ -349,7 +357,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
 }
 
 const removeSetting = (player: Player) => {
-  ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${it}`)
-  )
+  const ui = player.pluginManager.getPlugin<any>('ui') as any
+  ui?.setting?.unregister(`${PLUGIN_NAME}-Quality`)
+  ui?.setting?.unregister(`${PLUGIN_NAME}-Language`)
+  ui?.setting?.unregister(`${PLUGIN_NAME}-Subtitle`)
 }

@@ -1,4 +1,4 @@
-import Player, { PartialRequired, PlayerPlugin } from '@oplayer/core'
+import Player, { PartialRequired, PlayerPluginV2 } from '@oplayer/core'
 import type { ICONS_MAP } from './functions/icons'
 import type { Subtitle as SubtitleInstance } from './components/Subtitle'
 
@@ -221,7 +221,7 @@ export type ErrorPayload =
       code?: number
     }
 
-export interface UIInterface extends PlayerPlugin {
+export interface UIInterface extends PlayerPluginV2 {
   config: PartialRequired<UiConfig, 'theme'>
 
   player: Player
