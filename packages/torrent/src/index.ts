@@ -4,7 +4,8 @@ import {
   type PlayerPluginV2,
   type PluginMeta,
   type Source,
-  type LoadSourceContext
+  type LoadSourceContext,
+  type MenuRegistry
 } from '@oplayer/core'
 import type Webtorrent from 'webtorrent'
 
@@ -26,6 +27,7 @@ class TorrentPlugin implements PlayerPluginV2 {
   static library: Webtorrent.WebTorrent
 
   private player!: Player
+  private menus!: MenuRegistry
 
   instance: Webtorrent.Instance
 
@@ -33,6 +35,7 @@ class TorrentPlugin implements PlayerPluginV2 {
 
   setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
     this.player = ctx.player
+    this.menus = ctx.menus
     return this
   }
 
@@ -82,9 +85,9 @@ class TorrentPlugin implements PlayerPluginV2 {
 
       medias[0]!.renderTo(ctx.video, { controls: false })
 
-      const ui = player.pluginManager.getPlugin<any>('ui') as any
-      ui?.menu?.register({
+      this.menus.register({
         name: 'Torrent',
+        key: 'torrent',
         position: 'top',
         children: medias.map((media, i) => ({
           name: media.name,

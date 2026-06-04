@@ -1,5 +1,13 @@
-import type { Player, Source, PlayerPluginV2, PluginMeta, PartialRequired } from '@oplayer/core'
-import type { Highlight, SubtitleSource, Thumbnails } from '@oplayer/ui'
+import {
+  type Player,
+  type Source,
+  type PlayerPluginV2,
+  type PluginMeta,
+  type PartialRequired,
+  type MenuRegistry,
+  isObject
+} from '@oplayer/core'
+import type { Highlight, SubtitleSource, Thumbnails, UIInterface } from '@oplayer/ui'
 
 import './playlist.css'
 
@@ -44,6 +52,7 @@ export default class PlaylistPlugin implements PlayerPluginV2 {
   static m3u8Parser = globalThis.m3u8Parser
 
   private player!: Player
+  private menus!: MenuRegistry
 
   currentIndex?: number
 
@@ -60,6 +69,7 @@ export default class PlaylistPlugin implements PlayerPluginV2 {
     if (player.isNativeUI) return
 
     this.player = player
+    this.menus = ctx.menus
 
     this._init()
 
@@ -78,7 +88,7 @@ export default class PlaylistPlugin implements PlayerPluginV2 {
           this.next()
         })
       }
-      const ui = this.player.pluginManager.getPlugin<any>('ui')
+      const ui = this.player.pluginManager.getPlugin<UIInterface>('ui')
       ui?.keyboard?.register({
         L: () => {
           this.$root.classList.toggle('playlist__active')
@@ -97,14 +107,15 @@ export default class PlaylistPlugin implements PlayerPluginV2 {
       fetch(sources[0].src)
         .then((resp) => resp.text())
         .then((manifest) => {
-          const parser = new PlaylistPlugin.m3u8Parser.Parser()
+          const parser = new PlaylistPlugin.m3u8Parser!.Parser()
           parser.push(manifest)
           parser.end()
-          this.options.sources = parser.manifest.segments.map((seg: Segment) => {
-            if ((<any>m3uList)?.sourceFormat) {
-              return (<any>m3uList).sourceFormat(seg)
+          const segments = parser.manifest.segments as unknown as Segment[]
+          this.options.sources = segments.map((seg) => {
+            if (isObject(m3uList) && 'sourceFormat' in m3uList) {
+              m3uList.sourceFormat!(seg)
             }
-            return { src: seg.uri, title: seg.title }
+            return { src: seg.uri, title: seg.title } as PlaylistSource
           })
           start()
         })
@@ -142,15 +153,14 @@ export default class PlaylistPlugin implements PlayerPluginV2 {
     })
       .then((source) => {
         if (!source.src) {
-          const ui = this.player.pluginManager.getPlugin<any>('ui')
-          ui?.notice?.('Empty Source')
+          this.player.emit('notice', { text: 'Empty Source' })
           throw new Error('Empty Source')
         }
 
         const { src, poster, format, title, subtitles, thumbnails, highlights, danmaku } = source
 
         return this.player.changeSource({ src, poster, format, title }).then(() => {
-          const ui = this.player.pluginManager.getPlugin<any>('ui')
+          const ui = this.player.pluginManager.getPlugin<UIInterface>('ui')
           if (subtitles) {
             ui?.subtitle?.changeSource(subtitles)
           }
@@ -244,8 +254,9 @@ export default class PlaylistPlugin implements PlayerPluginV2 {
 
     ui?.$root?.appendChild(this.$root)
 
-    ui?.menu?.register({
+    this.menus.register({
       name: this.player.locales.get('Playlist'),
+      key: 'playlist',
 
       icon: `<svg style="transform: scale(1.2);" viewBox="0 0 1024 1024"><path d="M213.333333 426.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666666s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666666z m0-170.666667h426.666667c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666666H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666666s19.2-42.666667 42.666666-42.666667z m0 341.333333h256c23.466667 0 42.666667 19.2 42.666667 42.666667s-19.2 42.666667-42.666667 42.666667H213.333333c-23.466667 0-42.666667-19.2-42.666666-42.666667s19.2-42.666667 42.666666-42.666667z m384 37.546667v180.48c0 16.64 17.92 26.88 32.426667 18.346667l150.613333-90.453334c13.653333-8.106667 13.653333-28.16 0-36.693333l-150.613333-90.453333a21.674667 21.674667 0 0 0-32.426667 18.773333z"></path></svg>`,
       position: 'top',

@@ -33,6 +33,8 @@ export type MenuBar<
     value?: any
   }
 > = {
+  /** Unique identifier for unregister/select. Falls back to name if not provided. */
+  key?: string
   position?: 'top' | 'bottom'
   name: string
   icon?: string
@@ -271,6 +273,9 @@ export interface UIInterface extends PlayerPluginV2 {
   changeThumbnails: (src: Thumbnails) => void
 
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[]
+
+  /** CSS class name for VTT thumbnail container (set by Progress.ts) */
+  vttThumbnailsCls?: string
 
   $root: HTMLDivElement
 

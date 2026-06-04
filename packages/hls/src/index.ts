@@ -5,7 +5,9 @@ import {
   type PluginMeta,
   type RequiredPartial,
   type Source,
-  type LoadSourceContext
+  type LoadSourceContext,
+  type SettingRegistry,
+  type SettingDefinition
 } from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig, LevelSwitchedData, Level, MediaPlaylist } from 'hls.js'
@@ -94,6 +96,7 @@ class HlsPlugin implements PlayerPluginV2 {
   static library: typeof import('hls.js/dist/hls.min.js')
 
   private player!: Player
+  private settings!: SettingRegistry
 
   instance?: Hls
 
@@ -117,6 +120,7 @@ class HlsPlugin implements PlayerPluginV2 {
 
   setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
     this.player = ctx.player
+    this.settings = ctx.settings
     return this
   }
 
@@ -182,10 +186,7 @@ class HlsPlugin implements PlayerPluginV2 {
 
     instance.loadSource(ctx.source.src)
 
-    const ui = this.player.pluginManager.getPlugin<any>('ui') as any
-    if (ui?.setting) {
-      generateSetting(player, instance, this.options, ui)
-    }
+    generateSetting(player, instance, this.settings, this.options)
 
     return this
   }
@@ -196,9 +197,8 @@ class HlsPlugin implements PlayerPluginV2 {
 
   destroy() {
     if (this.instance) {
-      const { player, instance } = this
-      const ui = this.player.pluginManager.getPlugin<any>('ui') as any
-      if (ui?.setting) removeSetting(player)
+      const { instance } = this
+      removeSetting(this.settings)
       instance.destroy()
     }
   }
@@ -208,7 +208,12 @@ export default function create(options?: HlsPluginOptions) {
   return new HlsPlugin(options)
 }
 
-const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['options'], ui: any) => {
+const generateSetting = (
+  player: Player,
+  instance: Hls,
+  settings: SettingRegistry,
+  options: HlsPlugin['options']
+) => {
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
       if (instance.levels.length < 2) return
@@ -216,7 +221,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
       if (defaultLevel != -1) instance.currentLevel = defaultLevel
 
       injectSetting({
-        icon: ui.icons.quality,
         name: 'Quality',
         settings() {
           return instance.levels
@@ -238,13 +242,14 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
               [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
             )
         },
-        onChange(it) {
+        onChange({ value }) {
+          const v = value as number
           if (options.qualitySwitch == 'immediate') {
-            instance.currentLevel = it.value
-            if (it.value !== -1) instance.loadLevel = it.value
+            instance.currentLevel = v
+            if (v !== -1) instance.loadLevel = v
           } else {
-            instance.nextLevel = it.value
-            if (it.value !== -1) instance.nextLoadLevel = it.value
+            instance.nextLevel = v
+            if (v !== -1) instance.nextLoadLevel = v
           }
         }
       })
@@ -256,9 +261,9 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         if (instance.autoLevelEnabled) {
           const height = instance.levels[level]!.height
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-          ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+          settings.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         } else {
-          ui.setting.select(`${PLUGIN_NAME}-Quality`, level - instance.levels.length, false)
+          settings.select(`${PLUGIN_NAME}-Quality`, level - instance.levels.length, false)
         }
       }
     )
@@ -280,7 +285,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
       }
 
       injectSetting({
-        icon: ui.icons.lang,
         name: 'Language',
         settings() {
           return instance.audioTracks.map(({ name, lang, id }) => ({
@@ -289,8 +293,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
             value: id
           }))
         },
-        onChange(it) {
-          instance.audioTrack = it.value
+        onChange({ value }) {
+          instance.audioTrack = value as number
         }
       })
     })
@@ -312,7 +316,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
       }
 
       injectSetting({
-        icon: ui.icons.subtitle,
         name: 'Subtitle',
         settings() {
           return instance.subtitleTracks.reduce(
@@ -328,37 +331,35 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
           )
         },
         onChange({ value }) {
-          if ((instance.subtitleDisplay = !(value == -1))) {
-            instance.subtitleTrack = value
+          const v = value as number
+          if ((instance.subtitleDisplay = !(v == -1))) {
+            instance.subtitleTrack = v
           }
         }
       })
     })
 
   function injectSetting(arg: {
-    icon: string
     name: string
-    settings: () => { name: string; default: boolean; value: any }[]
-    onChange: (it: { value: any }) => void
+    settings: () => { name: string; default: boolean; value: unknown }[]
+    onChange: SettingDefinition['onChange']
   }) {
-    const settings = arg.settings()
-    const { name, icon, onChange } = arg
+    const items = arg.settings()
+    const { name, onChange } = arg
 
-    ui.setting?.unregister(`${PLUGIN_NAME}-${name}`)
-    ui.setting?.register({
+    settings.unregister(`${PLUGIN_NAME}-${name}`)
+    settings.register({
       name: player.locales.get(name),
-      icon,
       onChange,
       type: 'selector',
       key: `${PLUGIN_NAME}-${name}`,
-      children: settings
+      children: items
     })
   }
 }
 
-const removeSetting = (player: Player) => {
-  const ui = player.pluginManager.getPlugin<any>('ui') as any
-  ui?.setting?.unregister(`${PLUGIN_NAME}-Quality`)
-  ui?.setting?.unregister(`${PLUGIN_NAME}-Language`)
-  ui?.setting?.unregister(`${PLUGIN_NAME}-Subtitle`)
+const removeSetting = (settings: SettingRegistry) => {
+  settings.unregister(`${PLUGIN_NAME}-Quality`)
+  settings.unregister(`${PLUGIN_NAME}-Language`)
+  settings.unregister(`${PLUGIN_NAME}-Subtitle`)
 }

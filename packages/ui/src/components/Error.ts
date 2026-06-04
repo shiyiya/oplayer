@@ -37,8 +37,7 @@ const render = (player: Player, el: HTMLElement, config: UiConfig) => {
     let message = ''
 
     if (payload instanceof Event) {
-      //@ts-ignore
-      const error = payload.target?.error as {
+      const error = (payload.target as HTMLVideoElement | null)?.error as {
         message: string
         code: keyof typeof VIDEO_ERROR_MAP
       } | null

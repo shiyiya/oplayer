@@ -1,4 +1,4 @@
-import { $, mergeDeep, type PlayerPluginV2, type PluginMeta } from '@oplayer/core'
+import { $, mergeDeep, SettingRegistryImpl, MenuRegistryImpl, type PlayerPluginV2, type PluginMeta } from '@oplayer/core'
 import { root } from './style'
 
 import {
@@ -22,7 +22,7 @@ import renderSubtitle, { Subtitle } from './components/Subtitle'
 import { render as renderLayer } from './components/layer'
 import { ICONS_MAP } from './functions/icons'
 
-import type { PartialRequired, Player } from '@oplayer/core'
+import type { PartialRequired, Player, SettingRegistry, MenuRegistry } from '@oplayer/core'
 import type { Highlight, MenuBar, Setting, Thumbnails, UiConfig, UIInterface } from './types'
 
 const defaultConfig: UiConfig = {
@@ -88,18 +88,18 @@ class UI implements UIInterface {
     unregister: (keys: string[]) => void
   } = {} as any
 
-  setting: {
+  setting!: {
     register: (payload: Setting | Setting[]) => void
     unregister: (key: string) => void
     updateLabel: (key: string, text: string) => void
     select: (key: string, value: boolean | number, shouldBeCallFn?: Boolean) => void
-  } = {} as any
+  }
 
-  menu: {
+  menu!: {
     register: (menu: MenuBar) => void
     unregister: (key: string) => void
     select: (name: string, index: number) => void
-  } = {} as any
+  }
 
   toggleController!: () => void
 
@@ -110,6 +110,12 @@ class UI implements UIInterface {
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[] = []
 
   config: PartialRequired<UiConfig, 'theme'>
+
+  /** Central setting registry — owned by UI, shared with plugins via ctx.settings */
+  settings!: SettingRegistry
+
+  /** Central menu registry — owned by UI, shared with plugins via ctx.menus */
+  menus!: MenuRegistry
 
   constructor(config: UiConfig) {
     this.config = mergeDeep({}, defaultConfig, config) as any
@@ -122,6 +128,10 @@ class UI implements UIInterface {
     const { config } = this
     const player = ctx.player
     this.player = player
+
+    // Create registries BEFORE other plugins run setup (UI has priority 10)
+    this.settings = new SettingRegistryImpl()
+    this.menus = new MenuRegistryImpl()
 
     const $root = (this.$root = $.create(`div.${root(config)}`))
     renderLayer(this, config)
@@ -150,9 +160,9 @@ class UI implements UIInterface {
     renderController(this)
 
     renderMask(this)
-    renderSetting(this)
+    renderSetting(this, this.settings)
 
-    renderMenubar(this)
+    renderMenubar(this, this.menus)
     renderSubtitle(this)
 
     registerSpeedSetting(this)

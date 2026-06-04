@@ -29,7 +29,6 @@ const render = (it: UIInterface, el: HTMLElement) => {
     renderThumbnail(it, firstElement)
   }
 
-  //@ts-ignore
   it.vttThumbnailsCls = vttThumbnailsCls
 
   renderHighlight(it, firstElement)

@@ -1,4 +1,5 @@
-import type { Player, PlayerPluginV2, PluginMeta, Source } from '@oplayer/core'
+import type { Player, PlayerPluginV2, PluginMeta, Source, MenuRegistry } from '@oplayer/core'
+import type { UIInterface } from '@oplayer/ui'
 import { loadSDK, isIOS } from '@oplayer/core'
 
 const IS_CHROME = !!globalThis.chrome
@@ -20,6 +21,7 @@ class Chromecast implements PlayerPluginV2 {
   readonly meta: PluginMeta = { name: 'chromecast' }
 
   private player!: Player
+  private menus!: MenuRegistry
   protected _player?: cast.framework.RemotePlayer
 
   constructor(public options?: ChromeCastOptions) {}
@@ -28,6 +30,7 @@ class Chromecast implements PlayerPluginV2 {
     if (!this.canPlay()) return
 
     this.player = ctx.player
+    this.menus = ctx.menus
     this.registerUI()
 
     return this
@@ -99,7 +102,7 @@ class Chromecast implements PlayerPluginV2 {
     if (source.poster) metadata.images = [{ url: source.poster, height: null, width: null }]
     mediaInfo.metadata = metadata
 
-    const ui = this.player.pluginManager.getPlugin<any>('ui')
+    const ui = this.player.pluginManager.getPlugin<UIInterface>('ui')
     const subtitles = ui?.config?.subtitle?.source as any[] | undefined
     if (subtitles) {
       mediaInfo.tracks = subtitles.map((sub, id) => {
@@ -143,15 +146,11 @@ class Chromecast implements PlayerPluginV2 {
   }
 
   registerUI() {
-    const ui = this.player.pluginManager.getPlugin<any>('ui')
-    if (!ui) return
-
-    const { menu, icons } = ui
-
-    menu?.register({
+    this.menus.register({
       name: this.player.locales.get('Chromecast'),
+      key: 'chromecast',
       position: 'top',
-      icon: icons?.chromecast || ICON,
+      icon: ICON,
       onClick: () => this.start()
     })
   }

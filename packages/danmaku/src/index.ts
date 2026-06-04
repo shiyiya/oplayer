@@ -1,9 +1,8 @@
-import type { Player, PlayerPluginV2, PluginMeta, RequiredPartial } from '@oplayer/core'
+import type { Player, PlayerPluginV2, PluginMeta, SettingRegistry, RequiredPartial } from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { default as _Danmaku } from 'danmaku'
 import { danmakuParseFromUrl } from './danmaku-parse'
 import type { Comment, DanmakuContext, Options } from './types'
-import danmakuSvg from './danmaku.svg?raw'
 import { registerInput } from './sender'
 import Heatmap from './heatmap'
 
@@ -67,7 +66,7 @@ export default class Danmaku implements PlayerPluginV2 {
       window.removeEventListener('resize', resize)
     })
 
-    this.registerSetting()
+    this.registerSetting(ctx.settings)
     this.changeSource(this.options.source)
     if (this.options.displaySender && !isMobile) {
       registerInput(player, danmaku, this.options as any)
@@ -127,25 +126,23 @@ export default class Danmaku implements PlayerPluginV2 {
     })
   }
 
-  registerSetting() {
+  registerSetting(settings: SettingRegistry) {
     const { danmaku, player } = this
     const { enable, heatmap: heatmapEnable, opacity, area } = this.options
 
-    const ui = player.pluginManager.getPlugin<any>('ui') as any
-    ui?.setting?.register({
+    settings.register({
       name: player.locales.get('Danmaku'),
       type: 'selector',
       default: true,
       key: 'danmaku',
-      icon: ui?.icons?.danmaku ?? danmakuSvg,
       children: [
         {
           name: player.locales.get('Display'),
           type: 'switcher',
           default: enable,
           key: 'danmaku-switcher',
-          onChange: (value: boolean) => {
-            this.options.enable = value
+          onChange: (value: unknown) => {
+            this.options.enable = value as boolean
             if (value) {
               if (!this.loaded) {
                 this.changeSource(this.options.source)
@@ -162,8 +159,8 @@ export default class Danmaku implements PlayerPluginV2 {
           type: 'switcher',
           default: heatmapEnable,
           key: 'heatmap',
-          onChange: (value: boolean) => {
-            this.options.heatmap = value
+          onChange: (value: unknown) => {
+            this.options.heatmap = value as boolean
             if (value) this.heatmap.enable()
             else this.heatmap.disable()
           }

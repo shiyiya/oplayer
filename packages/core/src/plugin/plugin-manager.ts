@@ -12,6 +12,18 @@ import type {
 } from './types'
 
 /**
+ * No-op SettingRegistry — used when no UI plugin is registered.
+ * Stores settings but doesn't render anything.
+ */
+class NoOpSettingRegistry extends SettingRegistryImpl {}
+
+/**
+ * No-op MenuRegistry — used when no UI plugin is registered.
+ * Stores menus but doesn't render anything.
+ */
+class NoOpMenuRegistry extends MenuRegistryImpl {}
+
+/**
  * Internal storage for registered plugins
  */
 interface RegisteredPlugin {
@@ -25,33 +37,25 @@ interface RegisteredPlugin {
 /**
  * Manages the full plugin lifecycle:
  *   register → setup → [loadSource → unloadSource]×N → destroy
+ *
+ * Setting/Menu registries are owned by the UI plugin.
+ * PluginManager retrieves them via getPlugin('ui'), falls back to NoOp registries.
  */
 export class PluginManager {
   private _registered: Map<string, RegisteredPlugin> = new Map()
-  private _setupContexts: Map<string, PluginSetupContext> = new Map()
-  private _settingRegistry: SettingRegistryImpl
-  private _menuRegistry: MenuRegistryImpl
   private _player: Player
   private _currentLoader?: string
-  private _isUIConnected = false
 
   constructor(player: Player) {
     this._player = player
-    this._settingRegistry = new SettingRegistryImpl()
-    this._menuRegistry = new MenuRegistryImpl()
   }
 
   // ─── Registration ────────────────────────────────────────────────────
 
   /**
    * Register a plugin. This stores it but does NOT call setup() yet.
-   * setup() is called during create().
    */
   register(plugin: PlayerPluginV2<unknown>): void {
-    this._register(plugin)
-  }
-
-  private _register(plugin: PlayerPluginV2<unknown>): void {
     const name = plugin.meta.name
     if (this._registered.has(name)) {
       throw new Error(`Plugin "${name}" is already registered`)
@@ -67,7 +71,6 @@ export class PluginManager {
 
   /**
    * Call setup() on all registered plugins.
-   * Checks dependencies, resolves order, and initializes each plugin.
    */
   setup(): void {
     const order = this._resolveOrder()
@@ -86,9 +89,6 @@ export class PluginManager {
         console.error(`[OPlayer] Plugin "${name}" setup failed:`, err)
       }
     }
-
-    // Connect registries to UI backend if available
-    this._connectToUI()
   }
 
   private _resolveOrder(): string[] {
@@ -149,55 +149,38 @@ export class PluginManager {
     }
   }
 
-  private _createSetupContext(pluginName: string): PluginSetupContext {
+  /** Get setting/menu registries from UI plugin, or create NoOp fallbacks. */
+  private _getRegistries(): { settings: SettingRegistry; menus: MenuRegistry } {
+    const ui = this._registered.get('ui')?.api as { settings?: SettingRegistry; menus?: MenuRegistry } | undefined
+    return {
+      settings: ui?.settings ?? new NoOpSettingRegistry(),
+      menus: ui?.menus ?? new NoOpMenuRegistry()
+    }
+  }
+
+  private _createSetupContext(_pluginName: string): PluginSetupContext {
     const p = this._player
-    const ctx: PluginSetupContext = {
+    const { settings, menus } = this._getRegistries()
+
+    return {
       player: p,
       events: p.eventEmitter,
-      settings: this._settingRegistry,
-      menus: this._menuRegistry,
+      settings,
+      menus,
       notify: (text: string, options?: NotifyOptions) => {
-        p.emit('notice', { text, ...options, pluginName })
+        p.emit('notice', { text, ...options, pluginName: _pluginName })
       },
       getPlugin: <T = unknown>(name: string): T | undefined => {
         const entry = this._registered.get(name)
         return (entry?.api as T) ?? undefined
       }
     }
-
-    this._setupContexts.set(pluginName, ctx)
-    return ctx
-  }
-
-  private _connectToUI(): void {
-    if (this._isUIConnected) return
-    const uiEntry = this._registered.get('ui')
-    if (!uiEntry?.api) return
-
-    const ui = uiEntry.api as any
-    if (ui?.setting) {
-      this._settingRegistry.connect({
-        register: (s) => ui.setting.register(s),
-        unregister: (k) => ui.setting.unregister(k),
-        updateLabel: (k, t) => ui.setting.updateLabel(k, t),
-        select: (k, v, c) => ui.setting.select(k, v, c)
-      })
-    }
-    if (ui?.menu) {
-      this._menuRegistry.connect({
-        register: (m) => ui.menu.register(m),
-        unregister: (k) => ui.menu.unregister(k),
-        select: (n, i) => ui.menu.select(n, i)
-      })
-    }
-    this._isUIConnected = true
   }
 
   // ─── Load Source Phase ───────────────────────────────────────────────
 
   /**
    * Find a plugin that can handle the given source and call its loadSource().
-   * Plugins are checked in priority order (highest first).
    */
   async loadSource(source: Source): Promise<Destroyable | undefined> {
     if (this._currentLoader) {
@@ -260,17 +243,16 @@ export class PluginManager {
     }
 
     this._registered.clear()
-    this._setupContexts.clear()
   }
 
   // ─── Accessors ───────────────────────────────────────────────────────
 
   get settings(): SettingRegistry {
-    return this._settingRegistry
+    return this._getRegistries().settings
   }
 
   get menus(): MenuRegistry {
-    return this._menuRegistry
+    return this._getRegistries().menus
   }
 
   getPlugin<T = unknown>(name: string): T | undefined {

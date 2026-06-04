@@ -76,15 +76,15 @@ export interface LoadSourceContext {
 
 // ─── Setting Registry ──────────────────────────────────────────────────────
 
-export interface SettingDefinition {
+export interface SettingDefinition<T = unknown> {
   name: string
   key?: string
   type?: 'selector' | 'switcher' | 'slider' | 'option'
   icon?: string
-  children?: SettingDefinition[]
-  onChange?: (value: unknown, ctx?: { index: number; player: Player }) => void | Promise<void>
-  default?: unknown
-  value?: unknown
+  children?: SettingDefinition<T>[]
+  onChange?: (def: SettingDefinition<T>, ctx?: { index: number; player: Player }) => void | Promise<void>
+  default?: T
+  value?: T
   min?: number
   max?: number
   step?: number
@@ -95,11 +95,23 @@ export interface SettingRegistry {
   unregister(key: string): void
   updateLabel(key: string, text: string): void
   select(key: string, value: boolean | number, callFn?: boolean): void
+
+  /** Subscribe to new settings. Fires immediately for already-registered ones. */
+  onRegister(cb: (def: SettingDefinition) => void): void
+  /** Subscribe to settings being unregistered. */
+  onUnregister(cb: (key: string) => void): void
+  /** Subscribe to label updates. */
+  onLabelChange(cb: (key: string, text: string) => void): void
+  /** Subscribe to select events. */
+  onSelect(cb: (key: string, value: boolean | number, callFn?: boolean) => void): void
 }
 
 // ─── Menu Registry ─────────────────────────────────────────────────────────
 
 export interface MenuDefinition {
+  /** Unique identifier for unregister/select. Falls back to name if not provided. */
+  key?: string
+  /** Display name shown to users */
   name: string
   position?: 'top' | 'bottom'
   icon?: string
@@ -111,7 +123,16 @@ export interface MenuDefinition {
 export interface MenuRegistry {
   register(menu: MenuDefinition): void
   unregister(key: string): void
-  select(name: string, index: number): void
+  select(key: string, index: number): void
+
+  /** Subscribe to new menus. Fires immediately for already-registered ones. */
+  onRegister(cb: (def: MenuDefinition) => void): void
+  /** Subscribe to menus being unregistered. */
+  onUnregister(cb: (key: string) => void): void
+  /** Subscribe to select events. */
+  onSelect(cb: (key: string, index: number) => void): void
+  /** Get all registered menus (for debugging/inspection) */
+  getAll(): ReadonlyMap<string, MenuDefinition>
 }
 
 // ─── Notify Options ────────────────────────────────────────────────────────

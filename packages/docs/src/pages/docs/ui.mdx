@@ -17,9 +17,6 @@ npm i @oplayer/ui
 
 <!-- or just one **@oplayer/ui version updated with core** -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/core@latest/dist/index.ui.js"></script> -->
-
-<!-- or **@oplayer/core version updated with ui** -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@oplayer/ui@latest/dist/index.ui.js"></script> -->
 ```
 
 ## Basic
@@ -104,7 +101,6 @@ const player = OPlayer.make('#player', {
   menu: [
     {
       name: 'Quality(清晰度)',
-      key: 'Quality', // for select
       position: 'bottom', // or top
       children: [
         {
@@ -128,8 +124,12 @@ const player = OPlayer.make('#player', {
   ]
 }
 
-//or
-player.context.menu.register([])
+// or via registry
+player.pluginManager.menus.register({
+  name: 'My Menu',
+  icon: '🎵',
+  onClick() { /* ... */ }
+})
 ```
 
 ## Add custom setting
@@ -149,14 +149,22 @@ player.context.menu.register([])
         { name: 'a', value: 'a', default: true },
         { name: 'b', value: 'b', default: false }
       ],
-      onChange: ({ value }) => {
+      onChange({ value }) {
         // do something
       }
     }
   ]
 }
-//or
-player.context.menu.register([])
+
+// or via registry
+player.pluginManager.settings.register({
+  name: 'My Setting',
+  type: 'switcher',
+  key: 'my-key',
+  onChange(value) {
+    // do something
+  }
+})
 ```
 
 ## Highlight
@@ -177,32 +185,33 @@ player.context.menu.register([])
 
 ## Methods
 
-All methods on `player.context.ui`
+All methods on `player.pluginManager`
 
 ```js
 // - Update subtitle
-player.context.ui.subtitle.changeSource([])
+const ui = player.pluginManager.getPlugin('ui')
+ui.subtitle.changeSource([])
 
 // - Update highlight
-player.context.ui.changHighlightSource([])
+ui.changeHighlightSource([])
 
 // - Update thumbnails
-player.context.ui.changThumbnails('src')
+ui.changeThumbnails('src')
 
 // - Register menu
-player.context.ui.menu.register({})
-player.context.ui.menu.unregister('key')
-player.context.ui.menu.select('key', 'index')
+player.pluginManager.menus.register({})
+player.pluginManager.menus.unregister('name')
+player.pluginManager.menus.select('name', 'index')
 
 // - Register setting
-player.context.ui.setting.register({})
-player.context.ui.setting.unregister('key')
-player.context.ui.setting.updateLabel('key', 'text')
-player.context.ui.setting.select('key', 'index')
+player.pluginManager.settings.register({})
+player.pluginManager.settings.unregister('key')
+player.pluginManager.settings.updateLabel('key', 'text')
+player.pluginManager.settings.select('key', 'index')
 
 // - Display error,notice
 player.emit('error', { message: 'msg', code: 'number' })
-player.context.ui.notice('hello')
+player.emit('notice', { text: 'hello' })
 ```
 
 ## keyboard
@@ -217,6 +226,7 @@ player.context.ui.notice('hello')
 - `w` toggle full-screen web
 - `m` toggle mute
 - `c` toggle setting panel
+- `L` toggle playlist
 
 ## watermark
 
@@ -247,6 +257,53 @@ const ui = OUI({
 ## Add next,previous button
 
 - https://github.com/shiyiya/oplayer/discussions/88
+
+## Custom UI
+
+You can build your own UI using `createUI()` from `@oplayer/core`. It provides a simple subscription-based API to receive settings and menus from plugins.
+
+```js
+const { Player, createUI } = OPlayer
+
+const myUI = createUI((ctx) => {
+  const { player, settings, menus, $video } = ctx
+
+  const $root = document.createElement('div')
+  $root.className = 'my-ui'
+  $root.innerHTML = `
+    <button class="play">▶</button>
+    <div class="menus"></div>
+    <div class="settings"></div>
+  `
+
+  // Play control
+  $root.querySelector('.play').onclick = () => player.togglePlay()
+
+  // Subscribe to menus registered by plugins (Chromecast, AirPlay, etc.)
+  menus.onRegister((def) => {
+    const $btn = document.createElement('button')
+    $btn.textContent = def.name
+    $btn.onclick = () => def.onClick?.($btn, player)
+    $root.querySelector('.menus').appendChild($btn)
+  })
+
+  // Subscribe to settings registered by plugins (HLS Quality, Danmaku, etc.)
+  settings.onRegister((def) => {
+    const $btn = document.createElement('button')
+    $btn.textContent = def.name
+    $btn.onclick = () => settings.select(def.key, true)
+    $root.querySelector('.settings').appendChild($btn)
+  })
+
+  // Insert next to video
+  $video.parentNode.insertBefore($root, $video.nextSibling)
+
+  return { $root }
+})
+
+const player = Player.make('#player', { source: { src: 'video.mp4' } })
+player.use([myUI()]).create()
+```
 
 ## Events
 

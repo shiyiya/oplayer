@@ -68,7 +68,7 @@ class MpegtsPlugin implements PlayerPluginV2 {
 
     if (!MpegtsPlugin.library) {
       MpegtsPlugin.library =
-        (globalThis as any).mpegts ||
+        (globalThis as Record<string, unknown>).mpegts ||
         //@ts-expect-error
         (library ? await loadSDK(library, 'mpegts') : (await import('mpegts.js/dist/mpegts.js')).default)
 

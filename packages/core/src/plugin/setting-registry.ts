@@ -1,53 +1,61 @@
 import type { SettingDefinition, SettingRegistry as ISettingRegistry } from './types'
 
 /**
- * Central setting registry for managing plugin settings (quality, audio, subtitle, etc).
- * Replaces the old player.context.ui.setting API.
+ * Pure event emitter for settings.
+ *
+ * Plugins call register/unregister/select/updateLabel.
+ * UI subscribes to onRegister/onUnregister/onLabelChange/onSelect to render.
+ * No connect(), no backend.
  */
 export class SettingRegistryImpl implements ISettingRegistry {
   private _settings: Map<string, SettingDefinition> = new Map()
-  private _backend?: {
-    register: (s: SettingDefinition | SettingDefinition[]) => void
-    unregister: (key: string) => void
-    updateLabel: (key: string, text: string) => void
-    select: (key: string, value: boolean | number, callFn?: boolean) => void
+  private _onRegisterCbs: ((def: SettingDefinition) => void)[] = []
+  private _onUnregisterCbs: ((key: string) => void)[] = []
+  private _onLabelChangeCbs: ((key: string, text: string) => void)[] = []
+  private _onSelectCbs: ((key: string, value: boolean | number, callFn?: boolean) => void)[] = []
+
+  /** Subscribe to new settings. Fires immediately for already-registered ones. */
+  onRegister(cb: (def: SettingDefinition) => void): void {
+    this._onRegisterCbs.push(cb)
+    for (const s of this._settings.values()) cb(s)
   }
 
-  /**
-   * Connect to a backend (usually the UI plugin's setting system).
-   * Must be called before any settings are registered.
-   */
-  connect(backend: ISettingRegistry): void {
-    this._backend = backend
-    // Replay all queued settings to the backend
-    for (const [key, setting] of this._settings) {
-      this._backend.register({ ...setting, key: setting.key || key })
-    }
+  /** Subscribe to settings being unregistered. */
+  onUnregister(cb: (key: string) => void): void {
+    this._onUnregisterCbs.push(cb)
+  }
+
+  /** Subscribe to label updates. */
+  onLabelChange(cb: (key: string, text: string) => void): void {
+    this._onLabelChangeCbs.push(cb)
+  }
+
+  /** Subscribe to select events. UI should update highlight and optionally call onChange. */
+  onSelect(cb: (key: string, value: boolean | number, callFn?: boolean) => void): void {
+    this._onSelectCbs.push(cb)
   }
 
   register(setting: SettingDefinition | SettingDefinition[]): void {
     const settings = Array.isArray(setting) ? setting : [setting]
-
     for (const s of settings) {
       const key = s.key || s.name
       this._settings.set(key, s)
-
-      // If backend is connected, forward immediately
-      this._backend?.register(s)
+      this._onRegisterCbs.forEach(cb => cb(s))
     }
   }
 
   unregister(key: string): void {
+    if (!this._settings.has(key)) return
     this._settings.delete(key)
-    this._backend?.unregister(key)
+    this._onUnregisterCbs.forEach(cb => cb(key))
   }
 
   updateLabel(key: string, text: string): void {
-    this._backend?.updateLabel(key, text)
+    this._onLabelChangeCbs.forEach(cb => cb(key, text))
   }
 
   select(key: string, value: boolean | number, callFn?: boolean): void {
-    this._backend?.select(key, value, callFn)
+    this._onSelectCbs.forEach(cb => cb(key, value, callFn))
   }
 
   /** Get all registered settings (for debugging/inspection) */

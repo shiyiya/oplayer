@@ -1,44 +1,48 @@
 import type { MenuDefinition, MenuRegistry as IMenuRegistry } from './types'
 
 /**
- * Central menu registry for managing plugin menus (Chromecast, AirPlay, Playlist, etc).
- * Replaces the old player.context.ui.menu API.
+ * Pure event emitter for menus.
+ *
+ * Plugins call register/unregister/select.
+ * UI subscribes to onRegister/onUnregister/onSelect to render.
+ * No connect(), no backend.
  */
 export class MenuRegistryImpl implements IMenuRegistry {
   private _menus: Map<string, MenuDefinition> = new Map()
-  private _backend?: {
-    register: (m: MenuDefinition) => void
-    unregister: (key: string) => void
-    select: (name: string, index: number) => void
+  private _onRegisterCbs: ((def: MenuDefinition) => void)[] = []
+  private _onUnregisterCbs: ((key: string) => void)[] = []
+  private _onSelectCbs: ((key: string, index: number) => void)[] = []
+
+  /** Subscribe to new menus. Fires immediately for already-registered ones. */
+  onRegister(cb: (def: MenuDefinition) => void): void {
+    this._onRegisterCbs.push(cb)
+    for (const m of this._menus.values()) cb(m)
   }
 
-  /**
-   * Connect to a backend (usually the UI plugin's menu system).
-   * Must be called before any menus are registered.
-   */
-  connect(backend: IMenuRegistry): void {
-    this._backend = backend
-    // Replay all queued menus to the backend
-    for (const menu of this._menus.values()) {
-      this._backend.register(menu)
-    }
+  /** Subscribe to menus being unregistered. */
+  onUnregister(cb: (key: string) => void): void {
+    this._onUnregisterCbs.push(cb)
+  }
+
+  /** Subscribe to select events. UI should update highlight and call onClick/onChange. */
+  onSelect(cb: (key: string, index: number) => void): void {
+    this._onSelectCbs.push(cb)
   }
 
   register(menu: MenuDefinition): void {
-    this._menus.set(menu.name, menu)
-    this._backend?.register(menu)
+    const key = menu.key || menu.name
+    this._menus.set(key, menu)
+    this._onRegisterCbs.forEach(cb => cb(menu))
   }
 
   unregister(key: string): void {
-    const menu = this._menus.get(key)
-    if (menu) {
-      this._menus.delete(key)
-      this._backend?.unregister(key)
-    }
+    if (!this._menus.has(key)) return
+    this._menus.delete(key)
+    this._onUnregisterCbs.forEach(cb => cb(key))
   }
 
-  select(name: string, index: number): void {
-    this._backend?.select(name, index)
+  select(key: string, index: number): void {
+    this._onSelectCbs.forEach(cb => cb(key, index))
   }
 
   /** Get all registered menus (for debugging/inspection) */

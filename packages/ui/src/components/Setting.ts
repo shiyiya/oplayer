@@ -2,6 +2,7 @@ import Player, { $, isMobile } from '@oplayer/core'
 import { Icons } from '../functions/icons'
 import { icon, settingShown, tooltip } from '../style'
 import type { Setting, UIInterface } from '../types'
+import type { SettingRegistry } from '@oplayer/core'
 import {
   activeCls,
   nextIcon,
@@ -316,7 +317,6 @@ function createPanel(
         $input.onchange = function (event: any) {
           onChange?.(event.target.value)
         }
-        // TODO: update methond
       } else {
         if (type == 'option' || (type == undefined && !isSelectorOptionsPanel)) {
           $row.addEventListener('click', () => (onChange || options.parentOnChange)?.(value))
@@ -328,7 +328,7 @@ function createPanel(
   return panel
 }
 
-export default function (it: UIInterface) {
+export default function (it: UIInterface, registry: SettingRegistry) {
   const { player, $root: $el, config } = it
 
   if (config.settings === false) return
@@ -356,37 +356,26 @@ export default function (it: UIInterface) {
     }
   }
 
-  bootstrap(options.map((it) => (typeof it == 'string' ? defaultSettingMap[it] : it)) as Setting[])
+  // Subscribe to registry events
+  registry.onRegister((def) => {
+    const settings = Array.isArray(def) ? def : [def]
+    bootstrap(settings as Setting[])
+  })
 
-  function register(payload: Setting | Setting[]) {
-    const _payload = Array.isArray(payload) ? payload : [payload]
-
-    bootstrap(
-      _payload
-        .map((p) => {
-          const repeated = panels.find((panel) => panel.key == p.key)
-          if (repeated) {
-            unregister(repeated.key)
-            return
-          }
-
-          return p
-        })
-        .filter(Boolean) as Setting[]
-    )
-  }
-
-  function unregister(key: string) {
+  registry.onUnregister((key) => {
     if (!hasRendered) return
     panels[0]?.$ref.querySelector(`[data-key=${key}]`)?.remove()
     panels = panels.filter((p) => (p.key === key ? (p.$ref.remove(), (p = null as any), false) : true))
-  }
+  })
 
-  function updateLabel(key: string, text: string) {
+  registry.onLabelChange((key, text) => {
     if (!hasRendered) return
     const $item = $dom.querySelector<HTMLSpanElement>(`[data-key="${key}"] span[role="label"]`)
     if ($item) $item.innerText = text
-  }
+  })
+
+  // Bootstrap default settings from config
+  bootstrap(options.map((it) => (typeof it == 'string' ? defaultSettingMap[it] : it)) as Setting[])
 
   function select(key: string, value: boolean | number, shouldBeCallFn: Boolean = true) {
     if (!hasRendered) return
@@ -405,6 +394,9 @@ export default function (it: UIInterface) {
     }
   }
 
+  // Wire registry select → DOM select
+  registry.onSelect((key, value, callFn) => select(key, value, callFn))
+
   function bootstrap(settings: Setting[]) {
     if (settings.length < 1) return
 
@@ -418,13 +410,13 @@ export default function (it: UIInterface) {
     createPanel(player, panels, settings, { target: $dom })
   }
 
-   function outClickListener(e: Event) {
-      if (!$dom.contains(<HTMLElement>e.target)) {
-        player.$root.classList.remove(settingShown)
-        panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
-        document.removeEventListener('click', outClickListener)
-      }
+  function outClickListener(e: Event) {
+    if (!$dom.contains(<HTMLElement>e.target)) {
+      player.$root.classList.remove(settingShown)
+      panels.forEach(($p) => $p.$ref.classList.remove(activeCls))
+      document.removeEventListener('click', outClickListener)
     }
+  }
 
   function showSetting() {
     player.$root.classList.add(settingShown)
@@ -465,5 +457,11 @@ export default function (it: UIInterface) {
     }
   }
 
-  it.setting = { register, unregister, updateLabel, select }
+  // Expose for backward compat (old code uses it.setting)
+  it.setting = {
+    register: (payload: Setting | Setting[]) => registry.register(payload),
+    unregister: (key: string) => registry.unregister(key),
+    updateLabel: (key: string, text: string) => registry.updateLabel(key, text),
+    select
+  }
 }

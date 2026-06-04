@@ -32,7 +32,7 @@ export interface PlayerOptions {
   source?: {
     src: string
     poster?: string
-    title?: string // for screenshot, controll bar
+    title?: string // for screenshot, control bar
     format?:
       | 'auto'
       /** hls.js */
@@ -48,8 +48,8 @@ export interface PlayerOptions {
       /** other */
       | string
   }
-  autoplay?: boolean //https://developer.chrome.com/blog/autoplay/
-  autopause?: boolean //Only allow one player playing at once.
+  autoplay?: boolean // https://developer.chrome.com/blog/autoplay/
+  autopause?: boolean // Only allow one player playing at once.
   muted?: boolean
   loop?: boolean
   volume?: number
@@ -62,6 +62,42 @@ export interface PlayerOptions {
   isNativeUI?: () => boolean
 }
 ```
+
+## Plugin System
+
+Plugins are added via `.use()`:
+
+```js
+player.use([
+  ui(),           // UI plugin (priority 10, runs first)
+  hls(),          // HLS loader
+  danmaku(),      // Danmaku overlay
+  new Playlist()  // Playlist manager
+]).create()
+```
+
+### Settings & Menus
+
+Plugins register settings and menus that the UI renders automatically:
+
+```js
+// Register a menu button
+player.pluginManager.menus.register({
+  name: 'Cast',
+  icon: '📺',
+  onClick() { /* open cast */ }
+})
+
+// Register a setting
+player.pluginManager.settings.register({
+  name: 'My Feature',
+  type: 'switcher',
+  key: 'my-feature',
+  onChange(value) { /* toggle */ }
+})
+```
+
+See [Plugin Development](./plugin-dev) for details.
 
 ## persisted state
 
@@ -80,7 +116,7 @@ player.on('timeupdate', () => {
 })
 
 player.on('loadedmetadata', () => {
-  var prevTime = localStorage.getItem(e.payload.src)
+  var prevTime = localStorage.getItem(player.options.source.src)
   if (prevTime) {
     player.seek(prevTime - 3)
   }
