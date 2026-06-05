@@ -2,6 +2,56 @@ import React from 'react'
 import { useConfig } from 'nextra-theme-docs'
 import { useRouter } from 'next/router'
 
+// Detect version at build time via DOCS_BASE_PATH env var
+// v1 build: DOCS_BASE_PATH=/1  → 'v1'
+// v2 build: DOCS_BASE_PATH=''   → 'v2'
+const CURRENT_VERSION = process.env.DOCS_BASE_PATH === '/1' ? 'v1' : 'v2'
+
+const VERSIONS = [
+  { label: 'v1', path: '/1/' },
+  { label: 'v2', path: '/' }
+]
+
+function VersionSwitcher() {
+  const router = useRouter()
+
+  const switchTo = (version) => {
+    if (version === CURRENT_VERSION) return
+    const target = VERSIONS.find((v) => v.label === version)
+    if (!target) return
+    // Keep the same page path after version prefix
+    const pathWithoutVersion = CURRENT_VERSION === 'v1'
+      ? router.asPath.replace(/^\/1/, '')
+      : router.asPath
+    const newPath = target.path === '/'
+      ? pathWithoutVersion
+      : target.path + pathWithoutVersion.slice(1)
+    router.push(newPath || target.path)
+  }
+
+  return (
+    <div className="nx-flex nx-items-center nx-gap-1 nx-ml-4 nx-pl-4 nx-border-l nx-border-gray-200 dark:nx-border-gray-700">
+      {VERSIONS.map((v) => {
+        const isActive = v.label === CURRENT_VERSION
+        return (
+          <button
+            key={v.label}
+            onClick={() => switchTo(v.label)}
+            className={`nx-px-2.5 nx-py-1 nx-rounded-md nx-text-xs nx-font-medium nx-transition-colors ${
+              isActive
+                ? 'nx-bg-primary-500/10 nx-text-primary-600 dark:nx-text-primary-400 nx-font-semibold'
+                : 'nx-text-gray-500 hover:nx-text-gray-900 dark:hover:nx-text-gray-100'
+            }`}
+            title={`Switch to ${v.label} docs`}
+          >
+            {v.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export default {
   logo: <span>OPlayer</span>,
   project: { link: 'https://github.com/shiyiya/oplayer' },
@@ -21,7 +71,14 @@ export default {
       </svg>
     )
   },
-  footer: { text: null },
+  footer: {
+    text: (
+      <div className="nx-flex nx-items-center nx-justify-between nx-w-full">
+        <span>OPlayer — Oh! Another HTML5 video player.</span>
+        <VersionSwitcher />
+      </div>
+    )
+  },
   editLink: {
     text: 'Edit this page on GitHub →'
   },
@@ -43,6 +100,7 @@ export default {
   },
   head: function useHead() {
     const { title = 'oplayer' } = useConfig()
+    const { asPath } = useRouter()
     const socialCard = `https://nextra.site/api/og?title=${title}`
 
     return (
@@ -60,20 +118,7 @@ export default {
         <meta name="og:title" content={title ? title + ' – OPlayer' : 'OPlayer'} />
         <meta name="og:image" content={socialCard} />
         <meta name="apple-mobile-web-app-title" content="OPlayer" />
-        {/* <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.png" type="image/png" />
-        <link
-          rel="icon"
-          href="/favicon-dark.svg"
-          type="image/svg+xml"
-          media="(prefers-color-scheme: dark)"
-        />
-        <link
-          rel="icon"
-          href="/favicon-dark.png"
-          type="image/png"
-          media="(prefers-color-scheme: dark)"
-        /> */}
+        <link rel="canonical" href={`https://oplayer.vercel.app${asPath}`} />
       </>
     )
   }

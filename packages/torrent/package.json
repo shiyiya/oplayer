@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/torrent",
-  "version": "1.2.25-beta.2",
+  "version": "2.0.0-beta.0",
   "description": "Torrent plugin for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",

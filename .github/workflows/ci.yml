@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: main
+    branches: re
     # paths-ignore:
     # - '**/*.md'
     # - 'examples/**/*.html'
@@ -41,6 +41,10 @@ jobs:
       - name: build packs
         run: |
           pnpm build:cache
+
+      - name: build docs (versioned)
+        run: |
+          cd packages/docs && pnpm run build:versions
 
       - name: run test
         run: |

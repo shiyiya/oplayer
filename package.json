@@ -19,7 +19,7 @@
     "build:plugins": "pnpm --filter=@oplayer/plugins run build",
     "build:ui": "pnpm --filter=@oplayer/ui run build",
     "build": "pnpm --filter=!@oplayer/docs run build && pnpm run cp:ui",
-    "build:packs": "pnpm --filter=@oplayer/* run build && pnpm run cp:ui",
+    "build:packs": "pnpm --filter=!@oplayer/docs run build && pnpm run cp:ui",
     "build:cache": "nx run-many --target=build --all --parallel && pnpm run cp:ui",
     "build:affected": "nx Affected --target=build",
     "graph": "nx dep-graph",
