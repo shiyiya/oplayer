@@ -5,9 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dev:start": "next",
-    "build": "next build",
+    "build": "sh build-versioned.sh",
     "build:v1": "DOCS_BASE_PATH=/1 next build",
-    "build:v2": "DOCS_BASE_PATH=/2 next build",
+    "build:v2": "next build",
     "build:versions": "sh build-versioned.sh",
     "start": "next dev"
   },

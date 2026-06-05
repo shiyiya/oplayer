@@ -6,11 +6,11 @@ set -e
 rm -rf out out-v1
 
 echo "📦 Building docs for v1 (/1/)..."
-DOCS_BASE_PATH=/1 next build
+pnpm run build:v1
 mv out out-v1
 
 echo "📦 Building docs for v2 (root)..."
-next build
+pnpm run build:v2
 
 echo "📂 Merging..."
 mkdir -p out/1
