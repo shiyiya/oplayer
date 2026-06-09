@@ -1,5 +1,5 @@
 {
   "installCommand": "pnpm install",
-  "buildCommand": "sh packages/docs/build-versioned.sh",
+  "buildCommand": "pnpm --filter=!@oplayer/docs run build && sh packages/docs/build-versioned.sh",
   "outputDirectory": "packages/docs/out"
 }
