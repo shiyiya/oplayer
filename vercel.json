@@ -1,5 +1,5 @@
 {
   "installCommand": "pnpm install",
-  "buildCommand": "cd packages/docs && sh build-versioned.sh",
+  "buildCommand": "sh packages/docs/build-versioned.sh",
   "outputDirectory": "packages/docs/out"
 }
