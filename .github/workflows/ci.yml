@@ -42,9 +42,9 @@ jobs:
         run: |
           pnpm build:cache
 
-      - name: build docs (versioned)
+      - name: build docs
         run: |
-          cd packages/docs && pnpm run build:versions
+          cd packages/docs && pnpm run build
 
       - name: run test
         run: |
