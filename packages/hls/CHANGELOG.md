@@ -1,4 +1,4 @@
-# Changelog
+# @oplayer/hls
 
 ## 2.0.0
 
@@ -24,7 +24,3 @@
 
 - Updated dependencies [475fd8e]
   - @oplayer/core@2.0.0
-
-## [1.2.24]
-
-- Add heat map display switch

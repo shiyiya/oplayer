@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/torrent",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0",
   "description": "Torrent plugin for oplayer.",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -30,7 +30,7 @@
     "IE 11"
   ],
   "peerDependencies": {
-    "@oplayer/core": ">=1.0.0",
+    "@oplayer/core": ">=2.0.0",
     "@types/webtorrent": "^0.109.8",
     "webtorrent": "0.98.18"
   },

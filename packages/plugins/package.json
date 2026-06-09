@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/plugins",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0",
   "author": "shiyiya",
   "description": "oplayer's plugin",
   "homepage": "https://github.com/shiyiya/oplayer",
@@ -17,8 +17,8 @@
     "build": "node build-plugins.js && tsc --emitDeclarationOnly"
   },
   "peerDependencies": {
-    "@oplayer/core": ">=1.0.0",
-    "@oplayer/ui": ">=1.0.0",
+    "@oplayer/core": ">=2.0.0",
+    "@oplayer/ui": ">=2.0.0",
     "m3u8-parser": "^7.1.0"
   },
   "devDependencies": {
