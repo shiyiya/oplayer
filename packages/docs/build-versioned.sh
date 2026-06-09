@@ -2,16 +2,16 @@
 # Build docs: v2 at root, v1 at /1/
 # Must be run from monorepo root
 
-set -e
+set -ex
 
 rm -rf packages/docs/out packages/docs/out-v1
 
 echo "📦 Building docs for v1 (/1/)..."
-DOCS_BASE_PATH=/1 pnpm --filter @oplayer/docs exec next build
+DOCS_BASE_PATH=/1 pnpm --filter @oplayer/docs run build:v1
 mv packages/docs/out packages/docs/out-v1
 
 echo "📦 Building docs for v2 (root)..."
-pnpm --filter @oplayer/docs exec next build
+pnpm --filter @oplayer/docs run build:v2
 
 echo "📂 Merging..."
 mkdir -p packages/docs/out/1
