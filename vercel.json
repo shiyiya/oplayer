@@ -1,12 +1,6 @@
 {
-  "outputDirectory": "packages/docs/out",
-  "buildCommand": "cd packages/docs && sh build-versioned.sh",
   "installCommand": "pnpm install",
-  "framework": "nextjs",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ]
+  "buildCommand": "cd packages/docs && sh build-versioned.sh",
+  "outputDirectory": "packages/docs/out",
+  "framework": "nextjs"
 }
