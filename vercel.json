@@ -1,7 +1,5 @@
 {
-  "rootDirectory": "packages/docs",
-  "installCommand": "cd ../.. && pnpm install",
-  "buildCommand": "sh build-versioned.sh",
-  "outputDirectory": "out",
-  "framework": "nextjs"
+  "installCommand": "pnpm install",
+  "buildCommand": "cd packages/docs && sh build-versioned.sh",
+  "outputDirectory": "packages/docs/out"
 }
