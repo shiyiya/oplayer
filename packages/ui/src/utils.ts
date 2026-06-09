@@ -29,7 +29,7 @@ export function download(url: string, name: string) {
 export const resolveVideoAndWatermarkDataURL = (player: Player): string | Error => {
   try {
     const { $video, $root } = player
-    const ui = player.context.ui as UIInterface
+    const ui = player.pluginManager.getPlugin<UIInterface>('ui') as UIInterface
     const $canvas = document.createElement('canvas')
     const { videoWidth, videoHeight } = $video
     $canvas.width = videoWidth

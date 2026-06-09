@@ -6,6 +6,9 @@
   "scripts": {
     "dev:start": "next",
     "build": "next build",
+    "build:v1": "DOCS_BASE_PATH=/1 next build",
+    "build:v2": "next build",
+    "build:versions": "sh build-versioned.sh",
     "start": "next dev"
   },
   "dependencies": {
@@ -31,5 +34,6 @@
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "sass": "^1.89.2"
-  }
+  },
+  "version": "2.0.0"
 }

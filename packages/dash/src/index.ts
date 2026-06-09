@@ -1,4 +1,14 @@
-import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
+import {
+  loadSDK,
+  type Player,
+  type PlayerPluginV2,
+  type PluginMeta,
+  type RequiredPartial,
+  type Source,
+  type LoadSourceContext,
+  type SettingRegistry,
+  type SettingDefinition
+} from '@oplayer/core'
 import type {
   BitrateInfo,
   MediaPlayerClass,
@@ -7,7 +17,7 @@ import type {
   QualityChangeRenderedEvent
 } from 'dashjs'
 
-const PLUGIN_NAME = 'oplayer-plugin-dash'
+const PLUGIN_NAME = 'dash'
 
 export type Matcher = (video: HTMLVideoElement, source: Source) => boolean
 
@@ -39,12 +49,6 @@ export interface DashPluginOptions {
 
   drm?: ProtectionDataSet
 
-  // qualityLabelBuilder?: (instance: MediaPlayerClass) => {
-  //   name: string
-  //   default: boolean
-  //   value: any
-  // }[]
-
   /**
    * enable quality control for the stream, does not apply to the native (iPhone) clients.
    * @default: true
@@ -75,14 +79,13 @@ const defaultMatcher: Matcher = (_, source) =>
   source.format === 'mpd' ||
   ((source.format === 'auto' || typeof source.format === 'undefined') && /.mpd(#|\?|$)/i.test(source.src))
 
-class DashPlugin implements PlayerPlugin {
-  key = 'dash'
-  name = PLUGIN_NAME
-  version = __VERSION__
+class DashPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: PLUGIN_NAME }
 
   static library: typeof import('dashjs')
 
-  player!: Player
+  private player!: Player
+  private settings!: SettingRegistry
 
   instance?: MediaPlayerClass
 
@@ -102,15 +105,16 @@ class DashPlugin implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
-    this.player = player
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
+    this.settings = ctx.settings
     return this
   }
 
-  async load({ $video }: Player, source: Source) {
+  async loadSource(ctx: LoadSourceContext) {
     const { matcher, library } = this.options
 
-    if (!matcher($video, source)) return false
+    if (!matcher(ctx.video, ctx.source)) return false
 
     if (!DashPlugin.library) {
       DashPlugin.library =
@@ -126,7 +130,7 @@ class DashPlugin implements PlayerPlugin {
 
     if (config) instance.updateSettings(config)
     if (drm) instance.setProtectionData(drm)
-    instance.initialize($video, source.src, $video.autoplay)
+    instance.initialize(ctx.video, ctx.source.src, ctx.video.autoplay)
 
     instance.on(DashPlugin.library.MediaPlayer.events.ERROR, function (event: any) {
       const err = event.event || event.error
@@ -134,13 +138,10 @@ class DashPlugin implements PlayerPlugin {
       player.emit('error', { pluginName: PLUGIN_NAME, message, ...err })
     })
 
-    if (player.context.ui?.setting) {
-      // @ts-ignore
-      if (instance.getBitrateInfoListFor) {
-        generateSetting(player, instance, this.options)
-      } else {
-        console.warn('https://github.com/shiyiya/oplayer/issues/155')
-      }
+    if (typeof instance.getBitrateInfoListFor === 'function') {
+      generateSetting(player, instance, this.settings, this.options)
+    } else {
+      console.warn('https://github.com/shiyiya/oplayer/issues/155')
     }
 
     return this
@@ -148,8 +149,8 @@ class DashPlugin implements PlayerPlugin {
 
   destroy() {
     if (this.instance) {
-      const { player, instance } = this
-      if (player.context.ui?.setting) removeSetting(player)
+      const { instance } = this
+      removeSetting(this.settings)
       instance.destroy()
     }
   }
@@ -183,7 +184,12 @@ function getSettingsByType(instance: MediaPlayerClass, type: 'video', withBitrat
   return []
 }
 
-const generateSetting = (player: Player, instance: MediaPlayerClass, options: DashPlugin['options']) => {
+const generateSetting = (
+  player: Player,
+  instance: MediaPlayerClass,
+  settings: SettingRegistry,
+  options: DashPlugin['options']
+) => {
   instance.on(DashPlugin.library.MediaPlayer.events.STREAM_INITIALIZED, function () {
     if (options.qualityControl) {
       const quality = instance.getBitrateInfoListFor('video')
@@ -194,7 +200,6 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
 
       settingUpdater({
         name: 'Quality',
-        icon: player.context.ui.icons.quality,
         settings: () =>
           [
             {
@@ -204,11 +209,12 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
             }
           ].concat(getSettingsByType(instance, 'video', options.withBitrate)),
         onChange({ value }) {
+          const v = value as number
           instance.updateSettings({
-            streaming: { abr: { autoSwitchBitrate: { video: value == -1 } } }
+            streaming: { abr: { autoSwitchBitrate: { video: v == -1 } } }
           })
-          if (value != -1) {
-            instance.setQualityFor('video', value, options.qualitySwitch == 'immediate')
+          if (v != -1) {
+            instance.setQualityFor('video', v, options.qualitySwitch == 'immediate')
           }
         }
       })
@@ -221,7 +227,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
 
           const height = instance.getBitrateInfoListFor('video')[data.newQuality]?.height
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-          player.context.ui?.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+          settings.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         }
       )
     }
@@ -245,7 +251,6 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
 
       settingUpdater({
         name: 'Language',
-        icon: player.context.ui.icons.lang,
         settings() {
           return audioTracks.map((it) => ({
             name: it.lang || 'unknown',
@@ -254,7 +259,7 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
           }))
         },
         onChange({ value }) {
-          instance.setCurrentTrack(value)
+          instance.setCurrentTrack(value as dashjs.MediaInfo)
         }
       })
     }
@@ -279,59 +284,57 @@ const generateSetting = (player: Player, instance: MediaPlayerClass, options: Da
 
       settingUpdater({
         name: 'Subtitle',
-        icon: player.context.ui.icons.subtitle,
         settings() {
           return [
             {
               name: player.locales.get('Off'),
               default: !instance.isTextEnabled(),
-              value: -1 as any
+              value: -1
             }
           ].concat(
             textTracks.map((it) => ({
               name: it.lang || 'unknown',
               default: currentTrack?.index != null && currentTrack.index == it.index,
-              value: it.index
+              value: it.index!
             }))
           )
         },
         onChange({ value }) {
-          instance.enableText(value != -1)
-          if (value != -1) instance.setTextTrack(value)
+          const v = value as number
+          instance.enableText(v != -1)
+          if (v != -1) instance.setTextTrack(v)
         }
       })
     }
   })
 
   function settingUpdater(arg: {
-    icon: string
     name: string
     settings: () => {
       name: string
       default: boolean
-      value: any
+      value: unknown
     }[]
-    onChange: (it: { value: any }) => void
+    onChange: SettingDefinition['onChange']
   }) {
-    const settings = arg.settings()
-    const { name, icon, onChange } = arg
+    const settingsList = arg.settings()
+    const { name, onChange } = arg
 
-    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
-    player.context.ui.setting.register({
+    settings.unregister(`${PLUGIN_NAME}-${name}`)
+    settings.register({
       name: player.locales.get(name),
-      icon,
       onChange,
       type: 'selector',
       key: `${PLUGIN_NAME}-${name}`,
-      children: settings
+      children: settingsList
     })
   }
 }
 
-const removeSetting = (player: Player) => {
-  ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${it}`)
-  )
+const removeSetting = (settings: SettingRegistry) => {
+  settings.unregister(`${PLUGIN_NAME}-Quality`)
+  settings.unregister(`${PLUGIN_NAME}-Language`)
+  settings.unregister(`${PLUGIN_NAME}-Subtitle`)
 }
 
 export default function create(options?: DashPluginOptions) {

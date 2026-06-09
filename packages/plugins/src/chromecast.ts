@@ -1,4 +1,5 @@
-import type { Player, PlayerPlugin, Source } from '@oplayer/core'
+import type { Player, PlayerPluginV2, PluginMeta, Source, MenuRegistry } from '@oplayer/core'
+import type { UIInterface } from '@oplayer/ui'
 import { loadSDK, isIOS } from '@oplayer/core'
 
 const IS_CHROME = !!globalThis.chrome
@@ -16,19 +17,20 @@ export interface ChromeCastOptions {
   androidReceiverCompatible?: boolean | undefined
 }
 
-class Chromecast implements PlayerPlugin {
-  readonly name = 'oplayer-plugin-chromecast'
-  readonly version = __VERSION__
+class Chromecast implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'chromecast' }
 
-  public player: Player
+  private player!: Player
+  private menus!: MenuRegistry
   protected _player?: cast.framework.RemotePlayer
 
   constructor(public options?: ChromeCastOptions) {}
 
-  apply(player: Player) {
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
     if (!this.canPlay()) return
 
-    this.player = player
+    this.player = ctx.player
+    this.menus = ctx.menus
     this.registerUI()
 
     return this
@@ -100,7 +102,8 @@ class Chromecast implements PlayerPlugin {
     if (source.poster) metadata.images = [{ url: source.poster, height: null, width: null }]
     mediaInfo.metadata = metadata
 
-    const subtitles = this.player.context.ui?.config.subtitle?.source as any[] | undefined
+    const ui = this.player.pluginManager.getPlugin<UIInterface>('ui')
+    const subtitles = ui?.config?.subtitle?.source as any[] | undefined
     if (subtitles) {
       mediaInfo.tracks = subtitles.map((sub, id) => {
         const track = new chrome.cast.media.Track(id, chrome.cast.media.TrackType.TEXT)
@@ -143,14 +146,11 @@ class Chromecast implements PlayerPlugin {
   }
 
   registerUI() {
-    if (!this.player.context.ui) return
-
-    const { menu, icons } = this.player.context.ui
-
-    menu?.register({
+    this.menus.register({
       name: this.player.locales.get('Chromecast'),
+      key: 'chromecast',
       position: 'top',
-      icon: icons.chromecast || ICON,
+      icon: ICON,
       onClick: () => this.start()
     })
   }

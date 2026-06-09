@@ -8,6 +8,7 @@
     "title": "Plugins"
   },
   "ui": "@oplayer/ui",
+  "plugin-dev": "Plugin Development",
   "danmaku": "@oplayer/danmaku",
   "react": "@oplayer/react",
   "plugins": "@oplayer/plugins",

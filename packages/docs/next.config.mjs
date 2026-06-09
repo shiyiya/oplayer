@@ -1,5 +1,7 @@
 import nextra from 'nextra'
 
+const basePath = process.env.DOCS_BASE_PATH || ''
+
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
   themeConfig: './theme.config.jsx',
@@ -14,6 +16,7 @@ export default withNextra({
   output: 'export',
   reactStrictMode: false,
   trailingSlash: true,
+  basePath,
   images: {
     unoptimized: true
   },
@@ -21,7 +24,6 @@ export default withNextra({
     config.resolve.extensionAlias = {
       '.js': ['.js', '.ts', '.tsx']
     }
-    // https://github.com/vercel/next.js/issues/33693
     config.infrastructureLogging = {
       level: 'error'
     }

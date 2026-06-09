@@ -1,9 +1,8 @@
-import type { Player, PlayerPlugin, RequiredPartial } from '@oplayer/core'
+import type { Player, PlayerPluginV2, PluginMeta, SettingRegistry, RequiredPartial } from '@oplayer/core'
 import { $, isMobile } from '@oplayer/core'
 import { default as _Danmaku } from 'danmaku'
 import { danmakuParseFromUrl } from './danmaku-parse'
 import type { Comment, DanmakuContext, Options } from './types'
-import danmakuSvg from './danmaku.svg?raw'
 import { registerInput } from './sender'
 import Heatmap from './heatmap'
 
@@ -12,17 +11,15 @@ export * from './types'
 // oic=cid
 // https://cors-flame.vercel.app/api/stream?url=https://api.bilibili.com/x/v1/dm/list.so?oid=144541892
 
-export default class Danmaku implements PlayerPlugin {
-  key = 'danmaku'
-  name = 'oplayer-plugin-danmaku'
-  version = __VERSION__
+export default class Danmaku implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'danmaku' }
 
-  player: Player
-  danmaku: DanmakuContext
-  heatmap: Heatmap
+  private player!: Player
+  danmaku!: DanmakuContext
+  heatmap!: Heatmap
 
   loaded: boolean = false
-  $root: HTMLDivElement
+  $root!: HTMLDivElement
 
   options: RequiredPartial<Options, 'source' | 'onEmit' | 'customHeatmap'> = {
     speed: 144,
@@ -39,7 +36,8 @@ export default class Danmaku implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    const player = ctx.player
     if (player.isNativeUI) return
     this.player = player
 
@@ -68,7 +66,7 @@ export default class Danmaku implements PlayerPlugin {
       window.removeEventListener('resize', resize)
     })
 
-    this.registerSetting()
+    this.registerSetting(ctx.settings)
     this.changeSource(this.options.source)
     if (this.options.displaySender && !isMobile) {
       registerInput(player, danmaku, this.options as any)
@@ -128,24 +126,23 @@ export default class Danmaku implements PlayerPlugin {
     })
   }
 
-  registerSetting() {
+  registerSetting(settings: SettingRegistry) {
     const { danmaku, player } = this
     const { enable, heatmap: heatmapEnable, opacity, area } = this.options
 
-    player.context.ui?.setting.register({
+    settings.register({
       name: player.locales.get('Danmaku'),
       type: 'selector',
       default: true,
       key: 'danmaku',
-      icon: player.context.ui?.icons.danmalu ?? danmakuSvg,
       children: [
         {
           name: player.locales.get('Display'),
           type: 'switcher',
           default: enable,
           key: 'danmaku-switcher',
-          onChange: (value: boolean) => {
-            this.options.enable = value
+          onChange: (value: unknown) => {
+            this.options.enable = value as boolean
             if (value) {
               if (!this.loaded) {
                 this.changeSource(this.options.source)
@@ -162,8 +159,8 @@ export default class Danmaku implements PlayerPlugin {
           type: 'switcher',
           default: heatmapEnable,
           key: 'heatmap',
-          onChange: (value: boolean) => {
-            this.options.heatmap = value
+          onChange: (value: unknown) => {
+            this.options.heatmap = value as boolean
             if (value) this.heatmap.enable()
             else this.heatmap.disable()
           }

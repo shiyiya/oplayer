@@ -4,20 +4,23 @@ export function isObject(item: unknown): item is Record<string, unknown> {
 
 export function mergeDeep<T>(target: T, ...sources: T[]): T {
   if (!sources.length) return target
-  const source = sources.shift()
+  const source = sources[0]
+  const remaining = sources.slice(1)
 
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, { [key]: {} })
-        mergeDeep(target[key] as T, source[key] as T)
-      } else {
-        Object.assign(target, { [key]: source[key] })
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        if (isObject(source[key])) {
+          if (!target[key]) Object.assign(target, { [key]: {} })
+          mergeDeep(target[key] as T, source[key] as T)
+        } else {
+          Object.assign(target, { [key]: source[key] })
+        }
       }
     }
   }
 
-  return mergeDeep(target, ...sources)
+  return mergeDeep(target, ...remaining)
 }
 
 export function isPlainObject(obj: any): boolean {

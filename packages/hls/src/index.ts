@@ -1,8 +1,18 @@
-import { loadSDK, type Player, type PlayerPlugin, type RequiredPartial, type Source } from '@oplayer/core'
+import {
+  loadSDK,
+  type Player,
+  type PlayerPluginV2,
+  type PluginMeta,
+  type RequiredPartial,
+  type Source,
+  type LoadSourceContext,
+  type SettingRegistry,
+  type SettingDefinition
+} from '@oplayer/core'
 import type Hls from 'hls.js'
 import type { ErrorData, HlsConfig, LevelSwitchedData, Level, MediaPlaylist } from 'hls.js'
 
-const PLUGIN_NAME = 'oplayer-plugin-hls'
+const PLUGIN_NAME = 'hls'
 
 export type Matcher = (video: HTMLVideoElement, source: Source, forceHLS: boolean) => boolean
 
@@ -80,14 +90,13 @@ const defaultMatcher: Matcher = (video, source, forceHLS) => {
   )
 }
 
-class HlsPlugin implements PlayerPlugin {
-  key = 'hls'
-  name = PLUGIN_NAME
-  version = __VERSION__
+class HlsPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: PLUGIN_NAME }
 
   static library: typeof import('hls.js/dist/hls.min.js')
 
-  player!: Player
+  private player!: Player
+  private settings!: SettingRegistry
 
   instance?: Hls
 
@@ -109,15 +118,16 @@ class HlsPlugin implements PlayerPlugin {
     Object.assign(this.options, options)
   }
 
-  apply(player: Player) {
-    this.player = player
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
+    this.settings = ctx.settings
     return this
   }
 
-  async load({ $video }: Player, source: Source) {
+  async loadSource(ctx: LoadSourceContext) {
     const { matcher, forceHLS, library } = this.options
 
-    if (!matcher($video, source, forceHLS)) return false
+    if (!matcher(ctx.video, ctx.source, forceHLS)) return false
 
     if (!HlsPlugin.library) {
       HlsPlugin.library =
@@ -128,17 +138,18 @@ class HlsPlugin implements PlayerPlugin {
     if (!HlsPlugin.library.isSupported()) return false
 
     const { config, errorHandler } = this.options
+    const { video } = ctx
 
     this.instance = new HlsPlugin.library(config)
-    this.instance.attachMedia($video)
+    this.instance.attachMedia(video)
 
     const { instance, player } = this
 
     const $source = document.createElement('source')
-    $source.setAttribute('src', source.src)
-    $source.setAttribute('type', source.type || (source.type = 'application/x-mpegurl'))
+    $source.setAttribute('src', ctx.source.src)
+    $source.setAttribute('type', ctx.source.type || (ctx.source.type = 'application/x-mpegurl'))
     $source.setAttribute('data-hls', '')
-    $video.append($source)
+    video.append($source)
 
     instance.on(HlsPlugin.library.Events.DESTROYING, () => {
       $source.remove()
@@ -173,23 +184,21 @@ class HlsPlugin implements PlayerPlugin {
       })
     })
 
-    instance.loadSource(source.src)
+    instance.loadSource(ctx.source.src)
 
-    if (player.context.ui?.setting) {
-      generateSetting(player, instance, this.options)
-    }
+    generateSetting(player, instance, this.settings, this.options)
 
     return this
   }
 
-  unload() {
+  unloadSource() {
     this.instance?.stopLoad()
   }
 
   destroy() {
     if (this.instance) {
-      const { player, instance } = this
-      if (player.context.ui?.setting) removeSetting(player)
+      const { instance } = this
+      removeSetting(this.settings)
       instance.destroy()
     }
   }
@@ -199,8 +208,12 @@ export default function create(options?: HlsPluginOptions) {
   return new HlsPlugin(options)
 }
 
-const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['options']) => {
-  const ui = player.context.ui
+const generateSetting = (
+  player: Player,
+  instance: Hls,
+  settings: SettingRegistry,
+  options: HlsPlugin['options']
+) => {
   if (options.qualityControl) {
     instance.once(HlsPlugin.library.Events.LEVEL_LOADED, () => {
       if (instance.levels.length < 2) return
@@ -208,7 +221,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
       if (defaultLevel != -1) instance.currentLevel = defaultLevel
 
       injectSetting({
-        icon: ui.icons.quality,
         name: 'Quality',
         settings() {
           return instance.levels
@@ -230,13 +242,14 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
               [{ name: player.locales.get('Auto'), default: instance.autoLevelEnabled, value: -1 }]
             )
         },
-        onChange(it) {
+        onChange({ value }) {
+          const v = value as number
           if (options.qualitySwitch == 'immediate') {
-            instance.currentLevel = it.value
-            if (it.value !== -1) instance.loadLevel = it.value
+            instance.currentLevel = v
+            if (v !== -1) instance.loadLevel = v
           } else {
-            instance.nextLevel = it.value
-            if (it.value !== -1) instance.nextLoadLevel = it.value
+            instance.nextLevel = v
+            if (v !== -1) instance.nextLoadLevel = v
           }
         }
       })
@@ -248,9 +261,9 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
         if (instance.autoLevelEnabled) {
           const height = instance.levels[level]!.height
           const levelName = player.locales.get('Auto') + (height ? ` (${height}p)` : '')
-          ui.setting.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
+          settings.updateLabel(`${PLUGIN_NAME}-Quality`, levelName)
         } else {
-          ui.setting.select(`${PLUGIN_NAME}-Quality`, level - instance.levels.length, false)
+          settings.select(`${PLUGIN_NAME}-Quality`, level - instance.levels.length, false)
         }
       }
     )
@@ -272,7 +285,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
       }
 
       injectSetting({
-        icon: ui.icons.lang,
         name: 'Language',
         settings() {
           return instance.audioTracks.map(({ name, lang, id }) => ({
@@ -281,8 +293,8 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
             value: id
           }))
         },
-        onChange(it) {
-          instance.audioTrack = it.value
+        onChange({ value }) {
+          instance.audioTrack = value as number
         }
       })
     })
@@ -304,7 +316,6 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
       }
 
       injectSetting({
-        icon: ui.icons.subtitle,
         name: 'Subtitle',
         settings() {
           return instance.subtitleTracks.reduce(
@@ -320,36 +331,35 @@ const generateSetting = (player: Player, instance: Hls, options: HlsPlugin['opti
           )
         },
         onChange({ value }) {
-          if ((instance.subtitleDisplay = !(value == -1))) {
-            instance.subtitleTrack = value
+          const v = value as number
+          if ((instance.subtitleDisplay = !(v == -1))) {
+            instance.subtitleTrack = v
           }
         }
       })
     })
 
   function injectSetting(arg: {
-    icon: string
     name: string
-    settings: () => { name: string; default: boolean; value: any }[]
-    onChange: (it: { value: any }) => void
+    settings: () => { name: string; default: boolean; value: unknown }[]
+    onChange: SettingDefinition['onChange']
   }) {
-    const settings = arg.settings()
-    const { name, icon, onChange } = arg
+    const items = arg.settings()
+    const { name, onChange } = arg
 
-    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${name}`)
-    player.context.ui.setting.register({
+    settings.unregister(`${PLUGIN_NAME}-${name}`)
+    settings.register({
       name: player.locales.get(name),
-      icon,
       onChange,
       type: 'selector',
       key: `${PLUGIN_NAME}-${name}`,
-      children: settings
+      children: items
     })
   }
 }
 
-const removeSetting = (player: Player) => {
-  ;['Quality', 'Language', 'Subtitle'].forEach((it) =>
-    player.context.ui.setting.unregister(`${PLUGIN_NAME}-${it}`)
-  )
+const removeSetting = (settings: SettingRegistry) => {
+  settings.unregister(`${PLUGIN_NAME}-Quality`)
+  settings.unregister(`${PLUGIN_NAME}-Language`)
+  settings.unregister(`${PLUGIN_NAME}-Subtitle`)
 }

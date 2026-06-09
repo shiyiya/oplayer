@@ -193,7 +193,8 @@ function registerInputStyle() {
 }
 
 export function registerInput(player: Player, danmaku: Danmaku, options: Options) {
-  if (!player.context.ui) return
+  const ui = player.pluginManager.getPlugin<any>('ui')
+  if (!ui) return
   const {
     inputBar,
     inputBarWrap,
@@ -323,7 +324,7 @@ export function registerInput(player: Player, danmaku: Danmaku, options: Options
     }
   }
 
-  const parent = player.context.ui.$controllerBottom
+  const parent = ui.$controllerBottom
   const $input = $tpl.querySelector<HTMLInputElement>(`.${input}`)!
   parent.insertBefore($tpl, parent.children[1]!)
 
@@ -341,7 +342,7 @@ export function registerInput(player: Player, danmaku: Danmaku, options: Options
       }
       if (options.onEmit?.(comment) || true) {
         const primaryColor = window
-          .getComputedStyle(player.context.ui.$root)
+          .getComputedStyle(ui.$root)
           .getPropertyValue('--primary-color')
 
         //@ts-ignore

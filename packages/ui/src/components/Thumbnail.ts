@@ -84,5 +84,5 @@ export default function (it: UIInterface, container: HTMLElement) {
     )
   })
 
-  it.changThumbnails = change
+  it.changeThumbnails = change
 }

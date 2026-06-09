@@ -15,15 +15,6 @@ import vercel from '../../packages/docs/public/vercel.svg'
 import emptyBuffer from './emptyBuffer'
 import { highlight } from './constants'
 
-interface Ctx {
-  ui: ReturnType<typeof ui>
-  hls: ReturnType<typeof hls>
-  dash: ReturnType<typeof dash>
-  mpegts: ReturnType<typeof mpegts>
-  danmaku: Danmaku
-  playlist: Playlist
-}
-
 const POSTER = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/poster.png`
 const DANMAKU = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/danmaku.xml`
 const THUMB = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/thumbnails.jpg`
@@ -34,12 +25,13 @@ const FLV = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/weathering-wit
 const MP4 = `https://cdn.jsdelivr.net/gh/shiyiya/QI-ABSL@master/o/君の名は.mp4`
 
 function stopLoad() {
+  if (!player) return
   player.loader?.destroy()
   const u8 = Uint8Array.from(emptyBuffer)
   player.$video.src = URL.createObjectURL(new Blob([u8.buffer]))
 }
 
-let player: Player<Ctx>
+let player: Player | null = null
 
 render(
   html`
@@ -49,7 +41,7 @@ render(
         STAR ON <a target="_blank" href="https://github.com/shiyiya/oplayer">GitHub</a> |
         <a href="./script.html" target="_blank">SCRIPT DEMO</a> |
         <button target="_blank" @click="${() => !player && init()}">CREATE</button> |
-        <button target="_blank" @click="${() => (player.destroy(), (player = null))}">DESTORY</button>
+        <button target="_blank" @click="${() => (player?.destroy(), (player = null))}">DESTORY</button>
       </p>
     </div>
   `,
@@ -57,7 +49,7 @@ render(
 )
 
 const init = () => {
-  player = Player.make<Ctx>('#player', {
+  player = Player.make('#player', {
     // muted: true,
     volume: 0.5,
     isLive: true,
@@ -119,7 +111,8 @@ const init = () => {
             min: -5,
             max: 5,
             onChange(value) {
-              player.context.ui.subtitle.changeOffset(value)
+              const ui = player!.pluginManager.getPlugin<any>('ui')
+              ui?.subtitle?.changeOffset(value)
             }
           },
           {
@@ -273,9 +266,11 @@ const init = () => {
             id: 'hls-drm'
           }
         ],
-        customFetcher(player, source) {
+        customFetcher(p, source) {
+          const dashPlugin = p.pluginManager.getPlugin<any>('dash')
+          const hlsPlugin = p.pluginManager.getPlugin<any>('hls')
           if (source.id === 'dash-drm') {
-            ;(player.context.dash as ReturnType<typeof dash>).options.drm = {
+            dashPlugin!.options.drm = {
               'com.widevine.alpha': {
                 serverURL: 'https://drm-widevine-licensing.axtest.net/AcquireLicense',
                 httpRequestHeaders: {
@@ -290,15 +285,15 @@ const init = () => {
               src: 'https://media.axprod.net/TestVectors/v7-MultiDRM-SingleKey/Manifest_1080p.mpd'
             }
           } else if (source.id == 'hls-drm') {
-            ;(player.context.hls as ReturnType<typeof hls>).options.config = {
-              ...player.context.hls.options.config,
+            hlsPlugin!.options.config = {
+              ...hlsPlugin!.options.config,
               emeEnabled: true,
               drmSystems: {
                 'com.widevine.alpha': {
                   licenseUrl: 'https://widevine-proxy.appspot.com/proxy'
                 }
               },
-              licenseXhrSetup(xhr) {
+              licenseXhrSetup(xhr: XMLHttpRequest) {
                 xhr.setRequestHeader('content-type', 'application/octet-stream')
                 xhr.setRequestHeader('Authorization', 'Bearer token') // or other headers
               }
@@ -306,8 +301,8 @@ const init = () => {
 
             return {} //TODO
           } else {
-            ;(player.context.dash as ReturnType<typeof dash>).options.drm = null
-            ;(player.context.hls as ReturnType<typeof hls>).options.config.emeEnabled = false
+            dashPlugin!.options.drm = null
+            hlsPlugin!.options.config.emeEnabled = false
           }
           return source
         }

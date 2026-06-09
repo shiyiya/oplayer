@@ -5,7 +5,8 @@ import { vttThumbnails, ad } from '@oplayer/plugins'
 import hls from '@oplayer/hls'
 
 export const register = (player: Player) => {
-  player.context.ui?.menu.register(<MenuBar>{
+  const ui = player.pluginManager.getPlugin<any>('ui')
+  ui?.menu?.register(<MenuBar>{
     name: 'FMT',
     position: 'top',
     children: FORMAT_MENU,
@@ -17,7 +18,7 @@ export const register = (player: Player) => {
         // .changeQuality({ src: value })
         .then((_) => {
           // GET	https://cc.zorores.com/20/2e/202eaab6dff289a5976399077449654e/eng-2.vtt
-          // player.context.ui.subtitle.changeSource([
+          // ui.subtitle.changeSource([
           //   {
           //     name: 'Default',
           //     default: true,
@@ -28,13 +29,13 @@ export const register = (player: Player) => {
     }
   })
 
-  player.applyPlugin(
+  player.use([
     vttThumbnails({
       src: 'https://preview.zorores.com/4b/4b1a02c7ffcad4f1ee11cd6f474548cb/thumbnails/sprite.vtt'
     })
-  )
+  ])
 
-  player.applyPlugin(
+  player.use([
     ad({
       autoplay: false,
       image: 'http://5b0988e595225.cdn.sohucs.com/images/20190420/da316f8038b242c4b34f6db18b0418d4.gif',
@@ -44,5 +45,5 @@ export const register = (player: Player) => {
       target: 'https://oplayer.vercel.app',
       plugins: [hls({ qualityControl: false })]
     })
-  )
+  ])
 }

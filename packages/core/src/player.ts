@@ -3,6 +3,7 @@ import EventEmitter from './event'
 import I18n from './i18n'
 import $ from './utils/dom'
 import { isQQBrowser } from './utils/platform'
+import { PluginManager } from './plugin/plugin-manager'
 
 import type {
   Destroyable,
@@ -10,7 +11,7 @@ import type {
   PlayerEventName,
   PlayerListener,
   PlayerOptions,
-  PlayerPlugin,
+  PlayerPluginV2,
   RequiredPartial,
   Source
 } from './types'
@@ -31,7 +32,7 @@ const defaultOptions = {
   isNativeUI: () => isQQBrowser
 } as const
 
-export class Player<Context extends Record<string, any> = Record<string, any>> {
+export class Player {
   static players: Player[] = []
 
   container: HTMLElement
@@ -40,10 +41,11 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   locales: I18n
   eventEmitter: EventEmitter
 
-  plugins: PlayerPlugin[] = []
-  context: Context = {} as Context
   // hls|dash|etc. instance
   loader?: Destroyable
+
+  /** New plugin system manager */
+  pluginManager: PluginManager
 
   $root!: HTMLDivElement
   $video!: HTMLVideoElement
@@ -52,6 +54,10 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   hasError: boolean = false
   isSourceChanging: boolean = false
+
+  // Track pending handlers for cleanup during rapid source changes
+  private _pendingCanplayHandler?: Function
+  private _pendingErrorHandler?: Function
 
   constructor(el: HTMLElement | string, options?: PlayerOptions | string) {
     this.container = typeof el == 'string' ? document.querySelector(el)! : el
@@ -65,26 +71,34 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
     this.locales = new I18n(this.options.lang, this.options.languages)
     this.eventEmitter = new EventEmitter()
+    this.pluginManager = new PluginManager(this)
   }
 
-  static make<Context extends Record<string, any> = Record<string, any>>(
+  static make(
     el: HTMLElement | string,
     options?: PlayerOptions | string
   ) {
-    return new Player<Context>(el, options)
+    return new Player(el, options)
   }
 
-  use(plugins: PlayerPlugin[]) {
+  use(plugins: PlayerPluginV2<unknown>[]) {
     plugins.forEach((plugin) => {
-      this.plugins.push(plugin)
+      this.pluginManager.register(plugin)
     })
+    // If player is already created, setup newly registered plugins immediately
+    if (this.$root) {
+      this.pluginManager.setup()
+    }
     return this
   }
 
   create() {
     this.render()
     this.initEvent()
-    this.plugins.forEach((plugin) => this.applyPlugin(plugin, true))
+
+    // Plugin system: call setup() on all plugins
+    this.pluginManager.setup()
+
     if (this.options.source.src) this.load(this.options.source)
     Player.players.push(this)
     return this
@@ -201,35 +215,18 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   async load(source: Source) {
     await this.loader?.destroy()
     this.loader = undefined
-    for (const plugin of this.plugins) {
-      if (plugin.load) {
-        const returned = await plugin.load(this, source)
-        if (returned != false && !this.loader) {
-          this.loader = returned
-          this.emit('loaderchange', returned)
-          break
-        }
-      }
-    }
-    if (!this.loader) {
+
+    const loader = await this.pluginManager.loadSource(source)
+    if (loader) {
+      this.loader = loader
+      this.emit('loaderchange', loader)
+    } else {
       this.$video.src = source.src
     }
 
     return source
   }
 
-  applyPlugin(plugin: PlayerPlugin, init = false) {
-    const { name, key } = plugin
-    if (this.context[plugin.key || plugin.name]) {
-      throw new Error('duplicate plugin')
-    }
-
-    if (!init) this.plugins.push(plugin)
-    const returned = plugin.apply(this)
-    if (returned) {
-      ;(this.context as any)[key || name] = returned
-    }
-  }
 
   on(name: PlayerEventName | PlayerListener, listener?: PlayerListener) {
     if (typeof name === 'string') {
@@ -389,7 +386,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   changeQuality(source: Omit<Source, 'poster'> | Promise<Omit<Source, 'poster'>>) {
     this.hasError = false
-    return this._loader(source, {
+    return this.changeSourceInternal(source as Source | Promise<Source>, {
       keepPlaying: true,
       keepTime: true,
       preEvent: 'videoqualitychange',
@@ -400,7 +397,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
   changeSource(source: Source | Promise<Source>, keepPlaying: boolean = true) {
     this.hasError = false
-    return this._loader(source, {
+    return this.changeSourceInternal(source, {
       keepPlaying,
       preEvent: 'videosourcechange',
       event: 'videosourcechanged',
@@ -408,7 +405,11 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
     })
   }
 
-  _loader(
+  /**
+   * Internal method for switching video sources.
+   * Handles loading, event management, and rollback on failure.
+   */
+  private changeSourceInternal(
     sourceLike: Source | Promise<Source>,
     options: {
       event: string
@@ -434,9 +435,19 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
 
       let finalSource: Source
 
+      // Clean up any pending handlers from a previous source change
+      if (this._pendingCanplayHandler) {
+        this.off(canplay, this._pendingCanplayHandler as PlayerListener)
+      }
+      if (this._pendingErrorHandler) {
+        this.off('error', this._pendingErrorHandler as PlayerListener)
+      }
+
       const errorHandler = (err: any) => {
         if (!this.$root) return
         this.off(canplay, canplayHandler)
+        this._pendingCanplayHandler = undefined
+        this._pendingErrorHandler = undefined
         this.emit(options.brokenEvent, { source: finalSource || sourceLike, error: err })
         if (options.event == 'videosourcechanged') {
           this.isSourceChanging = false
@@ -449,6 +460,7 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         }
         reject(err)
       }
+      this._pendingErrorHandler = errorHandler
 
       const rollback = () => {
         if (volume != this.volume) this.setVolume(volume)
@@ -456,17 +468,21 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
         if (isPreloadNone && keepTime) this.$video.load()
         if (keepTime && !this.options.isLive) this.seek(currentTime)
         if (shouldPlay && !this.isPlaying) this.$video.play()
-        Object.assign(this.options.source, finalSource)
+        // Merge into a new object to avoid mutating the original source
+        this.options.source = { ...this.options.source, ...finalSource }
       }
 
       const canplayHandler = () => {
         if (!this.$root) return
         this.off('error', errorHandler)
+        this._pendingCanplayHandler = undefined
+        this._pendingErrorHandler = undefined
         rollback()
         this.isSourceChanging = false
         this.emit(options.event, finalSource)
         resolve()
       }
+      this._pendingCanplayHandler = canplayHandler
 
       return (sourceLike instanceof Promise ? sourceLike : Promise.resolve(sourceLike))
         .then((source) => {
@@ -485,29 +501,45 @@ export class Player<Context extends Record<string, any> = Record<string, any>> {
   }
 
   async destroy() {
-    Player.players.splice(Player.players.indexOf(this), 1)
+    Player.players = Player.players.filter((p) => p !== this)
 
-    const { eventEmitter, loader, plugins, container, $root, $video, isPlaying, isFullScreen, isInPip } = this
+    const { eventEmitter, loader, container, $root, $video, isPlaying, isFullScreen, isInPip } = this
 
     eventEmitter.emit('destroy')
     eventEmitter.offAll()
 
-    await loader?.destroy()
+    // Plugin system: destroy all plugins
+    await this.pluginManager.destroy()
 
-    for await (const plugin of plugins) {
-      if (!plugin.load && plugin?.destroy) {
-        await plugin.destroy()
-      }
-    }
+    await loader?.destroy()
 
     if (isPlaying) this.pause()
     if (isFullScreen) this.exitFullscreen()
     if (isInPip) this.exitPip()
     if ($video.src) URL.revokeObjectURL($video.src)
 
+    // Clean up native event listeners added in initEvent
+    for (const eventName of Object.keys(this.listeners)) {
+      const handler = this.listeners[eventName as keyof typeof this.listeners]
+      if (typeof handler === 'function') {
+        $video.removeEventListener(eventName, handler as EventListener)
+        $root.removeEventListener(eventName, handler as EventListener)
+      }
+    }
+
     container.removeChild($root)
-    // prettier-ignore
-    this.eventEmitter = this.locales = this.options = this.listeners = this.context = this.plugins = this.container = this.$root = this.$video = this.loader = undefined as any
+
+    // Clear all references to allow garbage collection
+    this.eventEmitter = null as any
+    this.locales = null as any
+    this.options = null as any
+    this.listeners = null as any
+    this.container = null as any
+    this.$root = null as any
+    this.$video = null as any
+    this.loader = null as any
+    this._pendingCanplayHandler = undefined
+    this._pendingErrorHandler = undefined
   }
 
   get isNativeUI() {

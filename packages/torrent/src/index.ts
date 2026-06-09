@@ -1,4 +1,12 @@
-import { loadSDK, type Player, type PlayerPlugin, type Source } from '@oplayer/core'
+import {
+  loadSDK,
+  type Player,
+  type PlayerPluginV2,
+  type PluginMeta,
+  type Source,
+  type LoadSourceContext,
+  type MenuRegistry
+} from '@oplayer/core'
 import type Webtorrent from 'webtorrent'
 
 export type PluginOptions = {
@@ -10,32 +18,32 @@ export type PluginOptions = {
   library?: string
 }
 
-class TorrentPlugin implements PlayerPlugin {
-  key = 'torrent'
-  name = 'oplayer-plugin-torrent'
-  //@ts-ignore
-  version = __VERSION__
+class TorrentPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'torrent' }
 
   static defaultMatcher: PluginOptions['matcher'] = (source) =>
     /magnet:?[^\"]+/.test(source.src) || /.*\.torrent/.test(source.src)
 
   static library: Webtorrent.WebTorrent
 
-  player!: Player
+  private player!: Player
+  private menus!: MenuRegistry
 
   instance: Webtorrent.Instance
 
   constructor(public options: PluginOptions) {}
 
-  apply(player: Player) {
-    this.player = player
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
+    this.menus = ctx.menus
     return this
   }
 
-  async load({ $video }: Player, source: Source) {
+  async loadSource(ctx: LoadSourceContext) {
     const { config = {}, matcher = TorrentPlugin.defaultMatcher, library } = this.options
+    const player = this.player
 
-    if (!matcher!(source)) return false
+    if (!matcher!(ctx.source)) return false
 
     if (!TorrentPlugin.library) {
       TorrentPlugin.library =
@@ -53,46 +61,33 @@ class TorrentPlugin implements PlayerPlugin {
 
     const medias: Webtorrent.TorrentFile[] = []
 
-    instance.add(source.src, (torrent) => {
+    instance.add(ctx.source.src, (torrent) => {
       torrent.files.forEach((file) => {
         if (file.name.endsWith('.mp4')) {
           medias.push(file)
-        }
-        // else if (file.name.endsWith('.srt')) {
-        // subtitlePromise.push(
-        //   new Promise((resolve) => {
-        //     file.getBlobURL((err, url) => {
-        //       if (err) return
-        //       resolve({
-        //         name: file.name,
-        //         src: url
-        //       })
-        //     })
-        //   })
-        // )
-        // }
-        else if (file.name.startsWith('poster')) {
+        } else if (file.name.startsWith('poster')) {
           file.getBlobURL((err, url) => {
             if (err || !url) return
-            $video.poster = url
+            ctx.video.poster = url
           })
         }
       })
 
       if (!medias.length) throw new Error('media not found')
 
-      this.player.on('loadedmetadata', (e) => {
+      player.on('loadedmetadata', (e) => {
         if (this.instance) {
           setTimeout(() => {
-            this.player.emit('canplay', e)
+            player.emit('canplay', e)
           })
         }
       })
 
-      medias[0]!.renderTo($video, { controls: false })
+      medias[0]!.renderTo(ctx.video, { controls: false })
 
-      this.player.context.ui?.menu.register({
+      this.menus.register({
         name: 'Torrent',
+        key: 'torrent',
         position: 'top',
         children: medias.map((media, i) => ({
           name: media.name,
@@ -101,7 +96,7 @@ class TorrentPlugin implements PlayerPlugin {
         })),
         onChange({ value, name }: any, elm: HTMLElement) {
           elm.innerText = name
-          value.renderTo($video, { controls: false })
+          value.renderTo(ctx.video, { controls: false })
         }
       })
     })
@@ -109,12 +104,12 @@ class TorrentPlugin implements PlayerPlugin {
     return this
   }
 
-  async unload() {
+  async unloadSource() {
     if (this.instance) await this.instance.destroy()
   }
 
   async destroy() {
-    await this.unload()
+    await this.unloadSource()
   }
 }
 

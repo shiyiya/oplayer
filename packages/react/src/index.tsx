@@ -1,4 +1,4 @@
-import type { PlayerEvent, PlayerOptions, PlayerPlugin, Source } from '@oplayer/core'
+import type { PlayerEvent, PlayerOptions, PlayerPluginV2, Source } from '@oplayer/core'
 import Player from '@oplayer/core'
 import {
   DependencyList,
@@ -16,7 +16,7 @@ export interface ReactOPlayerProps extends Omit<PlayerOptions, 'source'> {
   playing?: boolean
   duration?: number
   aspectRatio?: number
-  plugins?: PlayerPlugin[]
+  plugins?: PlayerPluginV2[]
   onEvent?: (e: PlayerEvent) => void
   source?: Source | Promise<Source>
 }

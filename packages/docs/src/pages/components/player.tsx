@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Player, { PlayerPlugin } from '@oplayer/core'
+import Player, { PlayerPluginV2 } from '@oplayer/core'
 import ui from '@oplayer/ui'
 import hls from '@oplayer/hls'
 import dash from '@oplayer/dash'
@@ -8,9 +8,10 @@ import mpegts from '@oplayer/mpegts'
 import style from './player.module.scss'
 import { Chromecast } from '@oplayer/plugins'
 
-const userPreferencesPlugin: PlayerPlugin = {
-  name: 'userPreferencesPlugin',
-  apply(player) {
+const userPreferencesPlugin: PlayerPluginV2 = {
+  meta: { name: 'userPreferencesPlugin' },
+  setup(ctx) {
+    const player = ctx.player
     player.on('ratechange', () => {
       // 首次调用changeSource且上一次视频地址为空时会触发 ratechange = 1
       if (!player.isSourceChanging)

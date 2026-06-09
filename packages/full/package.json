@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/full",
-  "version": "0.0.1-beta.28",
+  "version": "2.0.0-beta.0",
   "description": "Do More, Keep it simple.",
   "type": "module",
   "main": "./dist/index.min.js",

@@ -1,6 +1,6 @@
 {
   "name": "@oplayer/ui",
-  "version": "1.3.4-beta.10",
+  "version": "2.0.0",
   "description": "ui plugin for oplayer",
   "type": "module",
   "main": "./dist/index.es.js",
@@ -31,7 +31,7 @@
     "IE 11"
   ],
   "peerDependencies": {
-    "@oplayer/core": ">=1.0.0"
+    "@oplayer/core": ">=2.0.0"
   },
   "devDependencies": {
     "@oplayer/core": "workspace:*"

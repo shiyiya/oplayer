@@ -1,4 +1,4 @@
-import Player, { PartialRequired, PlayerPlugin } from '@oplayer/core'
+import Player, { PartialRequired, PlayerPluginV2 } from '@oplayer/core'
 import type { ICONS_MAP } from './functions/icons'
 import type { Subtitle as SubtitleInstance } from './components/Subtitle'
 
@@ -33,6 +33,8 @@ export type MenuBar<
     value?: any
   }
 > = {
+  /** Unique identifier for unregister/select. Falls back to name if not provided. */
+  key?: string
   position?: 'top' | 'bottom'
   name: string
   icon?: string
@@ -221,7 +223,7 @@ export type ErrorPayload =
       code?: number
     }
 
-export interface UIInterface extends PlayerPlugin {
+export interface UIInterface extends PlayerPluginV2 {
   config: PartialRequired<UiConfig, 'theme'>
 
   player: Player
@@ -266,11 +268,14 @@ export interface UIInterface extends PlayerPlugin {
 
   toggleController: () => void
 
-  changHighlightSource: (highlights: Highlight[]) => void
+  changeHighlightSource: (highlights: Highlight[]) => void
 
-  changThumbnails: (src: Thumbnails) => void
+  changeThumbnails: (src: Thumbnails) => void
 
   progressHoverCallback: ((rate?: number /** 0 ~ 1 */) => void)[]
+
+  /** CSS class name for VTT thumbnail container (set by Progress.ts) */
+  vttThumbnailsCls?: string
 
   $root: HTMLDivElement
 

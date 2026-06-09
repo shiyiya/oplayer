@@ -7,7 +7,7 @@ export const loadScript = (src: string, onLoad: () => void, onError: (e: unknown
   firstScriptTag?.parentNode?.insertBefore(script, firstScriptTag)
 }
 
-const pendingSDKRequests: Record<string, PendingSDKRequest[]> = {}
+const pendingSDKRequests: Map<string, PendingSDKRequest[]> = new Map()
 type PendingSDKRequest<SDKType = any> = {
   resolve: (value: SDKType) => void
   reject: (reason: unknown) => void
@@ -38,15 +38,16 @@ export const loadSDK = <SDKType = unknown>(
   }
 
   return new Promise<SDKType>((resolve, reject) => {
-    if (!isUndefined(pendingSDKRequests[url])) {
-      pendingSDKRequests[url]!.push({ resolve, reject })
+    const existingPending = pendingSDKRequests.get(url)
+    if (!isUndefined(existingPending)) {
+      existingPending.push({ resolve, reject })
       return
     }
 
-    pendingSDKRequests[url] = [{ resolve, reject }]
+    pendingSDKRequests.set(url, [{ resolve, reject }])
 
     const onLoaded = (sdk: SDKType) => {
-      pendingSDKRequests[url]?.forEach((request) => request.resolve(sdk))
+      pendingSDKRequests.get(url)?.forEach((request) => request.resolve(sdk))
     }
 
     if (!isUndefined(sdkReadyVar)) {
@@ -63,10 +64,10 @@ export const loadSDK = <SDKType = unknown>(
         if (isUndefined(sdkReadyVar)) onLoaded(getGlobal(sdkGlobalVar as keyof Window))
       },
       (e) => {
-        pendingSDKRequests[url]?.forEach((request) => {
+        pendingSDKRequests.get(url)?.forEach((request) => {
           request.reject(e)
         })
-        delete pendingSDKRequests[url]
+        pendingSDKRequests.delete(url)
       }
     )
   })

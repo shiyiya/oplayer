@@ -8,6 +8,7 @@ import {
 } from '../components/ControllerBottom.style'
 import { icon as iconCls, tooltip } from '../style'
 import type { MenuBar, UIInterface } from '../types'
+import type { MenuRegistry } from '@oplayer/core'
 import { siblings } from '../utils'
 
 const setChecked = (elm: HTMLElement) => {
@@ -16,7 +17,7 @@ const setChecked = (elm: HTMLElement) => {
   siblings(elm, (it) => it.setAttribute('aria-checked', `${selected}`))
 }
 
-export default (it: UIInterface) => {
+export default (it: UIInterface, registry: MenuRegistry) => {
   const initialState = it.config.menu
   const menus: MenuBar[] = []
   const $top = it.$controllerBar?.lastElementChild
@@ -47,8 +48,9 @@ export default (it: UIInterface) => {
   })
 
   function _register(menu: MenuBar) {
-    const repeated = menus.find((m) => m.name == menu.name)
-    if (repeated) unregister(repeated.name)
+    const menuKey = menu.key || menu.name
+    const repeated = menus.find((m) => (m.key || m.name) == menuKey)
+    if (repeated) unregisterByKey(repeated.key || repeated.name)
 
     const { name, icon, children, position } = menu
     const isTop = position == 'top' && $targets.length == 2
@@ -95,10 +97,13 @@ export default (it: UIInterface) => {
     menus.push(menu)
   }
 
-  function unregister(name: string) {
+  function unregisterByKey(key: string) {
+    // Look up menu by key to find its display name (used in aria-label)
+    const menu = registry.getAll().get(key)
+    const name = menu?.name || key
     $targets.forEach((it) => {
       it.querySelector(`button[aria-label='${name}']`)?.remove()
-      it.querySelector(`div[aria-label='${name}]'`)?.remove()
+      it.querySelector(`div[aria-label='${name}']`)?.remove()
     })
   }
 
@@ -114,13 +119,20 @@ export default (it: UIInterface) => {
     })
   }
 
+  // Subscribe to registry events
+  registry.onRegister((def) => _register(def as MenuBar))
+  registry.onUnregister((key) => unregisterByKey(key))
+  registry.onSelect((key, index) => select(key, index))
+
+  // Bootstrap initial menus from config
   if (initialState) initialState.forEach(_register)
 
+  // Expose for backward compat (old code uses it.menu)
   it.menu = {
     register: function (menu: MenuBar | MenuBar[]) {
-      ;(Array.isArray(menu) ? menu : [menu]).forEach(_register)
+      ;(Array.isArray(menu) ? menu : [menu]).forEach(m => registry.register(m))
     },
-    unregister,
+    unregister: (name: string) => registry.unregister(name),
     select
   }
 }

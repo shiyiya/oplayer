@@ -1,0 +1,215 @@
+# Plugin Development
+
+OPlayer uses a plugin system based on the `PlayerPluginV2` interface. Plugins can register settings and menus that the UI renders automatically.
+
+## Basic Plugin
+
+```typescript
+import { PlayerPluginV2, PluginMeta } from '@oplayer/core'
+
+class MyPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'my-plugin' }
+
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    const player = ctx.player
+    // plugin initialization
+    return this
+  }
+
+  destroy() {
+    // cleanup
+  }
+}
+
+export default function create() {
+  return new MyPlugin()
+}
+```
+
+## Register Settings
+
+Settings appear in the settings panel. Use `ctx.settings` from the setup context:
+
+```typescript
+class MyPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'my-plugin' }
+  private settings!: import('@oplayer/core').SettingRegistry
+
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.settings = ctx.settings
+
+    this.settings.register({
+      name: 'My Feature',
+      type: 'selector',
+      key: 'my-feature',
+      children: [
+        { name: 'Option A', value: 'a', default: true },
+        { name: 'Option B', value: 'b' }
+      ],
+      onChange({ value }) {
+        // value is 'a' or 'b'
+      }
+    })
+
+    return this
+  }
+}
+```
+
+### Setting Types
+
+| Type | UI | onChange receives |
+|------|----|-------------------|
+| `selector` | Submenu with options | `{ value: T }` (the selected child) |
+| `switcher` | Toggle switch | `true` or `false` |
+| `slider` | Range slider | `string` (the slider value) |
+| `option` | Simple clickable item | `value` from the setting |
+
+### SettingDefinition
+
+```typescript
+interface SettingDefinition<T = unknown> {
+  name: string         // Display name
+  key?: string         // Unique identifier
+  type?: 'selector' | 'switcher' | 'slider' | 'option'
+  icon?: string        // HTML or emoji
+  children?: SettingDefinition<T>[]  // For selector type
+  onChange?: (def: SettingDefinition<T>, ctx?: { index: number; player: Player }) => void
+  default?: T
+  value?: T
+  min?: number         // For slider
+  max?: number         // For slider
+  step?: number        // For slider
+}
+```
+
+### Update Label Dynamically
+
+```typescript
+// Update the displayed label of a selector setting
+settings.updateLabel('my-feature', 'Current: Option A')
+```
+
+### Unregister
+
+```typescript
+// Remove a setting by key
+settings.unregister('my-feature')
+```
+
+## Register Menus
+
+Menus appear as buttons in the controller bar (top or bottom):
+
+```typescript
+class MyPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'my-plugin' }
+  private menus!: import('@oplayer/core').MenuRegistry
+
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.menus = ctx.menus
+
+    this.menus.register({
+      name: 'Cast',
+      position: 'top', // or 'bottom'
+      icon: '📺',
+      onClick() {
+        // open cast dialog
+      }
+    })
+
+    // Menu with dropdown
+    this.menus.register({
+      name: 'Quality',
+      position: 'bottom',
+      children: [
+        { name: '1080p', default: true },
+        { name: '720p' },
+        { name: '480p' }
+      ],
+      onChange({ value, name }, elm, player) {
+        elm.textContent = name // update button text
+        // change quality
+      }
+    })
+
+    return this
+  }
+}
+```
+
+### MenuDefinition
+
+```typescript
+interface MenuDefinition {
+  name: string
+  position?: 'top' | 'bottom'
+  icon?: string
+  children?: { name: string; default?: boolean; value?: unknown }[]
+  onChange?: (arg: { value: unknown; name: string }, elm: HTMLButtonElement, player: Player) => void
+  onClick?: (elm: HTMLButtonElement, player: Player) => void
+}
+```
+
+## Plugin Meta
+
+```typescript
+interface PluginMeta {
+  name: string                  // Unique plugin name
+  priority?: number             // Higher runs first (UI = 10)
+  dependencies?: string[]       // Plugin names this plugin depends on
+}
+```
+
+## Lifecycle
+
+| Method | When |
+|--------|------|
+| `setup(ctx)` | Called during `player.create()` |
+| `loadSource(ctx)` | Called when a new source is set. Return `false` to skip. |
+| `unloadSource()` | Called before a new source is loaded |
+| `destroy()` | Called when player is destroyed |
+
+## Full Example
+
+```typescript
+import { PlayerPluginV2, PluginMeta, SettingRegistry, MenuRegistry } from '@oplayer/core'
+
+class QualityPlugin implements PlayerPluginV2 {
+  readonly meta: PluginMeta = { name: 'quality', priority: 20 }
+
+  private settings!: SettingRegistry
+  private menus!: MenuRegistry
+  private player!: import('@oplayer/core').Player
+
+  setup(ctx: Parameters<PlayerPluginV2['setup']>[0]) {
+    this.player = ctx.player
+    this.settings = ctx.settings
+    this.menus = ctx.menus
+    return this
+  }
+
+  async loadSource(ctx: import('@oplayer/core').LoadSourceContext) {
+    // Register quality setting after stream info is available
+    this.settings.register({
+      name: 'Quality',
+      type: 'selector',
+      key: 'quality',
+      children: [
+        { name: 'Auto', value: -1, default: true },
+        { name: '1080p', value: 0 },
+        { name: '720p', value: 1 }
+      ],
+      onChange({ value }) {
+        // change quality based on value
+      }
+    })
+
+    return this
+  }
+
+  destroy() {
+    this.settings.unregister('quality')
+  }
+}
+```
